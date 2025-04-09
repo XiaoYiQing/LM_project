@@ -38,6 +38,38 @@ int main() {
         cout << "File read successful." << endl;
     }
 
+
+    // If the first character of a line is == comm_mark, the line is a comment.
+    string comm_mark = "!";
+    // If the first character of a line is == opt_line_mark, the line holds the various
+    // options of the data format.
+    string opt_line_mark = "#";
+
+    // The variable holding the line currently read.
+    string line;
+
+    // Boolean flag for indicating whether the line stream has reached the data lines.
+    bool data_reached = false;
+
+    while( !data_reached && std::getline( inputFile, line ) ){
+
+        // Obtain the next word.
+        std::string word;
+        std::istringstream iss(line);
+
+        iss >> word;
+        // Check for comment line mark.
+        if( word == comm_mark ){
+            cout << "\tThis is a comment!" << endl;
+        }
+        // Use getline to read words, separated by spaces
+        while ( iss >> word ) {
+            
+        }
+
+    }
+
+
     return 0; // Indicates successful completion of the program
 
 }
