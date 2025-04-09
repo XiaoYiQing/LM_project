@@ -1,8 +1,10 @@
-#include <iostream> // Include header for input and output
-#include <vector>   // For standard vector usage
-#include <string>   // For using strings
 
-// Add other necessary includes here
+
+#include <iostream> 
+#include <vector>   
+#include <string>   
+
+#include "numUtils.h"
 
 
 using namespace std;
@@ -14,6 +16,9 @@ int main() {
     
     cout << "Hello World!" << endl;
 
+
+    vector<int> tmp = randIntVectGen( 0, 5, 7 );
+
     return 0; // Indicates successful completion of the program
-    
+
 }
