@@ -8,10 +8,12 @@
 using namespace std;
 
 int main() {
+
     // Initialization section
     // Example: Initialize variables, containers, etc.
     
     cout << "Hello World!" << endl;
 
     return 0; // Indicates successful completion of the program
+    
 }

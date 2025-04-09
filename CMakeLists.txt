@@ -20,6 +20,20 @@ add_executable( myapp src/main.cpp )
 #   Sub-Directories Inclusion
 # ======================================================================= >>>>>
 
+
+# ----------------------------------------------------------------- >>>>>
+#   Utility (Personal) Inclusion
+# ----------------------------------------------------------------- >>>>>
+
+# Add a sub directory.
+add_subdirectory( utils_XYQ )
+target_link_libraries( myapp PUBLIC utils_XYQ )
+target_include_directories(myapp PUBLIC
+    "${PROJECT_SOURCE_DIR}/utils_XYQ"
+)
+
+# ----------------------------------------------------------------- <<<<<
+
 # ======================================================================= <<<<<
 
 
