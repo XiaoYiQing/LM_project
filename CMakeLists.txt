@@ -15,6 +15,24 @@ add_executable( myapp src/main.cpp )
 
 
 
+# ======================================================================= >>>>>
+#   Present Project Additional Resource Inclusion
+# ======================================================================= >>>>>
+
+# Define the source directory and a destination directory as variables.
+set(RES_XYQ_DIR_SRC ${CMAKE_SOURCE_DIR}/res)
+
+target_include_directories(myapp PUBLIC
+    "${RES_XYQ_DIR_SRC}"
+)
+
+# Create a variable that you can access directly during runtime as a preprocessor definition.
+target_compile_definitions( myapp
+    PRIVATE RES_PATH_XYQ="${RES_XYQ_DIR_SRC}"
+)
+
+# ======================================================================= <<<<<
+
 
 # ======================================================================= >>>>>
 #   Sub-Directories Inclusion
