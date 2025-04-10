@@ -46,8 +46,17 @@ int main() {
     Eigen::Matrix2d matA;
     matA << 1, 2, 3, 4;
     Eigen::Matrix2d matA_inv = matA.inverse();
-    std::cout << "Matrix A:\n" << matA << "\n";
-    std::cout << "Matrix A inverse:\n" << matA_inv << "\n";
+    cout << "Matrix A:\n" << matA << endl;
+    cout << "Matrix A inverse:\n" << matA_inv << endl;
+
+
+    
+    Eigen::Vector2d vecA;
+    vecA << 1, 2;
+    cout << "Vector A:\n" << vecA << endl;
+    vecA << 1, 2;
+    cout << "Vector A:\n" << vecA << endl;
+
 
     return 0; // Indicates successful completion of the program
 

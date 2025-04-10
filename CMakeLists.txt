@@ -26,8 +26,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
     GIT_TAG 3.4.0
     GIT_SHALLOW ON
-    EXCLUDE_FROM_ALL
-    SYSTEM)
+)
 
 FetchContent_MakeAvailable(eigen)
 
