@@ -23,6 +23,9 @@ using namespace std;
 string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
 
 
+
+
+
 int main() {
 
     int err_ret_val = 1;
@@ -122,6 +125,8 @@ int main() {
         // Check for comment line mark.
         if( word == comm_mark ){
             cout << "This is a comment!" << endl;
+
+        // Check for option line mark.
         }else if( word == opt_line_mark ){
             cout << "This is an option!" << endl;
             int opt_idx = 0;
@@ -130,6 +135,8 @@ int main() {
                 opt_idx++;
             }
             cout << endl;
+
+        // Check for end of consecutive series of comment and option lines.
         }else{
 
             data_reached = true;
@@ -138,6 +145,7 @@ int main() {
 
     }
 
+    // If we reached the end of the file without reaching any data line, abort.
     if( !data_reached ){
         cout << "The entire file has been read without reaching a data line." << endl;
         return 1;
@@ -151,31 +159,38 @@ int main() {
 //      File Data Read
 // ---------------------------------------------------------------------- >>>>>
 
+    // Total number of parameter within the data matrix 
+    // (For example, 2 by 2 S-parameters matrix has 4 individual S-parameters).
+    unsigned int mat_ent_cnt = port_cnt*port_cnt;
+
+    // File parsing control variables.
     unsigned int line_idx = 0;
     unsigned int data_idx = 0;
     unsigned int res_blk_size = 200;
-
+    unsigned int curr_vec_size = 0;
+    // Temporary data value to be used during translation from string to double.
     double tmp_val = 0;
 
     // The frequency vector.
     vector< double > f_vec;
     // The portion A data vector (A is typically magnitude or real part).
-    vector< vector<double> > val_A_vec;
-    // The portion B data vector (A is typically phase or imaginary part).
-    vector< vector<double> > val_B_vec;
+    vector< vector<double> > val_M_vec;
+    // The portion B data vector (B is typically phase or imaginary part).
+    vector< vector<double> > val_P_vec;
 
     f_vec.reserve( res_blk_size );
-    val_A_vec.reserve( res_blk_size );
-    val_B_vec.reserve( res_blk_size );
+    val_M_vec.reserve( res_blk_size );
+    val_P_vec.reserve( res_blk_size );
 
     // Initialize inner vectors and resize them to the desired size
-    for (size_t i = 0; i < res_blk_size; ++i) {
-        val_A_vec.emplace_back(port_cnt*port_cnt);
-        val_B_vec.emplace_back(port_cnt*port_cnt);
+    for (size_t i = 0; i < res_blk_size; i++) {
+        val_M_vec.emplace_back( mat_ent_cnt );
+        val_P_vec.emplace_back( mat_ent_cnt );
     }
+    // Update vector size.
+    curr_vec_size = val_M_vec.size();
 
     do{
-
 
         // Set the stream for the current line.
         istringstream iss( line );
@@ -188,25 +203,41 @@ int main() {
         f_vec.push_back( tmp_val );
 
 
-        for( unsigned int z = 0; z < port_cnt*port_cnt; z++ ){
+        for( unsigned int z = 0; z < mat_ent_cnt; z++ ){
             
-            // Read the next data and translate it to double.
+            // Read the next data mag.
             iss >> word;    tmp_val = std::stod( word );
-            val_A_vec.at( line_idx ).at( z ) = tmp_val;
+            val_M_vec.at( line_idx ).at( z ) = tmp_val;
+            // Read the next data phase.
             iss >> word;    tmp_val = std::stod( word );
-            val_B_vec.at( line_idx ).at( z ) = tmp_val;
-
-            int lol = 0;
+            val_P_vec.at( line_idx ).at( z ) = tmp_val;
 
         }
 
+        line_idx++;
+        if( line_idx >= curr_vec_size ){
+
+            f_vec.reserve( line_idx + res_blk_size );
+            val_M_vec.reserve( line_idx + res_blk_size );
+            val_P_vec.reserve( line_idx + res_blk_size );
+
+            for (size_t i = line_idx; i < line_idx + res_blk_size; i++) {
+                val_M_vec.emplace_back( mat_ent_cnt );
+                val_P_vec.emplace_back( mat_ent_cnt );
+            }
+
+            curr_vec_size += res_blk_size;
+
+        }
 
     }while( getline( inputFile, line ) );
         
     // Deallocate unused reserved memory from the vectors.
     f_vec.shrink_to_fit();
-    val_A_vec.shrink_to_fit();
-    val_B_vec.shrink_to_fit();
+    val_M_vec.resize( line_idx );
+    val_M_vec.shrink_to_fit();
+    val_P_vec.resize( line_idx );
+    val_P_vec.shrink_to_fit();
 
 // ---------------------------------------------------------------------- <<<<<
 
