@@ -25,7 +25,7 @@ string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
 
 /*
 Function to retrieve frequency data from files ending with the extension of format
-".sXp" where X is any positive integer.
+".sXp" where X is any positive integer representing number of I/O ports.
 */
 void read_sXp_file( const string& fullFileName );
 
