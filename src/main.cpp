@@ -41,8 +41,13 @@ int main() {
     string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
 
 
-    read_sXp_file( fullFileName );
+    // read_sXp_file( fullFileName );
 
+    Eigen::Matrix2d matA;
+    matA << 1, 2, 3, 4;
+    Eigen::Matrix2d matA_inv = matA.inverse();
+    std::cout << "Matrix A:\n" << matA << "\n";
+    std::cout << "Matrix A inverse:\n" << matA_inv << "\n";
 
     return 0; // Indicates successful completion of the program
 

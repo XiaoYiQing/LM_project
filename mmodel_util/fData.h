@@ -2,6 +2,9 @@
 #define FDATA_H
 
 
+#include <Eigen/Dense>
+
+
 class fData{
 
 
@@ -17,7 +20,7 @@ public:
 
 protected:
 
-    
+
 
 private:
 

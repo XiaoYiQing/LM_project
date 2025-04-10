@@ -25,7 +25,9 @@ FetchContent_Declare(
     eigen
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
     GIT_TAG 3.4.0
-)
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
 
 FetchContent_MakeAvailable(eigen)
 
@@ -69,6 +71,19 @@ target_include_directories(myapp PUBLIC
 )
 
 # ----------------------------------------------------------------- <<<<<
+
+# ----------------------------------------------------------------- >>>>>
+#   Macromodel Work Inclusion
+# ----------------------------------------------------------------- >>>>>
+
+add_subdirectory( mmodel_util )
+target_link_libraries( myapp PUBLIC mmodel_util )
+target_include_directories(myapp PUBLIC
+    "${PROJECT_SOURCE_DIR}/mmodel_util"
+)
+
+# ----------------------------------------------------------------- <<<<<
+
 
 # ======================================================================= <<<<<
 
