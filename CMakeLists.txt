@@ -16,6 +16,25 @@ add_executable( myapp src/main.cpp )
 
 
 # ======================================================================= >>>>>
+#   Eigen Library Inclusion
+# ======================================================================= >>>>>
+
+include(FetchContent)
+
+FetchContent_Declare(
+    eigen
+    GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+    GIT_TAG 3.4.0
+)
+
+FetchContent_MakeAvailable(eigen)
+
+target_link_libraries(myapp PUBLIC Eigen3::Eigen)
+
+# ======================================================================= <<<<<
+
+
+# ======================================================================= >>>>>
 #   Present Project Additional Resource Inclusion
 # ======================================================================= >>>>>
 
@@ -37,7 +56,6 @@ target_compile_definitions( myapp
 # ======================================================================= >>>>>
 #   Sub-Directories Inclusion
 # ======================================================================= >>>>>
-
 
 # ----------------------------------------------------------------- >>>>>
 #   Utility (Personal) Inclusion

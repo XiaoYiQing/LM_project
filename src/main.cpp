@@ -5,6 +5,7 @@
 #else
 #endif
 
+#include <Eigen/Dense>
 #include <iostream>
 #include <filesystem>
 #include <fstream>
