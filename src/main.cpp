@@ -23,7 +23,11 @@ using namespace std;
 string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
 
 
-
+/*
+Function to retrieve frequency data from files ending with the extension of format
+".sXp" where X is any positive integer.
+*/
+void read_sXp_file( const string& fullFileName );
 
 
 int main() {
@@ -32,16 +36,31 @@ int main() {
 
     cout << RES_PATH_XYQ_str << endl;
 
-    vector<int> tmp = randIntVectGen( 0, 5, 7 );
-
     // Define the full file name.
     string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+
+
+    read_sXp_file( fullFileName );
+
+
+    return 0; // Indicates successful completion of the program
+
+}
+
+
+
+void read_sXp_file( const string& fullFileName ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full Name Parsing
+// ---------------------------------------------------------------------- >>>>>
 
     std::filesystem::path fullFilePath(fullFileName);
     std::string fileDir = fullFilePath.parent_path().string();
     std::string fileStem = fullFilePath.stem().string();
     std::string fileExt = fullFilePath.extension().string();
-
+    
+// ---------------------------------------------------------------------- <<<<<
 
 // ---------------------------------------------------------------------- >>>>>
 //      Port Count Regex Determination
@@ -49,40 +68,40 @@ int main() {
     /*
     Regex for determining the positive integer value X in the pattern ".sXp".
     */
-    regex pattern(R"(\.s(\d+)p)");
-    // The match result variable.
-    smatch matches;
-    // The exact number of the match in string.
-    string xValue;
+   regex pattern(R"(\.s(\d+)p)");
+   // The match result variable.
+   smatch matches;
+   // The exact number of the match in string.
+   string xValue;
 
-    if ( regex_match(fileExt, matches, pattern) ) {
-        if (matches.size() > 1) { // Check if we have a match for the integer
-            xValue = matches[1]; // Get the captured group (X)
-            cout << "X: " << xValue << endl; // Output the value of X
-        }
-    } else {
-        cout << "No match found." << endl;
-        return err_ret_val;
-    }
+   if ( regex_match(fileExt, matches, pattern) ) {
+       if (matches.size() > 1) { // Check if we have a match for the integer
+           xValue = matches[1]; // Get the captured group (X)
+           cout << "X: " << xValue << endl; // Output the value of X
+       }
+   } else {
+       cout << "No match found." << endl;
+       return;
+   }
 
-    
-    int port_cnt_tmp = -1;
-    try {
-        port_cnt_tmp = std::stoi( xValue );
-        const int loool = std::stoi( xValue );
-        cout << "The integer is: " << port_cnt_tmp << std::endl;
-    } catch (const std::invalid_argument& e) {
-        cout << "Invalid input: The string does not contain a valid integer." << std::endl;
-        cout << e.what() << endl;
-        return err_ret_val;
-    } catch (const std::out_of_range& e) {
-        cout << "Invalid input: The integer is out of range." << std::endl;
-        cout << e.what() << endl;
-        return err_ret_val;
-    }
-    
-    // Create the constant version of the port count.
-    const unsigned int port_cnt = port_cnt_tmp;
+   
+   int port_cnt_tmp = -1;
+   try {
+       port_cnt_tmp = std::stoi( xValue );
+       const int loool = std::stoi( xValue );
+       cout << "The integer is: " << port_cnt_tmp << std::endl;
+   } catch (const std::invalid_argument& e) {
+       cout << "Invalid input: The string does not contain a valid integer." << std::endl;
+       cout << e.what() << endl;
+       return;
+   } catch (const std::out_of_range& e) {
+       cout << "Invalid input: The integer is out of range." << std::endl;
+       cout << e.what() << endl;
+       return;
+   }
+   
+   // Create the constant version of the port count.
+   const unsigned int port_cnt = port_cnt_tmp;
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -95,7 +114,7 @@ int main() {
     std::ifstream inputFile( fullFilePath );
     if( !inputFile ){
         cout << "Failed to read file." << endl;
-        return err_ret_val;
+        return;
     }else{
         cout << "File read successful." << endl;
     }
@@ -148,7 +167,7 @@ int main() {
     // If we reached the end of the file without reaching any data line, abort.
     if( !data_reached ){
         cout << "The entire file has been read without reaching a data line." << endl;
-        return 1;
+        return;
     }
 
 // ---------------------------------------------------------------------- <<<<<
@@ -241,7 +260,6 @@ int main() {
 
 // ---------------------------------------------------------------------- <<<<<
 
-
-    return 0; // Indicates successful completion of the program
+    return;
 
 }
