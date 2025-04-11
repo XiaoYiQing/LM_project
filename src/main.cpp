@@ -16,7 +16,7 @@
 
 
 #include "numUtils.h"
-
+#include "fData.h"
 
 using namespace std;
 
@@ -24,12 +24,9 @@ using namespace std;
 string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
 
 
-/*
-Function to retrieve frequency data from files ending with the extension of format
-".sXp" where X is any positive integer representing number of I/O ports.
-*/
-void read_sXp_file( const string& fullFileName );
 
+
+void eigen_test1( int testCase );
 
 int main() {
 
@@ -39,23 +36,10 @@ int main() {
 
     // Define the full file name.
     string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( fullFileName );
 
-
-    // read_sXp_file( fullFileName );
-
-    Eigen::Matrix2d matA;
-    matA << 1, 2, 3, 4;
-    Eigen::Matrix2d matA_inv = matA.inverse();
-    cout << "Matrix A:\n" << matA << endl;
-    cout << "Matrix A inverse:\n" << matA_inv << endl;
-
-
-    
-    Eigen::Vector2d vecA;
-    vecA << 1, 2;
-    cout << "Vector A:\n" << vecA << endl;
-    vecA << 1, 2;
-    cout << "Vector A:\n" << vecA << endl;
+    // int testCase = 3;
+    // eigen_test1( testCase );
 
 
     return 0; // Indicates successful completion of the program
@@ -63,218 +47,124 @@ int main() {
 }
 
 
+/*
+This is simply a function where I test random things to learn about how to use 
+the eigen library.
+*/
+void eigen_test1( int testCase ){
 
-void read_sXp_file( const string& fullFileName ){
 
-// ---------------------------------------------------------------------- >>>>>
-//      Full Name Parsing
-// ---------------------------------------------------------------------- >>>>>
-
-    std::filesystem::path fullFilePath(fullFileName);
-    std::string fileDir = fullFilePath.parent_path().string();
-    std::string fileStem = fullFilePath.stem().string();
-    std::string fileExt = fullFilePath.extension().string();
-    
-// ---------------------------------------------------------------------- <<<<<
+    int case_cnt = 0;
 
 // ---------------------------------------------------------------------- >>>>>
-//      Port Count Regex Determination
+//      Simple 2x2 Matrix Definition
 // ---------------------------------------------------------------------- >>>>>
-    /*
-    Regex for determining the positive integer value X in the pattern ".sXp".
-    */
-   regex pattern(R"(\.s(\d+)p)");
-   // The match result variable.
-   smatch matches;
-   // The exact number of the match in string.
-   string xValue;
-
-   if ( regex_match(fileExt, matches, pattern) ) {
-       if (matches.size() > 1) { // Check if we have a match for the integer
-           xValue = matches[1]; // Get the captured group (X)
-           cout << "X: " << xValue << endl; // Output the value of X
-       }
-   } else {
-       cout << "No match found." << endl;
-       return;
-   }
-
-   
-   int port_cnt_tmp = -1;
-   try {
-       port_cnt_tmp = std::stoi( xValue );
-       const int loool = std::stoi( xValue );
-       cout << "The integer is: " << port_cnt_tmp << std::endl;
-   } catch (const std::invalid_argument& e) {
-       cout << "Invalid input: The string does not contain a valid integer." << std::endl;
-       cout << e.what() << endl;
-       return;
-   } catch (const std::out_of_range& e) {
-       cout << "Invalid input: The integer is out of range." << std::endl;
-       cout << e.what() << endl;
-       return;
-   }
-   
-   // Create the constant version of the port count.
-   const unsigned int port_cnt = port_cnt_tmp;
-
-// ---------------------------------------------------------------------- <<<<<
-
-
-// ---------------------------------------------------------------------- >>>>>
-//      File Parameters Read
-// ---------------------------------------------------------------------- >>>>>
-
-    // Open the input file stream.
-    std::ifstream inputFile( fullFilePath );
-    if( !inputFile ){
-        cout << "Failed to read file." << endl;
-        return;
-    }else{
-        cout << "File read successful." << endl;
+    if( case_cnt == testCase ){       
+        Eigen::Matrix2d matA;
+        matA << 1, 2, 3, 4;
+        Eigen::Matrix2d matA_inv = matA.inverse();
+        cout << "Matrix A:\n" << matA << endl;
+        cout << "Matrix A inverse:\n" << matA_inv << endl;
     }
 
+    case_cnt++;
+// ---------------------------------------------------------------------- <<<<<
 
-    // If the first character of a line is == comm_mark, the line is a comment.
-    string comm_mark = "!";
-    // If the first character of a line is == opt_line_mark, the line holds the various
-    // options of the data format.
-    string opt_line_mark = "#";
-    // The variables holding the line and word currently read, respectively.
-    string line, word;
 
-    // Define the data options' default values.
-    vector<string> options = { "GHZ", "S", "MA", "R", "50" };
+// ---------------------------------------------------------------------- >>>>>
+//      How to Increase Vector Size
+// ---------------------------------------------------------------------- >>>>>
 
-    // Boolean flag for indicating whether the line stream has reached the data lines.
-    bool data_reached = false;
+    if( case_cnt == testCase ){
+        // How to add entries to a vector.
+        Eigen::VectorXd vecA(2);
+        vecA << 1, 2;
+        cout << "Vector A:\n" << vecA << endl;
+        // Resize the vector to the new size
+        vecA.conservativeResize(5);
+        vecA(2) = 3;    vecA(3) = 4;    vecA(4) = 55;
+        cout << "Vector A after size increase:\n" << vecA << endl;
+    }
 
-    while( !data_reached && getline( inputFile, line ) ){
+    case_cnt++;
+// ---------------------------------------------------------------------- <<<<<
 
-        // Set the stream for the current line.
-        istringstream iss(line);
-        // Read the first word.
-        iss >> word;
 
-        // Check for comment line mark.
-        if( word == comm_mark ){
-            cout << "This is a comment!" << endl;
+// ---------------------------------------------------------------------- >>>>>
+//      How to Increase 2D Matrix Size
+// ---------------------------------------------------------------------- >>>>>
 
-        // Check for option line mark.
-        }else if( word == opt_line_mark ){
-            cout << "This is an option!" << endl;
-            int opt_idx = 0;
-            while( iss >> word ){
-                options.at(opt_idx) = word;
-                opt_idx++;
+    if( case_cnt == testCase ){
+        // A 2D matrix of variable size.
+        int row_cnt = 4; // Rows
+        int col_cnt = 5; // Columns
+        Eigen::MatrixXd matX( row_cnt, col_cnt );
+        for( int i = 0; i < row_cnt; i++ ){
+            for( int j = 0; j < col_cnt; j++ ){
+                matX( i, j ) = i+j;
             }
-            cout << endl;
-
-        // Check for end of consecutive series of comment and option lines.
-        }else{
-
-            data_reached = true;
-
         }
+        cout << "Matrix X:\n" << matX << endl;
 
-    }
-
-    // If we reached the end of the file without reaching any data line, abort.
-    if( !data_reached ){
-        cout << "The entire file has been read without reaching a data line." << endl;
-        return;
-    }
-
-// ---------------------------------------------------------------------- <<<<<
-
-    
-
-// ---------------------------------------------------------------------- >>>>>
-//      File Data Read
-// ---------------------------------------------------------------------- >>>>>
-
-    // Total number of parameter within the data matrix 
-    // (For example, 2 by 2 S-parameters matrix has 4 individual S-parameters).
-    unsigned int mat_ent_cnt = port_cnt*port_cnt;
-
-    // File parsing control variables.
-    unsigned int line_idx = 0;
-    unsigned int data_idx = 0;
-    unsigned int res_blk_size = 200;
-    unsigned int curr_vec_size = 0;
-    // Temporary data value to be used during translation from string to double.
-    double tmp_val = 0;
-
-    // The frequency vector.
-    vector< double > f_vec;
-    // The portion A data vector (A is typically magnitude or real part).
-    vector< vector<double> > val_M_vec;
-    // The portion B data vector (B is typically phase or imaginary part).
-    vector< vector<double> > val_P_vec;
-
-    f_vec.reserve( res_blk_size );
-    val_M_vec.reserve( res_blk_size );
-    val_P_vec.reserve( res_blk_size );
-
-    // Initialize inner vectors and resize them to the desired size
-    for (size_t i = 0; i < res_blk_size; i++) {
-        val_M_vec.emplace_back( mat_ent_cnt );
-        val_P_vec.emplace_back( mat_ent_cnt );
-    }
-    // Update vector size.
-    curr_vec_size = val_M_vec.size();
-
-    do{
-
-        // Set the stream for the current line.
-        istringstream iss( line );
-
-        // Read the frequency word.
-        iss >> word;
-        // Translate the word into a double value freq.
-        tmp_val = std::stod( word );
-        // Save the frequency value.
-        f_vec.push_back( tmp_val );
-
-
-        for( unsigned int z = 0; z < mat_ent_cnt; z++ ){
-            
-            // Read the next data mag.
-            iss >> word;    tmp_val = std::stod( word );
-            val_M_vec.at( line_idx ).at( z ) = tmp_val;
-            // Read the next data phase.
-            iss >> word;    tmp_val = std::stod( word );
-            val_P_vec.at( line_idx ).at( z ) = tmp_val;
-
-        }
-
-        line_idx++;
-        if( line_idx >= curr_vec_size ){
-
-            f_vec.reserve( line_idx + res_blk_size );
-            val_M_vec.reserve( line_idx + res_blk_size );
-            val_P_vec.reserve( line_idx + res_blk_size );
-
-            for (size_t i = line_idx; i < line_idx + res_blk_size; i++) {
-                val_M_vec.emplace_back( mat_ent_cnt );
-                val_P_vec.emplace_back( mat_ent_cnt );
+        // Increase the size to 5x7
+        int row_cnt2 = 5; // Rows
+        int col_cnt2 = 7; // Columns
+        // Increase size. NOTE: if specified size is less than original, you simply
+        // lose the data outside the new size range.
+        matX.conservativeResize(5, 7);
+        for( int i = 0; i < row_cnt2; i++ ){
+            for( int j = col_cnt; j < col_cnt2; j++ ){
+                matX( i, j ) = i+j;
             }
-
-            curr_vec_size += res_blk_size;
-
         }
+        for( int i = row_cnt; i < row_cnt2; i++ ){
+            for( int j = 0; j < col_cnt; j++ ){
+                matX( i, j ) = i+j;
+            }
+        }
+        cout << "Matrix X:\n" << matX << endl;
+    }
 
-    }while( getline( inputFile, line ) );
-        
-    // Deallocate unused reserved memory from the vectors.
-    f_vec.shrink_to_fit();
-    val_M_vec.resize( line_idx );
-    val_M_vec.shrink_to_fit();
-    val_P_vec.resize( line_idx );
-    val_P_vec.shrink_to_fit();
-
+    case_cnt++;
 // ---------------------------------------------------------------------- <<<<<
 
-    return;
+
+// ---------------------------------------------------------------------- >>>>>
+//      How to Create a 3D Matrix
+// ---------------------------------------------------------------------- >>>>>
+    
+    if( case_cnt == testCase ){
+        // Define the number of 2D matrix in our 3D matrix.
+        int mat_cnt = 3;
+        int row_cnt = 4;
+        int col_cnt = 5;
+
+        /*
+        There is no direct 3D matrix representation in Eigen.
+        You have to create a collection of 2D matrices.
+        */
+        vector<Eigen::MatrixXd> threeDMatrix( mat_cnt, Eigen::MatrixXd( row_cnt, col_cnt ) );
+
+        // Initialize the 3D matrix with some values
+        for (int z = 0; z < mat_cnt; z++) {
+            for (int i = 0; i < row_cnt; i++) {
+                for (int j = 0; j < col_cnt; j++) {
+                    threeDMatrix[z](i, j) = z * 10 + i + j; // Example initialization
+                }
+            }
+        }
+
+        // Output the 3D matrix values
+        for (int k = 0; k < mat_cnt; k++) {
+            cout << "Slice " << k << ":\n" << threeDMatrix[k] << "\n";
+        }
+
+        int lol = 0;
+    }
+
+    case_cnt++;
+// ---------------------------------------------------------------------- <<<<<
 
 }
+
+
