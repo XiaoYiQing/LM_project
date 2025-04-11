@@ -9,3 +9,8 @@ set( mmodel_util_SOURCES
 add_library(mmodel_util ${mmodel_util_SOURCES})
 
 target_link_libraries( mmodel_util PRIVATE Eigen3::Eigen )
+
+target_link_libraries( mmodel_util PRIVATE utils_XYQ )
+target_include_directories(mmodel_util PUBLIC
+    "${PROJECT_SOURCE_DIR}/utils_XYQ"
+)

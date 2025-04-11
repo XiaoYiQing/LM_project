@@ -34,7 +34,7 @@ public:
     In the order defined:
         pico, nano, micro, milli, centi, deci, deca, hecto, kilo, mega, giga, tera
     */
-    enum class METRIC_PREFIX{ p, n, mu, m, c, d, da, h, k, M, G, T };
+    enum class METRIC_PREFIX{ NONE, p, n, mu, m, c, d, da, h, k, M, G, T };
 
     // The number of enum entries in the enum "METRIC_PREFIX" (Uses magic enum).
     const static int METRIC_PREFIX_Count = (int) magic_enum::enum_count<METRIC_PREFIX>();
@@ -43,6 +43,8 @@ public:
     static string get_METRIC_PREFIX_Str( METRIC_PREFIX tar_METRIC_PREFIX );
     // Obtain the enum matching the enum integer index.
     static METRIC_PREFIX get_METRIC_PREFIX_AtIdx( int idx );
+    // Obtain the prefix using the equivalent string symbol.
+    static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );
 
 // ====================================================================== <<<<<
 
@@ -55,7 +57,7 @@ public:
     Enum representing the frequency data types.
     S stands for scattering paramreter, Y for admittance parameter, etc.
     */
-    enum class FDATA_TYPE{ S, Y, Z, H, G };
+    enum class FDATA_TYPE{ NONE, S, Y, Z, H, G };
 
     // The number of enum entries in the enum "FDATA_TYPE" (Uses magic enum).
     const static int FDATA_TYPE_Count = (int) magic_enum::enum_count<FDATA_TYPE>();
@@ -79,7 +81,7 @@ public:
         MA: Linear Magnitude/Degree Angle (polar form)
         RI: Real Part/Imaginary Part (rectangular form)
     */
-    enum class FDATA_FORMAT{ DB, MA, RI };
+    enum class FDATA_FORMAT{ NONE, DB, MA, RI };
 
     // The number of enum entries in the enum "FDATA_FORMAT" (Uses magic enum).
     const static int FDATA_FORMAT_Count = (int) magic_enum::enum_count<FDATA_FORMAT>();

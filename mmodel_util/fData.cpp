@@ -23,6 +23,15 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX_AtIdx( int idx ){
     }
 }
 
+fData::METRIC_PREFIX fData::get_METRIC_PREFIX( string strSymbol ){
+    auto color = magic_enum::enum_cast<METRIC_PREFIX>(strSymbol);
+    if( color.has_value() ){
+        return color.value();
+    }else{
+        return METRIC_PREFIX::NONE;
+    }
+}
+
 // ====================================================================== <<<<<
 
 
