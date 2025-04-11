@@ -26,6 +26,45 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX_AtIdx( int idx ){
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Class Enum "FDATA_TYPE" Help Functions
+// ====================================================================== >>>>>
+
+string fData::get_FDATA_TYPE_Str( fData::FDATA_TYPE tar_FDATA_TYPE ){
+    return string( magic_enum::enum_name( tar_FDATA_TYPE ) );
+}
+
+fData::FDATA_TYPE fData::get_FDATA_TYPE_AtIdx( int idx ){
+    if( idx >= 0 && idx < fData::FDATA_TYPE_Count ){
+        return static_cast<fData::FDATA_TYPE>(idx);
+    }else{
+        cout << "Invalid int index for accessing enum \"FDATA_TYPE\"." << endl;
+        return static_cast<fData::FDATA_TYPE>(-1);
+    }
+}
+
+// ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
+//      Class Enum "FDATA_FORMAT" Help Functions
+// ====================================================================== >>>>>
+
+string fData::get_FDATA_FORMAT_Str( fData::FDATA_FORMAT tar_FDATA_FORMAT ){
+    return string( magic_enum::enum_name( tar_FDATA_FORMAT ) );
+}
+
+fData::FDATA_FORMAT fData::get_FDATA_FORMAT_AtIdx( int idx ){
+    if( idx >= 0 && idx < fData::FDATA_FORMAT_Count ){
+        return static_cast<fData::FDATA_FORMAT>(idx);
+    }else{
+        cout << "Invalid int index for accessing enum \"FDATA_FORMAT\"." << endl;
+        return static_cast<fData::FDATA_FORMAT>(-1);
+    }
+}
+
+// ====================================================================== <<<<<
+
 
 fData::fData(){
 
