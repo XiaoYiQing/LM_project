@@ -5,16 +5,40 @@
 using namespace std;
 
 
+
+// ====================================================================== >>>>>
+//      Class Enum "CHK_PIECE" Help Functions
+// ====================================================================== >>>>>
+
+string fData::get_METRIC_PREFIX_Str( fData::METRIC_PREFIX tar_METRIC_PREFIX ){
+    return string( magic_enum::enum_name( tar_METRIC_PREFIX ) );
+}
+
+fData::METRIC_PREFIX fData::get_METRIC_PREFIX_AtIdx( int idx ){
+    if( idx >= 0 && idx < fData::METRIC_PREFIX_Count ){
+        return static_cast<fData::METRIC_PREFIX>(idx);
+    }else{
+        cout << "Invalid int index for accessing enum \"METRIC_PREFIX\"." << endl;
+        return static_cast<fData::METRIC_PREFIX>(-1);
+    }
+}
+
+// ====================================================================== <<<<<
+
+
+
 fData::fData(){
 
-    
+    // Native type variables initialization.
+    IOcnt[0] = 0;
+    IOcnt[1] = 0;
 
 }
 
 
 
 
-void fData::read_sXp_file( const string& fullFileName ){
+void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
     // ---------------------------------------------------------------------- >>>>>
     //      Full Name Parsing
@@ -30,44 +54,46 @@ void fData::read_sXp_file( const string& fullFileName ){
     // ---------------------------------------------------------------------- >>>>>
     //      Port Count Regex Determination
     // ---------------------------------------------------------------------- >>>>>
+
         /*
         Regex for determining the positive integer value X in the pattern ".sXp".
         */
-       regex pattern(R"(\.s(\d+)p)");
-       // The match result variable.
-       smatch matches;
-       // The exact number of the match in string.
-       string xValue;
-    
-       if ( regex_match(fileExt, matches, pattern) ) {
-           if (matches.size() > 1) { // Check if we have a match for the integer
-               xValue = matches[1]; // Get the captured group (X)
-               cout << "X: " << xValue << endl; // Output the value of X
-           }
-       } else {
-           cout << "No match found." << endl;
-           return;
-       }
-    
-       
-       int port_cnt_tmp = -1;
-       try {
-           port_cnt_tmp = std::stoi( xValue );
-           const int loool = std::stoi( xValue );
-           cout << "The integer is: " << port_cnt_tmp << std::endl;
-       } catch (const std::invalid_argument& e) {
-           cout << "Invalid input: The string does not contain a valid integer." << std::endl;
-           cout << e.what() << endl;
-           return;
-       } catch (const std::out_of_range& e) {
-           cout << "Invalid input: The integer is out of range." << std::endl;
-           cout << e.what() << endl;
-           return;
-       }
-       
-       // Create the constant version of the port count.
-       const unsigned int port_cnt = port_cnt_tmp;
-    
+        regex pattern(R"(\.s(\d+)p)");
+        // The match result variable.
+        smatch matches;
+        // The exact number of the match in string.
+        string xValue;
+        
+        if ( regex_match( fileExt, matches, pattern ) ) {
+            if ( matches.size() > 1 ) { // Check if we have a match for the integer
+                xValue = matches[1]; // Get the captured group (X)
+                cout << "X: " << xValue << endl; // Output the value of X
+            }
+        } else {
+            cout << "No match found." << endl;
+            return;
+        }
+        
+        
+        int port_cnt_tmp = -1;
+        try {
+            port_cnt_tmp = std::stoi( xValue );
+            const int loool = std::stoi( xValue );
+            cout << "The integer is: " << port_cnt_tmp << std::endl;
+        } catch (const std::invalid_argument& e) {
+            cout << "Invalid input: The string does not contain a valid integer." << std::endl;
+            cout << e.what() << endl;
+            return;
+        } catch (const std::out_of_range& e) {
+            cout << "Invalid input: The integer is out of range." << std::endl;
+            cout << e.what() << endl;
+            return;
+        }
+        
+        // UPdate the port count.
+        tarFData.IOcnt[0] = port_cnt_tmp;
+        tarFData.IOcnt[1] = port_cnt_tmp;
+
     // ---------------------------------------------------------------------- <<<<<
     
     
@@ -95,7 +121,7 @@ void fData::read_sXp_file( const string& fullFileName ){
     
         // Define the data options' default values.
         vector<string> options = { "GHZ", "S", "MA", "R", "50" };
-    
+        
         // Boolean flag for indicating whether the line stream has reached the data lines.
         bool data_reached = false;
     
@@ -145,7 +171,7 @@ void fData::read_sXp_file( const string& fullFileName ){
     
         // Total number of parameter within the data matrix 
         // (For example, 2 by 2 S-parameters matrix has 4 individual S-parameters).
-        unsigned int mat_ent_cnt = port_cnt*port_cnt;
+        unsigned int mat_ent_cnt = tarFData.IOcnt[0]*tarFData.IOcnt[0];
     
         // File parsing control variables.
         unsigned int line_idx = 0;
