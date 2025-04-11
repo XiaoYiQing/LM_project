@@ -66,6 +66,8 @@ public:
     static string get_FDATA_TYPE_Str( FDATA_TYPE tar_FDATA_TYPE );
     // Obtain the enum matching the enum integer index.
     static FDATA_TYPE get_FDATA_TYPE_AtIdx( int idx );
+    // Obtain the prefix using the equivalent string symbol.
+    static FDATA_TYPE get_FDATA_TYPE( string strSymbol );
 
 // ====================================================================== <<<<<
 
@@ -90,6 +92,8 @@ public:
     static string get_FDATA_FORMAT_Str( FDATA_FORMAT tar_FDATA_FORMAT );
     // Obtain the enum matching the enum integer index.
     static FDATA_FORMAT get_FDATA_FORMAT_AtIdx( int idx );
+    // Obtain the prefix using the equivalent string symbol.
+    static FDATA_FORMAT get_FDATA_FORMAT( string strSymbol );
 
 // ====================================================================== <<<<<
 

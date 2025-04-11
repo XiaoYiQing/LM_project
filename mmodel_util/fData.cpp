@@ -24,9 +24,9 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX_AtIdx( int idx ){
 }
 
 fData::METRIC_PREFIX fData::get_METRIC_PREFIX( string strSymbol ){
-    auto color = magic_enum::enum_cast<METRIC_PREFIX>(strSymbol);
-    if( color.has_value() ){
-        return color.value();
+    auto tmp_enum = magic_enum::enum_cast<METRIC_PREFIX>(strSymbol);
+    if( tmp_enum.has_value() ){
+        return tmp_enum.value();
     }else{
         return METRIC_PREFIX::NONE;
     }
@@ -52,6 +52,15 @@ fData::FDATA_TYPE fData::get_FDATA_TYPE_AtIdx( int idx ){
     }
 }
 
+fData::FDATA_TYPE fData::get_FDATA_TYPE( string strSymbol ){
+    auto tmp_enum = magic_enum::enum_cast<FDATA_TYPE>(strSymbol);
+    if( tmp_enum.has_value() ){
+        return tmp_enum.value();
+    }else{
+        return FDATA_TYPE::NONE;
+    }
+}
+
 // ====================================================================== <<<<<
 
 
@@ -69,6 +78,15 @@ fData::FDATA_FORMAT fData::get_FDATA_FORMAT_AtIdx( int idx ){
     }else{
         cout << "Invalid int index for accessing enum \"FDATA_FORMAT\"." << endl;
         return static_cast<fData::FDATA_FORMAT>(-1);
+    }
+}
+
+fData::FDATA_FORMAT fData::get_FDATA_FORMAT( string strSymbol ){
+    auto tmp_enum = magic_enum::enum_cast<FDATA_FORMAT>(strSymbol);
+    if( tmp_enum.has_value() ){
+        return tmp_enum.value();
+    }else{
+        return FDATA_FORMAT::NONE;
     }
 }
 
