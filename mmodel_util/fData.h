@@ -33,7 +33,15 @@ public:
 
 protected:
 
+    /*
+    The vector of frequencies in hertz (unit saved separately).
+    */
+    Eigen::VectorXd fr_vec;
 
+    /*
+    The vector of frequency data matrices.
+    */
+    vector< Eigen::MatrixXd > X_vec;
 
 private:
 
