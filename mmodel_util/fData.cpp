@@ -100,6 +100,8 @@ fData::fData(){
     IOcnt[1] = 0;
 
     f_pref = METRIC_PREFIX::NONE;
+    fD_type = FDATA_TYPE::NONE;
+    fD_format = FDATA_FORMAT::NONE;
 
 }
 
@@ -240,6 +242,9 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         tarFData.f_pref = f_pref;
         
         
+        tarFData.fD_type = fData::get_FDATA_TYPE( options.at(1) );
+
+        tarFData.fD_format = fData::get_FDATA_FORMAT( options.at(2) );
 
     
     // ---------------------------------------------------------------------- <<<<<

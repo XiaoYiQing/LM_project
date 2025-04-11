@@ -113,6 +113,8 @@ protected:
     int IOcnt[2];
 
     fData::METRIC_PREFIX f_pref;
+    fData::FDATA_TYPE fD_type;
+    fData::FDATA_FORMAT fD_format;
 
     /*
     The vector of frequencies in hertz (unit saved separately).
