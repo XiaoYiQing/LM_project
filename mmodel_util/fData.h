@@ -34,7 +34,7 @@ public:
     In the order defined:
         pico, nano, micro, milli, centi, deci, deca, hecto, kilo, mega, giga, tera
     */
-    enum class METRIC_PREFIX{ NONE, p, n, mu, m, c, d, da, h, k, M, G, T };
+    enum class METRIC_PREFIX{ NONE, p, n, μ, m, c, d, da, h, k, M, G, T };
 
     // The number of enum entries in the enum "METRIC_PREFIX" (Uses magic enum).
     const static int METRIC_PREFIX_Count = (int) magic_enum::enum_count<METRIC_PREFIX>();
@@ -111,6 +111,8 @@ protected:
 
     // Number of inputs and outputs, respectively.
     int IOcnt[2];
+
+    fData::METRIC_PREFIX f_pref;
 
     /*
     The vector of frequencies in hertz (unit saved separately).

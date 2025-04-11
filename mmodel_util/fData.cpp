@@ -99,6 +99,8 @@ fData::fData(){
     IOcnt[0] = 0;
     IOcnt[1] = 0;
 
+    f_pref = METRIC_PREFIX::NONE;
+
 }
 
 
@@ -226,6 +228,19 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             cout << "The entire file has been read without reaching a data line." << endl;
             return;
         }
+
+        options;
+
+        fData::METRIC_PREFIX f_pref = METRIC_PREFIX::NONE;
+        if( options.at(0).size() == 3 ){
+            char keyChar = options.at(0)[0];
+            fData::METRIC_PREFIX f_pref =  fData::get_METRIC_PREFIX( string( 1, keyChar ) );
+            cout << fData::get_METRIC_PREFIX_Str( f_pref ) << endl;
+        }
+        tarFData.f_pref = f_pref;
+        
+        
+
     
     // ---------------------------------------------------------------------- <<<<<
     
