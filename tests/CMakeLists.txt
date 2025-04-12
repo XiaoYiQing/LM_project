@@ -1,0 +1,18 @@
+
+# Create a list of variables, where the entries are the c++ and header files within the
+# current directory.
+set( tests_SOURCES 
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_Eigen.h
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_Eigen.cpp
+)
+
+add_library(tests ${tests_SOURCES})
+
+target_link_libraries( tests PRIVATE Eigen3::Eigen )
+
+target_link_libraries( tests PRIVATE mmodel_util )
+
+target_link_libraries( tests PRIVATE utils_XYQ )
+target_include_directories(tests PUBLIC
+    "${PROJECT_SOURCE_DIR}/utils_XYQ"
+)
