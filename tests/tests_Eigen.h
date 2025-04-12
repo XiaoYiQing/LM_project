@@ -3,8 +3,18 @@
 
 
 
+#include <Eigen/Dense>
+#include <iostream>
 
 
+using namespace std;
+
+
+namespace tests{
+
+    void eigen_test1( int testCase );
+
+}
 
 
 
