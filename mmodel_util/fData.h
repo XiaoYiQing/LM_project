@@ -112,9 +112,14 @@ protected:
     // Number of inputs and outputs, respectively.
     int IOcnt[2];
 
+    // The metric prefix for the frequency vector.
     fData::METRIC_PREFIX f_pref;
+    // The frequency data type, such as S-parameter, Y-parameter, etc.
     fData::FDATA_TYPE fD_type;
+    // The frequency data format (linear mag/phase, log mag/phase, real/img).
     fData::FDATA_FORMAT fD_format;
+    // The system impedence at which the measurements were taken.
+    double systImp;
 
     /*
     The vector of frequencies in hertz (unit saved separately).

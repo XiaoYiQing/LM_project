@@ -102,6 +102,7 @@ fData::fData(){
     f_pref = METRIC_PREFIX::NONE;
     fD_type = FDATA_TYPE::NONE;
     fD_format = FDATA_FORMAT::NONE;
+    systImp = 50;
 
 }
 
@@ -231,8 +232,8 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             return;
         }
 
-        options;
 
+        // Obtain the frequency metric prefix.
         fData::METRIC_PREFIX f_pref = METRIC_PREFIX::NONE;
         if( options.at(0).size() == 3 ){
             char keyChar = options.at(0)[0];
@@ -240,13 +241,15 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             cout << fData::get_METRIC_PREFIX_Str( f_pref ) << endl;
         }
         tarFData.f_pref = f_pref;
-        
-        
+        // Obtain the f data type.
         tarFData.fD_type = fData::get_FDATA_TYPE( options.at(1) );
-
+        // Obtain the f data format.
         tarFData.fD_format = fData::get_FDATA_FORMAT( options.at(2) );
+        // Obtain the input impedance of the measurement.
+        if( options.at(3) == "R" ){
+            tarFData.systImp = std::stod( options.at(4) );
+        }
 
-    
     // ---------------------------------------------------------------------- <<<<<
     
         
@@ -269,22 +272,14 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     
         // The frequency vector.
         vector< double > f_vec;
-        // The portion A data vector (A is typically magnitude or real part).
-        vector< vector<double> > val_M_vec;
-        // The portion B data vector (B is typically phase or imaginary part).
-        vector< vector<double> > val_P_vec;
+        // Initialize the vector of matrices.
+        tarFData.Xr_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
+        tarFData.Xi_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
     
         f_vec.reserve( res_blk_size );
-        val_M_vec.reserve( res_blk_size );
-        val_P_vec.reserve( res_blk_size );
     
-        // Initialize inner vectors and resize them to the desired size
-        for (size_t i = 0; i < res_blk_size; i++) {
-            val_M_vec.emplace_back( mat_ent_cnt );
-            val_P_vec.emplace_back( mat_ent_cnt );
-        }
         // Update vector size.
-        curr_vec_size = val_M_vec.size();
+        curr_vec_size = tarFData.Xr_vec.size();
     
         do{
     
@@ -298,28 +293,28 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             // Save the frequency value.
             f_vec.push_back( tmp_val );
     
-    
-            for( unsigned int z = 0; z < mat_ent_cnt; z++ ){
-                
-                // Read the next data mag.
-                iss >> word;    tmp_val = std::stod( word );
-                val_M_vec.at( line_idx ).at( z ) = tmp_val;
-                // Read the next data phase.
-                iss >> word;    tmp_val = std::stod( word );
-                val_P_vec.at( line_idx ).at( z ) = tmp_val;
-    
+            
+            for( int i = 0; i < tarFData.IOcnt[0]; i++ ){
+                for( int j = 0; j < tarFData.IOcnt[1]; j++ ){
+                    // Read the next data mag.
+                    iss >> word;    tmp_val = std::stod( word );
+                    tarFData.Xr_vec.at( line_idx )(i,j) = tmp_val;
+                    // Read the next data phase.
+                    iss >> word;    tmp_val = std::stod( word );
+                    tarFData.Xi_vec.at( line_idx )(i,j) = tmp_val;
+                }
             }
     
             line_idx++;
             if( line_idx >= curr_vec_size ){
     
                 f_vec.reserve( line_idx + res_blk_size );
-                val_M_vec.reserve( line_idx + res_blk_size );
-                val_P_vec.reserve( line_idx + res_blk_size );
-    
+
+                tarFData.Xr_vec.reserve( line_idx + res_blk_size );
+                tarFData.Xi_vec.reserve( line_idx + res_blk_size );
                 for (size_t i = line_idx; i < line_idx + res_blk_size; i++) {
-                    val_M_vec.emplace_back( mat_ent_cnt );
-                    val_P_vec.emplace_back( mat_ent_cnt );
+                    tarFData.Xr_vec.emplace_back( Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
+                    tarFData.Xi_vec.emplace_back( Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
                 }
     
                 curr_vec_size += res_blk_size;
@@ -330,10 +325,10 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             
         // Deallocate unused reserved memory from the vectors.
         f_vec.shrink_to_fit();
-        val_M_vec.resize( line_idx );
-        val_M_vec.shrink_to_fit();
-        val_P_vec.resize( line_idx );
-        val_P_vec.shrink_to_fit();
+        tarFData.Xr_vec.resize( line_idx );
+        tarFData.Xr_vec.shrink_to_fit();
+        tarFData.Xi_vec.resize( line_idx );
+        tarFData.Xi_vec.shrink_to_fit();
     
     // ---------------------------------------------------------------------- <<<<<
     
