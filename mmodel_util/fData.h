@@ -32,9 +32,9 @@ public:
     /*
     Enum representing the metric system prefix symbols.
     In the order defined:
-        pico, nano, micro, milli, centi, deci, deca, hecto, kilo, mega, giga, tera
+        pico, nano, micro, micro (alt), milli, centi, deci, deca, hecto, kilo, mega, giga, tera
     */
-    enum class METRIC_PREFIX{ NONE, p, n, μ, m, c, d, da, h, k, M, G, T };
+    enum class METRIC_PREFIX{ NONE, p, n, μ, mu, m, c, d, da, h, k, M, G, T };
 
     // The number of enum entries in the enum "METRIC_PREFIX" (Uses magic enum).
     const static int METRIC_PREFIX_Count = (int) magic_enum::enum_count<METRIC_PREFIX>();
@@ -45,6 +45,8 @@ public:
     static METRIC_PREFIX get_METRIC_PREFIX_AtIdx( int idx );
     // Obtain the prefix using the equivalent string symbol.
     static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );
+    // Obtain the numerical value of the metric prefix.
+    static double get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX );
 
 // ====================================================================== <<<<<
 
@@ -106,6 +108,28 @@ public:
 
 // ====================================================================== <<<<<
 
+
+// ====================================================================== >>>>>
+//      Access Functions
+// ====================================================================== >>>>>
+
+    // Obtain the number of outputs (Number of rows in a data matrix).
+    int get_out_cnt() const;
+    // Obtain the number of inputs (Number of columns in a data matrix).
+    int get_in_cnt() const;
+    // Obtain the number of frequency points.
+    int get_f_cnt() const;
+    // Obtain the string representation of the frequency scale or metric prefix.
+    string get_f_scale_str() const;
+    // Obtain the numerical value of the frequency scale or metric prefix.
+    double get_f_scale_num() const;
+    // Obtain the real part data matrix at target frequency index.
+    Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
+    // Obtain the imaginary part data matrix at target frequency index.
+    Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
+
+// ====================================================================== <<<<<
+
 protected:
 
 
@@ -124,7 +148,7 @@ protected:
     /*
     The vector of frequencies in hertz (unit saved separately).
     */
-    Eigen::VectorXd fr_vec;
+    Eigen::VectorXd f_vec;
 
     // The vector of frequency data matrices real part.
     vector< Eigen::MatrixXd > Xr_vec;

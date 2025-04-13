@@ -32,6 +32,47 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX( string strSymbol ){
     }
 }
 
+double fData::get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX ){
+
+    // p, n, μ, m, c, d, da, h, k, M, G, T
+    double retVal = 1;
+    switch( tar_METRIC_PREFIX ){
+        case METRIC_PREFIX::p:
+            retVal = 1e-12;  break;
+        case METRIC_PREFIX::n:
+            retVal = 1e-9;   break;
+        case METRIC_PREFIX::μ:
+            retVal = 1e-6;   break;
+        case METRIC_PREFIX::mu:
+            retVal = 1e-6;   break;
+        case METRIC_PREFIX::m:
+            retVal = 1e-3;   break;
+        case METRIC_PREFIX::c:
+            retVal = 1e-2;   break;
+        case METRIC_PREFIX::d:
+            retVal = 1e-1;   break;
+        case METRIC_PREFIX::da:
+            retVal = 1e1;   break;
+        case METRIC_PREFIX::h:
+            retVal = 1e2;   break;
+        case METRIC_PREFIX::k:
+            retVal = 1e3;   break;
+        case METRIC_PREFIX::M:
+            retVal = 1e6;   break;
+        case METRIC_PREFIX::G:
+            retVal = 1e9;   break;
+        case METRIC_PREFIX::T:
+            retVal = 1e12;   break;
+        case METRIC_PREFIX::NONE:
+            retVal = 1e0;   break;
+        default:
+            retVal = 1e0;   break;
+    };
+
+    return retVal;
+
+}
+
 // ====================================================================== <<<<<
 
 
@@ -93,6 +134,10 @@ fData::FDATA_FORMAT fData::get_FDATA_FORMAT( string strSymbol ){
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Constructors
+// ====================================================================== >>>>>
+
 fData::fData(){
 
     // Native type variables initialization.
@@ -106,6 +151,37 @@ fData::fData(){
 
 }
 
+// ====================================================================== <<<<<
+
+
+
+// ====================================================================== >>>>>
+//      Access Functions
+// ====================================================================== >>>>>
+
+int fData::get_out_cnt() const
+    { return this->IOcnt[0]; }
+int fData::get_in_cnt() const
+    { return this->IOcnt[1]; }
+
+int fData::get_f_cnt() const
+    { return this->f_vec.size(); }
+
+string fData::get_f_scale_str() const
+    { return get_METRIC_PREFIX_Str( this->f_pref ); }
+
+double fData::get_f_scale_num() const{
+    return get_METRIC_PREFIX_val( this->f_pref );
+}
+
+Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
+    return this->Xr_vec.at( f_idx );
+}
+Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
+    return this->Xi_vec.at( f_idx );
+}
+
+// ====================================================================== <<<<<
 
 
 
@@ -275,7 +351,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         // Initialize the vector of matrices.
         tarFData.Xr_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
         tarFData.Xi_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
-    
+        
         f_vec.reserve( res_blk_size );
     
         // Update vector size.
@@ -325,6 +401,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             
         // Deallocate unused reserved memory from the vectors.
         f_vec.shrink_to_fit();
+        tarFData.f_vec = Eigen::Map<Eigen::VectorXd>( f_vec.data(), f_vec.size() );
         tarFData.Xr_vec.resize( line_idx );
         tarFData.Xr_vec.shrink_to_fit();
         tarFData.Xi_vec.resize( line_idx );
@@ -334,4 +411,4 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     
         return;
     
-    }
+}
