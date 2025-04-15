@@ -3,7 +3,7 @@
 
 
 
-bool Matrix3DXd::integ_check( const vector< Eigen::MatrixXd >& tarMat ){
+bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarMat ){
 
     unsigned int lvl_cnt = tarMat.size();
     // The empty matrix case returns true always.
@@ -42,7 +42,6 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
 
     if( Mat3D.size() == 0 ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
-        return;
     }
 
     this->Mat3D = Mat3D;

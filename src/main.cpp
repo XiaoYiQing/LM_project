@@ -57,7 +57,7 @@ int main() {
     
     
 
-    
+    Matrix3DXd_test_1(0);
 
     return 0; 
 
@@ -71,7 +71,15 @@ void Matrix3DXd_test_1( int case_idx ){
     int case_cnt = 0;
 
     if( case_cnt == case_idx ){
-        Matrix3DXd my_3D_mat = Matrix3DXd();
+
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+
+        try{
+            Matrix3DXd my_3D_mat = Matrix3DXd( tmp_mat_vec );
+        }catch (const std::out_of_range& e){
+            cerr << e.what() << endl;
+        }
+
     }
     
 
