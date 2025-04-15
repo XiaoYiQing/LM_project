@@ -11,8 +11,6 @@ Matrix3DXd::Matrix3DXd(){
 
 }
 
-
-
 // ====================================================================== <<<<<
 
 
@@ -34,6 +32,25 @@ vector<unsigned int> Matrix3DXd::size(){
     size_vec[2] = Mat3D.size();
 
 }
+
+unsigned int Matrix3DXd::rows(){
+    if( Mat3D.size() == 0 ){
+        return 0;
+    }else{
+        return Mat3D.at(0).rows();
+    }
+}
+unsigned int Matrix3DXd::cols(){
+    if( Mat3D.size() == 0 ){
+        return 0;
+    }else{
+        return Mat3D.at(0).cols();
+    }
+}
+unsigned int Matrix3DXd::levels(){
+    return Mat3D.size();
+}
+
 
 
 // ====================================================================== <<<<<

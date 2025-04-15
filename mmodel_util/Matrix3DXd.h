@@ -35,19 +35,35 @@ public:
 
 
 // ====================================================================== >>>>>
-//      Access Functions
+//      Operators
 // ====================================================================== >>>>>
-
 
 
 // ====================================================================== <<<<<
 
-protected:
+
+// ====================================================================== >>>>>
+//      Access Functions
+// ====================================================================== >>>>>
+
+    // Obtain a vector representing the dimensions of the 3D matrix (row #, col #, level # ).
+    vector<unsigned int> size();
+
+    unsigned int rows();
+    unsigned int cols();
+    unsigned int levels();
+
+// ====================================================================== <<<<<
+
 
     /*
     The 3D matrix, which is just a vector of 2D matrices.
     */
     vector< Eigen::MatrixXd > Mat3D;
+
+protected:
+
+    
 
 private:
 
