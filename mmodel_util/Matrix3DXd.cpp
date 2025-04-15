@@ -11,8 +11,33 @@ Matrix3DXd::Matrix3DXd(){
 
 }
 
+Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
+    this->Mat3D = Mat3D;
+}
+
 // ====================================================================== <<<<<
 
+
+// ====================================================================== >>>>>
+//      Operators
+// ====================================================================== >>>>>
+
+// Multiplication operator overload.
+Matrix3DXd Matrix3DXd::operator*(const double scalar) const {
+
+    // Obtain 3D matrix level count.
+    unsigned int lvl_cnt = Mat3D.size();
+    // New 3D matrix definition.
+    Matrix3DXd Mat3D_res = Matrix3DXd( this->Mat3D );
+    // Apply individual 3D matrix scalar multiplication.
+    for( int i = 0; i < lvl_cnt; i++ ){
+        Mat3D_res.Mat3D[i] *= scalar;
+    }
+    
+    return Mat3D_res;
+}
+
+// ====================================================================== <<<<<
 
 
 // ====================================================================== >>>>>

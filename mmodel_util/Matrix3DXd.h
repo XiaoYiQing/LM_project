@@ -31,6 +31,8 @@ public:
 
     Matrix3DXd();
 
+    Matrix3DXd( vector< Eigen::MatrixXd > Mat3D );
+
 // ====================================================================== <<<<<
 
 
@@ -38,6 +40,8 @@ public:
 //      Operators
 // ====================================================================== >>>>>
 
+// Overloading the multiplication operator
+Matrix3DXd operator*(const double scalar) const;
 
 // ====================================================================== <<<<<
 
