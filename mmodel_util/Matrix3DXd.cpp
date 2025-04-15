@@ -135,8 +135,30 @@ unsigned int Matrix3DXd::levels() const{
     return Mat3D.size();
 }
 
+bool Matrix3DXd::isEmpty(){
+    return this->Mat3D.size() == 0;
+}
+
 Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
     return this->Mat3D.vector::at(z);
+}
+
+
+void Matrix3DXd::push_back( const Eigen::MatrixXd& val ){
+
+    if( this->isEmpty() ){
+        this->Mat3D.push_back( val );
+        return;
+    }
+
+    if( val.rows() == this->Mat3D.at(0).rows() && val.cols() == this->Mat3D.at(0).cols() ){
+        
+
+    }else{
+
+        
+    }
+
 }
 
 // ====================================================================== <<<<<

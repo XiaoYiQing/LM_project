@@ -36,7 +36,7 @@ public:
     For instance, all 2D matrices must have the same size.
     */
     static bool consist_check( const vector< Eigen::MatrixXd >& );
-    
+
 // ====================================================================== <<<<<
 
 
@@ -75,7 +75,14 @@ public:
     unsigned int cols() const;
     unsigned int levels() const;
 
+    // Determine if the matrix is empty.
+    bool isEmpty();
+
     Eigen::MatrixXd at( unsigned int ) const;
+
+
+    void push_back( const Eigen::MatrixXd& val );
+
 
 // ====================================================================== <<<<<
 
