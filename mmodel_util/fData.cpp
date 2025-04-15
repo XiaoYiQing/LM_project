@@ -154,6 +154,77 @@ fData::fData(){
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Data Editing
+// ====================================================================== >>>>>
+
+void fData::data_format_Switch( FDATA_FORMAT newFormat ){
+
+    //NONE, DB, MA, RI
+
+    // If specified format is the same as the current one, no change.
+    if( this->fD_format == newFormat ){
+        return;
+    }
+
+    switch( newFormat ){
+
+    case( FDATA_FORMAT::DB ):
+
+        if( this->fD_format == FDATA_FORMAT::MA ){
+
+
+            
+        }else if( this->fD_format == FDATA_FORMAT::RI ){
+
+        }else{
+            cerr << "An impossible outcome has been reached. Abort" << endl;
+            return;
+        }
+
+        break;
+
+    case( FDATA_FORMAT::MA ):
+
+        if( this->fD_format == FDATA_FORMAT::DB ){
+
+        }else if( this->fD_format == FDATA_FORMAT::RI ){
+
+        }else{
+            cerr << "An impossible outcome has been reached. Abort" << endl;
+            return;
+        }
+
+        break;
+
+    case( FDATA_FORMAT::RI ):
+
+        if( this->fD_format == FDATA_FORMAT::DB ){
+
+        }else if( this->fD_format == FDATA_FORMAT::MA ){
+
+        }else{
+            cerr << "An impossible outcome has been reached. Abort" << endl;
+            return;
+        }
+
+        break;
+
+
+
+    // The none format makes no change.
+    case( FDATA_FORMAT::NONE ):
+    default:
+        return;
+        break;
+
+    };
+
+}
+
+// ====================================================================== <<<<<
+
+
 
 // ====================================================================== >>>>>
 //      Access Functions
@@ -398,7 +469,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             }
     
         }while( getline( inputFile, line ) );
-            
+
         // Deallocate unused reserved memory from the vectors.
         f_vec.shrink_to_fit();
         tarFData.f_vec = Eigen::Map<Eigen::VectorXd>( f_vec.data(), f_vec.size() );
