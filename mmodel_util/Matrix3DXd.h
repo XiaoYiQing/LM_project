@@ -19,17 +19,27 @@ Eigen library.
 The 3D matrix is nothing more than a vector of 2D MatrixXd matrices.
 The class' purpose is to ease manipulation of the 3D matrix as well as simple
 matrix operations.
+This implementation doesn't operate as a typical 3D matrix in that its 3rd dimension
+is variable.
 */
 class Matrix3DXd{    
 
 
 public:
 
+
+    /*
+    Function for checking the integrety of the 3D matrix vector.
+    For instance, all 2D matrices must have the same size.
+    */
+    static bool integ_check( const vector< Eigen::MatrixXd >& );
+
+
 // ====================================================================== >>>>>
 //      Constructors
 // ====================================================================== >>>>>
 
-    Matrix3DXd();
+    Matrix3DXd( unsigned int row_cnt = 0, unsigned int col_cnt = 0 );
 
     Matrix3DXd( vector< Eigen::MatrixXd > Mat3D );
 
@@ -40,8 +50,8 @@ public:
 //      Operators
 // ====================================================================== >>>>>
 
-// Overloading the multiplication operator
-Matrix3DXd operator*(const double scalar) const;
+    // Overloading the multiplication operator
+    Matrix3DXd operator*(const double scalar) const;
 
 // ====================================================================== <<<<<
 
@@ -51,23 +61,37 @@ Matrix3DXd operator*(const double scalar) const;
 // ====================================================================== >>>>>
 
     // Obtain a vector representing the dimensions of the 3D matrix (row #, col #, level # ).
-    vector<unsigned int> size();
+    vector<unsigned int> size() const;
 
-    unsigned int rows();
-    unsigned int cols();
-    unsigned int levels();
+    unsigned int rows() const;
+    unsigned int cols() const;
+    unsigned int levels() const;
 
 // ====================================================================== <<<<<
 
+
+
+
+
+
+protected:
+
+    
+// ====================================================================== >>>>>
+//      Member Variables
+// ====================================================================== >>>>>
+    
+    // Number of rows.
+    unsigned int row_cnt;
+    // Number of columns.
+    unsigned int col_cnt;
 
     /*
     The 3D matrix, which is just a vector of 2D matrices.
     */
     vector< Eigen::MatrixXd > Mat3D;
 
-protected:
-
-    
+// ====================================================================== <<<<<
 
 private:
 

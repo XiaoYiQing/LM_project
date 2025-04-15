@@ -3,16 +3,52 @@
 
 
 
+bool Matrix3DXd::integ_check( const vector< Eigen::MatrixXd >& tarMat ){
+
+    unsigned int lvl_cnt = tarMat.size();
+    // The empty matrix case returns true always.
+    if( lvl_cnt == 0 ){
+        return true;
+    }
+
+    // Use the first matrix 
+    unsigned int row_cnt_ref = tarMat.at(0).rows();
+    unsigned int col_cnt_ref = tarMat.at(0).cols();
+
+    // Matrix rows and cols consistency check.
+    for( int z = 0; z < lvl_cnt; z++ ){
+        if( tarMat.at(z).rows() != row_cnt_ref || tarMat.at(z).cols() != col_cnt_ref ){
+            return false;
+        }
+    }
+
+    // Reaching this point means no problem found.
+    return true;
+
+}
+
+
+
 // ====================================================================== >>>>>
 //      Constructors
 // ====================================================================== >>>>>
 
-Matrix3DXd::Matrix3DXd(){
-
+Matrix3DXd::Matrix3DXd( unsigned int row_cnt, unsigned int col_cnt ){
+    this->row_cnt = row_cnt;
+    this->col_cnt = col_cnt;
 }
 
 Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
+
+    if( Mat3D.size() == 0 ){
+        throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
+        return;
+    }
+
     this->Mat3D = Mat3D;
+    this->row_cnt = Mat3D.at(0).rows();
+    this->col_cnt = Mat3D.at(0).rows();
+
 }
 
 // ====================================================================== <<<<<
@@ -45,34 +81,34 @@ Matrix3DXd Matrix3DXd::operator*(const double scalar) const {
 // ====================================================================== >>>>>
 
 
-vector<unsigned int> Matrix3DXd::size(){
+vector<unsigned int> Matrix3DXd::size() const{
 
     vector<unsigned int> size_vec = {0,0,0};
-    if( Mat3D.size() == 0 ){
+    if( this->Mat3D.size() == 0 ){
         return size_vec;
     }
 
-    size_vec[0] = Mat3D.at(0).rows();
-    size_vec[1] = Mat3D.at(1).cols();
-    size_vec[2] = Mat3D.size();
+    size_vec[0] = this->Mat3D.at(0).rows();
+    size_vec[1] = this->Mat3D.at(1).cols();
+    size_vec[2] = this->Mat3D.size();
 
 }
 
-unsigned int Matrix3DXd::rows(){
+unsigned int Matrix3DXd::rows() const{
     if( Mat3D.size() == 0 ){
         return 0;
     }else{
         return Mat3D.at(0).rows();
     }
 }
-unsigned int Matrix3DXd::cols(){
+unsigned int Matrix3DXd::cols() const{
     if( Mat3D.size() == 0 ){
         return 0;
     }else{
         return Mat3D.at(0).cols();
     }
 }
-unsigned int Matrix3DXd::levels(){
+unsigned int Matrix3DXd::levels() const{
     return Mat3D.size();
 }
 

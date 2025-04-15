@@ -28,6 +28,8 @@ using namespace std;
 string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
 
 
+void Matrix3DXd_test_1( int case_idx );
+
 
 int main() {
 
@@ -61,5 +63,20 @@ int main() {
 
 }
 
+
+
+void Matrix3DXd_test_1( int case_idx ){
+
+    // Initialize test case index.
+    int case_cnt = 0;
+
+    if( case_cnt == case_idx ){
+        Matrix3DXd my_3D_mat = Matrix3DXd();
+    }
+    
+
+    return;
+
+}
 
 
