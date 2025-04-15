@@ -2,6 +2,9 @@
 
 
 
+// ====================================================================== >>>>>
+//      Static Functions
+// ====================================================================== >>>>>
 
 bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarMat ){
 
@@ -27,6 +30,8 @@ bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarMat ){
 
 }
 
+// ====================================================================== <<<<<
+
 
 
 // ====================================================================== >>>>>
@@ -43,10 +48,14 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
     if( Mat3D.size() == 0 ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
     }
-
-    this->Mat3D = Mat3D;
-    this->row_cnt = Mat3D.at(0).rows();
-    this->col_cnt = Mat3D.at(0).rows();
+    
+    if( Matrix3DXd::consist_check( Mat3D ) ){
+        this->Mat3D = Mat3D;
+        this->row_cnt = Mat3D.at(0).rows();
+        this->col_cnt = Mat3D.at(0).rows();
+    }else{
+        throw std::invalid_argument( "Matrix3DXd can only be initialized with a vector of Eigen::MatrixXd matrices sharing the same dimensions." );
+    }
 
 }
 
@@ -70,6 +79,19 @@ Matrix3DXd Matrix3DXd::operator*(const double scalar) const {
     }
     
     return Mat3D_res;
+}
+
+Matrix3DXd& Matrix3DXd::operator*=(const double scalar){
+
+    // Obtain 3D matrix level count.
+    unsigned int lvl_cnt = this->Mat3D.size();
+    // Apply individual 3D matrix scalar multiplication.
+    for( unsigned int i = 0; i < lvl_cnt; i++ ){
+        this->Mat3D[i] *= scalar;
+    }
+
+    return *this;
+
 }
 
 // ====================================================================== <<<<<

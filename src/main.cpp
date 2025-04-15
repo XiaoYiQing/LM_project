@@ -57,7 +57,7 @@ int main() {
     
     
 
-    Matrix3DXd_test_1(1);
+    Matrix3DXd_test_1(2);
 
     return 0; 
 
@@ -86,6 +86,7 @@ void Matrix3DXd_test_1( int case_idx ){
     }
 
     case_cnt++;
+    // Multiplication operator test.
     if( case_cnt == case_idx ){
 
         unsigned int level_cnt = 4;
@@ -103,7 +104,24 @@ void Matrix3DXd_test_1( int case_idx ){
                 
     }
     
+    case_cnt++;
+    // Inplace multiplication operator test.
+    if( case_cnt == case_idx ){
 
+        unsigned int level_cnt = 4;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << z,z,z,z;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+
+        Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
+        cout << my3DMat.at(2) << endl;
+        my3DMat *= 3;
+        cout << my3DMat.at(2) << endl;
+                
+    }
 
 
     return;

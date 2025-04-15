@@ -27,12 +27,17 @@ class Matrix3DXd{
 
 public:
 
+// ====================================================================== >>>>>
+//      Static Functions
+// ====================================================================== >>>>>
 
     /*
     Function for checking the integrety of the 3D matrix vector.
     For instance, all 2D matrices must have the same size.
     */
     static bool consist_check( const vector< Eigen::MatrixXd >& );
+    
+// ====================================================================== <<<<<
 
 
 // ====================================================================== >>>>>
@@ -52,6 +57,9 @@ public:
 
     // Overloading the multiplication operator
     Matrix3DXd operator*(const double scalar) const;
+
+    // Overloading the multiplication operator
+    Matrix3DXd& operator*=(const double scalar);
 
 // ====================================================================== <<<<<
 
