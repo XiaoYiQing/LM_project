@@ -16,7 +16,7 @@ bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarMat ){
     unsigned int col_cnt_ref = tarMat.at(0).cols();
 
     // Matrix rows and cols consistency check.
-    for( int z = 0; z < lvl_cnt; z++ ){
+    for( unsigned int z = 0; z < lvl_cnt; z++ ){
         if( tarMat.at(z).rows() != row_cnt_ref || tarMat.at(z).cols() != col_cnt_ref ){
             return false;
         }
@@ -65,7 +65,7 @@ Matrix3DXd Matrix3DXd::operator*(const double scalar) const {
     // New 3D matrix definition.
     Matrix3DXd Mat3D_res = Matrix3DXd( this->Mat3D );
     // Apply individual 3D matrix scalar multiplication.
-    for( int i = 0; i < lvl_cnt; i++ ){
+    for( unsigned int i = 0; i < lvl_cnt; i++ ){
         Mat3D_res.Mat3D[i] *= scalar;
     }
     
@@ -91,6 +91,8 @@ vector<unsigned int> Matrix3DXd::size() const{
     size_vec[1] = this->Mat3D.at(1).cols();
     size_vec[2] = this->Mat3D.size();
 
+    return size_vec;
+
 }
 
 unsigned int Matrix3DXd::rows() const{
@@ -111,6 +113,8 @@ unsigned int Matrix3DXd::levels() const{
     return Mat3D.size();
 }
 
-
+Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
+    return this->Mat3D.vector::at(z);
+}
 
 // ====================================================================== <<<<<

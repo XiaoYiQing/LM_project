@@ -57,7 +57,7 @@ int main() {
     
     
 
-    Matrix3DXd_test_1(0);
+    Matrix3DXd_test_1(1);
 
     return 0; 
 
@@ -70,6 +70,8 @@ void Matrix3DXd_test_1( int case_idx ){
     // Initialize test case index.
     int case_cnt = 0;
 
+
+    // Empty vector initialization exception case.
     if( case_cnt == case_idx ){
 
         vector< Eigen::MatrixXd > tmp_mat_vec;
@@ -78,10 +80,31 @@ void Matrix3DXd_test_1( int case_idx ){
             Matrix3DXd my_3D_mat = Matrix3DXd( tmp_mat_vec );
         }catch (const std::out_of_range& e){
             cerr << e.what() << endl;
+            return;
         }
 
     }
+
+    case_cnt++;
+    if( case_cnt == case_idx ){
+
+        unsigned int level_cnt = 4;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << z,z,z,z;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+
+        Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
+        cout << my3DMat.at(2) << endl;
+        Matrix3DXd my3DMat2 = my3DMat*3;
+        cout << my3DMat2.at(2) << endl;
+                
+    }
     
+
+
 
     return;
 

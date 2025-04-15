@@ -67,6 +67,8 @@ public:
     unsigned int cols() const;
     unsigned int levels() const;
 
+    Eigen::MatrixXd at( unsigned int ) const;
+
 // ====================================================================== <<<<<
 
 
