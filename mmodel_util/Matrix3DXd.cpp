@@ -34,9 +34,15 @@ bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarVec ){
 
 }
 
+
+bool Matrix3DXd::same_size( const Eigen::MatrixXd& matA, Eigen::MatrixXd& matB ){
+    return ( matA.rows() == matB.rows() && matA.cols() == matB.cols() );
+}
+
+
 bool Matrix3DXd::null_ref_check( const Matrix3DXd& tarMat ){
 
-    return null_ref_check( tarMat );
+    return null_ref_check( tarMat.Mat3D );
 
 }
 

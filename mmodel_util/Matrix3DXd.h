@@ -42,6 +42,10 @@ public:
     */
     static bool consist_check( const vector< Eigen::MatrixXd >& );
 
+    /*
+    Function for checking if 2 2D matrices are of the same size.
+    */
+    static bool same_size( const Eigen::MatrixXd& matA, Eigen::MatrixXd& matB );
 
     /*
     Function for checking if the reference matrix of the matrix vector has
