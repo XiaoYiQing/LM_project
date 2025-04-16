@@ -73,10 +73,10 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
     }
 
-    if( Matrix3DXd::consist_check( *this ) ){
+    if( Matrix3DXd::consist_check( Mat3D ) ){
         this->Mat3D = Mat3D;
     }else{
-        throw std::invalid_argument( "Matrix3DXd can only be initialized with a vector of Eigen::MatrixXd matrices sharing the same dimensions." );
+        throw std::invalid_argument( "Matrix3DXd can only be initialized with a vector of Eigen::MatrixXd matrices with consistent dimensions." );
     }
 
 
