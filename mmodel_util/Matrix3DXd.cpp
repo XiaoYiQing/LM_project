@@ -121,6 +121,50 @@ Matrix3DXd& Matrix3DXd::operator*=(const double scalar){
 
 
 // ====================================================================== >>>>>
+//      Support Functions
+// ====================================================================== >>>>>
+
+bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
+
+    // An empty 2D matrix is automatically invalidated.
+    if( val.rows() == 0 || val.cols() == 0 ){
+        return false;
+    }
+
+    // The empty matrix vector case returns true (Any non-trivial 2D mat can be added 
+    // to an empty vec).
+    if( this->Mat3D.size() == 0 ){
+        return true;
+    }
+
+    // If neither input or mat vector are empty, just check for consistent 2D matrix dimensions.
+    if( !same_size( val, this->Mat3D.at(0) ) ){
+        return false;
+    }
+
+    // Reaching this point, no problem was found.
+    return true;
+
+}
+
+
+void Matrix3DXd::reserve( unsigned int add_size ){
+
+    size_t currSize = this->levels();
+    unsigned int row_cnt = this->rows();
+    unsigned int col_cnt = this->cols();
+
+    this->Mat3D.reserve( currSize + add_size );
+    for( size_t i = currSize; i < currSize + add_size; i++ ) {
+        Mat3D.emplace_back( Eigen::MatrixXd( row_cnt, col_cnt ) );
+    }
+
+}
+
+// ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
 //      Access Functions
 // ====================================================================== >>>>>
 
@@ -167,28 +211,7 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
 }
 
 
-bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
 
-    // An empty 2D matrix is automatically invalidated.
-    if( val.rows() == 0 || val.cols() == 0 ){
-        return false;
-    }
-
-    // The empty matrix vector case returns true (Any non-trivial 2D mat can be added 
-    // to an empty vec).
-    if( this->Mat3D.size() == 0 ){
-        return true;
-    }
-
-    // If neither input or mat vector are empty, just check for consistent 2D matrix dimensions.
-    if( !same_size( val, this->Mat3D.at(0) ) ){
-        return false;
-    }
-
-    // Reaching this point, no problem was found.
-    return true;
-
-}
 
 
 void Matrix3DXd::push_back( const Eigen::MatrixXd& in2DMat ){

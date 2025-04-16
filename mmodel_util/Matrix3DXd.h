@@ -91,6 +91,26 @@ public:
 
 
 // ====================================================================== >>>>>
+//      Support Functions
+// ====================================================================== >>>>>
+
+    /* 
+    Check if the target 2D matrix can be added to the 3D matrix.
+    */
+    bool mat3DValidInCheck( const Eigen::MatrixXd& val );
+
+    /*
+    Reserve a set number of entries worth of memory for additional 2D matrices.
+    This reserve additionally places zero matrices at the reserved spaces within
+    the 3D matrix as placeholders for direct index access.
+    */
+    void reserve( unsigned int );
+
+// ====================================================================== <<<<<
+
+
+
+// ====================================================================== >>>>>
 //      Access Functions
 // ====================================================================== >>>>>
 
@@ -105,13 +125,6 @@ public:
     bool isEmpty();
 
     Eigen::MatrixXd at( unsigned int ) const;
-
-    
-    /* 
-    Check if the target 2D matrix can be added to the 3D matrix.
-    */
-    bool mat3DValidInCheck( const Eigen::MatrixXd& val );
-
 
     /*
     Put a new 2D matrix entry at the end of the vector.
