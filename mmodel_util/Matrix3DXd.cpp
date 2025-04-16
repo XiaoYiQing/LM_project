@@ -7,20 +7,24 @@
 // ====================================================================== >>>>>
 
 bool Matrix3DXd::consist_check( const Matrix3DXd& tarMat ){
+    return consist_check( tarMat.Mat3D );
+}
 
-    unsigned int lvl_cnt = tarMat.Mat3D.size();
+bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarVec ){
+
+    unsigned int lvl_cnt = tarVec.size();
     // The empty matrix case returns true always.
     if( lvl_cnt == 0 ){
         return true;
     }
 
     // Use the first matrix 
-    unsigned int row_cnt_ref = tarMat.Mat3D.at(0).rows();
-    unsigned int col_cnt_ref = tarMat.Mat3D.at(0).cols();
+    unsigned int row_cnt_ref = tarVec.at(0).rows();
+    unsigned int col_cnt_ref = tarVec.at(0).cols();
 
     // Matrix rows and cols consistency check.
     for( unsigned int z = 0; z < lvl_cnt; z++ ){
-        if( tarMat.Mat3D.at(z).rows() != row_cnt_ref || tarMat.Mat3D.at(z).cols() != col_cnt_ref ){
+        if( tarVec.at(z).rows() != row_cnt_ref || tarVec.at(z).cols() != col_cnt_ref ){
             return false;
         }
     }
@@ -32,7 +36,13 @@ bool Matrix3DXd::consist_check( const Matrix3DXd& tarMat ){
 
 bool Matrix3DXd::null_ref_check( const Matrix3DXd& tarMat ){
 
-    return ( tarMat.Mat3D.at(0).rows() == 0 || tarMat.Mat3D.at(0).cols() == 0 );
+    return null_ref_check( tarMat );
+
+}
+
+bool Matrix3DXd::null_ref_check( const vector< Eigen::MatrixXd >& tarVec ){
+
+    return ( tarVec.at(0).rows() == 0 || tarVec.at(0).cols() == 0 );
 
 }
 
@@ -53,6 +63,9 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
     }
     
+    if( null_ref_check( Mat3D ) ){
+        throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
+    }
 
     if( Matrix3DXd::consist_check( *this ) ){
         this->Mat3D = Mat3D;
@@ -150,10 +163,15 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
 
 void Matrix3DXd::push_back( const Eigen::MatrixXd& val ){
 
+    if( val.rows() == 0 || val.cols() == 0 ){
+        throw std::out_of_range( "Cannot add an empty matrix to the vector." );
+    }
+
     if( this->isEmpty() ){
         this->Mat3D.push_back( val );
         return;
     }
+
 
     if( val.rows() == this->Mat3D.at(0).rows() && val.cols() == this->Mat3D.at(0).cols() ){
         

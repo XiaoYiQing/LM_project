@@ -36,12 +36,25 @@ public:
     For instance, all 2D matrices in the vector must have the same size.
     */
     static bool consist_check( const Matrix3DXd& );
+    /*
+    Function for checking the consistency of the 3D matrix vector.
+    For instance, all 2D matrices in the vector must have the same size.
+    */
+    static bool consist_check( const vector< Eigen::MatrixXd >& );
+
 
     /*
     Function for checking if the reference matrix of the matrix vector has
     0 rows or 0 columns.
+    If true, the reference matrix has 0 rows or columns.
     */
     static bool null_ref_check( const Matrix3DXd& );
+    /*
+    Function for checking if the reference matrix of the matrix vector has
+    0 rows or 0 columns.
+    If true, the reference matrix has 0 rows or columns.
+    */
+    static bool null_ref_check( const vector< Eigen::MatrixXd >& );
 
 // ====================================================================== <<<<<
 
