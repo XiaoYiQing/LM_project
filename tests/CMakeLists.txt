@@ -4,6 +4,8 @@
 set( tests_SOURCES 
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_Eigen.h
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_Eigen.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_Matrix3DXd.h
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_Matrix3DXd.cpp
 )
 
 add_library(tests ${tests_SOURCES})
