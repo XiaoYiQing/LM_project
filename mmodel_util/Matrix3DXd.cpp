@@ -35,7 +35,7 @@ bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarVec ){
 }
 
 
-bool Matrix3DXd::same_size( const Eigen::MatrixXd& matA, Eigen::MatrixXd& matB ){
+bool Matrix3DXd::same_size( const Eigen::MatrixXd& matA, const Eigen::MatrixXd& matB ){
     return ( matA.rows() == matB.rows() && matA.cols() == matB.cols() );
 }
 
@@ -167,24 +167,25 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
 }
 
 
-void Matrix3DXd::push_back( const Eigen::MatrixXd& val ){
+void Matrix3DXd::push_back( const Eigen::MatrixXd& in2DMat ){
 
-    if( val.rows() == 0 || val.cols() == 0 ){
+    // Empty input check.
+    if( in2DMat.rows() == 0 || in2DMat.cols() == 0 ){
         throw std::out_of_range( "Cannot add an empty matrix to the vector." );
     }
 
+    // Directly add the matrix if the vector of matrices is empty.
     if( this->isEmpty() ){
-        this->Mat3D.push_back( val );
+        this->Mat3D.push_back( in2DMat );
         return;
     }
 
-
-    if( val.rows() == this->Mat3D.at(0).rows() && val.cols() == this->Mat3D.at(0).cols() ){
-        
-
+    // Consistency check and add the matrix if fine.
+    if( Matrix3DXd::same_size( this->Mat3D.at(0), in2DMat ) ){
+        this->Mat3D.push_back( in2DMat );
+        return;
     }else{
-
-
+        throw std::invalid_argument( "Matrix3DXd can only add 2D matrices with the same dimensions as the 2D matrices already present." );
     }
 
 }
