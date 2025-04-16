@@ -167,6 +167,30 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
 }
 
 
+bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
+
+    // An empty 2D matrix is automatically invalidated.
+    if( val.rows() == 0 || val.cols() == 0 ){
+        return false;
+    }
+
+    // The empty matrix vector case returns true (Any non-trivial 2D mat can be added 
+    // to an empty vec).
+    if( this->Mat3D.size() == 0 ){
+        return true;
+    }
+
+    // If neither input or mat vector are empty, just check for consistent 2D matrix dimensions.
+    if( !same_size( val, this->Mat3D.at(0) ) ){
+        return false;
+    }
+
+    // Reaching this point, no problem was found.
+    return true;
+
+}
+
+
 void Matrix3DXd::push_back( const Eigen::MatrixXd& in2DMat ){
 
     // Empty input check.

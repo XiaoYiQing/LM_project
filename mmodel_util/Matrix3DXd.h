@@ -60,6 +60,9 @@ public:
     */
     static bool null_ref_check( const vector< Eigen::MatrixXd >& );
 
+
+    
+
 // ====================================================================== <<<<<
 
 
@@ -103,6 +106,11 @@ public:
 
     Eigen::MatrixXd at( unsigned int ) const;
 
+    
+    /* 
+    Check if the target 2D matrix can be added to the 3D matrix.
+    */
+    bool mat3DValidInCheck( const Eigen::MatrixXd& val );
 
     void push_back( const Eigen::MatrixXd& val );
 
