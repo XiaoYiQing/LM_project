@@ -84,7 +84,7 @@ public:
     // Overloading the multiplication operator
     Matrix3DXd operator*(const double scalar) const;
 
-    // Overloading the multiplication operator
+    // Overloading the compound multiplication operator
     Matrix3DXd& operator*=(const double scalar);
 
 // ====================================================================== <<<<<
@@ -125,6 +125,8 @@ public:
     /*
     Insert a new 2D matrix entry at the target index position.
     */
+    void insert( unsigned int idx, const Eigen::MatrixXd& in2DMat );
+
     void insert( unsigned int idx, const Eigen::MatrixXd& in2DMat );
 
 // ====================================================================== <<<<<
