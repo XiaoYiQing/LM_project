@@ -127,7 +127,6 @@ public:
     */
     void insert( unsigned int idx, const Eigen::MatrixXd& in2DMat );
 
-    void insert( unsigned int idx, const Eigen::MatrixXd& in2DMat );
 
 // ====================================================================== <<<<<
 
