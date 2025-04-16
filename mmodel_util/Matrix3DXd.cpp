@@ -6,27 +6,33 @@
 //      Static Functions
 // ====================================================================== >>>>>
 
-bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarMat ){
+bool Matrix3DXd::consist_check( const Matrix3DXd& tarMat ){
 
-    unsigned int lvl_cnt = tarMat.size();
+    unsigned int lvl_cnt = tarMat.Mat3D.size();
     // The empty matrix case returns true always.
     if( lvl_cnt == 0 ){
         return true;
     }
 
     // Use the first matrix 
-    unsigned int row_cnt_ref = tarMat.at(0).rows();
-    unsigned int col_cnt_ref = tarMat.at(0).cols();
+    unsigned int row_cnt_ref = tarMat.Mat3D.at(0).rows();
+    unsigned int col_cnt_ref = tarMat.Mat3D.at(0).cols();
 
     // Matrix rows and cols consistency check.
     for( unsigned int z = 0; z < lvl_cnt; z++ ){
-        if( tarMat.at(z).rows() != row_cnt_ref || tarMat.at(z).cols() != col_cnt_ref ){
+        if( tarMat.Mat3D.at(z).rows() != row_cnt_ref || tarMat.Mat3D.at(z).cols() != col_cnt_ref ){
             return false;
         }
     }
 
     // Reaching this point means no problem found.
     return true;
+
+}
+
+bool Matrix3DXd::null_ref_check( const Matrix3DXd& tarMat ){
+
+    return ( tarMat.Mat3D.at(0).rows() == 0 || tarMat.Mat3D.at(0).cols() == 0 );
 
 }
 
@@ -47,11 +53,13 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
     }
     
-    if( Matrix3DXd::consist_check( Mat3D ) ){
+
+    if( Matrix3DXd::consist_check( *this ) ){
         this->Mat3D = Mat3D;
     }else{
         throw std::invalid_argument( "Matrix3DXd can only be initialized with a vector of Eigen::MatrixXd matrices sharing the same dimensions." );
     }
+
 
 }
 
@@ -106,7 +114,7 @@ vector<unsigned int> Matrix3DXd::size() const{
     }
 
     size_vec[0] = this->Mat3D.at(0).rows();
-    size_vec[1] = this->Mat3D.at(1).cols();
+    size_vec[1] = this->Mat3D.at(0).cols();
     size_vec[2] = this->Mat3D.size();
 
     return size_vec;

@@ -32,10 +32,16 @@ public:
 // ====================================================================== >>>>>
 
     /*
-    Function for checking the integrety of the 3D matrix vector.
-    For instance, all 2D matrices must have the same size.
+    Function for checking the consistency of the 3D matrix vector.
+    For instance, all 2D matrices in the vector must have the same size.
     */
-    static bool consist_check( const vector< Eigen::MatrixXd >& );
+    static bool consist_check( const Matrix3DXd& );
+
+    /*
+    Function for checking if the reference matrix of the matrix vector has
+    0 rows or 0 columns.
+    */
+    static bool null_ref_check( const Matrix3DXd& );
 
 // ====================================================================== <<<<<
 
@@ -75,7 +81,7 @@ public:
     unsigned int cols() const;
     unsigned int levels() const;
 
-    // Determine if the matrix is empty.
+    // Determine if the matrix is empty. True if matrix vector is empty.
     bool isEmpty();
 
     Eigen::MatrixXd at( unsigned int ) const;
