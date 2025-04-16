@@ -216,7 +216,7 @@ void Matrix3DXd::push_back( const vector< Eigen::MatrixXd >& in2DMatVec ){
     }
 
     // Check for empty 2D matrix special case.
-    if( !this->mat3DValidInCheck( in2DMatVec.at(0) ) ){
+    if( this->mat3DValidInCheck( in2DMatVec.at(0) ) ){
         // Reserve the required memory.
         this->Mat3D.reserve( this->Mat3D.size() + inSize );
         // Put all matrices at the end of the vector in the given order.

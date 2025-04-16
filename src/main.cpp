@@ -57,7 +57,7 @@ int main() {
     
     
 
-    Matrix3DXd_test_1(5);
+    Matrix3DXd_test_1(6);
 
     return 0; 
 
@@ -245,6 +245,35 @@ void Matrix3DXd_test_1( int case_idx ){
 
     }
 
+
+    case_cnt++;
+    // 6- Batch push_back function check.
+    if( case_cnt == case_idx ){
+
+        // Create a vector of 2D matrices.
+        unsigned int level_cnt = 4;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << z,z,z,z;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+        // Create the 3D matrix object using the above matrix vector.
+        Matrix3DXd my_3D_mat = Matrix3DXd( tmp_mat_vec );
+
+        vector< Eigen::MatrixXd > addVec;
+        unsigned int add_cnt = 3;
+        for( unsigned int z = 0; z < add_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << z*10+1,z*10+2,z*10+3,z*10+4;
+            addVec.push_back( tmpMat );
+        }
+
+        // Put the additional matrix vector at the end of the 3D matrix.
+        my_3D_mat.push_back( addVec );
+        cout << my_3D_mat.at( my_3D_mat.levels() - 1 ) << endl;
+
+    }
 
     return;
 
