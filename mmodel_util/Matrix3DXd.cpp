@@ -201,12 +201,44 @@ void Matrix3DXd::push_back( const Eigen::MatrixXd& in2DMat ){
 
 }
 
+void Matrix3DXd::push_back( const vector< Eigen::MatrixXd >& in2DMatVec ){
+
+    unsigned int inSize = in2DMatVec.size();
+
+    // Empty vector check.
+    if( inSize == 0 ){
+        return;
+    }
+
+    // Check dimension consistency of matrices within the vector.
+    if( !Matrix3DXd::consist_check( in2DMatVec ) ){
+        throw std::invalid_argument( "Matrix3DXd::push_back: \n\tInput vector of matrices must have consistent matrix dimensions." );
+    }
+
+    // Check for empty 2D matrix special case.
+    if( !this->mat3DValidInCheck( in2DMatVec.at(0) ) ){
+        // Reserve the required memory.
+        this->Mat3D.reserve( this->Mat3D.size() + inSize );
+        // Put all matrices at the end of the vector in the given order.
+        for( unsigned int z = 0; z < inSize; z++ ){
+            Mat3D.push_back( in2DMatVec.at(z) );
+        }
+
+    }else{
+        throw std::invalid_argument( "Matrix3DXd::push_back: \n\tInput matrices are invalid." );
+    }
+
+
+}
+
 void Matrix3DXd::insert( unsigned int idx, const Eigen::MatrixXd& in2DMat ){
 
+    // Index validity check.
     if( idx > this->levels() ){
         throw std::out_of_range( "Insert index invalid: index is larger than the size of the vector." );
     }
 
+    // Attempt at insert.
     if( this->mat3DValidInCheck( in2DMat ) ){
         vector< Eigen::MatrixXd >::iterator iter = this->Mat3D.begin();
         iter = this->Mat3D.insert( iter + idx, in2DMat );

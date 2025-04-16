@@ -117,6 +117,10 @@ public:
     Put a new 2D matrix entry at the end of the vector.
     */
     void push_back( const Eigen::MatrixXd& in2DMat );
+    /*
+    Put a vector of 2D matrix entries at the end of the vector.
+    */
+    void push_back( const vector< Eigen::MatrixXd >& in2DMatVec );
 
     /*
     Insert a new 2D matrix entry at the target index position.
