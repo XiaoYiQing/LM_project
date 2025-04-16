@@ -112,8 +112,16 @@ public:
     */
     bool mat3DValidInCheck( const Eigen::MatrixXd& val );
 
-    void push_back( const Eigen::MatrixXd& val );
 
+    /*
+    Put a new 2D matrix entry at the end of the vector.
+    */
+    void push_back( const Eigen::MatrixXd& in2DMat );
+
+    /*
+    Insert a new 2D matrix entry at the target index position.
+    */
+    void insert( unsigned int idx, const Eigen::MatrixXd& in2DMat );
 
 // ====================================================================== <<<<<
 

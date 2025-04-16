@@ -193,25 +193,27 @@ bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
 
 void Matrix3DXd::push_back( const Eigen::MatrixXd& in2DMat ){
 
-    // Empty input check.
-    if( in2DMat.rows() == 0 || in2DMat.cols() == 0 ){
-        throw std::out_of_range( "Cannot add an empty matrix to the vector." );
-    }
-
-    // Directly add the matrix if the vector of matrices is empty.
-    if( this->isEmpty() ){
+    if( this->mat3DValidInCheck( in2DMat ) ){
         this->Mat3D.push_back( in2DMat );
-        return;
-    }
-
-    // Consistency check and add the matrix if fine.
-    if( Matrix3DXd::same_size( this->Mat3D.at(0), in2DMat ) ){
-        this->Mat3D.push_back( in2DMat );
-        return;
     }else{
         throw std::invalid_argument( "Matrix3DXd can only add 2D matrices with the same dimensions as the 2D matrices already present." );
     }
 
+}
+
+void Matrix3DXd::insert( unsigned int idx, const Eigen::MatrixXd& in2DMat ){
+
+    if( idx > this->levels() ){
+        throw std::out_of_range( "Insert index invalid: index is larger than the size of the vector." );
+    }
+
+    if( this->mat3DValidInCheck( in2DMat ) ){
+        vector< Eigen::MatrixXd >::iterator iter = this->Mat3D.begin();
+        iter = this->Mat3D.insert( iter + idx, in2DMat );
+    }else{
+        throw std::invalid_argument( "Matrix3DXd can only add 2D matrices with the same dimensions as the 2D matrices already present." );
+    }
+    
 }
 
 // ====================================================================== <<<<<
