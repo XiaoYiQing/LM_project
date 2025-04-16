@@ -44,7 +44,7 @@ public:
 //      Constructors
 // ====================================================================== >>>>>
 
-    Matrix3DXd( unsigned int row_cnt = 0, unsigned int col_cnt = 0 );
+    Matrix3DXd();
 
     Matrix3DXd( vector< Eigen::MatrixXd > Mat3D );
 
@@ -97,11 +97,6 @@ protected:
 // ====================================================================== >>>>>
 //      Member Variables
 // ====================================================================== >>>>>
-    
-    // Number of rows.
-    unsigned int row_cnt;
-    // Number of columns.
-    unsigned int col_cnt;
 
     /*
     The 3D matrix, which is just a vector of 2D matrices.

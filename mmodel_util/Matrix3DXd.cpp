@@ -38,9 +38,7 @@ bool Matrix3DXd::consist_check( const vector< Eigen::MatrixXd >& tarMat ){
 //      Constructors
 // ====================================================================== >>>>>
 
-Matrix3DXd::Matrix3DXd( unsigned int row_cnt, unsigned int col_cnt ){
-    this->row_cnt = row_cnt;
-    this->col_cnt = col_cnt;
+Matrix3DXd::Matrix3DXd(){
 }
 
 Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
@@ -51,8 +49,6 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
     
     if( Matrix3DXd::consist_check( Mat3D ) ){
         this->Mat3D = Mat3D;
-        this->row_cnt = Mat3D.at(0).rows();
-        this->col_cnt = Mat3D.at(0).rows();
     }else{
         throw std::invalid_argument( "Matrix3DXd can only be initialized with a vector of Eigen::MatrixXd matrices sharing the same dimensions." );
     }
@@ -156,7 +152,7 @@ void Matrix3DXd::push_back( const Eigen::MatrixXd& val ){
 
     }else{
 
-        
+
     }
 
 }
