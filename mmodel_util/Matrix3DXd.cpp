@@ -148,7 +148,7 @@ bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
 }
 
 
-void Matrix3DXd::reserve( unsigned int add_size ){
+void Matrix3DXd::reserve( unsigned int res_size ){
 
     size_t currSize = this->levels();
     unsigned int row_cnt = this->rows();
@@ -158,8 +158,8 @@ void Matrix3DXd::reserve( unsigned int add_size ){
         throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
     }
 
-    this->Mat3D.reserve( currSize + add_size );
-    for( size_t i = currSize; i < currSize + add_size; i++ ) {
+    this->Mat3D.reserve( res_size );
+    for( size_t i = currSize; i < res_size; i++ ) {
         Mat3D.emplace_back( Eigen::MatrixXd( row_cnt, col_cnt ) );
     }
 

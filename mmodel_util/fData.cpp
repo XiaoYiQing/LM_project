@@ -420,16 +420,13 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         // The frequency vector.
         vector< double > f_vec;
         // Initialize the vector of matrices.
-        tarFData.Xr_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
-        tarFData.Xi_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
-        
         tarFData.Xr_vec.reserve( res_blk_size );
         tarFData.Xi_vec.reserve( res_blk_size );
 
         f_vec.reserve( res_blk_size );
     
         // Update vector size.
-        curr_vec_size = tarFData.Xr_vec.size();
+        curr_vec_size = tarFData.Xr_vec.levels();
     
         do{
     
@@ -448,10 +445,10 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
                 for( int j = 0; j < tarFData.IOcnt[1]; j++ ){
                     // Read the next data mag.
                     iss >> word;    tmp_val = std::stod( word );
-                    tarFData.Xr_vec.at( line_idx )(i,j) = tmp_val;
+                    tarFData.Xr_vec.set( i, j, line_idx, tmp_val );
                     // Read the next data phase.
                     iss >> word;    tmp_val = std::stod( word );
-                    tarFData.Xi_vec.at( line_idx )(i,j) = tmp_val;
+                    tarFData.Xi_vec.set( i, j, line_idx, tmp_val );
                 }
             }
     
