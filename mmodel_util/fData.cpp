@@ -407,7 +407,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     
         // Total number of parameter within the data matrix 
         // (For example, 2 by 2 S-parameters matrix has 4 individual S-parameters).
-        unsigned int mat_ent_cnt = tarFData.IOcnt[0]*tarFData.IOcnt[0];
+        unsigned int mat_ent_cnt = tarFData.IOcnt[0]*tarFData.IOcnt[1];
     
         // File parsing control variables.
         unsigned int line_idx = 0;
