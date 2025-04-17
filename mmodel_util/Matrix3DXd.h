@@ -138,6 +138,11 @@ public:
     void set( unsigned int, const Eigen::MatrixXd& );
 
     /*
+    Set the value at the specific coordinate of the specific 2D matrix. 
+    */
+    void set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, double val );
+
+    /*
     Put a new 2D matrix entry at the end of the vector.
     */
     void push_back( const Eigen::MatrixXd& in2DMat );

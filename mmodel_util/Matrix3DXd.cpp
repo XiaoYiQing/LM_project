@@ -232,6 +232,23 @@ void Matrix3DXd::set( unsigned int tarIdx, const Eigen::MatrixXd& tarMat ){
 }
 
 
+void Matrix3DXd::set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, double val ){
+
+    if( lvl_idx >= this->levels() ){
+        throw std::out_of_range( 
+            "Specified vector index outside range of available vector entries." );
+    }
+
+    if( row_idx >= this->rows() || col_idx >= this->cols() ){
+        throw std::out_of_range( 
+            "2D matrix coordinate is out of range." );
+    }
+
+    // Assign the new 2D matrix values.
+    Mat3D.at( lvl_idx )( row_idx, col_idx ) = val;
+
+}
+
 
 
 

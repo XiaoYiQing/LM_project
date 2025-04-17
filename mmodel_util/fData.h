@@ -172,9 +172,11 @@ protected:
     Eigen::VectorXd f_vec;
 
     // The vector of frequency data matrices real part.
-    vector< Eigen::MatrixXd > Xr_vec;
+    // vector< Eigen::MatrixXd > Xr_vec;
+    Matrix3DXd Xr_vec;
     // The vector of frequency data imaginary real part.
-    vector< Eigen::MatrixXd > Xi_vec;
+    // vector< Eigen::MatrixXd > Xi_vec;
+    Matrix3DXd Xi_vec;
 
     Matrix3DXd Xr_Mat3D;
     Matrix3DXd Xi_Mat3D;

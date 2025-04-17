@@ -423,6 +423,9 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         tarFData.Xr_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
         tarFData.Xi_vec = vector<Eigen::MatrixXd>( res_blk_size, Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
         
+        tarFData.Xr_vec.reserve( res_blk_size );
+        tarFData.Xi_vec.reserve( res_blk_size );
+
         f_vec.reserve( res_blk_size );
     
         // Update vector size.

@@ -54,22 +54,10 @@ int main() {
     // cout << myF.get_imData_at_f( 10 ) << endl;
 
 
-    // tests::Matrix3DXd_test_1(7);
+    tests::Matrix3DXd_test_1(8);
 
-    // Create the 3D matrix object using the above matrix vector.
-    Matrix3DXd my_3D_mat = Matrix3DXd();
-
-    Eigen::MatrixXd init_mat = Eigen::MatrixXd( 2, 2 );
-    init_mat << 1, 2, 3, 4;
-    my_3D_mat.push_back( init_mat );
-
-    Eigen::MatrixXd next_mat = Eigen::MatrixXd( 2, 2 );
-    next_mat << 11, 12, 13, 14;
-    my_3D_mat.at(0) = next_mat;
-    cout << my_3D_mat.at(0) << endl;
-    my_3D_mat.set( 0, next_mat );
-    cout << my_3D_mat.at(0) << endl;
     
+
     return 0; 
 
 }
