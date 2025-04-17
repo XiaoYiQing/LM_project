@@ -54,7 +54,7 @@ int main() {
     // cout << myF.get_imData_at_f( 10 ) << endl;
 
 
-    tests::Matrix3DXd_test_1(6);
+    tests::Matrix3DXd_test_1(7);
 
     return 0; 
 

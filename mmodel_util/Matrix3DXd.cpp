@@ -154,6 +154,10 @@ void Matrix3DXd::reserve( unsigned int add_size ){
     unsigned int row_cnt = this->rows();
     unsigned int col_cnt = this->cols();
 
+    if( row_cnt == 0 || col_cnt == 0 ){
+        throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
+    }
+
     this->Mat3D.reserve( currSize + add_size );
     for( size_t i = currSize; i < currSize + add_size; i++ ) {
         Mat3D.emplace_back( Eigen::MatrixXd( row_cnt, col_cnt ) );
