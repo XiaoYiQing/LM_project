@@ -214,6 +214,23 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
     return this->Mat3D.vector::at(z);
 }
 
+void Matrix3DXd::set( unsigned int tarIdx, const Eigen::MatrixXd& tarMat ){
+
+    if( tarIdx >= this->levels() ){
+        throw std::out_of_range( 
+            "Specified vector index outside range of available vector entries." );
+    }
+
+    if( !same_size( tarMat, this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( 
+            "Input 2D matrix must have the same dimensions as the 2D matrices already present." );
+    }
+
+    // Assign the new 2D matrix values.
+    Mat3D.at( tarIdx ) = tarMat;
+
+}
+
 
 
 

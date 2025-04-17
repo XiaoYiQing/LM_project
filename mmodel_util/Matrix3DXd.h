@@ -133,6 +133,11 @@ public:
     Eigen::MatrixXd at( unsigned int ) const;
 
     /*
+    Set the 2D matrix values at the target index to the given 2D matrix values.
+    */
+    void set( unsigned int, const Eigen::MatrixXd& );
+
+    /*
     Put a new 2D matrix entry at the end of the vector.
     */
     void push_back( const Eigen::MatrixXd& in2DMat );

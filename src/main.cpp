@@ -66,9 +66,10 @@ int main() {
     Eigen::MatrixXd next_mat = Eigen::MatrixXd( 2, 2 );
     next_mat << 11, 12, 13, 14;
     my_3D_mat.at(0) = next_mat;
-
     cout << my_3D_mat.at(0) << endl;
-
+    my_3D_mat.set( 0, next_mat );
+    cout << my_3D_mat.at(0) << endl;
+    
     return 0; 
 
 }
