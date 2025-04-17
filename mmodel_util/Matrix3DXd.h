@@ -124,6 +124,12 @@ public:
     // Determine if the matrix is empty. True if matrix vector is empty.
     bool isEmpty();
 
+    /*
+    Return the 2D matrix at the target index of the vector of 2D matrix.
+    NOTE: this "at( unsigned int )" function does not perform the assignment 
+    function because it doesn't return a reference, but a copy. This is to 
+    prevent insertion of a 2D matrix having different dimensions than the rest.
+    */
     Eigen::MatrixXd at( unsigned int ) const;
 
     /*
