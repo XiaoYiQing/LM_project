@@ -178,8 +178,6 @@ protected:
     // vector< Eigen::MatrixXd > Xi_vec;
     Matrix3DXd Xi_vec;
 
-    Matrix3DXd Xr_Mat3D;
-    Matrix3DXd Xi_Mat3D;
 
 private:
 

@@ -420,8 +420,8 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         // The frequency vector.
         vector< double > f_vec;
         // Initialize the vector of matrices.
-        tarFData.Xr_vec.reserve( res_blk_size );
-        tarFData.Xi_vec.reserve( res_blk_size );
+        tarFData.Xr_vec.reInit( tarFData.IOcnt[0], tarFData.IOcnt[1], res_blk_size );
+        tarFData.Xi_vec.reInit( tarFData.IOcnt[0], tarFData.IOcnt[1], res_blk_size );
 
         f_vec.reserve( res_blk_size );
     
@@ -459,10 +459,6 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
                 tarFData.Xr_vec.reserve( line_idx + res_blk_size );
                 tarFData.Xi_vec.reserve( line_idx + res_blk_size );
-                for (size_t i = line_idx; i < line_idx + res_blk_size; i++) {
-                    tarFData.Xr_vec.emplace_back( Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
-                    tarFData.Xi_vec.emplace_back( Eigen::MatrixXd( tarFData.IOcnt[0], tarFData.IOcnt[1] ) );
-                }
     
                 curr_vec_size += res_blk_size;
     

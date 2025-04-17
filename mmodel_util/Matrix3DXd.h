@@ -100,11 +100,27 @@ public:
     bool mat3DValidInCheck( const Eigen::MatrixXd& val );
 
     /*
+    Re-initialize the 3D matrix with an initiate set of zero matrices of specified sizes.
+    WARNING: This function erases all current 3D matrix entries.
+    */
+    void reInit( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
+
+    /*
     Reserve a set number of entries worth of memory for additional 2D matrices.
     This reserve additionally places zero matrices at the reserved spaces within
     the 3D matrix as placeholders for direct index access.
     */
     void reserve( unsigned int );
+
+    /*
+    Perform the same operations as resize() of a vector variable.
+    */
+    void resize( unsigned int );
+
+    /*
+    Perform the same operations as shrink_to_fit() of a vector variable.
+    */
+    void shrink_to_fit();
 
 // ====================================================================== <<<<<
 

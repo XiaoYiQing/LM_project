@@ -44,8 +44,8 @@ int main() {
     // tests::eigen_test1( testCase );
 
     // Define the full file name.
-    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-    // fData::read_sXp_file( myF, fullFileName );
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myF, fullFileName );
 
     // cout << myF.get_f_cnt() << endl;
     // cout << myF.get_f_scale_str() << endl;
@@ -54,7 +54,7 @@ int main() {
     // cout << myF.get_imData_at_f( 10 ) << endl;
 
 
-    tests::Matrix3DXd_test_1(8);
+    // tests::Matrix3DXd_test_1(8);
 
     
 

@@ -147,6 +147,20 @@ bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
 
 }
 
+void Matrix3DXd::reInit( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx ){
+
+    if( row_idx == 0 || col_idx == 0 || lvl_idx == 0 ){
+        throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
+    }
+
+    this->Mat3D.clear();
+
+    Eigen::MatrixXd firstMat = Eigen::MatrixXd( row_idx, col_idx );
+    firstMat.setZero();
+    this->push_back( firstMat );
+    this->reserve( lvl_idx );
+
+}
 
 void Matrix3DXd::reserve( unsigned int res_size ){
 
@@ -155,7 +169,7 @@ void Matrix3DXd::reserve( unsigned int res_size ){
     unsigned int col_cnt = this->cols();
 
     if( row_cnt == 0 || col_cnt == 0 ){
-        throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
+        throw std::invalid_argument( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
     }
 
     this->Mat3D.reserve( res_size );
@@ -164,6 +178,16 @@ void Matrix3DXd::reserve( unsigned int res_size ){
     }
 
 }
+
+
+void Matrix3DXd::resize( unsigned int tarSize ){
+    this->Mat3D.resize( tarSize );
+}
+
+void Matrix3DXd::shrink_to_fit(){
+    this->Mat3D.shrink_to_fit();
+}
+
 
 // ====================================================================== <<<<<
 
