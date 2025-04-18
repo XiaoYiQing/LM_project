@@ -209,6 +209,10 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
         if( this->fD_format == FDATA_FORMAT::DB ){
 
+            Xr_vec *= 0.05;
+            Xr_vec.elem_raise_pow( 10 );
+            
+            
         }else if( this->fD_format == FDATA_FORMAT::MA ){
 
         }else{

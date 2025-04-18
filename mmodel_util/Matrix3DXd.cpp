@@ -117,6 +117,27 @@ Matrix3DXd& Matrix3DXd::operator*=(const double scalar){
 
 }
 
+Matrix3DXd Matrix3DXd::operator*( const Matrix3DXd tarMat ) const{
+
+    if( this->levels() != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+
+    Matrix3DXd resMat;
+    resMat.reInit( this->rows(), this->cols(), this->levels() );
+
+    for( unsigned int z = 0; z < this->levels(); z++ ){
+        resMat.set( z, this->at(z).array() * tarMat.at(z).array() );
+    }
+
+}
+
 // ====================================================================== <<<<<
 
 
