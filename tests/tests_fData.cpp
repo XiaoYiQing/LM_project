@@ -42,6 +42,8 @@ void tests::fData_test_1( unsigned int test_idx ){
         cout << myF.get_reData_at_f(100) << endl;
         myF.data_format_Switch( fData::FDATA_FORMAT::MA );
         cout << myF.get_reData_at_f(100) << endl;
+        myF.data_format_Switch( fData::FDATA_FORMAT::DB );
+        cout << myF.get_reData_at_f(100) << endl;
 
     }
 

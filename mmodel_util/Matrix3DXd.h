@@ -108,7 +108,7 @@ public:
     /*
     Perform element-wise base 10 logarithmic operation.
     */
-    void elem_log10(  );
+    void elem_log10();
 
 // ====================================================================== <<<<<
 

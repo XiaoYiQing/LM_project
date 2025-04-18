@@ -173,7 +173,8 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
         if( this->fD_format == FDATA_FORMAT::MA ){
 
-            
+            this->Xr_vec.elem_log10();
+            Xr_vec *= 20;
             
         }else if( this->fD_format == FDATA_FORMAT::RI ){
 
@@ -226,6 +227,8 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
         break;
 
     };
+
+    this->fD_format = newFormat;
 
 }
 
