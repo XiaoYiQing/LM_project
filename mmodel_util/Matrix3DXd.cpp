@@ -144,11 +144,21 @@ Matrix3DXd& Matrix3DXd::operator*=(const double scalar){
     }
 
     void Matrix3DXd::elem_log10(){
-
         for( unsigned int z = 0; z < Mat3D.size(); z++ ){
             this->Mat3D.at(z) = this->Mat3D.at(z).array().log10();
         }
+    }
 
+    void Matrix3DXd::elem_cos(){
+        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+            this->Mat3D.at(z) = this->Mat3D.at(z).array().cos();
+        }
+    }
+
+    void Matrix3DXd::elem_sin(){
+        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+            this->Mat3D.at(z) = this->Mat3D.at(z).array().sin();
+        }
     }
 
 // ====================================================================== <<<<<

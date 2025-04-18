@@ -110,6 +110,16 @@ public:
     */
     void elem_log10();
 
+    /*
+    Perform element-wise cosine function on the entries of the matrix.
+    */
+    void elem_cos();
+
+    /*
+    Perform element-wise cosine function on the entries of the matrix.
+    */
+    void elem_sin();
+
 // ====================================================================== <<<<<
 
 
