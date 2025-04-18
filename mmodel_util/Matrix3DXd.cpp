@@ -130,6 +130,19 @@ Matrix3DXd& Matrix3DXd::operator*=(const double scalar){
         }
     }
 
+    void Matrix3DXd::elem_raise_pow( double base_val ){
+        
+        double log_base_val = log( base_val );
+
+        *this*=log_base_val;
+
+        unsigned int z = 0;
+        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+            this->Mat3D.at(z) = this->Mat3D.at(z).array().exp();
+        }
+
+    }
+
 // ====================================================================== <<<<<
 
 
