@@ -105,6 +105,11 @@ public:
     */
     void elem_raise_pow( double base_val );
 
+    /*
+    Perform element-wise base 10 logarithmic operation.
+    */
+    void elem_log10(  );
+
 // ====================================================================== <<<<<
 
 
