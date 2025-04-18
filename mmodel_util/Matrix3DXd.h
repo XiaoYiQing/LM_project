@@ -81,13 +81,32 @@ public:
 //      Operators
 // ====================================================================== >>>>>
 
-    // Overloading the multiplication operator
+    // Overloading the multiplication operator for scalar multiplication.
     Matrix3DXd operator*(const double scalar) const;
 
-    // Overloading the compound multiplication operator
+    // Overloading the compound multiplication operator for scalar multiplication.
     Matrix3DXd& operator*=(const double scalar);
 
 // ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
+//      Operations
+// ====================================================================== >>>>>
+
+    /*
+    Perform element-wise power to the target value on the entries of the matrix.
+    */
+    void elem_pow( double exp_val );
+
+    /*
+    Perform element-wise power with the input base value raised to the power value given
+    by the entries of the matrix.
+    */
+    void elem_raise_pow( double base_val );
+
+// ====================================================================== <<<<<
+
 
 
 // ====================================================================== >>>>>
@@ -101,6 +120,8 @@ public:
 
     /*
     Re-initialize the 3D matrix with an initiate set of zero matrices of specified sizes.
+    This function effectively serves as the "reserve" function specifically when the 3D matrix
+    is empty (or emptied) and requires a new start with specificed number of rows and columns.
     WARNING: This function erases all current 3D matrix entries.
     */
     void reInit( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );

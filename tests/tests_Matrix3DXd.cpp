@@ -256,3 +256,34 @@ void tests::Matrix3DXd_test_1( int case_idx ){
 
 
 }
+
+
+
+
+void tests::Matrix3DXd_test_2_ops( int case_idx ){
+
+    // Initialize test case index.
+    int case_cnt = 0;
+
+    // 0- elem_pow test.
+    if( case_cnt == case_idx ){
+
+        // Create a vector of 2D matrices.
+        unsigned int level_cnt = 4;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << z,z,z,z;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
+
+        cout << my3DMat.at( 3 ) << endl;
+        my3DMat.elem_pow( 3 );
+        cout << my3DMat.at( 3 ) << endl;
+
+    }
+
+}
