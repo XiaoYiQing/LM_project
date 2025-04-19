@@ -309,4 +309,37 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
 
     }
 
+    case_cnt++;
+    // 2- Same type mat element-wise mult. operator test.
+    if( case_cnt == case_idx ){
+
+        // Create a vector of 2D matrices.
+        unsigned int level_cnt = 4;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << 1+10*z, 2+10*z, 3+10*z, 4+10*z;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd my3DMat1 = Matrix3DXd( tmp_mat_vec );
+
+        vector< Eigen::MatrixXd > tmp_mat_vec2;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << 1.5+z, 2.5+z, 3.5+z, 4.5+z;
+            tmp_mat_vec2.push_back( tmpMat );
+        }
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd my3DMat2 = Matrix3DXd( tmp_mat_vec2 );
+
+        cout << my3DMat1.at(1) << endl;
+
+        Matrix3DXd my3DMat_prod = my3DMat1 * my3DMat2;
+        cout << my3DMat1.at(1) << endl;
+        cout << my3DMat2.at(1) << endl;
+        cout << my3DMat_prod.at(1) << endl;
+
+    }
+
 }

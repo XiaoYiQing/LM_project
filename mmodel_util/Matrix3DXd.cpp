@@ -119,7 +119,9 @@ Matrix3DXd& Matrix3DXd::operator*=(const double scalar){
 
 Matrix3DXd Matrix3DXd::operator*( const Matrix3DXd tarMat ) const{
 
-    if( this->levels() != tarMat.levels() ){
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
         throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
     }
     if( !Matrix3DXd::consist_check( tarMat ) ){
@@ -130,11 +132,13 @@ Matrix3DXd Matrix3DXd::operator*( const Matrix3DXd tarMat ) const{
     }
 
     Matrix3DXd resMat;
-    resMat.reInit( this->rows(), this->cols(), this->levels() );
+    resMat.reInit( this->rows(), this->cols(), currLevels );
 
-    for( unsigned int z = 0; z < this->levels(); z++ ){
-        resMat.set( z, this->at(z).array() * tarMat.at(z).array() );
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        resMat.set( z, this->Mat3D.at(z).array() * tarMat.at(z).array() );
     }
+
+    return resMat;
 
 }
 
@@ -316,7 +320,7 @@ void Matrix3DXd::set( unsigned int tarIdx, const Eigen::MatrixXd& tarMat ){
     }
 
     // Assign the new 2D matrix values.
-    Mat3D.at( tarIdx ) = tarMat;
+    this->Mat3D.at( tarIdx ) = tarMat;
 
 }
 
