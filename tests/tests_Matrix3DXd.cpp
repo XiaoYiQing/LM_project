@@ -283,6 +283,8 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
         cout << my3DMat.at( 3 ) << endl;
         my3DMat.elem_pow( 3 );
         cout << my3DMat.at( 3 ) << endl;
+        my3DMat.elem_pow( 1.0/3 );
+        cout << my3DMat.at( 3 ) << endl;
 
     }
 
