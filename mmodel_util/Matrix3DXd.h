@@ -123,6 +123,11 @@ public:
     */
     void elem_sin();
 
+    /*
+    Perform element-wise arctan function on the entries of the matrix.
+    */
+    void elem_atan();
+
 // ====================================================================== <<<<<
 
 

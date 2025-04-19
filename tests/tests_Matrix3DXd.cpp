@@ -333,8 +333,7 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
         // Initialize a 3D matrix using the vector.
         Matrix3DXd my3DMat2 = Matrix3DXd( tmp_mat_vec2 );
 
-        cout << my3DMat1.at(1) << endl;
-
+        // Perform matrix multiplication.
         Matrix3DXd my3DMat_prod = my3DMat1 * my3DMat2;
         cout << my3DMat1.at(1) << endl;
         cout << my3DMat2.at(1) << endl;

@@ -186,6 +186,12 @@ Matrix3DXd Matrix3DXd::operator*( const Matrix3DXd tarMat ) const{
         }
     }
 
+    void Matrix3DXd::elem_atan(){
+        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+            this->Mat3D.at(z) = this->Mat3D.at(z).array().atan();
+        }
+    }
+
 // ====================================================================== <<<<<
 
 
