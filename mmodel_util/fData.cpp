@@ -209,9 +209,17 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
         if( this->fD_format == FDATA_FORMAT::DB ){
 
-            Xr_vec *= 0.05;
-            Xr_vec.elem_raise_pow( 10 );
-            
+            this->Xr_vec *= 0.05;
+            this->Xr_vec.elem_raise_pow( 10 );
+
+            Matrix3DXd Xi_vec_cos = this->Xi_vec;
+            Xi_vec_cos.elem_cos();
+            this->Xi_vec.elem_sin();
+
+            this->Xi_vec = this->Xr_vec*this->Xi_vec;
+            this->Xr_vec = this->Xr_vec*Xi_vec_cos;
+
+            int lol = 0;
             
         }else if( this->fD_format == FDATA_FORMAT::MA ){
 
