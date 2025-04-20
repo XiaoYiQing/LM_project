@@ -69,7 +69,7 @@ Matrix3DXd::Matrix3DXd(){
 Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
 
     this->num_thresh = Matrix3DXd::DEF_NUM_THRESH;
-    
+
     if( Mat3D.size() == 0 ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
     }
@@ -225,6 +225,48 @@ Matrix3DXd Matrix3DXd::operator/(const Matrix3DXd tarMat) const{
     void Matrix3DXd::elem_atan(){
         for( unsigned int z = 0; z < Mat3D.size(); z++ ){
             this->Mat3D.at(z) = this->Mat3D.at(z).array().atan();
+        }
+    }
+
+    void Matrix3DXd::elem_div_spec( const Matrix3DXd tarMat ){
+
+        unsigned int currLevels = this->levels();
+
+        if( currLevels != tarMat.levels() ){
+            throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+        }
+        if( !Matrix3DXd::consist_check( tarMat ) ){
+            throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+        }
+        if( !Matrix3DXd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+            throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+        }
+
+        unsigned int row_cnt = this->rows();
+        unsigned int col_cnt = this->cols();
+
+        for( unsigned int z = 0; z < currLevels; z++ ){
+            try{
+                this->set( z, this->Mat3D.at(z).array() / tarMat.at(z).array() );
+            // Catch the division by 0 case.
+            }catch( const std::runtime_error& e ){
+
+                // A more careful evaluation 
+                for( unsigned int i = 0; i < row_cnt; i++ ){
+                    for( unsigned int j = 0; j < col_cnt; j++ ){
+
+                        if( abs( Mat3D.at(z)[i,j] ) < this->num_thresh ){
+                            Mat3D.at(z)[i,j] = 0;
+                        }else if( abs( tarMat.at(z)[i,j] ) >= this->num_thresh ){
+                            Mat3D.at(z)[i,j] = Mat3D.at(z)[i,j]/tarMat.at(z)[i,j];
+                        }else{
+                            throw( std::runtime_error( "Division by zero error." ) );
+                        }
+
+                    }
+                }
+
+            }
         }
     }
 

@@ -134,6 +134,14 @@ public:
     */
     void elem_atan();
 
+    /*
+    Perform element-wise division with entries of "tarMat" serving as divisors.
+    This function has a special rule where if both the entry of the present matrix
+    and the one in tarMat at the matching coordinate are zero, the result is 0 
+    and not considered a runtime error.
+    */
+    void elem_div_spec( const Matrix3DXd tarMat );
+
 // ====================================================================== <<<<<
 
 
@@ -238,7 +246,7 @@ protected:
 // ====================================================================== >>>>>
 
     /* 
-    The numerical threshold used bu this object to determine if a numerical value
+    The numerical threshold used by this object to determine if a numerical value
     is to be considered trivial.
     As such, this value is also used to evaluate if two numerical values are equal.
     */
