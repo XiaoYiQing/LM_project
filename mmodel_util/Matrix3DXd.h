@@ -137,8 +137,9 @@ public:
     /*
     Perform element-wise division with entries of "tarMat" serving as divisors.
     This function has a special rule where if both the entry of the present matrix
-    and the one in tarMat at the matching coordinate are zero, the result is 0 
-    and not considered a runtime error.
+    and the one in tarMat at the matching coordinate are zero (according to num_thresh), 
+    the result is 0 and not considered a runtime error.
+    Context: this is to deal with DC point frequency data having zero real part.
     */
     void elem_div_spec( const Matrix3DXd tarMat );
 

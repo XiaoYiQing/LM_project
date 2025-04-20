@@ -246,26 +246,21 @@ Matrix3DXd Matrix3DXd::operator/(const Matrix3DXd tarMat) const{
         unsigned int col_cnt = this->cols();
 
         for( unsigned int z = 0; z < currLevels; z++ ){
-            try{
-                this->set( z, this->Mat3D.at(z).array() / tarMat.at(z).array() );
-            // Catch the division by 0 case.
-            }catch( const std::runtime_error& e ){
+            // A more careful evaluation 
+            for( unsigned int i = 0; i < row_cnt; i++ ){
+                for( unsigned int j = 0; j < col_cnt; j++ ){
 
-                // A more careful evaluation 
-                for( unsigned int i = 0; i < row_cnt; i++ ){
-                    for( unsigned int j = 0; j < col_cnt; j++ ){
-
-                        if( abs( Mat3D.at(z)[i,j] ) < this->num_thresh ){
-                            Mat3D.at(z)[i,j] = 0;
-                        }else if( abs( tarMat.at(z)[i,j] ) >= this->num_thresh ){
-                            Mat3D.at(z)[i,j] = Mat3D.at(z)[i,j]/tarMat.at(z)[i,j];
-                        }else{
-                            throw( std::runtime_error( "Division by zero error." ) );
-                        }
-
+                    if( abs( Mat3D.at(z)(i,j) ) < this->num_thresh ){
+                        Mat3D.at(z)(i,j) = 0;
                     }
-                }
+                    else if( abs( tarMat.at(z)(i,j) ) >= this->num_thresh ){
+                        Mat3D.at(z)(i,j) = Mat3D.at(z)(i,j)/tarMat.at(z)(i,j);
+                    }
+                    else{
+                        throw std::runtime_error( "Division by zero error." );
+                    }
 
+                }
             }
         }
     }
