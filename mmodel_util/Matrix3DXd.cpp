@@ -185,85 +185,90 @@ Matrix3DXd Matrix3DXd::operator/(const Matrix3DXd tarMat) const{
 //      Operations
 // ====================================================================== >>>>>
 
-    void Matrix3DXd::elem_pow( double exp_val ){
-        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
-            this->Mat3D.at(z) = this->Mat3D.at(z).array().pow( exp_val );
-        }
+void Matrix3DXd::elem_pow( double exp_val ){
+    for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+        this->Mat3D.at(z) = this->Mat3D.at(z).array().pow( exp_val );
+    }
+}
+
+void Matrix3DXd::elem_raise_pow( double base_val ){
+    
+    double log_base_val = log( base_val );
+
+    *this*=log_base_val;
+
+    unsigned int z = 0;
+    for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+        this->Mat3D.at(z) = this->Mat3D.at(z).array().exp();
     }
 
-    void Matrix3DXd::elem_raise_pow( double base_val ){
-        
-        double log_base_val = log( base_val );
+}
 
-        *this*=log_base_val;
+void Matrix3DXd::elem_log10(){
+    for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+        this->Mat3D.at(z) = this->Mat3D.at(z).array().log10();
+    }
+}
 
-        unsigned int z = 0;
-        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
-            this->Mat3D.at(z) = this->Mat3D.at(z).array().exp();
-        }
+void Matrix3DXd::elem_cos(){
+    for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+        this->Mat3D.at(z) = this->Mat3D.at(z).array().cos();
+    }
+}
 
+void Matrix3DXd::elem_sin(){
+    for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+        this->Mat3D.at(z) = this->Mat3D.at(z).array().sin();
+    }
+}
+
+void Matrix3DXd::elem_atan(){
+    for( unsigned int z = 0; z < Mat3D.size(); z++ ){
+        this->Mat3D.at(z) = this->Mat3D.at(z).array().atan();
+    }
+}
+
+Matrix3DXd Matrix3DXd::elem_div_spec( const Matrix3DXd tarMat ){
+
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
     }
 
-    void Matrix3DXd::elem_log10(){
-        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
-            this->Mat3D.at(z) = this->Mat3D.at(z).array().log10();
-        }
-    }
+    unsigned int row_cnt = this->rows();
+    unsigned int col_cnt = this->cols();
 
-    void Matrix3DXd::elem_cos(){
-        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
-            this->Mat3D.at(z) = this->Mat3D.at(z).array().cos();
-        }
-    }
+    Matrix3DXd resMat;
+    resMat.reInit( row_cnt, col_cnt, currLevels );
 
-    void Matrix3DXd::elem_sin(){
-        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
-            this->Mat3D.at(z) = this->Mat3D.at(z).array().sin();
-        }
-    }
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        // A more careful evaluation 
+        for( unsigned int i = 0; i < row_cnt; i++ ){
+            for( unsigned int j = 0; j < col_cnt; j++ ){
 
-    void Matrix3DXd::elem_atan(){
-        for( unsigned int z = 0; z < Mat3D.size(); z++ ){
-            this->Mat3D.at(z) = this->Mat3D.at(z).array().atan();
-        }
-    }
-
-    void Matrix3DXd::elem_div_spec( const Matrix3DXd tarMat ){
-
-        unsigned int currLevels = this->levels();
-
-        if( currLevels != tarMat.levels() ){
-            throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
-        }
-        if( !Matrix3DXd::consist_check( tarMat ) ){
-            throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
-        }
-        if( !Matrix3DXd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
-            throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
-        }
-
-        unsigned int row_cnt = this->rows();
-        unsigned int col_cnt = this->cols();
-
-        for( unsigned int z = 0; z < currLevels; z++ ){
-            // A more careful evaluation 
-            for( unsigned int i = 0; i < row_cnt; i++ ){
-                for( unsigned int j = 0; j < col_cnt; j++ ){
-
-                    if( abs( Mat3D.at(z)(i,j) ) < this->num_thresh ){
-                        Mat3D.at(z)(i,j) = 0;
-                    }
-                    else if( abs( tarMat.at(z)(i,j) ) >= this->num_thresh ){
-                        Mat3D.at(z)(i,j) = Mat3D.at(z)(i,j)/tarMat.at(z)(i,j);
-                    }
-                    else{
-                        throw std::runtime_error( "Division by zero error." );
-                    }
-
+                if( abs( Mat3D.at(z)(i,j) ) < this->num_thresh ){
+                    resMat.Mat3D.at(z)(i,j) = 0;
                 }
+                else if( abs( tarMat.at(z)(i,j) ) >= this->num_thresh ){
+                    resMat.Mat3D.at(z)(i,j) = Mat3D.at(z)(i,j)/tarMat.at(z)(i,j);
+                }
+                else{
+                    throw std::runtime_error( "Division by zero error." );
+                }
+
             }
         }
     }
+
+    return resMat;
+}
 
 // ====================================================================== <<<<<
 

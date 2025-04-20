@@ -141,7 +141,7 @@ public:
     the result is 0 and not considered a runtime error.
     Context: this is to deal with DC point frequency data having zero real part.
     */
-    void elem_div_spec( const Matrix3DXd tarMat );
+    Matrix3DXd elem_div_spec( const Matrix3DXd tarMat );
 
 // ====================================================================== <<<<<
 

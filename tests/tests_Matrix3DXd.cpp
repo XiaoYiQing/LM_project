@@ -377,16 +377,19 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
         // Perform modification on the divisor's entry to have 0.
         my3DMat2.set( 0, 1, 1, 0 );
 
+        Matrix3DXd resMat;
+
         cout << endl;
         // Perform sepcial element-wise matrix division.
         cout << my3DMat1.at(1) << endl;
         cout << my3DMat2.at(1) << endl;
         try{
-            my3DMat1.elem_div_spec( my3DMat2 );
+            resMat = my3DMat1.elem_div_spec( my3DMat2 );
+            cout << resMat.at(1) << endl;
         }catch( std::runtime_error e ){
             cerr << e.what() << endl;
         }
-        cout << my3DMat1.at(1) << endl;
+        
 
         // Perform another modification to put the same coordiante target
         // in the dividend to zero.
@@ -396,11 +399,12 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
         cout << my3DMat1.at(1) << endl;
         cout << my3DMat2.at(1) << endl;
         try{
-            my3DMat1.elem_div_spec( my3DMat2 );
+            resMat = my3DMat1.elem_div_spec( my3DMat2 );
+            cout << resMat.at(1) << endl;
         }catch( std::runtime_error e ){
             cerr << e.what() << endl;
         }
-        cout << my3DMat1.at(1) << endl;
+        
 
     }
 
