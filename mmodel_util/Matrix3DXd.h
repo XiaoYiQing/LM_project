@@ -90,6 +90,9 @@ public:
     // Overloading the multiplication operator with another matrix of the same class.
     Matrix3DXd operator*(const Matrix3DXd tarMat) const;
 
+    // Overloading the division oeprator with anothe matrix of the same class.
+    Matrix3DXd operator/(const Matrix3DXd tarMat) const;
+
 // ====================================================================== <<<<<
 
 

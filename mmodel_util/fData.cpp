@@ -178,7 +178,10 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             
         }else if( this->fD_format == FDATA_FORMAT::RI ){
 
+            this->Xr_vec;
+            this->Xi_vec;
 
+            
             
         }else{
             cerr << "An impossible outcome has been reached. Abort" << endl;

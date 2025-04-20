@@ -28,7 +28,7 @@ void tests::fData_test_1( unsigned int test_idx ){
     }
 
     case_cnt++;
-    // 1- Data Conversion check.
+    // 1- Data Conversion check (DB <-> MA).
     if( test_idx == case_cnt ){
 
         // Define our frequency data object.
@@ -41,15 +41,36 @@ void tests::fData_test_1( unsigned int test_idx ){
 
         cout << "[DB]" << endl;
         cout << myF.get_reData_at_f(100) << endl;
+        cout << myF.get_imData_at_f(100) << endl;
 
         // DB to MA
         cout << "[DB to MA]:" << endl;
         myF.data_format_Switch( fData::FDATA_FORMAT::MA );
         cout << myF.get_reData_at_f(100) << endl;
+        cout << myF.get_imData_at_f(100) << endl;
 
         // MA to DB
         cout << "[MA to DB]:" << endl;
         myF.data_format_Switch( fData::FDATA_FORMAT::DB );
+        cout << myF.get_reData_at_f(100) << endl;
+        cout << myF.get_imData_at_f(100) << endl;
+        
+
+    }
+
+    case_cnt++;
+    // 2- Data Conversion check (DB <-> RI).
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+
+        // 0- Basic file reading test.
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        cout << "[DB]" << endl;
         cout << myF.get_reData_at_f(100) << endl;
         cout << myF.get_imData_at_f(100) << endl;
 
@@ -58,6 +79,7 @@ void tests::fData_test_1( unsigned int test_idx ){
         myF.data_format_Switch( fData::FDATA_FORMAT::RI );
         cout << myF.get_reData_at_f(100) << endl;
         cout << myF.get_imData_at_f(100) << endl;
+
         
 
     }
