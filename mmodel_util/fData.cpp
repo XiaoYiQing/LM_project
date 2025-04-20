@@ -181,12 +181,19 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             this->Xr_vec;
             this->Xi_vec;
 
+            // Compute the data phase.
             Matrix3DXd quot = Xi_vec.elem_div_spec( Xr_vec );
             quot.elem_atan();
 
+            // Compute the decibel magnitudes.
             Xr_vec.elem_pow(2);
             Xi_vec.elem_pow(2);
+            Xr_vec = Xr_vec + Xi_vec;
+            Xr_vec.elem_log10();
+            Xr_vec *= 10;   // Decibel data assigned to first data matrix.
 
+            // Assigne the data phase to second data matrix.
+            Xi_vec = quot;
             
         }else{
             cerr << "An impossible outcome has been reached. Abort" << endl;
