@@ -181,7 +181,12 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             this->Xr_vec;
             this->Xi_vec;
 
-            
+            Matrix3DXd quot = Xi_vec.elem_div_spec( Xr_vec );
+            quot.elem_atan();
+
+            Xr_vec.elem_pow(2);
+            Xi_vec.elem_pow(2);
+
             
         }else{
             cerr << "An impossible outcome has been reached. Abort" << endl;

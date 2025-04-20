@@ -94,7 +94,32 @@ Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
 //      Operators
 // ====================================================================== >>>>>
 
-// Multiplication operator overload.
+
+Matrix3DXd Matrix3DXd::operator+(const Matrix3DXd tarMat) const{
+
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+
+    Matrix3DXd resMat;
+    resMat.reInit( this->rows(), this->cols(), currLevels );
+
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        resMat.set( z, this->Mat3D.at(z).array() + tarMat.at(z).array() );
+    }
+
+    return resMat;
+
+}
+
 Matrix3DXd Matrix3DXd::operator*(const double scalar) const {
 
     // Obtain 3D matrix level count.
@@ -228,7 +253,7 @@ void Matrix3DXd::elem_atan(){
     }
 }
 
-Matrix3DXd Matrix3DXd::elem_div_spec( const Matrix3DXd tarMat ){
+Matrix3DXd Matrix3DXd::elem_div_spec( const Matrix3DXd tarMat ) const{
 
     unsigned int currLevels = this->levels();
 

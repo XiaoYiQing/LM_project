@@ -84,6 +84,9 @@ public:
 //      Operators
 // ====================================================================== >>>>>
 
+    // Overloading the addition operator with another matrix of the same class.
+    Matrix3DXd operator*(const Matrix3DXd tarMat) const;
+
     // Overloading the multiplication operator for scalar multiplication.
     Matrix3DXd operator*(const double scalar) const;
 
@@ -141,7 +144,7 @@ public:
     the result is 0 and not considered a runtime error.
     Context: this is to deal with DC point frequency data having zero real part.
     */
-    Matrix3DXd elem_div_spec( const Matrix3DXd tarMat );
+    Matrix3DXd elem_div_spec( const Matrix3DXd tarMat ) const;
 
 // ====================================================================== <<<<<
 
