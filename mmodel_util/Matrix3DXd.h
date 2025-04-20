@@ -3,6 +3,7 @@
 
 
 #include <Eigen/Dense>
+#include <iostream>
 #include <magic_enum.hpp>
 #include <string>   
 #include <vector> 
@@ -30,6 +31,8 @@ public:
 // ====================================================================== >>>>>
 //      Static Functions
 // ====================================================================== >>>>>
+
+    static const double DEF_NUM_THRESH;
 
     /*
     Function for checking the consistency of the 3D matrix vector.
@@ -233,6 +236,13 @@ protected:
 // ====================================================================== >>>>>
 //      Member Variables
 // ====================================================================== >>>>>
+
+    /* 
+    The numerical threshold used bu this object to determine if a numerical value
+    is to be considered trivial.
+    As such, this value is also used to evaluate if two numerical values are equal.
+    */
+    double num_thresh;
 
     /*
     The 3D matrix, which is just a vector of 2D matrices.

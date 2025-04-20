@@ -6,6 +6,8 @@
 //      Static Functions
 // ====================================================================== >>>>>
 
+const double Matrix3DXd::DEF_NUM_THRESH = 1e-12;
+
 bool Matrix3DXd::consist_check( const Matrix3DXd& tarMat ){
     return consist_check( tarMat.Mat3D );
 }
@@ -61,10 +63,13 @@ bool Matrix3DXd::null_ref_check( const vector< Eigen::MatrixXd >& tarVec ){
 // ====================================================================== >>>>>
 
 Matrix3DXd::Matrix3DXd(){
+    this->num_thresh = Matrix3DXd::DEF_NUM_THRESH;
 }
 
 Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
 
+    this->num_thresh = Matrix3DXd::DEF_NUM_THRESH;
+    
     if( Mat3D.size() == 0 ){
         throw std::out_of_range( "Cannot initialize Matrix3DXd with an empty matrix vector." );
     }
@@ -160,7 +165,13 @@ Matrix3DXd Matrix3DXd::operator/(const Matrix3DXd tarMat) const{
     resMat.reInit( this->rows(), this->cols(), currLevels );
 
     for( unsigned int z = 0; z < currLevels; z++ ){
-        resMat.set( z, this->Mat3D.at(z).array() / tarMat.at(z).array() );
+        try{
+            resMat.set( z, this->Mat3D.at(z).array() / tarMat.at(z).array() );
+        // Catch the division by 0 case.
+        }catch( const std::runtime_error& e ){
+            cerr << e.what() << endl;
+            return resMat;
+        }
     }
 
     return resMat;
