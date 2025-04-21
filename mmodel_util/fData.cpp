@@ -178,11 +178,11 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             
         }else if( this->fD_format == FDATA_FORMAT::RI ){
 
-            this->Xr_vec;
-            this->Xi_vec;
-
             // Compute the data phase.
             Matrix3DXd quot = Xi_vec.elem_div_spec( Xr_vec );
+            cout << "HOHO" << endl;
+            cout << quot.at(100) << endl;
+            cout << endl;
             quot.elem_atan();
 
             // Compute the decibel magnitudes.
