@@ -144,10 +144,24 @@ public:
     the result is 0 and not considered a runtime error.
     Context: this is to deal with DC point frequency data having zero real part.
     */
-    Matrix3DXd elem_div_spec( const Matrix3DXd tarMat ) const;
+    Matrix3DXd elem_div_spec( const Matrix3DXd& tarMat ) const;
 
 // ====================================================================== <<<<<
 
+
+// ====================================================================== >>>>>
+//      Specialized Operations
+// ====================================================================== >>>>>
+
+    /*
+    Specialize function which computes the phase (in radians) with the individual
+    vector real parts in "rePart" and corresponding imaginary parts in "imPart".
+    Each entry in the 3D matrix is considered one independent vector.
+    The resulting phases are stored in a 3D matrix of the same size.
+    */
+    static Matrix3DXd elem_phase_comp( const Matrix3DXd& rePart, const Matrix3DXd& imPart );
+
+// ====================================================================== <<<<<
 
 
 // ====================================================================== >>>>>
