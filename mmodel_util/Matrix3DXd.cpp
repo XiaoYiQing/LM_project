@@ -6,6 +6,9 @@
 //      Static Functions
 // ====================================================================== >>>>>
 
+/*
+Default numerical threshold for determining if a number is trivial.
+*/
 const double Matrix3DXd::DEF_NUM_THRESH = 1e-12;
 
 bool Matrix3DXd::consist_check( const Matrix3DXd& tarMat ){
@@ -352,7 +355,7 @@ double Matrix3DXd::RMS_total_comp( const Matrix3DXd& rePart, const Matrix3DXd& i
     unsigned int row_cnt = rePart.rows();
     unsigned int col_cnt = rePart.cols();
 
-    double resVal;
+    double resVal = 0;
     double currRe = 0, currIm = 0;
 
     // Compute the sum of all values squared.

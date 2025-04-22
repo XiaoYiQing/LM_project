@@ -409,3 +409,48 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
     }
 
 }
+
+
+
+void tests::Matrix3DXd_test_2_spec_ops( int case_idx ){
+
+    // Initialize test case index.
+    int case_cnt = 0;
+
+    // 0- RMS_total_comp test.
+    if( case_cnt == case_idx ){
+
+        // Create a vector of 2D matrices.
+        unsigned int level_cnt = 2;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << 0+z, 1+z, 2+z, 3+z;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd rePart = Matrix3DXd( tmp_mat_vec );
+
+        vector< Eigen::MatrixXd > tmp_mat_vec2;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << 0+z, 0.1+z, 0.2+z, 0.3+z;
+            tmp_mat_vec2.push_back( tmpMat );
+        }
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd imPart = Matrix3DXd( tmp_mat_vec2 );
+
+        double absRMS = Matrix3DXd::RMS_total_comp( rePart, imPart );
+
+        double trueAns = std::pow( 1237.0/200, 0.5 );
+
+        cout << "Absolute RMS is: " << absRMS << endl;
+        cout << "Expected RMS is: " << trueAns << endl;
+        if( abs( trueAns - absRMS ) < Matrix3DXd::DEF_NUM_THRESH ){
+            cout << "Result: MATCH!" << endl;
+        }else{
+            cout << "Result: MISMATCH!" << endl;
+        }
+    }
+
+}
