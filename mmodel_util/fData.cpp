@@ -244,6 +244,13 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             
         }else if( this->fD_format == FDATA_FORMAT::MA ){
 
+            Matrix3DXd Xi_vec_cos = this->Xi_vec;
+            Xi_vec_cos.elem_cos();
+            this->Xi_vec.elem_sin();
+
+            this->Xi_vec = this->Xr_vec*this->Xi_vec;
+            this->Xr_vec = this->Xr_vec*Xi_vec_cos;
+
         }else{
             cerr << "An impossible outcome has been reached. Abort" << endl;
             return;
