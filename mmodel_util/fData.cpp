@@ -207,7 +207,17 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
         }else if( this->fD_format == FDATA_FORMAT::RI ){
 
+            // Compute the data phase.
+            Matrix3DXd quot = Matrix3DXd::elem_phase_comp( Xi_vec, Xr_vec );
 
+            // Compute the linear magnitudes.
+            Xr_vec.elem_pow(2);
+            Xi_vec.elem_pow(2);
+            Xr_vec = Xr_vec + Xi_vec;
+            Xr_vec.elem_pow(0.5);
+
+            // Assigne the data phase to second data matrix.
+            Xi_vec = quot;
 
         }else{
             cerr << "An impossible outcome has been reached. Abort" << endl;
