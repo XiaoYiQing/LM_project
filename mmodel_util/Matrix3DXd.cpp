@@ -334,6 +334,42 @@ Matrix3DXd Matrix3DXd::elem_phase_comp( const Matrix3DXd& rePart, const Matrix3D
 
 }
 
+
+double Matrix3DXd::RMS_total_comp( const Matrix3DXd& rePart, const Matrix3DXd& imPart ){
+
+    unsigned int reLevels = rePart.levels();
+
+    if( reLevels != imPart.levels() ){
+        throw std::invalid_argument( "Element-wise absolute value computation: mismatched dimensions." );
+    }
+    if( !Matrix3DXd::consist_check( rePart ) || !Matrix3DXd::consist_check( imPart ) ){
+        throw std::invalid_argument( "Element-wise absolute value computation: inconsistent dimensions." );
+    }
+    if( !Matrix3DXd::same_size( rePart.at(0), imPart.at(0) ) ){
+        throw std::invalid_argument( "Element-wise absolute value computation: mismatched dimensions." );
+    }
+
+    unsigned int row_cnt = rePart.rows();
+    unsigned int col_cnt = rePart.cols();
+
+    double resVal;
+    double currRe = 0, currIm = 0;
+
+    // Compute the sum of all values squared.
+    for( unsigned int z = 0; z < reLevels; z++ ){
+    for( unsigned int i = 0; i < row_cnt; i++ ){
+    for( unsigned int j = 0; j < col_cnt; j++ ){
+        resVal += pow( rePart.Mat3D.at(z)(i,j), 2 ) + pow( imPart.Mat3D.at(z)(i,j), 2 );
+    }    }    }
+    // Compute the mean square value.
+    resVal /= ( reLevels * row_cnt * col_cnt );
+    // Take the square root of the final mean square value.
+    resVal = pow( resVal, 0.5 );
+
+    return resVal;
+
+}
+
 // ====================================================================== <<<<<
 
 

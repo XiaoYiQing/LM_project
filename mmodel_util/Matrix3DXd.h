@@ -161,6 +161,12 @@ public:
     */
     static Matrix3DXd elem_phase_comp( const Matrix3DXd& rePart, const Matrix3DXd& imPart );
 
+    /*
+    Compute the root-mean-square (RMS) value from the 3D matrix of complex value
+    with real and imaginary parts stored separately.
+    */
+    static double RMS_total_comp( const Matrix3DXd& rePart, const Matrix3DXd& imPart );
+
 // ====================================================================== <<<<<
 
 

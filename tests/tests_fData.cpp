@@ -120,7 +120,6 @@ void tests::fData_test_1( unsigned int test_idx ){
         cout << myF.get_imData_at_f(100) << endl;
 
 
-
     }
 
 }
