@@ -284,6 +284,17 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 //      Specialized Support Functions
 // ====================================================================== >>>>>
 
+
+vector<fData> fData::gen_2_partitions(){
+
+    vector<fData> retVec;
+
+    
+
+    return retVec;
+
+}
+
 fData fData::gen_cplx_conj_set(){
 
     // Initialize the copy using the current object.
@@ -314,14 +325,13 @@ fData fData::gen_cplx_conj_set(){
     case fData::FDATA_FORMAT::RI:
         // Invert the imaginary part.
         tmpXi_vec *= -1;
+        break;
+
     }
-    
 
     cplxConj_copy.f_vec = tmpFVec;
     cplxConj_copy.Xr_vec = tmpXr_vec;
     cplxConj_copy.Xi_vec = tmpXi_vec;
-
-    cout << cplxConj_copy.Xi_vec.at(0) << endl;
 
     return cplxConj_copy;
 

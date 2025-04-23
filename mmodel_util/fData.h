@@ -133,6 +133,11 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Create two partitions from the original frequency data set.
+    */
+    vector<fData> gen_2_partitions();
+
+    /*
     Generate a complex conjugate set of data.
     This function assumes the frequency data are ordered in the ascending order
     of frequency magnitudes (If DC point is present, it MUST be first entry).
