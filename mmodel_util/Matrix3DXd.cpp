@@ -445,6 +445,18 @@ void Matrix3DXd::shrink_to_fit(){
     this->Mat3D.shrink_to_fit();
 }
 
+Matrix3DXd Matrix3DXd::segment( size_t startIndex, size_t len ) const{
+
+    // Obtain the continuous subset of 2D matrices using iterators.
+    vector<Eigen::MatrixXd> subset(this->Mat3D.begin() + startIndex, 
+        this->Mat3D.begin() + startIndex + len);
+
+    Matrix3DXd segMat( subset );
+
+    return segMat;
+
+}
+
 
 // ====================================================================== <<<<<
 

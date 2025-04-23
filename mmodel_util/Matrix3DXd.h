@@ -204,6 +204,11 @@ public:
     */
     void shrink_to_fit();
 
+    /*
+    Obtain a continuous subset segment of the vector of 2D matrices.
+    */
+    Matrix3DXd segment( size_t startIndex, size_t len ) const;
+
 // ====================================================================== <<<<<
 
 
