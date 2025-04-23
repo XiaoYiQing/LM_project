@@ -236,6 +236,12 @@ public:
     Eigen::MatrixXd at( unsigned int ) const;
 
     /*
+    Return a subset 3D matrix comprised of the group of 2D matrices given by the
+    input index vector.
+    */
+    Matrix3DXd at( vector< unsigned int > idxVec ) const;
+
+    /*
     Set the 2D matrix values at the target index to the given 2D matrix values.
     */
     void set( unsigned int, const Eigen::MatrixXd& );

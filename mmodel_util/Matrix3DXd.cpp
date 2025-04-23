@@ -507,6 +507,28 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
     return this->Mat3D.vector::at(z);
 }
 
+Matrix3DXd Matrix3DXd::at( vector< unsigned int > idxVec ) const{
+    
+    Eigen::VectorXi idxVecAlt( idxVec );
+
+    // Check for out of range violation.
+    if( idxVecAlt.maxCoeff() > this->levels() ){
+        throw std::out_of_range( "Index array contain at least one out of range index." );
+    }
+
+
+
+    vector< Eigen::MatrixXd > subMatVec;
+    subMatVec.reserve( idxVecAlt.size() );
+
+    for( unsigned int z : idxVecAlt ){
+        subMatVec.emplace_back( this->Mat3D.at(z) );
+    }
+    
+    return;
+
+}
+
 void Matrix3DXd::set( unsigned int tarIdx, const Eigen::MatrixXd& tarMat ){
 
     if( tarIdx >= this->levels() ){
