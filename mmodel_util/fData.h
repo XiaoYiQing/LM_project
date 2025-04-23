@@ -124,8 +124,15 @@ public:
 
 
 // ====================================================================== >>>>>
-//      Base Math Functions
+//      Specialized Support Functions
 // ====================================================================== >>>>>
+
+    /*
+    Generate a complex conjugate set of data.
+    This function assumes the frequency data are ordered in the ascending order
+    of frequency magnitudes (If DC point is present, it MUST be first entry).
+    */
+    fData gen_cplx_conj_set();
 
 // ====================================================================== <<<<<
 
@@ -174,7 +181,7 @@ protected:
     // The vector of frequency data matrices real part.
     // vector< Eigen::MatrixXd > Xr_vec;
     Matrix3DXd Xr_vec;
-    // The vector of frequency data imaginary real part.
+    // The vector of frequency data matrices imaginary part.
     // vector< Eigen::MatrixXd > Xi_vec;
     Matrix3DXd Xi_vec;
 

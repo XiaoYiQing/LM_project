@@ -275,6 +275,40 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Specialized Support Functions
+// ====================================================================== >>>>>
+
+    fData fData::gen_cplx_conj_set(){
+
+        // Initialize the copy using the current object.
+        fData cplxConj_copy = *this;
+
+        
+
+        cout << cplxConj_copy.f_vec(0) << ", " << cplxConj_copy.f_vec(1) << endl;
+
+        Eigen::VectorXd tmpVec;
+        if( cplxConj_copy.f_vec(0) == 0 ){
+            tmpVec = cplxConj_copy.f_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
+        }else{
+            tmpVec = cplxConj_copy.f_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
+        }
+
+        cout << tmpVec(0) << ", " << tmpVec(1) << endl;
+
+        cplxConj_copy.f_vec = tmpVec;
+
+        cout << cplxConj_copy.f_vec(0) << ", " << cplxConj_copy.f_vec(1) << endl;
+
+        int lol = 0;
+
+        return cplxConj_copy;
+
+    }
+
+// ====================================================================== <<<<<
+
 
 // ====================================================================== >>>>>
 //      Access Functions

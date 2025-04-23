@@ -17,7 +17,15 @@ using namespace std;
 
 namespace tests{
 
+    /*
+    Base functionalities check.
+    */
     void fData_test_1( unsigned int test_idx );
+
+    /*
+    Specialized function checks.
+    */
+    void fData_test_2( unsigned int test_idx );
 
 }
 
