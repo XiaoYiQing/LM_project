@@ -108,6 +108,11 @@ public:
 
     fData();
 
+    /*
+    Initialization with known frequency vector and frequency data.
+    */
+    // fData( Eigen::VectorXd, Matrix3DXd, Matrix3DXd );
+
 // ====================================================================== <<<<<
 
 
@@ -131,6 +136,8 @@ public:
     Generate a complex conjugate set of data.
     This function assumes the frequency data are ordered in the ascending order
     of frequency magnitudes (If DC point is present, it MUST be first entry).
+    The generated freq. data set is a complement set, so it will not include
+    the DC data point if it is present in the original.
     */
     fData gen_cplx_conj_set();
 

@@ -151,6 +151,11 @@ fData::fData(){
 
 }
 
+
+// fData::fData( Eigen::VectorXd f_vec, Matrix3DXd Xr_vec, Matrix3DXd Xi_vec ){
+
+// }
+
 // ====================================================================== <<<<<
 
 
@@ -279,33 +284,48 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 //      Specialized Support Functions
 // ====================================================================== >>>>>
 
-    fData fData::gen_cplx_conj_set(){
+fData fData::gen_cplx_conj_set(){
 
-        // Initialize the copy using the current object.
-        fData cplxConj_copy = *this;
+    // Initialize the copy using the current object.
+    fData cplxConj_copy = *this;
+    
+    cout << this->f_vec(0) << ", " << cplxConj_copy.f_vec(1) << endl;
+    cout << this->Xr_vec.at(0) << endl;
+    cout << this->Xi_vec.at(0) << endl;
 
-        
+    Eigen::VectorXd tmpFVec;
+    Matrix3DXd tmpXr_vec;
+    Matrix3DXd tmpXi_vec;
 
-        cout << cplxConj_copy.f_vec(0) << ", " << cplxConj_copy.f_vec(1) << endl;
-
-        Eigen::VectorXd tmpVec;
-        if( cplxConj_copy.f_vec(0) == 0 ){
-            tmpVec = cplxConj_copy.f_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
-        }else{
-            tmpVec = cplxConj_copy.f_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
-        }
-
-        cout << tmpVec(0) << ", " << tmpVec(1) << endl;
-
-        cplxConj_copy.f_vec = tmpVec;
-
-        cout << cplxConj_copy.f_vec(0) << ", " << cplxConj_copy.f_vec(1) << endl;
-
-        int lol = 0;
-
-        return cplxConj_copy;
-
+    if( cplxConj_copy.f_vec(0) == 0 ){
+        tmpFVec = cplxConj_copy.f_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
+        tmpXr_vec = cplxConj_copy.Xr_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
+        tmpXi_vec = cplxConj_copy.Xi_vec.segment( 1, cplxConj_copy.f_vec.size() - 1 );
+    }else{
+        tmpFVec = cplxConj_copy.f_vec;
+        tmpXr_vec = cplxConj_copy.Xr_vec;
+        tmpXi_vec = cplxConj_copy.Xi_vec;
     }
+
+    switch( this->fD_format ){
+
+    case fData::FDATA_FORMAT::DB:
+    case fData::FDATA_FORMAT::MA:
+    case fData::FDATA_FORMAT::RI:
+        // Invert the imaginary part.
+        tmpXi_vec *= -1;
+    }
+    
+
+    cplxConj_copy.f_vec = tmpFVec;
+    cplxConj_copy.Xr_vec = tmpXr_vec;
+    cplxConj_copy.Xi_vec = tmpXi_vec;
+
+    cout << cplxConj_copy.Xi_vec.at(0) << endl;
+
+    return cplxConj_copy;
+
+}
 
 // ====================================================================== <<<<<
 

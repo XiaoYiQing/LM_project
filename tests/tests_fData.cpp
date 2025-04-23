@@ -141,8 +141,6 @@ void tests::fData_test_2( unsigned int test_idx ){
         // Define the full file name.
         string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
         fData::read_sXp_file( myF, fullFileName );
-
-
         
         myF.gen_cplx_conj_set();
 

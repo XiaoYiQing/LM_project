@@ -45,10 +45,10 @@ int main() {
     // tests::Matrix3DXd_test_1(8);
     // tests::Matrix3DXd_test_2_ops(3);
     // tests::Matrix3DXd_test_3_spec_ops(0);
-    tests::Matrix3DXd_test_4_supp(0);
+    // tests::Matrix3DXd_test_4_supp(0);
 
     // tests::fData_test_1( 3 );
-    // tests::fData_test_2( 0 );
+    tests::fData_test_2( 0 );
     
 
     return 0; 
