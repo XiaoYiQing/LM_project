@@ -305,7 +305,7 @@ Matrix3DXd Matrix3DXd::elem_div_spec( const Matrix3DXd& tarMat ) const{
 //      Specialized Operations
 // ====================================================================== >>>>>
 
-Matrix3DXd Matrix3DXd::elem_phase_comp( const Matrix3DXd& rePart, const Matrix3DXd& imPart ){
+Matrix3DXd Matrix3DXd::elem_phase_comp( const Matrix3DXd& imPart, const Matrix3DXd& rePart ){
     
     unsigned int reLevels = rePart.levels();
 
@@ -330,7 +330,7 @@ Matrix3DXd Matrix3DXd::elem_phase_comp( const Matrix3DXd& rePart, const Matrix3D
     for( unsigned int z = 0; z < reLevels; z++ ){
     for( unsigned int i = 0; i < row_cnt; i++ ){
     for( unsigned int j = 0; j < col_cnt; j++ ){
-        resMat.Mat3D.at(z)(i,j) = atan2( rePart.Mat3D.at(z)(i,j), imPart.Mat3D.at(z)(i,j) );
+        resMat.Mat3D.at(z)(i,j) = atan2( imPart.Mat3D.at(z)(i,j), rePart.Mat3D.at(z)(i,j) );
     }    }    }
 
     return resMat;
