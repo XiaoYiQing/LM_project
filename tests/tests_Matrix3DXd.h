@@ -28,7 +28,12 @@ namespace tests{
     /*
     Tests focused on specialize operators.
     */
-    void Matrix3DXd_test_2_spec_ops( int case_idx );
+    void Matrix3DXd_test_3_spec_ops( int case_idx );
+
+    /*
+    Tests focused on support functions.
+    */
+    void Matrix3DXd_test_4_supp( int case_idx );
 
 
 }

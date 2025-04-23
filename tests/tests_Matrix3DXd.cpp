@@ -412,7 +412,7 @@ void tests::Matrix3DXd_test_2_ops( int case_idx ){
 
 
 
-void tests::Matrix3DXd_test_2_spec_ops( int case_idx ){
+void tests::Matrix3DXd_test_3_spec_ops( int case_idx ){
 
     // Initialize test case index.
     int case_cnt = 0;
@@ -451,6 +451,46 @@ void tests::Matrix3DXd_test_2_spec_ops( int case_idx ){
         }else{
             cout << "Result: MISMATCH!" << endl;
         }
+    }
+
+}
+
+
+
+
+void tests::Matrix3DXd_test_4_supp( int case_idx ){
+
+    // Initialize test case index.
+    int case_cnt = 0;
+
+    // 0- RMS_total_comp test.
+    if( case_cnt == case_idx ){
+
+        // Create a vector of 2D matrices.
+        unsigned int level_cnt = 10;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << 0+z*10, 1+z*10, 2+z*10, 3+z*10;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd myMat3D = Matrix3DXd( tmp_mat_vec );
+
+        // Obtain subset.
+        unsigned int startIdx = 2;
+        unsigned int len = 3;
+        Matrix3DXd myMat3Dsubset = myMat3D.segment( startIdx, len );
+
+        bool check_sub_len = myMat3Dsubset.levels() == len;
+        cout << "Is sub length correct: " << check_sub_len << endl;
+
+        bool check_val_a_0 = myMat3Dsubset.at(0)(0,0) == 20 && 
+            myMat3Dsubset.at(0)(0,1) == 21 &&
+            myMat3Dsubset.at(0)(1,0) == 22 &&
+            myMat3Dsubset.at(0)(1,1) == 23;
+        cout << "Are values at index = 0 correct: " << check_val_a_0 << endl;
+
     }
 
 }
