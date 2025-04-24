@@ -159,24 +159,28 @@ vector< unsigned int > utils::gen_lin_idx_arr( unsigned int lower, unsigned int 
     if( upper <= lower ){
         throw std::invalid_argument( "The upper bound must be larger than the lower bound." );
     }
+    if( upper - lower + 1 < cnt ){
+        throw std::invalid_argument( "The number of indices required must not exceed the number of distinct integers between the lower and upper bounds." );
+    }
     if( cnt == 2 ){
         vector< unsigned int > resVec = {lower, upper};
         return resVec;
     }
     
 
-    // Compute the average distance between 
+    // Compute the average distance between each index (if allowed to be floating numbers).
     double avg_diff = ( (double) ( upper - lower ) )/( cnt - 1 );
-
+    // Initialize return vector.
     vector< unsigned int > resVec;
+    resVec.reserve( cnt );
 
+    // Add the lower bound.
     resVec.push_back( lower );
+    // Add all indices between the bounds.
     for( unsigned int z = 0; z < cnt - 2; z++ ){
-
-        double tmp = avg_diff*(z+1) + lower;
-        resVec.push_back( std::ceil( tmp ) );
-
+        resVec.push_back( (unsigned int) std::ceil( avg_diff*(z+1) + lower ) );
     }
+    // Add the upper bound.
     resVec.push_back( upper );
 
     return resVec;

@@ -22,6 +22,7 @@
 #include "tests_Eigen.h"
 #include "tests_fData.h"
 #include "tests_Matrix3DXd.h"
+#include "tests_numUtils.h"
 
 
 using namespace std;
@@ -42,6 +43,8 @@ int main() {
     // tests::eigen_test1( testCase );
 
 
+    tests::numUtils_test(0);
+
     // tests::Matrix3DXd_test_1(9);
     // tests::Matrix3DXd_test_2_ops(3);
     // tests::Matrix3DXd_test_3_spec_ops(0);
@@ -51,12 +54,8 @@ int main() {
     // tests::fData_test_2( 0 );
 
 
-
-    vector< unsigned int > tmp = utils::gen_lin_idx_arr( 0, 10, 6 );
-    for( unsigned int z = 0; z < tmp.size(); z++ ){
-        cout << tmp.at(z) << ", ";
-    }
-    cout << endl;
+    
+    
 
     return 0; 
 
