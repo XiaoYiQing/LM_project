@@ -188,4 +188,43 @@ vector< unsigned int > utils::gen_lin_idx_arr( unsigned int lower, unsigned int 
 }
 
 
+vector< unsigned int > utils::gen_rem_idx_arr( unsigned int lower, unsigned upper, vector< unsigned int >& p1 ){
+
+    vector< unsigned int > p1_copy = p1;
+    // Sort the vector in ascending order
+    std::sort(p1_copy.begin(), p1_copy.end());
+
+    // Index outside range check.
+    if( *( p1_copy.end() - 1 ) > upper ){
+        throw std::out_of_range( "The given index array \"p1\" contains at least one entry outside the specified range." );
+    }
+    // Add an outside range value at the end of the reference vector to serve as
+    // an impossible value to reach.
+    p1_copy.push_back( upper + 1 );
+
+    // Initialize return index vector.
+    vector< unsigned int > retVec;
+    retVec.reserve( upper - lower + 1 );
+
+    // Initialize variables 
+    unsigned int retVec_idx = 0;
+    unsigned int p1_idx = 0;
+    
+    // Cycle through all possible indices within the specified range and insert
+    // into the result vector if conditions are met.
+    for( unsigned int currIdx = lower; currIdx <= upper; currIdx++ ){
+
+        if( currIdx == p1_copy.at( p1_idx ) ){
+            p1_idx++;
+        }else{
+            retVec.push_back( currIdx );
+        }
+
+    }
+
+    return retVec;
+    
+}
+
+
 // ====================================================================== <<<<<

@@ -289,7 +289,6 @@ vector<fData> fData::gen_2_partitions( const vector< unsigned int >& p1_idx ){
 
     vector<fData> retVec;
 
-    
 
     return retVec;
 

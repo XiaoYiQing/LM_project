@@ -4,12 +4,12 @@
 using namespace std;
 
 
-void tests::numUtils_test( unsigned int case_idx ){
+void tests::numUtils_test_1( unsigned int case_idx ){
 
     // Initialize test case index.
     int case_cnt = 0;
 
-    // 0- Empty vector initialization exception case.
+    // 0- Test gen_lin_idx_arr.
     if( case_cnt == case_idx ){
 
         bool match_flag = true;

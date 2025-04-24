@@ -14,7 +14,7 @@ using namespace std;
 
 namespace tests{
 
-    void numUtils_test( unsigned int test_idx );
+    void numUtils_test_1( unsigned int test_idx );
 
 }
 

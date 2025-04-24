@@ -13,6 +13,7 @@
 #include <vector>  
 
 #include "Matrix3DXd.h"
+#include "numUtils.h"
 
 using namespace std;
 

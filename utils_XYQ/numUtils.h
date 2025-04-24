@@ -53,10 +53,23 @@ namespace utils{
 /*
 Function generates a linearly distributed array of indices between the specified
 range and filled with the specified number of indices.
-Note that the low and high bounds are included in the final index array.
+Note:
+    - The low and high bounds are included in the final index array.
+    - There can be no repeat of indices. If this cannot be avoid given the input
+        specifications, an exception is thrown.
 */
 vector< unsigned int > gen_lin_idx_arr( unsigned int lower, unsigned int upper, unsigned int cnt );
 
+/*
+Functions generates an index array of ascending values between (and including) the 
+specified lower and upper bounds and which ARE NOT IN the specified existing index 
+array "p1".
+Note:
+    - "p1" must not contain repeating values.
+    - "p1" must only contain integers within the specified bounds (Can be bound values).
+*/
+vector< unsigned int > gen_rem_idx_arr( unsigned int lower, unsigned upper, 
+    vector< unsigned int >& p1 );
 
 // ====================================================================== <<<<<
 
