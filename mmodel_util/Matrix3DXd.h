@@ -239,7 +239,7 @@ public:
     Return a subset 3D matrix comprised of the group of 2D matrices given by the
     input index vector.
     */
-    Matrix3DXd at( vector< unsigned int > idxVec ) const;
+    Matrix3DXd at( vector< int > idxVec );
 
     /*
     Set the 2D matrix values at the target index to the given 2D matrix values.

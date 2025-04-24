@@ -252,6 +252,37 @@ void tests::Matrix3DXd_test_1( int case_idx ){
     }
 
 
+    case_cnt++;
+    // 9- at( vector< unsigned int > idxVec ).
+    if( case_cnt == case_idx ){
+
+        // Create a vector of 2D matrices.
+        unsigned int level_cnt = 9;
+        vector< Eigen::MatrixXd > tmp_mat_vec;
+        for( unsigned int z = 0; z < level_cnt; z++ ){
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << 10*z+1,10*z+2,10*z+3,10*z+4;
+            tmp_mat_vec.push_back( tmpMat );
+        }
+        // Initialize a 3D matrix using the vector.
+        Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
+
+
+        vector<int> sub_vec_idx = { 2, 3, 4 }; 
+        Matrix3DXd my3DMatSub = my3DMat.at( sub_vec_idx );
+        bool match = true;
+        for( unsigned int z = 0; z < sub_vec_idx.size(); z++ ){
+
+            unsigned int curr_idx = sub_vec_idx[z];
+
+            match = match && ( my3DMatSub.at(z) == my3DMat.at( curr_idx ) );
+
+        }
+
+        cout << "Matching data? -> " << match << endl;
+
+    }
+
     return;
 
 
