@@ -43,7 +43,7 @@ int main() {
     // tests::eigen_test1( testCase );
 
 
-    tests::numUtils_test_1(0);
+    tests::numUtils_test_1(1);
 
     // tests::Matrix3DXd_test_1(9);
     // tests::Matrix3DXd_test_2_ops(3);
