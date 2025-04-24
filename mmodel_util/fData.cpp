@@ -285,7 +285,7 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 // ====================================================================== >>>>>
 
 
-vector<fData> fData::gen_2_partitions(  ){
+vector<fData> fData::gen_2_partitions( const vector< unsigned int >& p1_idx ){
 
     vector<fData> retVec;
 

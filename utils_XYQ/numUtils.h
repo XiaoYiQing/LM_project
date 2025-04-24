@@ -42,3 +42,23 @@ Simply determines if two doubles are close enough in value with specified thresh
 */
 bool isEqEnough( double a, double b, double thresh = std::pow( 10, -9 ) );
 
+
+
+namespace utils{
+
+// ====================================================================== >>>>>
+//      Indexing Arrays Functions
+// ====================================================================== >>>>>
+
+/*
+Function generates a linearly distributed array of indices between the specified
+range and filled with the specified number of indices.
+Note that the low and high bounds are included in the final index array.
+*/
+vector< unsigned int > gen_lin_idx_arr( unsigned int lower, unsigned int upper, unsigned int cnt );
+
+
+// ====================================================================== <<<<<
+
+}
+

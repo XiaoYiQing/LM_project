@@ -42,14 +42,21 @@ int main() {
     // tests::eigen_test1( testCase );
 
 
-    tests::Matrix3DXd_test_1(9);
+    // tests::Matrix3DXd_test_1(9);
     // tests::Matrix3DXd_test_2_ops(3);
     // tests::Matrix3DXd_test_3_spec_ops(0);
     // tests::Matrix3DXd_test_4_supp(0);
 
     // tests::fData_test_1( 3 );
     // tests::fData_test_2( 0 );
-    
+
+
+
+    vector< unsigned int > tmp = utils::gen_lin_idx_arr( 0, 10, 6 );
+    for( unsigned int z = 0; z < tmp.size(); z++ ){
+        cout << tmp.at(z) << ", ";
+    }
+    cout << endl;
 
     return 0; 
 

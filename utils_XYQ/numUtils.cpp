@@ -144,3 +144,44 @@ bool isEqEnough( double a, double b, double thresh ){
     return std::abs( a - b ) < std::abs( thresh );
 }
 
+
+
+
+// ====================================================================== >>>>>
+//      Indexing Arrays Functions
+// ====================================================================== >>>>>
+
+vector< unsigned int > utils::gen_lin_idx_arr( unsigned int lower, unsigned int upper, unsigned int cnt ){
+
+    if( cnt < 2 ){
+        throw std::invalid_argument( "The length of the linear index array cannot be less than 2." );
+    }
+    if( upper <= lower ){
+        throw std::invalid_argument( "The upper bound must be larger than the lower bound." );
+    }
+    if( cnt == 2 ){
+        vector< unsigned int > resVec = {lower, upper};
+        return resVec;
+    }
+    
+
+    // Compute the average distance between 
+    double avg_diff = ( (double) ( upper - lower ) )/( cnt - 1 );
+
+    vector< unsigned int > resVec;
+
+    resVec.push_back( lower );
+    for( unsigned int z = 0; z < cnt - 2; z++ ){
+
+        double tmp = avg_diff*(z+1) + lower;
+        resVec.push_back( std::ceil( tmp ) );
+
+    }
+    resVec.push_back( upper );
+
+    return resVec;
+
+}
+
+
+// ====================================================================== <<<<<
