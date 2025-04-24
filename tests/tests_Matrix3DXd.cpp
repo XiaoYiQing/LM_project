@@ -268,7 +268,7 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
 
 
-        vector<int> sub_vec_idx = { 2, 3, 4 }; 
+        vector<unsigned int> sub_vec_idx = { 2, 3, 4 }; 
         Matrix3DXd my3DMatSub = my3DMat.at( sub_vec_idx );
         bool match = true;
         for( unsigned int z = 0; z < sub_vec_idx.size(); z++ ){

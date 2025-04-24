@@ -507,9 +507,15 @@ Eigen::MatrixXd Matrix3DXd::at( unsigned int z ) const{
     return this->Mat3D.vector::at(z);
 }
 
-Matrix3DXd Matrix3DXd::at( vector< int > idxVec ){
+Matrix3DXd Matrix3DXd::at( vector< unsigned int > idxVec ){
     
-    Eigen::VectorXi idxVecAlt = Eigen::Map<Eigen::VectorXi>(idxVec.data(), idxVec.size());
+    vector<int> idxVec_tmp;
+    idxVec_tmp.reserve( idxVec.size() );
+    for( unsigned int z : idxVec ){
+        idxVec_tmp.push_back( z );
+    }
+
+    Eigen::VectorXi idxVecAlt = Eigen::Map<Eigen::VectorXi>(idxVec_tmp.data(), idxVec_tmp.size());
 
     // Check for out of range violation.
     if( (unsigned int) idxVecAlt.maxCoeff() > this->levels() ){
