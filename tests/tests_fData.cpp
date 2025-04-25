@@ -161,7 +161,6 @@ void tests::fData_test_1( unsigned int test_idx ){
         }
         cout << "Match result: " << match_bool << endl;
 
-
     }
 
 }
@@ -198,8 +197,13 @@ void tests::fData_test_2( unsigned int test_idx ){
         string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
         fData::read_sXp_file( myF, fullFileName );
 
-        myF.gen_2_partit();
+        vector<fData> myPartits = myF.gen_2_partit();
 
+        fData partit1 = myPartits.at(0);
+        fData partit2 = myPartits.at(1);
+
+        
     }
+
 
 }

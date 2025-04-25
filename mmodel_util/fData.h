@@ -184,9 +184,12 @@ public:
     // Obtain the imaginary part data matrix at target frequency index.
     Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
 
-    Eigen::VectorXd getF_vec();
-    Matrix3DXd getXr_vec();
-    Matrix3DXd getXi_vec();
+    // Obtain the f vector.
+    Eigen::VectorXd getF_vec() const;
+    // Obtain the frequency data part A (Real part or magnitude).
+    Matrix3DXd getXr_vec() const;
+    // Obtain the frequency data part B (Imaginary part or phase).
+    Matrix3DXd getXi_vec() const;
 
 // ====================================================================== <<<<<
 

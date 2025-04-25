@@ -309,16 +309,19 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
 vector<fData> fData::gen_2_partit(){
 
+    // Initialize return fData vector.
     vector<fData> retVec;
 
+    // Obtain the size of the frequency data set.
     unsigned int fSize = this->f_vec.size();
+    // Set the size of partition 1.
     unsigned int f1Size = (unsigned int) std::ceil( (double) fSize/2 );
 
+    // Generate the linearly distributed index array for partition 1.
     vector< unsigned int > f1_idx_vec = utils::gen_lin_idx_arr( 0, fSize - 1, f1Size );
+    // Generate the remainder index array for partition 2.
     vector< unsigned int > f2_idx_vec = utils::gen_rem_idx_arr( 0, fSize - 1, f1_idx_vec );
     unsigned int f2Size = f2_idx_vec.size();
-
-    // Eigen::VectorXd f_vec = Eigen::Map<Eigen::VectorXd>( f1vec.data(), f1vec.size() );
 
     // Create the partition 1 frequency vector, real data vector, and imaginary data vector.
     Eigen::VectorXd f1_vec = Eigen::VectorXd( f1Size );
@@ -424,13 +427,13 @@ Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
     return this->Xi_vec.at( f_idx );
 }
 
-Eigen::VectorXd fData::getF_vec(){
-    Eigen::VectorXd tmp = this->f_vec;
-    return tmp;
+Eigen::VectorXd fData::getF_vec() const{
+    // Eigen::VectorXd tmp = this->f_vec;
+    return this->f_vec;
 }
-Matrix3DXd fData::getXr_vec()
+Matrix3DXd fData::getXr_vec() const
     { return this->Xr_vec; }
-Matrix3DXd fData::getXi_vec()
+Matrix3DXd fData::getXi_vec() const
     { return this->Xi_vec; }
 
 // ====================================================================== <<<<<
