@@ -202,12 +202,22 @@ void tests::fData_test_2( unsigned int test_idx ){
         shared_ptr<fData> partit1 = myPartits.at(0);
         shared_ptr<fData> partit2 = myPartits.at(1);
 
-        
-
         bool match_bool = true;
+        vector< unsigned int > even_idx_arr = utils::gen_even_idx_arr( 0, myF.get_f_cnt() - 1 );
+        vector< unsigned int > odd_idx_arr = utils::gen_odd_idx_arr( 0, myF.get_f_cnt() - 1 );
 
+        for( unsigned int z = 0; z < even_idx_arr.size(); z++ ){
+            match_bool = match_bool && ( partit1->get_fval_at(z) == myF.get_fval_at( even_idx_arr.at(z) ) );
+            match_bool = match_bool && ( partit1->get_reData_at_f(z) == myF.get_reData_at_f( even_idx_arr.at(z) ) );
+            match_bool = match_bool && ( partit1->get_imData_at_f(z) == myF.get_imData_at_f( even_idx_arr.at(z) ) );
+        }
+        for( unsigned int z = 0; z < odd_idx_arr.size(); z++ ){
+            match_bool = match_bool && ( partit2->get_fval_at(z) == myF.get_fval_at( odd_idx_arr.at(z) ) );
+            match_bool = match_bool && ( partit2->get_reData_at_f(z) == myF.get_reData_at_f( odd_idx_arr.at(z) ) );
+            match_bool = match_bool && ( partit2->get_imData_at_f(z) == myF.get_imData_at_f( odd_idx_arr.at(z) ) );
+        }
         
-
+        cout << "Interleaving partitioned data match: " << match_bool << endl;
 
     }
 
