@@ -307,10 +307,10 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 // ====================================================================== >>>>>
 
 
-vector<fData> fData::gen_2_partit(){
+vector< shared_ptr<fData> > fData::gen_2_partit(){
 
     // Initialize return fData vector.
-    vector<fData> retVec;
+    vector< shared_ptr<fData> > retVec;
 
     // Obtain the size of the frequency data set.
     unsigned int fSize = this->f_vec.size();
@@ -345,9 +345,10 @@ vector<fData> fData::gen_2_partit(){
         f2_Xi_vec.set( z, this->Xi_vec.at( f2_idx_vec.at(z) ) );
     }
 
+
     // Place the two partition data objects in the return vector.
-    retVec.emplace_back( fData( f1_vec, f1_Xr_vec, f1_Xi_vec ) );
-    retVec.emplace_back( fData( f2_vec, f2_Xr_vec, f2_Xi_vec ) );
+    retVec.emplace_back( std::make_shared<fData>( f1_vec, f1_Xr_vec, f1_Xi_vec ) );
+    retVec.emplace_back( std::make_shared<fData>( f2_vec, f2_Xr_vec, f2_Xi_vec ) );
 
     return retVec;
 

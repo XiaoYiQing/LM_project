@@ -140,7 +140,7 @@ public:
     The partitions are decided by interleaving indexing.
     Partition 1 always has the first frequency entry.
     */
-    vector<fData> gen_2_partit();
+    vector< shared_ptr<fData> > gen_2_partit();
 
     /*
     Create two partitions from the original frequency data set.

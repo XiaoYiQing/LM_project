@@ -151,6 +151,31 @@ bool isEqEnough( double a, double b, double thresh ){
 //      Indexing Arrays Functions
 // ====================================================================== >>>>>
 
+vector< unsigned int > utils::gen_even_idx_arr( unsigned int lower, unsigned int upper ){    
+
+    if( upper <= lower ){
+        throw std::invalid_argument( "The upper bound must be larger than the lower bound." );
+    }
+
+    // Initialize return vector.
+    vector< unsigned int > resVec;
+    resVec.reserve( ( upper - lower )/2 + 1 );
+
+
+    unsigned int start_idx = lower;
+    if( remainder( (double) lower, 2.0 ) == 1 ){
+        start_idx += 1;
+    }
+
+    for( unsigned int z = start_idx; z <= upper; z += 2 ){
+        resVec.push_back( z );
+    }
+    resVec.shrink_to_fit();
+
+    return resVec;
+
+}
+
 vector< unsigned int > utils::gen_lin_idx_arr( unsigned int lower, unsigned int upper, unsigned int cnt ){
 
     if( cnt < 2 ){
@@ -166,7 +191,6 @@ vector< unsigned int > utils::gen_lin_idx_arr( unsigned int lower, unsigned int 
         vector< unsigned int > resVec = {lower, upper};
         return resVec;
     }
-    
 
     // Compute the average distance between each index (if allowed to be floating numbers).
     double avg_diff = ( (double) ( upper - lower ) )/( cnt - 1 );
