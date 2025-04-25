@@ -171,6 +171,11 @@ fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
     this->Xr_vec = Xr_vec;
     this->Xi_vec = Xi_vec;
 
+    this->f_pref = METRIC_PREFIX::NONE;
+    this->fD_type = FDATA_TYPE::NONE;
+    this->fD_format = FDATA_FORMAT::NONE;
+    this->systImp = 50;
+
 }
 
 // ====================================================================== <<<<<
@@ -337,6 +342,9 @@ vector<fData> fData::gen_2_partit(){
         f2_Xi_vec.set( z, this->Xi_vec.at( f2_idx_vec.at(z) ) );
     }
 
+    // Place the two partition data objects in the return vector.
+    retVec.emplace_back( fData( f1_vec, f1_Xr_vec, f1_Xi_vec ) );
+    retVec.emplace_back( fData( f2_vec, f2_Xr_vec, f2_Xi_vec ) );
 
     return retVec;
 
@@ -406,12 +414,24 @@ double fData::get_f_scale_num() const{
     return get_METRIC_PREFIX_val( this->f_pref );
 }
 
+double fData::get_fval_at( int f_idx ) const{
+    return this->f_vec( f_idx );
+}
 Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
     return this->Xr_vec.at( f_idx );
 }
 Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
     return this->Xi_vec.at( f_idx );
 }
+
+Eigen::VectorXd fData::getF_vec(){
+    Eigen::VectorXd tmp = this->f_vec;
+    return tmp;
+}
+Matrix3DXd fData::getXr_vec()
+    { return this->Xr_vec; }
+Matrix3DXd fData::getXi_vec()
+    { return this->Xi_vec; }
 
 // ====================================================================== <<<<<
 

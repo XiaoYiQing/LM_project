@@ -111,6 +111,8 @@ public:
 
     /*
     Initialization with known frequency vector and frequency data.
+    NOTE: scale, data-type, and data format are all set to NONE by default. You 
+    have to change them by yourself afterward initialization.
     */
     fData( Eigen::VectorXd&, Matrix3DXd&, Matrix3DXd& );
 
@@ -174,10 +176,17 @@ public:
     string get_f_scale_str() const;
     // Obtain the numerical value of the frequency scale or metric prefix.
     double get_f_scale_num() const;
+
+    // Obtain the frequency value at target frequency index.
+    double get_fval_at( int f_idx ) const;
     // Obtain the real part data matrix at target frequency index.
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
     // Obtain the imaginary part data matrix at target frequency index.
     Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
+
+    Eigen::VectorXd getF_vec();
+    Matrix3DXd getXr_vec();
+    Matrix3DXd getXi_vec();
 
 // ====================================================================== <<<<<
 
