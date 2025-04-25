@@ -135,11 +135,18 @@ public:
 
     /*
     Create two partitions from the original frequency data set.
+    The partitions are decided by interleaving indexing.
+    Partition 1 always has the first frequency entry.
+    */
+    vector<fData> gen_2_partit();
+
+    /*
+    Create two partitions from the original frequency data set.
     Partition 1 is decided by the input index array.
     Partition 2 receives all leftover.
     TODO: verify if partition 1 index array have repeat.
     */
-    vector<fData> gen_2_partitions( const vector< unsigned int >& p1_idx );
+    vector<fData> gen_2_partit( const vector< unsigned int >& p1_idx );
 
     /*
     Generate a complex conjugate set of data.

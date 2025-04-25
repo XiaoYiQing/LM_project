@@ -285,9 +285,40 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 // ====================================================================== >>>>>
 
 
-vector<fData> fData::gen_2_partitions( const vector< unsigned int >& p1_idx ){
+vector<fData> fData::gen_2_partit(){
 
     vector<fData> retVec;
+
+    unsigned int fSize = this->f_vec.size();
+    unsigned int f1Size = (unsigned int) std::ceil( (double) fSize/2 );
+
+    vector< unsigned int > f1_idx_vec = utils::gen_lin_idx_arr( 0, fSize - 1, f1Size );
+    vector< unsigned int > f2_idx_vec = utils::gen_rem_idx_arr( 0, fSize - 1, f1_idx_vec );
+    unsigned int f2Size = f2_idx_vec.size();
+
+    // Eigen::VectorXd f_vec = Eigen::Map<Eigen::VectorXd>( f1vec.data(), f1vec.size() );
+
+    // Create the partition 1 frequency vector, real data vector, and imaginary data vector.
+    Eigen::VectorXd f1_vec = Eigen::VectorXd( f1Size );
+    Matrix3DXd f1_Xr_vec, f1_Xi_vec;
+    f1_Xr_vec.reInit( this->Xr_vec.rows(), this->Xr_vec.cols(), f1Size );
+    f1_Xi_vec.reInit( this->Xi_vec.rows(), this->Xi_vec.cols(), f1Size );
+    for( unsigned int z = 0; z < f1Size; z++ ){
+        f1_vec(z) = f_vec( f1_idx_vec.at(z) );
+        f1_Xr_vec.set( z, this->Xr_vec.at( f1_idx_vec.at(z) ) );
+        f1_Xi_vec.set( z, this->Xi_vec.at( f1_idx_vec.at(z) ) );
+    }
+
+    // Create the partition 2 frequency vector, real data vector, and imaginary data vector.
+    Eigen::VectorXd f2_vec = Eigen::VectorXd( f2Size );
+    Matrix3DXd f2_Xr_vec, f2_Xi_vec;
+    f2_Xr_vec.reInit( this->Xr_vec.rows(), this->Xr_vec.cols(), f2Size );
+    f2_Xi_vec.reInit( this->Xi_vec.rows(), this->Xi_vec.cols(), f2Size );
+    for( unsigned int z = 0; z < f2Size; z++ ){
+        f2_vec(z) = f_vec( f2_idx_vec.at(z) );
+        f2_Xr_vec.set( z, this->Xr_vec.at( f2_idx_vec.at(z) ) );
+        f2_Xi_vec.set( z, this->Xi_vec.at( f2_idx_vec.at(z) ) );
+    }
 
 
     return retVec;
