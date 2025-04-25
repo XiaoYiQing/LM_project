@@ -152,9 +152,26 @@ fData::fData(){
 }
 
 
-// fData::fData( Eigen::VectorXd f_vec, Matrix3DXd Xr_vec, Matrix3DXd Xi_vec ){
+fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
 
-// }
+    if( f_vec.size() == 0 ){
+        throw std::invalid_argument( "This constructor does not allow an empty initialization." );
+    }
+    if( f_vec.size() != Xr_vec.levels() || f_vec.size() != Xi_vec.levels() ){
+        throw std::invalid_argument( "The frequency vector and the two data matrix vectors must have the same number of entries." );
+    }
+    if( !Matrix3DXd::consist_check( Xr_vec ) || !Matrix3DXd::consist_check( Xi_vec ) ){
+        throw std::invalid_argument( "Both data vectors must have consistent 2D matrices." );
+    }
+    if( !Matrix3DXd::same_size( Xr_vec.at(0), Xi_vec.at(0) ) ){
+        throw std::invalid_argument( "Size inconsistency between the two data matrix vectors." );
+    }
+
+    this->f_vec = f_vec;
+    this->Xr_vec = Xr_vec;
+    this->Xi_vec = Xi_vec;
+
+}
 
 // ====================================================================== <<<<<
 

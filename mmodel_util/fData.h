@@ -112,7 +112,7 @@ public:
     /*
     Initialization with known frequency vector and frequency data.
     */
-    // fData( Eigen::VectorXd, Matrix3DXd, Matrix3DXd );
+    fData( Eigen::VectorXd&, Matrix3DXd&, Matrix3DXd& );
 
 // ====================================================================== <<<<<
 
