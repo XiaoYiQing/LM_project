@@ -51,5 +51,37 @@ void tests::numUtils_test_1( unsigned int case_idx ){
 
     }
 
+    case_cnt++;
+    // 2- Test gen_even_idx_arr and gen_odd_idx_arr.
+    if( case_cnt == case_idx ){
+        
+        bool match_flag = true;
+
+        vector< unsigned int > p1vec = utils::gen_even_idx_arr( 1, 17 );
+        vector< unsigned int > p2vec = utils::gen_odd_idx_arr( 1, 17 );
+        vector< unsigned int > p1vec_ans = { 2, 4, 6, 8, 10, 12, 14, 16 };
+        vector< unsigned int > p2vec_ans = { 1, 3, 5, 7, 9, 11, 13, 15, 17};
+
+        if( p1vec.size() == p1vec_ans.size() ){
+            for( unsigned int z = 0; z < p1vec_ans.size(); z++ ){
+                match_flag = match_flag && ( p1vec.at(z) == p1vec_ans.at(z) );
+            }
+        }else{
+            match_flag = false;
+        }
+        cout << "Check even array: " << match_flag << endl;
+
+        match_flag = true;
+        if( p2vec.size() == p2vec_ans.size() ){
+            for( unsigned int z = 0; z < p2vec_ans.size(); z++ ){
+                match_flag = match_flag && ( p2vec.at(z) == p2vec_ans.at(z) );
+            }
+        }else{
+            match_flag = false;
+        }
+        cout << "Check odd array: " << match_flag << endl;
+
+    }
+
 }
 

@@ -161,12 +161,39 @@ vector< unsigned int > utils::gen_even_idx_arr( unsigned int lower, unsigned int
     vector< unsigned int > resVec;
     resVec.reserve( ( upper - lower )/2 + 1 );
 
-
+    // Initialize the starting index.
     unsigned int start_idx = lower;
     if( remainder( (double) lower, 2.0 ) == 1 ){
         start_idx += 1;
     }
 
+    // Fill even entries into the index array.
+    for( unsigned int z = start_idx; z <= upper; z += 2 ){
+        resVec.push_back( z );
+    }
+    resVec.shrink_to_fit();
+
+    return resVec;
+
+}
+
+vector< unsigned int > utils::gen_odd_idx_arr( unsigned int lower, unsigned int upper ){
+
+    if( upper <= lower ){
+        throw std::invalid_argument( "The upper bound must be larger than the lower bound." );
+    }
+
+    // Initialize return vector.
+    vector< unsigned int > resVec;
+    resVec.reserve( ( upper - lower )/2 + 1 );
+
+    // Initialize the starting index.
+    unsigned int start_idx = lower;
+    if( remainder( (double) lower, 2.0 ) == 0 ){
+        start_idx += 1;
+    }
+
+    // Fill even entries into the index array.
     for( unsigned int z = start_idx; z <= upper; z += 2 ){
         resVec.push_back( z );
     }

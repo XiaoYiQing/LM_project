@@ -51,10 +51,16 @@ namespace utils{
 // ====================================================================== >>>>>
 
 /*
-Simply generate the index array of even indices within the specified range.
+Generate the index array of even indices within the specified range.
 Array is in ascending order.
 */
 vector< unsigned int > gen_even_idx_arr( unsigned int lower, unsigned int upper );
+
+/*
+Generate the index array of odd indices within the specified range.
+Array is in ascending order.
+*/
+vector< unsigned int > gen_odd_idx_arr( unsigned int lower, unsigned int upper );
 
 /*
 Function generates a linearly distributed array of indices between the specified
