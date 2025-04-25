@@ -314,13 +314,11 @@ vector< shared_ptr<fData> > fData::gen_2_partit(){
 
     // Obtain the size of the frequency data set.
     unsigned int fSize = this->f_vec.size();
-    // Set the size of partition 1.
-    unsigned int f1Size = (unsigned int) std::ceil( (double) fSize/2 );
 
-    // Generate the linearly distributed index array for partition 1.
-    vector< unsigned int > f1_idx_vec = utils::gen_lin_idx_arr( 0, fSize - 1, f1Size );
-    // Generate the remainder index array for partition 2.
-    vector< unsigned int > f2_idx_vec = utils::gen_rem_idx_arr( 0, fSize - 1, f1_idx_vec );
+    // Generate the frequency partition index arrays (Interleaving).
+    vector< unsigned int > f1_idx_vec = utils::gen_even_idx_arr( 0, fSize - 1 );
+    vector< unsigned int > f2_idx_vec = utils::gen_odd_idx_arr( 0, fSize - 1 );
+    unsigned int f1Size = f1_idx_vec.size();
     unsigned int f2Size = f2_idx_vec.size();
 
     // Create the partition 1 frequency vector, real data vector, and imaginary data vector.

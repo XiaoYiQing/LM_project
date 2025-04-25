@@ -169,7 +169,6 @@ void tests::fData_test_1( unsigned int test_idx ){
 
 void tests::fData_test_2( unsigned int test_idx ){
 
-
     int case_cnt = 0;
 
     // 0- Complex conjugate set generation
@@ -202,6 +201,8 @@ void tests::fData_test_2( unsigned int test_idx ){
 
         shared_ptr<fData> partit1 = myPartits.at(0);
         shared_ptr<fData> partit2 = myPartits.at(1);
+
+        
 
         bool match_bool = true;
 
