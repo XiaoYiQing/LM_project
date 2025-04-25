@@ -6,6 +6,8 @@ set( mmodel_util_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/fData.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Matrix3DXd.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Matrix3DXd.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/LM_eng.h
+	${CMAKE_CURRENT_SOURCE_DIR}/LM_eng.cpp
 )
 
 add_library(mmodel_util ${mmodel_util_SOURCES})

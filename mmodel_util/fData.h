@@ -148,7 +148,7 @@ public:
     Partition 2 receives all leftover.
     TODO: verify if partition 1 index array have repeat.
     */
-    vector<fData> gen_2_partit( const vector< unsigned int >& p1_idx );
+    vector< shared_ptr<fData> > gen_2_partit( const vector< unsigned int >& p1_idx );
 
     /*
     Generate a complex conjugate set of data.
