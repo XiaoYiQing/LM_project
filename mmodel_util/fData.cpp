@@ -356,10 +356,6 @@ fData fData::gen_cplx_conj_set(){
 
     // Initialize the copy using the current object.
     fData cplxConj_copy = *this;
-    
-    cout << this->f_vec(0) << ", " << cplxConj_copy.f_vec(1) << endl;
-    cout << this->Xr_vec.at(0) << endl;
-    cout << this->Xi_vec.at(0) << endl;
 
     Eigen::VectorXd tmpFVec;
     Matrix3DXd tmpXr_vec;
@@ -381,6 +377,7 @@ fData fData::gen_cplx_conj_set(){
     case fData::FDATA_FORMAT::MA:
     case fData::FDATA_FORMAT::RI:
         // Invert the imaginary part.
+        tmpFVec *= -1;
         tmpXi_vec *= -1;
         break;
 

@@ -189,6 +189,8 @@ void tests::fData_test_1( unsigned int test_idx ){
 
         complex<double> tarF = myF.get_cplx_f_at( testIdx );
         cout << "Complex frequency: " << tarF << endl;
+        fData myF_cconj = myF.gen_cplx_conj_set();
+        cout << "Complex frequency: " << myF_cconj.get_cplx_f_at( testIdx ) << endl;
 
     }
 
