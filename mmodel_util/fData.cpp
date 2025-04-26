@@ -419,6 +419,9 @@ double fData::get_f_scale_num() const{
 double fData::get_fval_at( int f_idx ) const{
     return this->f_vec( f_idx );
 }
+std::complex<double> fData::get_cplx_f_at( int f_idx ) const{
+    return std::complex<double>( 0, this->f_vec( f_idx ) );
+}
 Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
     return this->Xr_vec.at( f_idx );
 }

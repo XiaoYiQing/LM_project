@@ -41,4 +41,6 @@ Eigen::MatrixXd LM_UTIL::build_LM( fData f1Data, fData f2Data ){
         }
     }
 
+    return LM;
+    
 }

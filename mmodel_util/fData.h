@@ -179,6 +179,10 @@ public:
 
     // Obtain the frequency value at target frequency index.
     double get_fval_at( int f_idx ) const;
+    // Obtain the complex frequency value at target frequency index.
+    // TODO: Consider putting the 2*pi scaling in the future.
+    std::complex<double> get_cplx_f_at( int f_idx ) const;
+
     // Obtain the real part data matrix at target frequency index.
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
     // Obtain the imaginary part data matrix at target frequency index.
@@ -192,6 +196,8 @@ public:
     Matrix3DXd getXr_vec() const;
     // Obtain the frequency data part B (Imaginary part or phase).
     Matrix3DXd getXi_vec() const;
+
+
 
 // ====================================================================== <<<<<
 

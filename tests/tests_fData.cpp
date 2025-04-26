@@ -187,6 +187,9 @@ void tests::fData_test_1( unsigned int test_idx ){
         match_bool = match_bool && ( tarMatIm == myF.get_imData_at_f( testIdx ) );
         cout << "Complex data matching result: " << match_bool << endl;
 
+        complex<double> tarF = myF.get_cplx_f_at( testIdx );
+        cout << "Complex frequency: " << tarF << endl;
+
     }
 
 }
