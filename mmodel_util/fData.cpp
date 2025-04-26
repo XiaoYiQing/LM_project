@@ -425,6 +425,17 @@ Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
 Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
     return this->Xi_vec.at( f_idx );
 }
+Eigen::MatrixXcd fData::get_cplxData_at_f( int f_idx ) const{
+
+    Eigen::MatrixXcd cplxMat( Xr_vec.rows(), Xr_vec.cols() );
+    for( unsigned int i = 0; i < Xr_vec.rows(); i++ ) {
+        for( unsigned int j = 0; j < Xr_vec.cols(); j++ ) {
+            cplxMat(i, j) = std::complex<double>( Xr_vec.at(f_idx)(i, j), Xi_vec.at(f_idx)(i, j) );
+        }
+    }
+    return cplxMat;
+
+}
 
 Eigen::VectorXd fData::getF_vec() const{
     // Eigen::VectorXd tmp = this->f_vec;

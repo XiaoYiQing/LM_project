@@ -4,15 +4,19 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>   
 #include <vector> 
 
 #include "fData.h"
 
-namespace LM_ENG{
 
-    
-    Eigen::MatrixXd build_LM();
+using namespace std;
+
+namespace LM_UTIL{
+
+
+    Eigen::MatrixXd build_LM( fData f1Data, fData f2Data );
 
 }
 

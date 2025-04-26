@@ -50,8 +50,8 @@ int main() {
     // tests::Matrix3DXd_test_3_spec_ops(0);
     // tests::Matrix3DXd_test_4_supp(0);
 
-    // tests::fData_test_1( 4 );
-    tests::fData_test_2( 1 );
+    tests::fData_test_1( 5 );
+    // tests::fData_test_2( 1 );
 
 
     

@@ -183,6 +183,8 @@ public:
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
     // Obtain the imaginary part data matrix at target frequency index.
     Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
+    // Obtain the complex data matrix at the target frequency index.
+    Eigen::MatrixXcd get_cplxData_at_f( int f_idx ) const;
 
     // Obtain the f vector.
     Eigen::VectorXd getF_vec() const;

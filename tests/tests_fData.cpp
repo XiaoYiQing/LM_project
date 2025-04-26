@@ -163,6 +163,32 @@ void tests::fData_test_1( unsigned int test_idx ){
 
     }
 
+
+    case_cnt++;
+    // 5- get_cplxData_at_f() test.
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        unsigned testIdx = 2;
+
+        Eigen::MatrixXcd tarMat = myF.get_cplxData_at_f( testIdx );
+        Eigen::MatrixXd tarMatRe = tarMat.real();
+        Eigen::MatrixXd tarMatIm = tarMat.imag();
+
+        bool match_bool = true;
+
+        match_bool = match_bool && ( tarMatRe == myF.get_reData_at_f( testIdx ) );
+        match_bool = match_bool && ( tarMatIm == myF.get_imData_at_f( testIdx ) );
+        cout << "Complex data matching result: " << match_bool << endl;
+
+    }
+
 }
 
 
