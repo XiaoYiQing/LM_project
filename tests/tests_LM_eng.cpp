@@ -20,6 +20,6 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     shared_ptr<fData> partit1 = myPartits.at(0);
     shared_ptr<fData> partit2 = myPartits.at(1);
 
-    LM_UTIL::build_LM( *partit1, *partit2 );
+    Eigen::MatrixXd myLM = LM_UTIL::build_LM( *partit1, *partit2 );
 
 }

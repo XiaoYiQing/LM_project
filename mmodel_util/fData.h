@@ -136,6 +136,12 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Create a reduced set of frequency data using a smaller linearly distributed
+    index set.
+    */
+    shared_ptr<fData> red_partit_lin( unsigned int rSize );
+
+    /*
     Create two partitions from the original frequency data set.
     The partitions are decided by interleaving indexing.
     Partition 1 always has the first frequency entry.
