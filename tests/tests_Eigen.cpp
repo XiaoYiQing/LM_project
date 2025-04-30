@@ -148,9 +148,24 @@ void tests::eigen_test2( int testCase ){
 
         Eigen::MatrixXcd matA = Eigen::MatrixXcd( 1, 1 );
         matA << complex<double>(1,2);
-        cout << matA << endl;
+        cout << "Matrix A: \n" << matA << endl;
 
+        Eigen::MatrixXcd matB = Eigen::MatrixXcd( 2, 2 );
+        matB << complex<double>(1,1), complex<double>(1,2), 
+            complex<double>(2,1), complex<double>(2,2);
+        cout << "Matrix B: \n" << matB << endl;
+
+        unsigned int row = 2;
+        unsigned int col = 3;
+        Eigen::MatrixXcd matC = Eigen::MatrixXcd( row, col );
         
+        matC( 0, 0 ) = complex<double>(1,1);
+        matC( 0, 1 ) = complex<double>(1,2);
+        matC( 0, 2 ) = complex<double>(1,3);
+        matC( 1, 0 ) = complex<double>(2,1);
+        matC( 1, 1 ) = complex<double>(2,2);
+        matC( 1, 2 ) = complex<double>(2,3);
+        cout << "Matrix C: \n" << matC << endl;
 
     }
 

@@ -16,7 +16,7 @@ using namespace std;
 namespace LM_UTIL{
 
 
-    Eigen::MatrixXd build_LM( fData& f1Data, fData& f2Data );
+    Eigen::MatrixXd build_LM( fData f1Data, fData f2Data );
 
 }
 
