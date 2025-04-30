@@ -52,7 +52,7 @@ int main() {
     // tests::Matrix3DXd_test_4_supp(0);
 
     // tests::fData_test_1( 5 );
-    tests::fData_test_2( 1 );
+    tests::fData_test_2( 2 );
 
 
     

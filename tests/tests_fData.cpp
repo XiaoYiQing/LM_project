@@ -268,9 +268,18 @@ void tests::fData_test_2( unsigned int test_idx ){
 
         
         // Generate a linear index vector.
-        vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, myF.get_f_cnt(), rSize );
+        vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, myF.get_f_cnt() - 1, rSize );
 
-        int lol = 0;
+        // Generate a reduced fData.
+        shared_ptr<fData> myFr = myF.red_partit( fr_idx_vec );
+
+        bool match_bool = true;
+        for( unsigned int z = 0; z < fr_idx_vec.size(); z++ ){
+            match_bool = match_bool && ( myFr->get_fval_at(z) == myF.get_fval_at( fr_idx_vec.at(z) ) );
+            match_bool = match_bool && ( myFr->get_reData_at_f(z) == myF.get_reData_at_f( fr_idx_vec.at(z) ) );
+            match_bool = match_bool && ( myFr->get_imData_at_f(z) == myF.get_imData_at_f( fr_idx_vec.at(z) ) );
+        }
+        cout << "Reduced frequency data object match: " << match_bool << endl;
 
     }
 

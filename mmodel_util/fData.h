@@ -140,7 +140,10 @@ public:
     index set.
     */
     shared_ptr<fData> red_partit_lin( unsigned int rSize );
-
+    
+    /*
+    Create a reduced set of frequency data using a subset index array.
+    */
     shared_ptr<fData> red_partit( vector< unsigned int > fr_idx_vec );
 
     /*

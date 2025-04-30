@@ -18,7 +18,7 @@ namespace tests{
     /*
     Test basic LM construction.
     */
-    void LM_eng_test_1( unsigned int test_idx );
+    // void LM_eng_test_1( unsigned int test_idx );
 
 }
 
