@@ -4,8 +4,6 @@
 
 
 
-
-
 Eigen::MatrixXcd LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){
 
     // Obtain the size of the two partitions.
@@ -57,8 +55,8 @@ Eigen::MatrixXcd LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){
 
             // Obtain the matrix coordinate of the upper-left leading point of the current
             // LM sub-block being computed.
-            lead_x = i*row_cnt;
-            lead_y = j*col_cnt;
+            lead_x = i*out_cnt;
+            lead_y = j*in_cnt;
 
             // Compute the current Loewner Matrix block.
             LM_ij = ( f2_D_i - f1_D_j )/( f2_i - f1_j );

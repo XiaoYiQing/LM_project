@@ -171,6 +171,8 @@ fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
     this->Xr_vec = Xr_vec;
     this->Xi_vec = Xi_vec;
 
+    this->IOcnt[0] = Xr_vec.rows();
+    this->IOcnt[1] = Xr_vec.cols();
     this->f_pref = METRIC_PREFIX::NONE;
     this->fD_type = FDATA_TYPE::NONE;
     this->fD_format = FDATA_FORMAT::NONE;

@@ -43,7 +43,7 @@ int main() {
     // int testCase = 3;
 
     // tests::eigen_test1( testCase );
-    tests::eigen_test2( 1 );
+    // tests::eigen_test2( 1 );
 
 
     // tests::numUtils_test_1(2);
@@ -57,7 +57,7 @@ int main() {
     // tests::fData_test_2( 2 );
 
 
-    
+    tests::LM_eng_test_1( 0 );
     
 
     return 0; 
