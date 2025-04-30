@@ -21,6 +21,7 @@
 #include "numUtils.h"
 #include "tests_Eigen.h"
 #include "tests_fData.h"
+#include "tests_LM_eng.h"
 #include "tests_Matrix3DXd.h"
 #include "tests_numUtils.h"
 
