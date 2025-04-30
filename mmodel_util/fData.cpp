@@ -336,6 +336,12 @@ shared_ptr<fData> fData::red_partit( vector< unsigned int > fr_idx_vec ){
 
     // Create the return variable.
     shared_ptr<fData> retVec = std::make_shared<fData>( f1_vec, f_Xr_vec, f_Xi_vec ) ;
+    retVec->IOcnt[0] = this->IOcnt[0];
+    retVec->IOcnt[1] = this->IOcnt[1];
+    retVec->f_pref = this->f_pref;
+    retVec->fD_type = this->fD_type;
+    retVec->fD_format = this->fD_format;
+    retVec->systImp = this->systImp;
 
     return retVec;
 
@@ -382,6 +388,16 @@ vector< shared_ptr<fData> > fData::gen_2_partit(){
     // Place the two partition data objects in the return vector.
     retVec.emplace_back( std::make_shared<fData>( f1_vec, f1_Xr_vec, f1_Xi_vec ) );
     retVec.emplace_back( std::make_shared<fData>( f2_vec, f2_Xr_vec, f2_Xi_vec ) );
+
+    for( unsigned int z = 0; z < retVec.size(); z++ ){
+        retVec[z]->IOcnt[0] = this->IOcnt[0];
+        retVec[z]->IOcnt[1] = this->IOcnt[1];
+        retVec[z]->f_pref = this->f_pref;
+        retVec[z]->fD_type = this->fD_type;
+        retVec[z]->fD_format = this->fD_format;
+        retVec[z]->systImp = this->systImp;
+    }
+    
 
     return retVec;
 
