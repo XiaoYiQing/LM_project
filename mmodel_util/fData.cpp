@@ -66,7 +66,7 @@ double fData::get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX ){
         case METRIC_PREFIX::NONE:
             retVal = 1e0;   break;
         default:
-            retVal = 1e0;   break;
+            throw std::out_of_range( "Target prefix has no equivalent value defined currently by this function." );
     };
 
     return retVal;
@@ -307,7 +307,7 @@ void fData::data_prefix_switch( METRIC_PREFIX newPref ){
     double new_pref_val = get_METRIC_PREFIX_val( newPref );
     
     // Apply the rescaling to the frequency vector.
-    this->f_vec *= ( new_pref_val/curr_pref_val );
+    this->f_vec *= ( curr_pref_val/new_pref_val );
     // Update the prefix.
     this->f_pref = newPref;
 

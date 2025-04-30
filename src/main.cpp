@@ -53,11 +53,11 @@ int main() {
     // tests::Matrix3DXd_test_3_spec_ops(0);
     // tests::Matrix3DXd_test_4_supp(0);
 
-    // tests::fData_test_1( 5 );
+    tests::fData_test_1( 6 );
     // tests::fData_test_2( 2 );
 
 
-    tests::LM_eng_test_1( 0 );
+    // tests::LM_eng_test_1( 0 );
     
 
     return 0; 

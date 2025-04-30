@@ -194,6 +194,24 @@ void tests::fData_test_1( unsigned int test_idx ){
 
     }
 
+    case_cnt++;
+    // 6- data_prefix_switch test.
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        cout << myF.get_fval_at( 10 ) << endl;
+        myF.data_prefix_switch( fData::METRIC_PREFIX::G );
+        cout << myF.get_fval_at( 10 ) << endl;
+
+
+    }
+
 }
 
 
