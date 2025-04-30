@@ -301,6 +301,19 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
 }
 
+void fData::data_prefix_switch( METRIC_PREFIX newPref ){
+
+    double curr_pref_val = get_METRIC_PREFIX_val( this->f_pref );
+    double new_pref_val = get_METRIC_PREFIX_val( newPref );
+    
+    // Apply the rescaling to the frequency vector.
+    this->f_vec *= ( new_pref_val/curr_pref_val );
+    // Update the prefix.
+    this->f_pref = newPref;
+
+}
+
+
 // ====================================================================== <<<<<
 
 

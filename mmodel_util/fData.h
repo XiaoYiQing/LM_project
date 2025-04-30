@@ -127,6 +127,10 @@ public:
     Switch the format of the data from the current format to the specified new format.
     */
     void data_format_Switch( FDATA_FORMAT newFormat );
+    /*
+    Switch the data prefix, which applies the corresponding rescaling to the f vector.
+    */
+    void data_prefix_switch( METRIC_PREFIX newPref );
 
 // ====================================================================== <<<<<
 
