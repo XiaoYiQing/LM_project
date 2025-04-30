@@ -307,15 +307,19 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 // ====================================================================== >>>>>
 
 shared_ptr<fData> fData::red_partit_lin( unsigned int rSize ){
-
-    // Initialize return fData vector.
-    shared_ptr<fData> retVec;
-
-    // Obtain the size of the frequency data set.
-    unsigned int fSize = this->f_vec.size();
     
     // Generate a linear index vector.
-    vector< unsigned int > f_idx_vec = utils::gen_lin_idx_arr( 0, fSize, rSize );
+    vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, this->f_vec.size(), rSize );
+
+    // Use the main function with the created sub-indexing vector.
+    return this->red_partit( fr_idx_vec );
+
+}
+
+shared_ptr<fData> fData::red_partit( vector< unsigned int > fr_idx_vec ){
+
+    // Obtain the size of the frequency data set.
+    unsigned int rSize = fr_idx_vec.size();
 
     // Create the reduced set frequency vector, real data vector, and imaginary data vector.
     Eigen::VectorXd f1_vec = Eigen::VectorXd( rSize );
@@ -323,12 +327,13 @@ shared_ptr<fData> fData::red_partit_lin( unsigned int rSize ){
     f_Xr_vec.reInit( this->Xr_vec.rows(), this->Xr_vec.cols(), rSize );
     f_Xi_vec.reInit( this->Xi_vec.rows(), this->Xi_vec.cols(), rSize );
     for( unsigned int z = 0; z < rSize; z++ ){
-        f1_vec(z) = f_vec( f_idx_vec.at(z) );
-        f_Xr_vec.set( z, this->Xr_vec.at( f_idx_vec.at(z) ) );
-        f_Xi_vec.set( z, this->Xi_vec.at( f_idx_vec.at(z) ) );
+        f1_vec(z) = f_vec( fr_idx_vec.at(z) );
+        f_Xr_vec.set( z, this->Xr_vec.at( fr_idx_vec.at(z) ) );
+        f_Xi_vec.set( z, this->Xi_vec.at( fr_idx_vec.at(z) ) );
     }
 
-    retVec = std::make_shared<fData>( f1_vec, f_Xr_vec, f_Xi_vec ) ;
+    // Create the return variable.
+    shared_ptr<fData> retVec = std::make_shared<fData>( f1_vec, f_Xr_vec, f_Xi_vec ) ;
 
     return retVec;
 

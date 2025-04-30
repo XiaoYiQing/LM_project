@@ -252,5 +252,13 @@ void tests::fData_test_2( unsigned int test_idx ){
 
     }
 
+    case_cnt++;
+    // 2- Reduced freq. data set generation.
+    if( test_idx == case_cnt ){
+
+        
+
+    }
+
 
 }

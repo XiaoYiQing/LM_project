@@ -141,6 +141,8 @@ public:
     */
     shared_ptr<fData> red_partit_lin( unsigned int rSize );
 
+    shared_ptr<fData> red_partit( vector< unsigned int > fr_idx_vec );
+
     /*
     Create two partitions from the original frequency data set.
     The partitions are decided by interleaving indexing.
