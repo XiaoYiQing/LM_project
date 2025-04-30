@@ -14,22 +14,23 @@ Eigen::MatrixXd LM_UTIL::build_LM( fData f1Data, fData f2Data ){
     Eigen::MatrixXd refMat = f1Data.get_reData_at_f(0);
     
     // Obtain the number of outputs and inputs.
-    int out_cnt = f1Data.get_out_cnt();
-    int in_cnt = f1Data.get_in_cnt();
+    unsigned int out_cnt = f1Data.get_out_cnt();
+    unsigned int in_cnt = f1Data.get_in_cnt();
 
     // Determine the expected size of the Loewner Matrix.
-    int row_cnt = f2Size*out_cnt;
-    int col_cnt = f1Size*in_cnt;
+    unsigned int row_cnt = f2Size*out_cnt;
+    unsigned int col_cnt = f1Size*in_cnt;
 
-    // // Initialize the Loewner Matrix.
-    // Eigen::MatrixXcd LM = Eigen::MatrixXcd( row_cnt, col_cnt );
-    // // Initialize temporary matrix representing the current sub-block being computed.
-    // Eigen::MatrixXcd LM_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
-    // // Initialize current freq. data from each partition.
-    // Eigen::MatrixXcd f1_D_j = Eigen::MatrixXcd( out_cnt, in_cnt );
-    // Eigen::MatrixXcd f2_D_i = Eigen::MatrixXcd( out_cnt, in_cnt );
+    // Initialize the Loewner Matrix.
+    Eigen::MatrixXcd LM = Eigen::MatrixXcd( row_cnt, col_cnt );
+    // Initialize temporary matrix representing the current sub-block being computed.
+    Eigen::MatrixXcd LM_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    // Initialize current freq. data from each partition.
+    Eigen::MatrixXcd f1_D_j = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd f2_D_i = Eigen::MatrixXcd( out_cnt, in_cnt );
     // // Initialize current frequencies from each partition.
-    // complex<double> f1_j = 0, f2_i = 0;
+    complex<double> f1_j = complex<double>(0,0); 
+    complex<double> f2_i = complex<double>(0,0);
     
 
     // // Initialize current lead coordinate where the sub-block is to be inserted in the
