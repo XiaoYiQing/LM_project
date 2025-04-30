@@ -256,7 +256,21 @@ void tests::fData_test_2( unsigned int test_idx ){
     // 2- Reduced freq. data set generation.
     if( test_idx == case_cnt ){
 
+        // Subset size.
+        unsigned int rSize = 100;
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
         
+        // Generate a linear index vector.
+        vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, myF.get_f_cnt(), rSize );
+
+        int lol = 0;
 
     }
 
