@@ -14,6 +14,11 @@ namespace tests{
 
     void eigen_test1( int testCase );
 
+    /*
+    Complex matrix tests.
+    */
+    void eigen_test2( int testCase );
+
 }
 
 

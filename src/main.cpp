@@ -41,7 +41,9 @@ int main() {
 
     // Test aspectes of the Eigen library.
     // int testCase = 3;
+
     // tests::eigen_test1( testCase );
+    tests::eigen_test2( 1 );
 
 
     // tests::numUtils_test_1(2);
@@ -52,7 +54,7 @@ int main() {
     // tests::Matrix3DXd_test_4_supp(0);
 
     // tests::fData_test_1( 5 );
-    tests::fData_test_2( 2 );
+    // tests::fData_test_2( 2 );
 
 
     

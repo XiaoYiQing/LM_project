@@ -124,3 +124,36 @@ void tests::eigen_test1( int testCase ){
 }
 
 
+void tests::eigen_test2( int testCase ){
+
+    int case_cnt = 0;
+
+    // 0- Simple complex values test.
+    if( case_cnt == testCase ){       
+
+        complex<double> myVal1 = complex<double>( 1, 9 );
+        cout << "Complex value 1: " << myVal1 << endl;
+
+        complex<double> myVal2 = complex<double>( 7, -4 );
+        cout << "Complex value 2: " << myVal2 << endl;
+
+        cout << "Complex value sum: " << myVal2 + myVal1 << endl;
+
+    }
+
+    
+    case_cnt++;
+    // 1- Simple complex matrix test.
+    if( case_cnt == testCase ){
+
+        Eigen::MatrixXcd matA = Eigen::MatrixXcd( 1, 1 );
+        matA << complex<double>(1,2);
+        cout << matA << endl;
+
+        
+
+    }
+
+}
+
+
