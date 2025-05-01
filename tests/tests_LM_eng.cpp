@@ -34,7 +34,7 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
         shared_ptr<fData> partit1 = myPartits.at(0);
         shared_ptr<fData> partit2 = myPartits.at(1);
         // Constrcut the Loewner Matrix using the two partitions.
-        Eigen::MatrixXcd myLM = LM_UTIL::build_LM( *partit1, *partit2 );
+        shared_ptr<Eigen::MatrixXcd> myLM = LM_UTIL::build_LM( *partit1, *partit2 );
 
         unsigned int out_cnt = myFr->get_out_cnt();
         unsigned int in_cnt = myFr->get_in_cnt();
@@ -52,7 +52,7 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
         Eigen::MatrixXcd test_LM_ij = ( test_S_i - test_S_j )/( test_f_i - test_f_j );
         // Obtain the generated LM sub-block.
         Eigen::MatrixXcd LM_ij = 
-            myLM.block( ( test_i )*out_cnt, ( test_j )*in_cnt, out_cnt, in_cnt );
+            myLM->block( ( test_i )*out_cnt, ( test_j )*in_cnt, out_cnt, in_cnt );
         // Compute difference between the two LM sub-blocks.
         Eigen::MatrixXcd LM_ij_diff = test_LM_ij - LM_ij;
 

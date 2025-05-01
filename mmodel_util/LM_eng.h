@@ -16,7 +16,15 @@ using namespace std;
 namespace LM_UTIL{
 
 
-    Eigen::MatrixXcd build_LM( const fData& f1Data, const fData& f2Data );
+    /*
+    Construct a Loewner Matrix.
+    */
+    shared_ptr<Eigen::MatrixXcd> build_LM( const fData& f1Data, const fData& f2Data );
+
+    /*
+    Construct a shifted-Loewner Matrix.
+    */
+    Eigen::MatrixXcd build_sLM(  );
 
 }
 
