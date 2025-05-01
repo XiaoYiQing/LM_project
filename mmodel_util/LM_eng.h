@@ -24,7 +24,7 @@ namespace LM_UTIL{
     /*
     Construct a shifted-Loewner Matrix.
     */
-    Eigen::MatrixXcd build_sLM(  );
+    shared_ptr<Eigen::MatrixXcd> build_sLM( const fData& f1Data, const fData& f2Data );
 
 }
 
