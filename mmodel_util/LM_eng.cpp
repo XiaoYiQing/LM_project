@@ -242,3 +242,12 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM_pencil( complex<double> ref_f, co
     return LM_pen;
 
 }
+
+
+shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, vector<unsigned int> sub_blk_size, unsigned int sub_blk_cnt ){
+
+    unsigned int row_cnt = 1;
+    unsigned int col_cnt = 1;
+
+}
+

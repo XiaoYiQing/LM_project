@@ -47,6 +47,17 @@ namespace LM_UTIL{
     shared_ptr<Eigen::MatrixXcd> build_LM_pencil( complex<double>, const Eigen::MatrixXcd& LM, 
         const Eigen::MatrixXcd& SLM );
 
+    /*
+    Construct a real transformation matrix.
+    > has_DC_pt: If the DC point is present, it means the first sub block vector is real and need
+        no complex to real transform.
+    > sub_blk_size: The number of rows (sub_blk_size.at(0)) and columns (sub_blk_size.at(1)) of a
+        sub-matrix block.
+    > sub_blk_cnt: The number of sub-matrix blocks.
+    */
+    shared_ptr<Eigen::MatrixXcd> build_reT_mat( bool has_DC_pt, vector<unsigned int> sub_blk_size, unsigned int sub_blk_cnt );
+    
+
 }
 
 
