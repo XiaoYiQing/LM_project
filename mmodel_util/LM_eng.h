@@ -26,6 +26,12 @@ namespace LM_UTIL{
     */
     shared_ptr<Eigen::MatrixXcd> build_SLM( const fData& f1Data, const fData& f2Data );
 
+    /*
+    Construct the row matrix vector containing the partition 2 data matrices in 
+    the same order they are used to construct the LM and SLM.
+    */
+    shared_ptr<Eigen::MatrixXcd> build_W( const fData& f2Data );
+
 }
 
 

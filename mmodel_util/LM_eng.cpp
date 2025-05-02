@@ -79,7 +79,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fDat
     unsigned int f1Size = f1Data.get_f_cnt();
     unsigned int f2Size = f2Data.get_f_cnt();
     if( f1Size == 0 || f2Size == 0 ){
-        throw std::invalid_argument( "Empty frequency data inputs are not allowed for constructing the Loewner Matrix." );
+        throw std::invalid_argument( "Empty frequency data inputs are not allowed for constructing the shifted Loewner Matrix." );
     }
 
     // Obtain the number of outputs and inputs.
@@ -135,5 +135,26 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fDat
     }
 
     return sLM;
+
+}
+
+
+shared_ptr<Eigen::MatrixXcd> build_W( const fData& f2Data ){
+
+    // Obtain the size of the two partitions.
+    unsigned int f2Size = f2Data.get_f_cnt();
+    if( f2Size == 0 ){
+        throw std::invalid_argument( "Empty frequency data input is not allowed for constructing the W matrix vector." );
+    }
+
+    // Obtain the number of outputs and inputs.
+    unsigned int out_cnt = f2Data.get_out_cnt();
+    unsigned int in_cnt = f2Data.get_in_cnt();
+
+    // Determine the expected size of the shifted Loewner Matrix.
+    unsigned int col_cnt = f2Size*out_cnt;
+
+    // Initialize the W matrix vector.
+    shared_ptr<Eigen::MatrixXcd> W = std::make_shared<Eigen::MatrixXcd>( in_cnt, col_cnt );
 
 }

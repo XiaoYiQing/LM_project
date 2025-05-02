@@ -171,8 +171,8 @@ fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
     this->Xr_vec = Xr_vec;
     this->Xi_vec = Xi_vec;
 
-    this->IOcnt[0] = Xr_vec.rows();
-    this->IOcnt[1] = Xr_vec.cols();
+    this->IOcnt[0] = Xr_vec.cols();
+    this->IOcnt[1] = Xr_vec.rows();
     this->f_pref = METRIC_PREFIX::NONE;
     this->fD_type = FDATA_TYPE::NONE;
     this->fD_format = FDATA_FORMAT::NONE;
@@ -463,9 +463,9 @@ fData fData::gen_cplx_conj_set(){
 // ====================================================================== >>>>>
 
 int fData::get_out_cnt() const
-    { return this->IOcnt[0]; }
-int fData::get_in_cnt() const
     { return this->IOcnt[1]; }
+int fData::get_in_cnt() const
+    { return this->IOcnt[0]; }
 
 int fData::get_f_cnt() const
     { return this->f_vec.size(); }
@@ -678,8 +678,8 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         // The frequency vector.
         vector< double > f_vec;
         // Initialize the vector of matrices.
-        tarFData.Xr_vec.reInit( tarFData.IOcnt[0], tarFData.IOcnt[1], res_blk_size );
-        tarFData.Xi_vec.reInit( tarFData.IOcnt[0], tarFData.IOcnt[1], res_blk_size );
+        tarFData.Xr_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
+        tarFData.Xi_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
 
         f_vec.reserve( res_blk_size );
     
@@ -699,8 +699,8 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             f_vec.push_back( tmp_val );
     
             
-            for( int i = 0; i < tarFData.IOcnt[0]; i++ ){
-                for( int j = 0; j < tarFData.IOcnt[1]; j++ ){
+            for( int i = 0; i < tarFData.IOcnt[1]; i++ ){
+                for( int j = 0; j < tarFData.IOcnt[0]; j++ ){
                     // Read the next data mag.
                     iss >> word;    tmp_val = std::stod( word );
                     tarFData.Xr_vec.set( i, j, line_idx, tmp_val );
