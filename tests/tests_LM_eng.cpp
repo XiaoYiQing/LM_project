@@ -126,4 +126,12 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
     }
 
+
+    case_cnt++;
+    // 2- W construct test.
+    if( test_idx == case_cnt ){
+
+
+    }
+
 }
