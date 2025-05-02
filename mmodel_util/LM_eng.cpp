@@ -244,10 +244,50 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM_pencil( complex<double> ref_f, co
 }
 
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, vector<unsigned int> sub_blk_size, unsigned int sub_blk_cnt ){
+shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_blk_cnt ){
 
-    unsigned int row_cnt = 1;
-    unsigned int col_cnt = 1;
+
+    // Obtain the total number of rows and columns of the final transformation matrix.
+    unsigned int row_cnt = 2*sub_blk_cnt*sub_mat_size;
+    unsigned int col_cnt = 2*sub_blk_cnt*sub_mat_size;
+
+    if( has_DC_pt ){
+        row_cnt += sub_mat_size;
+        col_cnt += sub_mat_size;        
+    }
+
+    // Complex 1.
+    complex<double> im1(0,1);
+    // Initialize the standard identity matrix.
+    Eigen::MatrixXd I_mat = Eigen::MatrixXd::Identity(sub_mat_size, sub_mat_size);
+    // Initialize the unit sub-block transformation matrix.
+    Eigen::MatrixXcd T_unit = Eigen::MatrixXcd( 2*sub_mat_size, 2*sub_mat_size );
+    T_unit.block( 0, 0, sub_mat_size, sub_mat_size ) = I_mat;
+    T_unit.block( 0, sub_mat_size, sub_mat_size, sub_mat_size ) = -im1*I_mat;
+    T_unit.block( sub_mat_size, 0, sub_mat_size, sub_mat_size ) = I_mat;
+    T_unit.block( sub_mat_size, sub_mat_size, sub_mat_size, sub_mat_size ) = im1*I_mat;
+
+    // Initialize the transformation matrix.
+    shared_ptr<Eigen::MatrixXcd> T_mat = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
+
+    // Initialize current sub-block's lead coordinate.
+    unsigned int lead_x = 0;
+    if( has_DC_pt ){
+        T_mat->block( lead_x, lead_x, sub_mat_size, sub_mat_size ) = I_mat;
+        lead_x += sub_mat_size;
+    }
+
+    for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
+
+        // Insert the current sub-block.
+        T_mat->block( lead_x, lead_x, 2*sub_mat_size, 2*sub_mat_size ) = T_unit;
+
+        // Increment leading point on the matrix diagonal.
+        lead_x += 2*sub_mat_size;
+
+    }
+
+    return T_mat;
 
 }
 
