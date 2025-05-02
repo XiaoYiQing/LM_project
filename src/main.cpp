@@ -57,7 +57,7 @@ int main() {
     // tests::fData_test_2( 2 );
 
 
-    tests::LM_eng_test_1( 0 );
+    tests::LM_eng_test_1( 1 );
     
 
     return 0; 

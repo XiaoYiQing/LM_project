@@ -73,7 +73,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData
 
 
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_sLM( const fData& f1Data, const fData& f2Data ){
+shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fData& f2Data ){
 
     // Obtain the size of the two partitions.
     unsigned int f1Size = f1Data.get_f_cnt();
