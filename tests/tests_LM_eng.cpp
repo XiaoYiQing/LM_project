@@ -131,6 +131,49 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     // 2- W construct test.
     if( test_idx == case_cnt ){
 
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        // Switch the data format into real + imaginary format.
+        myF.data_format_Switch( fData::FDATA_FORMAT::RI );
+        // Normalize the frequency vector (As much as you can according to metric prefixes).
+        myF.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+        // Create a subset linear index array.
+        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myF.get_f_cnt() - 1, 100 );
+        // Create a fData subset.
+        shared_ptr<fData> myFr = myF.red_partit( fr_idx_arr );
+
+        // Generate two partitions from this data subset.
+        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+        shared_ptr<fData> partit1 = myPartits.at(0);
+        shared_ptr<fData> partit2 = myPartits.at(1);
+        // Construct the shifted Loewner Matrix using the two partitions.
+        shared_ptr<Eigen::MatrixXcd> myW = LM_UTIL::build_W( *partit1 );
+
+        // Obtain the number of outputs and inputs.
+        unsigned int out_cnt = myFr->get_out_cnt();
+        unsigned int in_cnt = myFr->get_in_cnt();
+
+        bool match_bool = true;
+        // Random test point selection.
+        unsigned int test_j = randIntGen( 0, partit1->get_f_cnt() - 1, 1 )->at(0);
+        Eigen::MatrixXcd test_S_j = partit1->get_cplxData_at_f( test_j );
+
+        // Obtain the generated LM sub-block.
+        Eigen::MatrixXcd W_ij = 
+            myW->block( 0, ( test_j )*in_cnt, out_cnt, in_cnt );
+        // Compute difference between the two LM sub-blocks.
+        Eigen::MatrixXcd W_ij_diff = test_S_j - W_ij;
+
+        match_bool = match_bool && ( W_ij_diff.cwiseAbs().maxCoeff() < 1e-9 );
+
+        cout << "Random W sub-block (" << test_j << ") match: " 
+            << match_bool << endl;
 
     }
 
