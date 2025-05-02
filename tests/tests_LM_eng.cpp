@@ -8,30 +8,35 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
     int case_cnt = 0;
 
+// ---------------------------------------------------------------------- >>>>>
+//      All Tests Common Initialization 
+// ---------------------------------------------------------------------- >>>>>
+    // Define our frequency data object.
+    fData myFData;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+    // Create a subset linear index array.
+    vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
+    // Create a fData subset.
+    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+
+    // Generate two partitions from this data subset.
+    vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+    shared_ptr<fData> partit1 = myPartits.at(0);
+    shared_ptr<fData> partit2 = myPartits.at(1);
+// ---------------------------------------------------------------------- <<<<<
+
     // 0- LM construct test.
     if( test_idx == case_cnt ){
 
-        // Define our frequency data object.
-        fData myFData;
-
-        // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-        fData::read_sXp_file( myFData, fullFileName );
-
-        // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-        // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
-
-        // Create a subset linear index array.
-        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
-        // Create a fData subset.
-        shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
-
-        // Generate two partitions from this data subset.
-        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-        shared_ptr<fData> partit1 = myPartits.at(0);
-        shared_ptr<fData> partit2 = myPartits.at(1);
         // Construct the Loewner Matrix using the two partitions.
         shared_ptr<Eigen::MatrixXcd> myLM = LM_UTIL::build_LM( *partit1, *partit2 );
 
@@ -61,12 +66,6 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
         cout << "Random LM sub-block (" << test_i << ", " << test_j << ") match: " 
             << match_bool << endl;
 
-        // // Compute the SVD
-        // Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( myLM, Eigen::ComputeThinU | Eigen::ComputeThinV );
-        // // Get the singular values
-        // Eigen::VectorXd singularValues = mySVD.singularValues();
-        // cout << singularValues << endl;
-
     }
 
 
@@ -74,27 +73,6 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     // 1- sLM construct test.
     if( test_idx == case_cnt ){
 
-        // Define our frequency data object.
-        fData myFData;
-
-        // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-        fData::read_sXp_file( myFData, fullFileName );
-
-        // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-        // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
-
-        // Create a subset linear index array.
-        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
-        // Create a fData subset.
-        shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
-
-        // Generate two partitions from this data subset.
-        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-        shared_ptr<fData> partit1 = myPartits.at(0);
-        shared_ptr<fData> partit2 = myPartits.at(1);
         // Construct the shifted Loewner Matrix using the two partitions.
         shared_ptr<Eigen::MatrixXcd> mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
 
@@ -131,27 +109,6 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     // 2- W construct test.
     if( test_idx == case_cnt ){
 
-        // Define our frequency data object.
-        fData myFData;
-
-        // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-        fData::read_sXp_file( myFData, fullFileName );
-
-        // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-        // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
-
-        // Create a subset linear index array.
-        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
-        // Create a fData subset.
-        shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
-
-        // Generate two partitions from this data subset.
-        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-        shared_ptr<fData> partit1 = myPartits.at(0);
-        shared_ptr<fData> partit2 = myPartits.at(1);
         // Construct the W matrix vector using partition 1.
         shared_ptr<Eigen::MatrixXcd> myW = LM_UTIL::build_W( *partit1 );
 
@@ -182,27 +139,6 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     // 3- F construct test.
     if( test_idx == case_cnt ){
 
-        // Define our frequency data object.
-        fData myFData;
-
-        // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-        fData::read_sXp_file( myFData, fullFileName );
-
-        // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-        // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
-
-        // Create a subset linear index array.
-        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
-        // Create a fData subset.
-        shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
-
-        // Generate two partitions from this data subset.
-        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-        shared_ptr<fData> partit1 = myPartits.at(0);
-        shared_ptr<fData> partit2 = myPartits.at(1);
         // Construct the F matrix vector using partition 2.
         shared_ptr<Eigen::MatrixXcd> myF = LM_UTIL::build_F( *partit2 );
 
@@ -230,6 +166,70 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
 }
 
-void LM_eng_test_2( unsigned int test_idx ){
-    
+
+void tests::LM_eng_test_2( unsigned int test_idx ){
+
+    int case_cnt = 0;
+
+// ---------------------------------------------------------------------- >>>>>
+//      All Tests Common Initialization 
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define our frequency data object.
+    fData myFData;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+    // Create a subset linear index array.
+    vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
+    // Create a fData subset.
+    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+
+    // Generate two partitions from this data subset.
+    vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+    shared_ptr<fData> partit1 = myPartits.at(0);
+    shared_ptr<fData> partit2 = myPartits.at(1);
+
+    // Construct the Loewner Matrix using the two partitions.
+    shared_ptr<Eigen::MatrixXcd> myLM = LM_UTIL::build_LM( *partit1, *partit2 );
+    // Construct the Loewner Matrix using the two partitions.
+    shared_ptr<Eigen::MatrixXcd> mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
+
+// ---------------------------------------------------------------------- <<<<<
+
+    // 0- Base LM pencil verification.
+    if( test_idx == case_cnt ){
+
+        complex<double> cplx_f_ref = partit1->get_cplx_f_at( partit1->get_f_cnt()/2 );
+        shared_ptr<Eigen::MatrixXcd> myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, *myLM, *mySLM );
+
+        // Perform SVD.
+        Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *myLM_pen );
+        // Get the singular values
+        Eigen::VectorXd singularValues = mySVD.singularValues();
+        
+        // std::cout << std::fixed << std::setprecision(12);
+        // cout << singularValues << endl;
+
+        Eigen::VectorXd top10singVals(10);
+        top10singVals << 1482.643133463571, 1468.219478553086, 1418.868597959851,
+        1385.038432483787, 1311.652883867499, 1294.188802726333, 1230.153395906074,
+        1216.890355807787, 1187.052516244472, 1170.663508169054;
+
+        bool match_bool = true;
+        for( unsigned int z = 0; z < 10; z++ ){
+            match_bool = match_bool && ( top10singVals(z) - singularValues(z) < 1e-9 );
+        }
+        cout << "Top singular values match: " << match_bool << endl;
+
+    }
+
+
 }
