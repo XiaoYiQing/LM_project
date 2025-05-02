@@ -229,3 +229,7 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     }
 
 }
+
+void LM_eng_test_2( unsigned int test_idx ){
+    
+}

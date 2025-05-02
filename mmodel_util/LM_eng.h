@@ -38,6 +38,15 @@ namespace LM_UTIL{
     */
     shared_ptr<Eigen::MatrixXcd> build_F( const fData& f2Data );
 
+    /*
+    Generate the Loenwer Matrix pencil.
+    The pencil is constructed using the Loewner Matrix (LM), the shifted 
+    Loewner Matrix (SLM), and a select reference frequency value that can be
+    picked as any complex frequency that participated in contructing the LM.
+    */
+    shared_ptr<Eigen::MatrixXcd> build_LM_pencil( complex<double>, const Eigen::MatrixXcd& LM, 
+        const Eigen::MatrixXcd& SLM );
+
 }
 
 

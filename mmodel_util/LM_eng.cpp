@@ -222,6 +222,23 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_F( const fData& f2Data ){
     }
 
     return F;
-    
+
 }
 
+
+shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM_pencil( complex<double> ref_f, const Eigen::MatrixXcd& LM, const Eigen::MatrixXcd& SLM ){
+
+
+    unsigned int row_cnt = LM.rows();
+    unsigned int col_cnt = LM.cols();
+    if( row_cnt != SLM.rows() || col_cnt != SLM.cols() ){
+        throw std::invalid_argument( "The LM and the SLM must shared the same dimensions." );
+    }
+    
+    shared_ptr<Eigen::MatrixXcd> LM_pen = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
+
+    *LM_pen = LM - ref_f*SLM;
+
+    return LM_pen;
+
+}

@@ -19,6 +19,11 @@ namespace tests{
     Test basic LM construction.
     */
     void LM_eng_test_1( unsigned int test_idx );
+    
+    /*
+    Test LM pencil.
+    */
+    void LM_eng_test_2( unsigned int test_idx );
 
 }
 
