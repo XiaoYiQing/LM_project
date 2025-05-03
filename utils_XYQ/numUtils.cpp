@@ -145,6 +145,43 @@ bool isEqEnough( double a, double b, double thresh ){
 }
 
 
+// ====================================================================== >>>>>
+//      Random Number Generator
+// ====================================================================== >>>>>
+
+shared_ptr<vector<int>> utils::rIntGen( int L_bnd, int U_bnd, unsigned int cnt ){
+
+    if( L_bnd > U_bnd ){
+        throw std::invalid_argument( "rIntGen lower bound must not be larger than the upper bound." );
+    }
+
+    /*
+    A random number seed from hardware which ensures a varying seed based 
+    on external entropy.
+    */
+    random_device rd;
+    /*
+    The generator using the seed. 
+    mt19937 is a popular choice due to its balance of speed and randomness quality
+    */
+    mt19937 gen(rd());
+
+
+    // Define a uniform distribution for even number occurence chance over the range.
+    uniform_int_distribution<> distrib( L_bnd, U_bnd );
+
+    // Create an integer array to store all random integers.
+    shared_ptr<vector<int>> tmpVec = make_shared< vector<int> >();
+    tmpVec->reserve( cnt );
+    for (unsigned int i = 0; i < cnt; i++) {
+        tmpVec->emplace_back( distrib(gen) );
+    }
+    
+    return tmpVec;
+
+}
+
+// ====================================================================== <<<<<
 
 
 // ====================================================================== >>>>>

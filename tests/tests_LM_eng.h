@@ -25,6 +25,11 @@ namespace tests{
     */
     void LM_eng_test_2( unsigned int test_idx );
 
+    /*
+    Test various support functions.
+    */
+    void LM_eng_test_3( unsigned int test_idx );
+
 }
 
 #endif  // TESTS_LM_ENG_H

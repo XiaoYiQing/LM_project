@@ -239,3 +239,31 @@ void tests::LM_eng_test_2( unsigned int test_idx ){
     }
 
 }
+
+
+
+void tests::LM_eng_test_3( unsigned int test_idx ){
+
+    int case_cnt = 0;
+
+    // 0- Base LM pencil verification.
+    if( test_idx == case_cnt ){
+
+        bool has_DC_pt = false;
+        unsigned int sub_mat_size = 3;
+        unsigned int sub_blk_cnt = 4;
+
+        // Initialize our test vector matrix.
+        Eigen::MatrixXcd myMatVet( sub_mat_size, 2*sub_blk_cnt*sub_mat_size );
+
+        // Fill the matrix vector with random entries, but following the real transform structure.
+        for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
+
+            
+
+        }
+
+    }
+
+}
+

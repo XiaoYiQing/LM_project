@@ -83,5 +83,36 @@ void tests::numUtils_test_1( unsigned int case_idx ){
 
     }
 
+
+    case_cnt++;
+    // 3- Test rIntGen()
+    if( case_cnt == case_idx ){
+
+        bool match_flag = true;
+        int L_bnd = 3;
+        int U_bnd = 26;
+        unsigned int cnt = 10;
+
+        // Generate a random integer array.
+        shared_ptr<vector<int>> myRandIntVec = utils::rIntGen( L_bnd, U_bnd, cnt );
+
+        // Find the maximum element using std::max_element
+        auto maxElemIter = std::max_element(myRandIntVec->begin(), myRandIntVec->end());
+        auto minElemIter = std::min_element(myRandIntVec->begin(), myRandIntVec->end());
+
+        match_flag = match_flag && ( myRandIntVec->size() == cnt );
+        for( unsigned int z = 0; z < cnt; z++ ){
+            match_flag = match_flag && ( myRandIntVec->at(z) <= *maxElemIter );
+            match_flag = match_flag && ( myRandIntVec->at(z) >= *minElemIter );
+            if( !match_flag ){
+                break;
+            }
+        }
+
+        cout << "Random integer generator test match: " << match_flag << endl;
+
+    }
+
+
 }
 
