@@ -46,7 +46,7 @@ int main() {
     // tests::eigen_test2( 1 );
 
 
-    tests::numUtils_test_1(3);
+    tests::numUtils_test_1(4);
 
     // tests::Matrix3DXd_test_1(9);
     // tests::Matrix3DXd_test_2_ops(3);
