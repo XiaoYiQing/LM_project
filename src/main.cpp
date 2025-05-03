@@ -46,7 +46,7 @@ int main() {
     // tests::eigen_test2( 1 );
 
 
-    tests::numUtils_test_1(4);
+    // tests::numUtils_test_1(4);
 
     // tests::Matrix3DXd_test_1(9);
     // tests::Matrix3DXd_test_2_ops(3);
@@ -60,6 +60,16 @@ int main() {
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     
+    unsigned int sub_mat_size = 3;
+    shared_ptr<vector<double>> reVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+    shared_ptr<vector<double>> imVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+
+    Eigen::MatrixXcd mat_z( sub_mat_size, sub_mat_size );
+    for( unsigned int y = 0; y < reVec->size(); y++ ){
+        mat_z(y) = complex<double>( reVec->at(y), imVec->at(y) );
+    }
+    cout << mat_z << endl;
+
 
     return 0; 
 

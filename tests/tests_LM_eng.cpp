@@ -259,7 +259,16 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
         // Fill the matrix vector with random entries, but following the real transform structure.
         for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
 
-            
+            shared_ptr<vector<double>> reVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+            shared_ptr<vector<double>> imVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+
+            Eigen::MatrixXcd mat_z( sub_mat_size, sub_mat_size );
+            for( unsigned int y = 0; y < reVec->size(); y++ ){
+                mat_z(y) = reVec->at(y);
+            }
+
+            unsigned int lead_orig = z*2*sub_mat_size;
+            unsigned int lead_conj = z*2*sub_mat_size + sub_mat_size;
 
         }
 
