@@ -246,7 +246,7 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
     int case_cnt = 0;
 
-    // 0- Real transformation matrix check.
+    // 0- Real transformation matrix vector mult check.
     if( test_idx == case_cnt ){
 
         bool has_DC_pt = false;
@@ -299,7 +299,56 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
     }
 
-    
+    case_cnt++;
+    // 1- Real transformation matrix LM mult check.
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myFData;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myFData, fullFileName );
+
+        // Switch the data format into real + imaginary format.
+        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+        // Normalize the frequency vector (As much as you can according to metric prefixes).
+        myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+        unsigned int sub_blk_cnt = 8;
+        // Create a subset linear index array.
+        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, sub_blk_cnt );
+        // Create a fData subset.
+        shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+
+        // Generate two partitions from this data subset.
+        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+        shared_ptr<fData> myFr1 = myPartits.at(0);
+        shared_ptr<fData> myFr2 = myPartits.at(1);
+
+        // Construct the Loewner Matrix using the two partitions.
+        Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFr1, *myFr2 );
+        // Construct the Loewner Matrix using the two partitions.
+        Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFr1, *myFr2 );
+
+
+        bool has_DC_pt = myFr1->get_fval_at(0) == 0;
+        unsigned int sub_mat_size = myFr1->get_out_cnt();
+        unsigned int sub_blk_cnt_1 = myFr1->get_f_cnt();
+        unsigned int sub_blk_cnt_2 = myFr2->get_f_cnt();
+
+        Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
+        Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
+
+        Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
+
+        cout << myLM.rows() << ", " << myLM.cols() << endl;
+        cout << myTMat_R_herm.rows() << ", " << myTMat_R_herm.cols() << endl;
+        cout << myTMat_L.rows() << ", " << myTMat_L.cols() << endl;
+
+        Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
+
+    }
 
 }
 

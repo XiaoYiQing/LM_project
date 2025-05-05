@@ -140,6 +140,11 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Set the settings of the target objects to match those of the reference object.
+    */
+    void setting_copy( const fData& refObj, fData& tarObj );
+
+    /*
     Create a reduced set of frequency data using a smaller linearly distributed
     index set.
     */
