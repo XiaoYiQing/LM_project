@@ -141,8 +141,12 @@ public:
 
     /*
     Set the settings of the target objects to match those of the reference object.
+    NOTE: Settings copying does not perform any kind of data format conversion.
+    The target will adopt all settings of the reference directly without any check
+    and modifition on the data.
+    The frequency data and the frequency array are not touched.
     */
-    void setting_copy( const fData& refObj, fData& tarObj );
+    static void copy_settings( fData& tarObj, const fData& refObj );
 
     /*
     Create a reduced set of frequency data using a smaller linearly distributed

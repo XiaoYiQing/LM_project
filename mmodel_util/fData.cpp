@@ -321,6 +321,16 @@ void fData::data_prefix_switch( METRIC_PREFIX newPref ){
 //      Specialized Support Functions
 // ====================================================================== >>>>>
 
+
+void fData::copy_settings( fData& tarObj, const fData& refObj ){
+
+    tarObj.f_pref = refObj.f_pref;
+    tarObj.fD_format = refObj.fD_format;
+    tarObj.fD_type = refObj.fD_type;
+    tarObj.systImp = refObj.systImp;
+
+}
+
 shared_ptr<fData> fData::red_partit_lin( unsigned int rSize ){
     
     // Generate a linear index vector.
