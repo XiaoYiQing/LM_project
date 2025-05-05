@@ -59,16 +59,17 @@ int main() {
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
-    
-    unsigned int sub_mat_size = 3;
-    shared_ptr<vector<double>> reVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-    shared_ptr<vector<double>> imVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+    tests::LM_eng_test_3( 0 );
 
-    Eigen::MatrixXcd mat_z( sub_mat_size, sub_mat_size );
-    for( unsigned int y = 0; y < reVec->size(); y++ ){
-        mat_z(y) = complex<double>( reVec->at(y), imVec->at(y) );
-    }
-    cout << mat_z << endl;
+    // unsigned int sub_mat_size = 3;
+    // shared_ptr<vector<double>> reVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+    // shared_ptr<vector<double>> imVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+
+    // Eigen::MatrixXcd mat_z( sub_mat_size, sub_mat_size );
+    // for( unsigned int y = 0; y < reVec->size(); y++ ){
+    //     mat_z(y) = complex<double>( reVec->at(y), imVec->at(y) );
+    // }
+    // cout << mat_z << endl;
 
 
     return 0; 

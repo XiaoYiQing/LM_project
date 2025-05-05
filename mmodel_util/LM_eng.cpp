@@ -269,7 +269,8 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
 
     // Initialize the transformation matrix.
     shared_ptr<Eigen::MatrixXcd> T_mat = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
-
+    T_mat->setZero();
+    
     // Initialize current sub-block's lead coordinate.
     unsigned int lead_x = 0;
     if( has_DC_pt ){

@@ -246,33 +246,60 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
     int case_cnt = 0;
 
-    // 0- Base LM pencil verification.
+    // 0- Real transformation matrix check.
     if( test_idx == case_cnt ){
 
         bool has_DC_pt = false;
         unsigned int sub_mat_size = 3;
-        unsigned int sub_blk_cnt = 4;
+        unsigned int sub_blk_cnt = 2;
+
+        shared_ptr<Eigen::MatrixXcd> myTMat = LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt );
 
         // Initialize our test vector matrix.
-        Eigen::MatrixXcd myMatVet( sub_mat_size, 2*sub_blk_cnt*sub_mat_size );
+        Eigen::MatrixXcd myMatVet_A( sub_mat_size, 2*sub_blk_cnt*sub_mat_size );
+        Eigen::MatrixXcd myMatVet_B( 2*sub_blk_cnt*sub_mat_size, sub_mat_size );
 
         // Fill the matrix vector with random entries, but following the real transform structure.
         for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
 
-            shared_ptr<vector<double>> reVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-            shared_ptr<vector<double>> imVec = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+            // Generate random values for the real and imaginary parts.
+            shared_ptr<vector<double>> reVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+            shared_ptr<vector<double>> imVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+            shared_ptr<vector<double>> reVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+            shared_ptr<vector<double>> imVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
 
-            Eigen::MatrixXcd mat_z( sub_mat_size, sub_mat_size );
-            for( unsigned int y = 0; y < reVec->size(); y++ ){
-                mat_z(y) = reVec->at(y);
+            // Create the current sub-matrix.
+            Eigen::MatrixXcd mat_A_z( sub_mat_size, sub_mat_size );
+            Eigen::MatrixXcd mat_B_z( sub_mat_size, sub_mat_size );
+            for( unsigned int y = 0; y < reVec_A->size(); y++ ){
+                mat_A_z(y) = complex<double>( reVec_A->at(y), imVec_A->at(y) );
+                mat_B_z(y) = complex<double>( reVec_B->at(y), imVec_B->at(y) );
             }
 
             unsigned int lead_orig = z*2*sub_mat_size;
             unsigned int lead_conj = z*2*sub_mat_size + sub_mat_size;
 
+            myMatVet_A.block( 0, lead_orig, sub_mat_size, sub_mat_size ) = mat_A_z;
+            myMatVet_A.block( 0, lead_conj, sub_mat_size, sub_mat_size ) = mat_A_z.conjugate();
+            myMatVet_B.block( lead_orig, 0, sub_mat_size, sub_mat_size ) = mat_B_z;
+            myMatVet_B.block( lead_conj, 0, sub_mat_size, sub_mat_size ) = mat_B_z.conjugate();
+
         }
 
+        // Multiply the target matrix with the real transform matrix from the RHS.
+        Eigen::MatrixXcd myReMatVet_A = myMatVet_A*( *myTMat );
+        Eigen::MatrixXcd myReMatVet_B = ( myTMat->conjugate().transpose() )*myMatVet_B;
+
+        bool match_bool = true;
+        match_bool = match_bool && ( myReMatVet_A.imag().cwiseAbs().maxCoeff() < 1e-12 );
+        cout << "Real transform matrix check (RHS): " << match_bool << endl;
+        match_bool = match_bool && ( myReMatVet_B.imag().cwiseAbs().maxCoeff() < 1e-12 );
+        cout << "Real transform matrix check (LHS): " << match_bool << endl;
+        
+
     }
+
+    
 
 }
 
