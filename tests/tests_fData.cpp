@@ -302,4 +302,55 @@ void tests::fData_test_2( unsigned int test_idx ){
     }
 
 
+    case_cnt++;
+    // 3- gen_cplx_conj_comb() test.
+    if( test_idx == case_cnt ){
+
+        // Subset size.
+        unsigned int rSize = 100;
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+        
+        // Generate a linear index vector.
+        vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, myF.get_f_cnt() - 1, rSize );
+
+        // Generate a reduced fData.
+        shared_ptr<fData> myFr = myF.red_partit( fr_idx_vec );
+
+        // Generate the complex conjugate set and insert into the reduced array.
+        shared_ptr<fData> myFr_cconj = myFr->gen_cplx_conj_comb();
+
+        // Define the test boolean result.
+        bool match_bool = true;
+        unsigned int idx_offset = 0;
+        if( myFr->hasDC() ){
+            idx_offset = 1;
+        }
+
+        unsigned int orig_fr_cnt = myFr->get_f_cnt();
+        // Verify the placement of the data and their respective complex conjugates.
+        for( unsigned int z = idx_offset; z < orig_fr_cnt; z++ ){
+
+            unsigned int z2 = 2*z - idx_offset;
+
+            match_bool = match_bool && ( myFr->get_fval_at(z) ==
+                myFr_cconj->get_fval_at( z2 ) );
+            match_bool = match_bool && ( myFr->get_fval_at(z) ==
+                -1*myFr_cconj->get_fval_at( z2 + 1 ) );
+            match_bool = match_bool && ( myFr->get_cplxData_at_f(z) ==  
+                myFr_cconj->get_cplxData_at_f( z2 ) );
+            match_bool = match_bool && ( myFr->get_cplxData_at_f(z) ==  
+                ( myFr_cconj->get_cplxData_at_f( z2 + 1 ) ).conjugate() );
+
+        }
+
+        cout << "Self complex conjugate injected fData test: " << match_bool << endl;
+
+    }
+
 }
