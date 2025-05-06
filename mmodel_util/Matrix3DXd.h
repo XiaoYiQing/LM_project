@@ -75,6 +75,8 @@ public:
 
     Matrix3DXd();
 
+    Matrix3DXd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
+
     Matrix3DXd( vector< Eigen::MatrixXd > Mat3D );
 
 // ====================================================================== <<<<<

@@ -69,6 +69,12 @@ Matrix3DXd::Matrix3DXd(){
     this->num_thresh = Matrix3DXd::DEF_NUM_THRESH;
 }
 
+Matrix3DXd::Matrix3DXd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx ){
+    this->num_thresh = Matrix3DXd::DEF_NUM_THRESH;
+
+    this->reInit( row_idx, col_idx, lvl_idx );
+}
+
 Matrix3DXd::Matrix3DXd( vector< Eigen::MatrixXd > Mat3D ){
 
     this->num_thresh = Matrix3DXd::DEF_NUM_THRESH;
