@@ -471,27 +471,59 @@ fData fData::gen_cplx_conj_set() const{
 
 shared_ptr<fData> fData::gen_cplx_conj_comb() const{
 
-    // // Create the return fData object and copy all settings.
-    // shared_ptr<fData> retFData = make_shared<fData>();
-    // fData::copy_settings( *retFData, *this );
-    // retFData->IOcnt[0] = this->IOcnt[0];
-    // retFData->IOcnt[1] = this->IOcnt[1];
-
-
     bool DC_present = this->hasDC();
     unsigned int f_cnt = this->get_f_cnt();
+    unsigned int in_cnt = this->IOcnt[0];
+    unsigned int out_cnt = this->IOcnt[1];
     
-
-    unsigned f_cnt_new = 0;
+    // Compute the new amount of frequency entries with complex conjugates included.
+    unsigned f_cnt_new = 2*f_cnt;
     if( DC_present ){
         f_cnt_new--;
     }
     
+    // Initialize the frequency vector.
     Eigen::VectorXd f_vec_new( f_cnt_new );
-    Matrix3DXd Xr_vec_new;
-    Matrix3DXd Xi_vec_new;
+    // Initialize the frequency data matrix vectors.
+    Matrix3DXd Xr_vec_new = Matrix3DXd( out_cnt, in_cnt, f_cnt_new );
+    Matrix3DXd Xi_vec_new = Matrix3DXd( out_cnt, in_cnt, f_cnt_new );
     
+    // Initialize frequency index variable.
+    unsigned int f_idx = 0, f_new_idx = 0;
+    // Deal with the DC point insertion.
+    if( DC_present ){
+        f_vec_new( f_new_idx ) = this->get_fval_at( f_idx );
+        Xr_vec_new.set( f_new_idx, this->get_reData_at_f( f_idx ) );
+        Xi_vec_new.set( f_new_idx, this->get_imData_at_f( f_idx ) );
 
+        f_idx++;
+        f_new_idx++;
+    }
+
+
+    while( f_idx < f_cnt ){
+
+        f_vec_new( f_new_idx ) = f_vec( f_idx );
+        f_vec_new( f_new_idx + 1 ) = - f_vec( f_idx );
+
+        Xr_vec_new.set( f_new_idx, this->get_reData_at_f( f_idx ) );
+        Xr_vec_new.set( f_new_idx + 1, this->get_reData_at_f( f_idx ) );
+
+        Xi_vec_new.set( f_new_idx, this->get_imData_at_f( f_idx ) );
+        Xi_vec_new.set( f_new_idx + 1, -1*( this->get_imData_at_f( f_idx ) ) );
+
+        f_idx++;
+        f_new_idx += 2;
+
+    }
+
+    // Create the return fData object and copy all settings.
+    shared_ptr<fData> retFData = make_shared<fData>( f_vec_new, Xr_vec_new, Xi_vec_new );
+    fData::copy_settings( *retFData, *this );
+    retFData->IOcnt[0] = this->IOcnt[0];
+    retFData->IOcnt[1] = this->IOcnt[1];
+
+    return retFData;
 
 }
 
