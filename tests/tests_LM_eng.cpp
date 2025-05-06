@@ -334,15 +334,16 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
         Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFr1, *myFr2 );
 
         // Obtain base parameters of the two partitions.
-        bool has_DC_pt = myFr1->hasDC();
+        bool f1_has_DC_pt = myFr1->hasDC();
+        bool f2_has_DC_pt = myFr1->hasDC();
         unsigned int sub_mat_size = myFr1->get_out_cnt();
         // Partition sizes before cconj injection.
         unsigned int sub_blk_cnt_1 = myPartits.at(0)->get_f_cnt();  
         unsigned int sub_blk_cnt_2 = myPartits.at(1)->get_f_cnt();
 
         // Build the left and right transformation matrices.
-        Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
-        Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
+        Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
+        Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
         // Obtain the hermitian of the right transform matrix.
         Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
@@ -358,3 +359,10 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
 }
 
+
+
+void tests::LM_eng_full_SFML_testrun(){
+
+    
+
+}

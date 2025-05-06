@@ -26,9 +26,15 @@ namespace tests{
     void LM_eng_test_2( unsigned int test_idx );
 
     /*
-    Test various support functions.
+    Test real transform matrices.
     */
     void LM_eng_test_3( unsigned int test_idx );
+
+    /*
+    Special test which performs the entire SFML (System Format Loewner Matrix) process
+    and check for mistakes.
+    */
+    void LM_eng_full_SFML_run();
 
 }
 
