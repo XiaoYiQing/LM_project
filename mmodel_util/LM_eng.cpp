@@ -266,6 +266,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
     T_unit.block( 0, sub_mat_size, sub_mat_size, sub_mat_size ) = -im1*I_mat;
     T_unit.block( sub_mat_size, 0, sub_mat_size, sub_mat_size ) = I_mat;
     T_unit.block( sub_mat_size, sub_mat_size, sub_mat_size, sub_mat_size ) = im1*I_mat;
+    T_unit *= 1/( std::sqrt(2.0) );
 
     // Initialize the transformation matrix.
     shared_ptr<Eigen::MatrixXcd> T_mat = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );

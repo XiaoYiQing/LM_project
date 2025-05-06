@@ -51,22 +51,23 @@ namespace LM_UTIL{
     Construct a real transformation matrix in the context of Loewner Matrix real transform.
     The transformation is based on a target vector of matrices, where sub_mat_size is defined
     as the length each matrix takes from the vector total length.
+    Note that the transformation matrix is scaled by 2^(-0.5).
     The vector of matrices is expected to have the specific pair pattern where each 
     distinct matrix entry is immediately followed by its complex conjugate.
     In this case, the vector total length is found to be:
-        total_len = 2*sub_blk_cnt*sub_mat_size.
+        total_len = 2*sub_cplx_blk_cnt*sub_mat_size.
 
     The only exception to the above pattern occurs when has_DC_pt = true, in which
     case the very first matrix entry of the vector is purely real. Naturally, it won't
     be followed by a complex conjugate version, so the vector total length would be:
-        total_len = ( 2*sub_blk_cnt + 1 )*sub_mat_size.
+        total_len = ( 2*sub_cplx_blk_cnt + 1 )*sub_mat_size.
 
     > has_DC_pt: If the DC point is present, it means the first sub block vector is real and need
         no complex to real transform.
     > sub_mat_size: The size of each sub-matrix.
-    > sub_blk_cnt: The number of distinct sub-matrices, excluding the purely real DC point one, if present.
+    > sub_cplx_blk_cnt: The number of distinct sub-matrices, excluding the purely real DC point one, if present.
     */
-    shared_ptr<Eigen::MatrixXcd> build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_blk_cnt );
+    shared_ptr<Eigen::MatrixXcd> build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_cplx_blk_cnt );
     
 
 }

@@ -440,7 +440,7 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXcd myW_re = myW*myTMat_L;
     Eigen::MatrixXcd myL_re = myTMat_R_herm*myF;
 
-
+    // Check for real matrices.
     bool match_bool = true;
     match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
     match_bool = match_bool && ( mySLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
