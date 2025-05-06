@@ -124,6 +124,15 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Set the settings of the target objects to match those of the reference object.
+    NOTE: Settings copying does not perform any kind of data format conversion.
+    The target will adopt all settings of the reference directly without any check
+    and modifition on the data, so the frequency data and the frequency array are 
+    not touched.
+    */
+    static void copy_settings( fData& tarObj, const fData& refObj );
+
+    /*
     Switch the format of the data from the current format to the specified new format.
     */
     void data_format_Switch( FDATA_FORMAT newFormat );
@@ -140,13 +149,11 @@ public:
 // ====================================================================== >>>>>
 
     /*
-    Set the settings of the target objects to match those of the reference object.
-    NOTE: Settings copying does not perform any kind of data format conversion.
-    The target will adopt all settings of the reference directly without any check
-    and modifition on the data.
-    The frequency data and the frequency array are not touched.
+    Return true if the zero frequency point is within the f vector.
+    NOTE: will only check the first entry of the f vector, which is the only
+    slot where the DC point is allowed to be.
     */
-    static void copy_settings( fData& tarObj, const fData& refObj );
+    bool hasDC() const;
 
     /*
     Create a reduced set of frequency data using a smaller linearly distributed
@@ -164,7 +171,7 @@ public:
     The partitions are decided by interleaving indexing.
     Partition 1 always has the first frequency entry.
     */
-    vector< shared_ptr<fData> > gen_2_partit();
+    vector< shared_ptr<fData> > gen_2_partit() const;
 
     /*
     Create two partitions from the original frequency data set.
@@ -181,7 +188,15 @@ public:
     The generated freq. data set is a complement set, so it will not include
     the DC data point if it is present in the original.
     */
-    fData gen_cplx_conj_set();
+    fData gen_cplx_conj_set() const;
+
+    /*
+    Generate a copy of the present fData object but with complex conjugate frequency
+    and data inserted in interleaving fashion.
+    This means each frequency and the corresponding frequency data is immediately 
+    followed by their complex conjugate in the arrays.
+    */
+    shared_ptr<fData> gen_cplx_conj_comb() const;
 
 // ====================================================================== <<<<<
 

@@ -187,6 +187,16 @@ fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
 //      Data Editing
 // ====================================================================== >>>>>
 
+
+void fData::copy_settings( fData& tarObj, const fData& refObj ){
+
+    tarObj.f_pref = refObj.f_pref;
+    tarObj.fD_format = refObj.fD_format;
+    tarObj.fD_type = refObj.fD_type;
+    tarObj.systImp = refObj.systImp;
+
+}
+
 void fData::data_format_Switch( FDATA_FORMAT newFormat ){
 
     //NONE, DB, MA, RI
@@ -321,14 +331,8 @@ void fData::data_prefix_switch( METRIC_PREFIX newPref ){
 //      Specialized Support Functions
 // ====================================================================== >>>>>
 
-
-void fData::copy_settings( fData& tarObj, const fData& refObj ){
-
-    tarObj.f_pref = refObj.f_pref;
-    tarObj.fD_format = refObj.fD_format;
-    tarObj.fD_type = refObj.fD_type;
-    tarObj.systImp = refObj.systImp;
-
+bool fData::hasDC() const{
+    return this->f_vec(0) == 0;
 }
 
 shared_ptr<fData> fData::red_partit_lin( unsigned int rSize ){
@@ -371,7 +375,7 @@ shared_ptr<fData> fData::red_partit( vector< unsigned int > fr_idx_vec ){
 }
 
 
-vector< shared_ptr<fData> > fData::gen_2_partit(){
+vector< shared_ptr<fData> > fData::gen_2_partit() const{
 
     // Initialize return fData vector.
     vector< shared_ptr<fData> > retVec;
@@ -426,7 +430,7 @@ vector< shared_ptr<fData> > fData::gen_2_partit(){
 
 }
 
-fData fData::gen_cplx_conj_set(){
+fData fData::gen_cplx_conj_set() const{
 
     // Initialize the copy using the current object.
     fData cplxConj_copy = *this;
@@ -462,6 +466,32 @@ fData fData::gen_cplx_conj_set(){
     cplxConj_copy.Xi_vec = tmpXi_vec;
 
     return cplxConj_copy;
+
+}
+
+shared_ptr<fData> fData::gen_cplx_conj_comb() const{
+
+    // // Create the return fData object and copy all settings.
+    // shared_ptr<fData> retFData = make_shared<fData>();
+    // fData::copy_settings( *retFData, *this );
+    // retFData->IOcnt[0] = this->IOcnt[0];
+    // retFData->IOcnt[1] = this->IOcnt[1];
+
+
+    bool DC_present = this->hasDC();
+    unsigned int f_cnt = this->get_f_cnt();
+    
+
+    unsigned f_cnt_new = 0;
+    if( DC_present ){
+        f_cnt_new--;
+    }
+    
+    Eigen::VectorXd f_vec_new( f_cnt_new );
+    Matrix3DXd Xr_vec_new;
+    Matrix3DXd Xi_vec_new;
+    
+
 
 }
 
