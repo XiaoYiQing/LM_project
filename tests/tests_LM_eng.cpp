@@ -323,30 +323,36 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
         // Generate two partitions from this data subset.
         vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-        shared_ptr<fData> myFr1 = myPartits.at(0);
-        shared_ptr<fData> myFr2 = myPartits.at(1);
+        // Generate the two partitions with their complex conjugates inserted 
+        // in interleaving fashion.
+        shared_ptr<fData> myFr1 = myPartits.at(0)->gen_cplx_conj_comb();
+        shared_ptr<fData> myFr2 = myPartits.at(1)->gen_cplx_conj_comb();
 
-        // Construct the Loewner Matrix using the two partitions.
+        // Construct the Loewner Matrix using the two cconj injected partitions.
         Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFr1, *myFr2 );
-        // Construct the Loewner Matrix using the two partitions.
+        // Construct the Loewner Matrix using the two cconj injected partitions.
         Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFr1, *myFr2 );
 
-
-        bool has_DC_pt = myFr1->get_fval_at(0) == 0;
+        // Obtain base parameters of the two partitions.
+        bool has_DC_pt = myFr1->hasDC();
         unsigned int sub_mat_size = myFr1->get_out_cnt();
-        unsigned int sub_blk_cnt_1 = myFr1->get_f_cnt();
-        unsigned int sub_blk_cnt_2 = myFr2->get_f_cnt();
+        // Partition sizes before cconj injection.
+        unsigned int sub_blk_cnt_1 = myPartits.at(0)->get_f_cnt();  
+        unsigned int sub_blk_cnt_2 = myPartits.at(1)->get_f_cnt();
 
+        // Build the left and right transformation matrices.
         Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
         Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
-
+        // Obtain the hermitian of the right transform matrix.
         Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
-        cout << myLM.rows() << ", " << myLM.cols() << endl;
-        cout << myTMat_R_herm.rows() << ", " << myTMat_R_herm.cols() << endl;
-        cout << myTMat_L.rows() << ", " << myTMat_L.cols() << endl;
-
+        // Perform the transformation.
         Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
+
+
+        bool match_bool = true;
+        match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+        cout << "Real transform matrix full matrix mult check: " << match_bool << endl;
 
     }
 

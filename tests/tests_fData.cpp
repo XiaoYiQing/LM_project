@@ -327,14 +327,20 @@ void tests::fData_test_2( unsigned int test_idx ){
 
         // Define the test boolean result.
         bool match_bool = true;
+        
+        // Obtain the original reduced fData size.
+        unsigned int orig_fr_cnt = myFr->get_f_cnt();
+
         unsigned int idx_offset = 0;
         if( myFr->hasDC() ){
             idx_offset = 1;
         }
-
-        unsigned int orig_fr_cnt = myFr->get_f_cnt();
         // Verify the placement of the data and their respective complex conjugates.
         for( unsigned int z = idx_offset; z < orig_fr_cnt; z++ ){
+
+            if( !match_bool ){
+                break;
+            }
 
             unsigned int z2 = 2*z - idx_offset;
 
@@ -348,6 +354,8 @@ void tests::fData_test_2( unsigned int test_idx ){
                 ( myFr_cconj->get_cplxData_at_f( z2 + 1 ) ).conjugate() );
 
         }
+
+
 
         cout << "Self complex conjugate injected fData test: " << match_bool << endl;
 
