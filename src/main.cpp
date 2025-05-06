@@ -59,7 +59,8 @@ int main() {
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
-    tests::LM_eng_test_3( 1 );
+    // tests::LM_eng_test_3( 1 );
+    tests::LM_eng_full_SFML_testrun();
 
 
 

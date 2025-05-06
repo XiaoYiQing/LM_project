@@ -335,7 +335,7 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
         // Obtain base parameters of the two partitions.
         bool f1_has_DC_pt = myFr1->hasDC();
-        bool f2_has_DC_pt = myFr1->hasDC();
+        bool f2_has_DC_pt = myFr2->hasDC();
         unsigned int sub_mat_size = myFr1->get_out_cnt();
         // Partition sizes before cconj injection.
         unsigned int sub_blk_cnt_1 = myPartits.at(0)->get_f_cnt();  
@@ -363,6 +363,93 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
 void tests::LM_eng_full_SFML_testrun(){
 
+
+    // Size of reduced frequency data array.
+    unsigned int sub_blk_cnt = 8;
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define our frequency data object.
+    fData myFData;
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
     
+    // Create a subset linear index array.
+    vector< unsigned int > fr_idx_arr = 
+        utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, sub_blk_cnt );
+    // Create a fData subset.
+    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+
+    // Generate two partitions from this data subset.
+    vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+    // Generate the two partitions with their complex conjugates inserted 
+    // in interleaving fashion.
+    shared_ptr<fData> myFrc1 = myPartits.at(0)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = myPartits.at(1)->gen_cplx_conj_comb();
+
+    // Obtain base parameters of the two partitions.
+    bool f1_has_DC_pt = myFrc1->hasDC();
+    bool f2_has_DC_pt = myFrc2->hasDC();
+    unsigned int out_cnt = myFrc1->get_out_cnt();
+    // Partition sizes before cconj injection.
+    unsigned int fr1_len = myPartits.at(0)->get_f_cnt();  
+    unsigned int fr2_len = myPartits.at(1)->get_f_cnt();
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM System Construct
+// ---------------------------------------------------------------------- >>>>>
+
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
+    // Construct the W matrix vector using partition 1.
+    Eigen::MatrixXcd myW = *LM_UTIL::build_W( *myFrc1 );
+    // Construct the F matrix vector using partition 2.
+    Eigen::MatrixXcd myF = *LM_UTIL::build_F( *myFrc2 );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM System Real Transform
+// ---------------------------------------------------------------------- >>>>>
+
+    // Build the left and right transformation matrices.
+    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    // Obtain the hermitian of the right transform matrix.
+    Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
+
+    // Perform the transformation.
+    Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
+    Eigen::MatrixXcd mySLM_re = ( myTMat_R_herm*mySLM )*myTMat_L;
+    Eigen::MatrixXcd myW_re = myW*myTMat_L;
+    Eigen::MatrixXcd myL_re = myTMat_R_herm*myF;
+
+
+    bool match_bool = true;
+    match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( mySLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myW_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myL_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    cout << "SFLM real matrices check: " << match_bool << endl;
+
+
+
+// ---------------------------------------------------------------------- <<<<<
 
 }

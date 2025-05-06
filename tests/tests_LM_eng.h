@@ -34,7 +34,7 @@ namespace tests{
     Special test which performs the entire SFML (System Format Loewner Matrix) process
     and check for mistakes.
     */
-    void LM_eng_full_SFML_run();
+    void LM_eng_full_SFML_testrun();
 
 }
 
