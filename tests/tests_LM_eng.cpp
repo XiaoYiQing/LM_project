@@ -365,7 +365,7 @@ void tests::LM_eng_full_SFML_testrun(){
 
 
     // Size of reduced frequency data array.
-    unsigned int sub_blk_cnt = 8;
+    unsigned int sub_blk_cnt = 100;
 
 
 // ---------------------------------------------------------------------- >>>>>
@@ -435,20 +435,24 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
     // Perform the transformation.
-    Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
-    Eigen::MatrixXcd mySLM_re = ( myTMat_R_herm*mySLM )*myTMat_L;
-    Eigen::MatrixXcd myW_re = myW*myTMat_L;
-    Eigen::MatrixXcd myL_re = myTMat_R_herm*myF;
+    Eigen::MatrixXcd myLM_re_tmp = ( myTMat_R_herm*myLM )*myTMat_L;
+    Eigen::MatrixXcd mySLM_re_tmp = ( myTMat_R_herm*mySLM )*myTMat_L;
+    Eigen::MatrixXcd myW_re_tmp = myW*myTMat_L;
+    Eigen::MatrixXcd myL_re_tmp = myTMat_R_herm*myF;
 
     // Check for real matrices.
     bool match_bool = true;
-    match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
-    match_bool = match_bool && ( mySLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
-    match_bool = match_bool && ( myW_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
-    match_bool = match_bool && ( myL_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myLM_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( mySLM_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myW_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myL_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
     cout << "SFLM real matrices check: " << match_bool << endl;
 
-
+    // Obtain purely real defintion of the matrices.
+    Eigen::MatrixXd myLM_re = myLM_re_tmp.real();
+    Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
+    Eigen::MatrixXd myW_re = myW_re_tmp.real();
+    Eigen::MatrixXd myL_re = myL_re_tmp.real();
 
 // ---------------------------------------------------------------------- <<<<<
 

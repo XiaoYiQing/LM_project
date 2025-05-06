@@ -48,6 +48,15 @@ namespace LM_UTIL{
         const Eigen::MatrixXcd& SLM );
 
     /*
+    Generate the Loenwer Matrix pencil, but after the real transform.
+    The pencil is constructed using the Loewner Matrix (LM), the shifted 
+    Loewner Matrix (SLM), and a select reference frequency value that can be
+    picked as any frequency magnitude that participated in contructing the LM.
+    */
+    shared_ptr<Eigen::MatrixXd> build_LM_pencil( double, const Eigen::MatrixXd& LM, 
+        const Eigen::MatrixXd& SLM );
+
+    /*
     Construct a real transformation matrix in the context of Loewner Matrix real transform.
     The transformation is based on a target vector of matrices, where sub_mat_size is defined
     as the length each matrix takes from the vector total length.
