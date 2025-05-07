@@ -29,9 +29,9 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-    shared_ptr<fData> partit1 = myPartits.at(0);
-    shared_ptr<fData> partit2 = myPartits.at(1);
+    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    shared_ptr<fData> partit1 = myFrs.at(0);
+    shared_ptr<fData> partit2 = myFrs.at(1);
 // ---------------------------------------------------------------------- <<<<<
 
     // 0- LM construct test.
@@ -193,9 +193,9 @@ void tests::LM_eng_test_2( unsigned int test_idx ){
     shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
-    shared_ptr<fData> partit1 = myPartits.at(0);
-    shared_ptr<fData> partit2 = myPartits.at(1);
+    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    shared_ptr<fData> partit1 = myFrs.at(0);
+    shared_ptr<fData> partit2 = myFrs.at(1);
 
     // Construct the Loewner Matrix using the two partitions.
     shared_ptr<Eigen::MatrixXcd> myLM = LM_UTIL::build_LM( *partit1, *partit2 );
@@ -322,11 +322,11 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
         shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
 
         // Generate two partitions from this data subset.
-        vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+        vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
         // Generate the two partitions with their complex conjugates inserted 
         // in interleaving fashion.
-        shared_ptr<fData> myFr1 = myPartits.at(0)->gen_cplx_conj_comb();
-        shared_ptr<fData> myFr2 = myPartits.at(1)->gen_cplx_conj_comb();
+        shared_ptr<fData> myFr1 = myFrs.at(0)->gen_cplx_conj_comb();
+        shared_ptr<fData> myFr2 = myFrs.at(1)->gen_cplx_conj_comb();
 
         // Construct the Loewner Matrix using the two cconj injected partitions.
         Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFr1, *myFr2 );
@@ -338,8 +338,8 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
         bool f2_has_DC_pt = myFr2->hasDC();
         unsigned int sub_mat_size = myFr1->get_out_cnt();
         // Partition sizes before cconj injection.
-        unsigned int sub_blk_cnt_1 = myPartits.at(0)->get_f_cnt();  
-        unsigned int sub_blk_cnt_2 = myPartits.at(1)->get_f_cnt();
+        unsigned int sub_blk_cnt_1 = myFrs.at(0)->get_f_cnt();  
+        unsigned int sub_blk_cnt_2 = myFrs.at(1)->get_f_cnt();
 
         // Build the left and right transformation matrices.
         Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
@@ -365,7 +365,7 @@ void tests::LM_eng_full_SFML_testrun(){
 
 
     // Size of reduced frequency data array.
-    unsigned int sub_blk_cnt = 100;
+    unsigned int fr_len = 120;
 
 
 // ---------------------------------------------------------------------- >>>>>
@@ -386,24 +386,24 @@ void tests::LM_eng_full_SFML_testrun(){
     
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = 
-        utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, sub_blk_cnt );
+        utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, fr_len );
     // Create a fData subset.
     shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myPartits = myFr->gen_2_partit();
+    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
-    shared_ptr<fData> myFrc1 = myPartits.at(0)->gen_cplx_conj_comb();
-    shared_ptr<fData> myFrc2 = myPartits.at(1)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc1 = myFrs.at(0)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = myFrs.at(1)->gen_cplx_conj_comb();
 
     // Obtain base parameters of the two partitions.
     bool f1_has_DC_pt = myFrc1->hasDC();
     bool f2_has_DC_pt = myFrc2->hasDC();
     unsigned int out_cnt = myFrc1->get_out_cnt();
     // Partition sizes before cconj injection.
-    unsigned int fr1_len = myPartits.at(0)->get_f_cnt();  
-    unsigned int fr2_len = myPartits.at(1)->get_f_cnt();
+    unsigned int fr1_len = myFrs.at(0)->get_f_cnt();  
+    unsigned int fr2_len = myFrs.at(1)->get_f_cnt();
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -453,6 +453,28 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
     Eigen::MatrixXd myW_re = myW_re_tmp.real();
     Eigen::MatrixXd myL_re = myL_re_tmp.real();
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM Pencil Generation and SVD
+// ---------------------------------------------------------------------- >>>>>
+
+    // Obtain a reference frequency value.
+    double ref_f = myFr->get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
+    
+    // Construct the LM pencil.
+    shared_ptr<Eigen::MatrixXd> LM_pen = 
+        LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
+
+    // Perform SVD.
+    Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    // Get the singular values
+    Eigen::VectorXd singularValues = mySVD.singularValues();
+
+    std::cout << std::fixed << std::setprecision(12);
+    cout << singularValues << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 

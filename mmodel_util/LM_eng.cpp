@@ -228,7 +228,6 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_F( const fData& f2Data ){
 
 shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM_pencil( complex<double> ref_f, const Eigen::MatrixXcd& LM, const Eigen::MatrixXcd& SLM ){
 
-
     unsigned int row_cnt = LM.rows();
     unsigned int col_cnt = LM.cols();
     if( row_cnt != SLM.rows() || col_cnt != SLM.cols() ){
@@ -237,11 +236,12 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM_pencil( complex<double> ref_f, co
     
     shared_ptr<Eigen::MatrixXcd> LM_pen = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
 
-    *LM_pen = LM - ref_f*SLM;
+    *LM_pen = ref_f*LM - SLM;
 
     return LM_pen;
 
 }
+
 
 shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_pencil( double ref_f, const Eigen::MatrixXd& LM, 
     const Eigen::MatrixXd& SLM )
@@ -254,7 +254,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_pencil( double ref_f, const Eigen:
 
     shared_ptr<Eigen::MatrixXd> LM_pen = std::make_shared<Eigen::MatrixXd>( row_cnt, col_cnt );
 
-    *LM_pen = LM - ref_f*SLM;
+    *LM_pen = ref_f*LM - SLM;
 
     return LM_pen;
 
