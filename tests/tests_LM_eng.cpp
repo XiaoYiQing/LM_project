@@ -469,13 +469,37 @@ void tests::LM_eng_full_SFML_testrun(){
         LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
 
     // Perform SVD.
-    Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
     // Get the singular values
-    Eigen::VectorXd singularValues = mySVD.singularValues();
+    Eigen::VectorXd singVals = svdResObj.singularValues();
+    // Get the left singular vectors (U)
+    Eigen::MatrixXd U = svdResObj.matrixU();
+    // Get the right singular vectors (V)
+    Eigen::MatrixXd V = svdResObj.matrixV();
+
 
     std::cout << std::fixed << std::setprecision(12);
-    cout << singularValues << endl;
+    cout << singVals << endl;
 
 // ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      SVD Model Order Reduction
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define the number of singular values to retain.
+    unsigned int svd_ret_cnt = 100;
+
+    Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
+
+    Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
+
+    Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
+
+    int lol = 0;
+
+
+// ---------------------------------------------------------------------- >>>>>
 
 }
