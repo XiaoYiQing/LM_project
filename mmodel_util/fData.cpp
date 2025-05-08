@@ -534,15 +534,43 @@ shared_ptr<fData> fData::gen_cplx_conj_comb() const{
 //      Access Functions
 // ====================================================================== >>>>>
 
+void fData::set_IO_cnt( unsigned int new_in_cnt, unsigned int new_out_cnt ){
+    if( new_in_cnt == 0 || new_out_cnt == 0 ){
+        throw std::invalid_argument( "Number of inputs and outputs cannot be set to 0" );
+    }
+    this->IOcnt[0] = new_in_cnt;
+    this->IOcnt[1] = new_out_cnt;
+    // Delete all existing data.
+    this->f_vec.resize(0);
+    this->Xr_vec.clear();
+    this->Xi_vec.clear();
+}
+
 void fData::set_out_cnt( unsigned int new_out_cnt ){
     if( new_out_cnt == 0 ){
         throw std::invalid_argument( "Number of outputs cannot be set to 0" );
     }
     this->IOcnt[1] = new_out_cnt;
+    // Delete all existing data.
+    this->f_vec.resize(0);
+    this->Xr_vec.clear();
+    this->Xi_vec.clear();
     
 }
 int fData::get_out_cnt() const
     { return this->IOcnt[1]; }
+
+void fData::set_in_cnt( unsigned int new_in_cnt ){
+    if( new_in_cnt == 0 ){
+        throw std::invalid_argument( "Number of inputs cannot be set to 0" );
+    }
+    this->IOcnt[0] = new_in_cnt;
+    // Delete all existing data.
+    this->f_vec.resize(0);
+    this->Xr_vec.clear();
+    this->Xi_vec.clear();
+    
+}
 int fData::get_in_cnt() const
     { return this->IOcnt[0]; }
 

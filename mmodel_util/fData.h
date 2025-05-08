@@ -208,12 +208,23 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Set the number of inputs and outputs.
+    NOTE: This function expunges existing frequency data.
+    */
+    void set_IO_cnt( unsigned int new_in_cnt, unsigned int new_out_cnt );
+
+    /*
     Set the number of outputs.
     NOTE: This function expunges existing frequency data.
     */
     void set_out_cnt( unsigned int new_out_cnt );
     // Obtain the number of outputs (Number of rows in a data matrix).
     int get_out_cnt() const;
+    /*
+    Set the number of inputs.
+    NOTE: This function expunges existing frequency data.
+    */
+    void set_in_cnt( unsigned int new_in_cnt );
     // Obtain the number of inputs (Number of columns in a data matrix).
     int get_in_cnt() const;
     // Obtain the number of frequency points.
