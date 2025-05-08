@@ -549,17 +549,34 @@ double fData::get_f_scale_num() const{
     return get_METRIC_PREFIX_val( this->f_pref );
 }
 
+void fData::set_fval_at( int f_idx, double f_val ){
+    this->f_vec( f_idx ) = f_val;
+}
 double fData::get_fval_at( int f_idx ) const{
     return this->f_vec( f_idx );
 }
 std::complex<double> fData::get_cplx_f_at( int f_idx ) const{
     return std::complex<double>( 0, this->f_vec( f_idx ) );
 }
+
+void fData::set_reData_at_f( int f_idx, const Eigen::MatrixXd& new_rePart ){
+    this->Xr_vec.set( f_idx, new_rePart );
+}
 Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
     return this->Xr_vec.at( f_idx );
 }
+
+void fData::set_imData_at_f( int f_idx, const Eigen::MatrixXd& new_imPart ){
+    this->Xi_vec.set( f_idx, new_imPart );
+}
 Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
     return this->Xi_vec.at( f_idx );
+}
+
+
+Eigen::MatrixXcd fData::set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat ){
+    this->Xr_vec.set( f_idx, new_mat.real() );
+    this->Xi_vec.set( f_idx, new_mat.imag() );
 }
 Eigen::MatrixXcd fData::get_cplxData_at_f( int f_idx ) const{
 

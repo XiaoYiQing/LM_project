@@ -216,18 +216,30 @@ public:
     // Obtain the numerical value of the frequency scale or metric prefix.
     double get_f_scale_num() const;
 
+    // Set the frequency value at the target frequency index.
+    void set_fval_at( int f_idx, double f_val );
     // Obtain the frequency value at target frequency index.
     double get_fval_at( int f_idx ) const;
+
     // Obtain the complex frequency value at target frequency index.
     // TODO: Consider putting the 2*pi scaling in the future.
     std::complex<double> get_cplx_f_at( int f_idx ) const;
 
+    // Set the real part data matrix at target frequency index.
+    void set_reData_at_f( int f_idx, const Eigen::MatrixXd& new_rePart );
     // Obtain the real part data matrix at target frequency index.
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
+
+    // Set the real part data matrix at target frequency index.
+    void set_imData_at_f( int f_idx, const Eigen::MatrixXd& new_imPart );
     // Obtain the imaginary part data matrix at target frequency index.
     Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
+
+    // Set the complex data at the target frequency index.
+    Eigen::MatrixXcd set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat );
     // Obtain the complex data matrix at the target frequency index.
     Eigen::MatrixXcd get_cplxData_at_f( int f_idx ) const;
+    
 
     // Obtain the f vector.
     Eigen::VectorXd getF_vec() const;

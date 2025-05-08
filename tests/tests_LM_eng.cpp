@@ -376,7 +376,9 @@ void tests::LM_eng_full_SFML_testrun(){
     fData myFData;
     // Define the full file name.
     // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
+    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+
     fData::read_sXp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
@@ -492,8 +494,8 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd V = svdResObj.matrixV();
 
 
-    std::cout << std::fixed << std::setprecision(12);
-    cout << singVals << endl;
+    // std::cout << std::fixed << std::setprecision(12);
+    // cout << singVals << endl;
 
     // Perform the model reduction to obtain usable E, A, B, C matrices.
     Eigen::MatrixXcd E_full = -1*( U.transpose() * myLM_re * V );
@@ -517,12 +519,11 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 100;
+    unsigned int svd_ret_cnt = 64;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
     Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
-
     Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
 
 
@@ -542,10 +543,14 @@ void tests::LM_eng_full_SFML_testrun(){
     complex<double> f_z = myFr->get_cplx_f_at( test_f_idx );
     tmp_z = ( f_z * E_n - A_n );
     H_z = C_n * tmp_z.inverse() * B_n;
-
     cout << H_z << endl;
-
     cout << myFr->get_cplxData_at_f( test_f_idx ) << endl;
+
+    // Create an evaluated data object.
+    fData eval_FData = fData();
+    fData::copy_settings( eval_FData, myFData );
+
+    
 
 // // ---------------------------------------------------------------------- <<<<<
 
