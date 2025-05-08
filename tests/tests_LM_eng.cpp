@@ -375,7 +375,8 @@ void tests::LM_eng_full_SFML_testrun(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
     fData::read_sXp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
@@ -474,7 +475,8 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Obtain a reference frequency value.
-    double ref_f = myFr->get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
+    // double ref_f = myFr->get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
+    double ref_f = myFr->get_fval_at( myFr->get_f_cnt() - 1 );
     
     // Construct the LM pencil.
     shared_ptr<Eigen::MatrixXd> LM_pen = 
@@ -490,8 +492,8 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd V = svdResObj.matrixV();
 
 
-    // std::cout << std::fixed << std::setprecision(12);
-    // cout << singVals << endl;
+    std::cout << std::fixed << std::setprecision(12);
+    cout << singVals << endl;
 
     // Perform the model reduction to obtain usable E, A, B, C matrices.
     Eigen::MatrixXcd E_full = -1*( U.transpose() * myLM_re * V );
@@ -515,7 +517,7 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 199;
+    unsigned int svd_ret_cnt = 100;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
