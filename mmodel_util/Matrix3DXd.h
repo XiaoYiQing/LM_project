@@ -190,6 +190,11 @@ public:
     void reInit( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
 
     /*
+    Clear all existing 2D matrices.
+    */
+    void clear();
+
+    /*
     Reserve a set number of entries worth of memory for additional 2D matrices.
     This reserve additionally places zero matrices at the reserved spaces within
     the 3D matrix as placeholders for direct index access.

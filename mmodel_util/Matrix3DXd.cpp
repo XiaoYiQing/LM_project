@@ -425,6 +425,10 @@ void Matrix3DXd::reInit( unsigned int row_idx, unsigned int col_idx, unsigned in
 
 }
 
+void Matrix3DXd::clear(){
+    this->Mat3D.clear();
+}
+
 void Matrix3DXd::reserve( unsigned int res_size ){
 
     size_t currSize = this->levels();

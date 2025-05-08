@@ -123,6 +123,8 @@ public:
 //      Data Editing
 // ====================================================================== >>>>>
 
+
+
     /*
     Set the settings of the target objects to match those of the reference object.
     NOTE: Settings copying does not perform any kind of data format conversion.
@@ -205,6 +207,11 @@ public:
 //      Access Functions
 // ====================================================================== >>>>>
 
+    /*
+    Set the number of outputs.
+    NOTE: This function expunges existing frequency data.
+    */
+    void set_out_cnt( unsigned int new_out_cnt );
     // Obtain the number of outputs (Number of rows in a data matrix).
     int get_out_cnt() const;
     // Obtain the number of inputs (Number of columns in a data matrix).

@@ -534,6 +534,13 @@ shared_ptr<fData> fData::gen_cplx_conj_comb() const{
 //      Access Functions
 // ====================================================================== >>>>>
 
+void fData::set_out_cnt( unsigned int new_out_cnt ){
+    if( new_out_cnt == 0 ){
+        throw std::invalid_argument( "Number of outputs cannot be set to 0" );
+    }
+    this->IOcnt[1] = new_out_cnt;
+    
+}
 int fData::get_out_cnt() const
     { return this->IOcnt[1]; }
 int fData::get_in_cnt() const
@@ -560,6 +567,9 @@ std::complex<double> fData::get_cplx_f_at( int f_idx ) const{
 }
 
 void fData::set_reData_at_f( int f_idx, const Eigen::MatrixXd& new_rePart ){
+    if( new_rePart.rows() != this->IOcnt[1] || new_rePart.cols() != this->IOcnt[0] ){
+        throw std::invalid_argument( "Given matrix must share the expected dimensions." );
+    }
     this->Xr_vec.set( f_idx, new_rePart );
 }
 Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
