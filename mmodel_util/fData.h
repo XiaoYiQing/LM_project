@@ -124,13 +124,15 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Set the data of the target objects to match those of the reference object.
+    NOTE: Data copying does NOT perform settings copying such as frequency data type and format.
     */
     static void copy_data( fData& tarObj, const fData& refObj );
 
 
     /*
     Set the settings of the target objects to match those of the reference object.
-    NOTE: Settings copying does not perform any kind of data format conversion.
+    NOTE: Settings copying does NOT perform any kind of data format conversion.
     The target will adopt all settings of the reference directly without any check
     and modifition on the data, so the frequency data and the frequency array are 
     not touched.

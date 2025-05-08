@@ -187,6 +187,16 @@ fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
 //      Data Editing
 // ====================================================================== >>>>>
 
+void fData::copy_data( fData& tarObj, const fData& refObj ){
+
+    tarObj.IOcnt[0] = refObj.IOcnt[0];
+    tarObj.IOcnt[1] = refObj.IOcnt[1];
+
+    tarObj.f_vec = refObj.f_vec;
+    tarObj.Xr_vec = refObj.Xr_vec;
+    tarObj.Xi_vec = refObj.Xi_vec;
+
+}
 
 void fData::copy_settings( fData& tarObj, const fData& refObj ){
 
