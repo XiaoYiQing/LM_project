@@ -365,7 +365,7 @@ void tests::LM_eng_full_SFML_testrun(){
 
 
     // Size of reduced frequency data array.
-    unsigned int fr_len = 20;
+    unsigned int fr_len = 100;
 
 
 // ---------------------------------------------------------------------- >>>>>
@@ -494,49 +494,56 @@ void tests::LM_eng_full_SFML_testrun(){
     // cout << singVals << endl;
 
     // Perform the model reduction to obtain usable E, A, B, C matrices.
-    Eigen::MatrixXcd E_n = -1*( U.transpose() * myLM_re * V );
-    Eigen::MatrixXcd A_n = -1*( U.transpose() * mySLM_re * V );
-    Eigen::MatrixXcd C_n = myW_re * V;
-    Eigen::MatrixXcd B_n = U.transpose() * myF_re;
+    Eigen::MatrixXcd E_full = -1*( U.transpose() * myLM_re * V );
+    Eigen::MatrixXcd A_full = -1*( U.transpose() * mySLM_re * V );
+    Eigen::MatrixXcd C_full = myW_re * V;
+    Eigen::MatrixXcd B_full = U.transpose() * myF_re;
+
+    Eigen::MatrixXcd tmp_z = ( test_f * E_full - A_full );
+    Eigen::MatrixXcd H_z = C_full * tmp_z.inverse() * B_full;
+
+    match_bool = true;
+    ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - H_z;
+    match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+    cout << "Full sized LM system post-SVD evaluation test: " << match_bool << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 
 
-// // ---------------------------------------------------------------------- >>>>>
-// //      SVD Model Order Reduction
-// // ---------------------------------------------------------------------- >>>>>
+// ---------------------------------------------------------------------- >>>>>
+//      SVD Model Order Reduction
+// ---------------------------------------------------------------------- >>>>>
 
-//     // Define the number of singular values to retain.
-//     unsigned int svd_ret_cnt = 20;
+    // Define the number of singular values to retain.
+    unsigned int svd_ret_cnt = 199;
 
-//     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
+    Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
-//     Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
+    Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
 
-//     Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
+    Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
 
 
-//     // Perform the model reduction to obtain usable E, A, B, C matrices.
-//     Eigen::MatrixXcd E_n = -1*( U_r.transpose() * myLM_re * V_r );
-//     Eigen::MatrixXcd A_n = -1*( U_r.transpose() * mySLM_re * V_r );
-//     Eigen::MatrixXcd C_n = myW_re * V_r;
-//     Eigen::MatrixXcd B_n = U_r.transpose() * myF_re;
+    // Perform the model reduction to obtain usable E, A, B, C matrices.
+    Eigen::MatrixXcd E_n = -1*( U_r.transpose() * myLM_re * V_r );
+    Eigen::MatrixXcd A_n = -1*( U_r.transpose() * mySLM_re * V_r );
+    Eigen::MatrixXcd C_n = myW_re * V_r;
+    Eigen::MatrixXcd B_n = U_r.transpose() * myF_re;
 
-// // ---------------------------------------------------------------------- >>>>>
+// ---------------------------------------------------------------------- >>>>>
 
 
 // // ---------------------------------------------------------------------- >>>>>
 // //      Model Evaluation
 // // ---------------------------------------------------------------------- >>>>>
 
-//     unsigned int test_idx = 100;
-//     complex<double> f_z = myFData.get_cplx_f_at( test_idx );
-//     Eigen::MatrixXcd tmp_z = ( f_z * E_n - A_n );
-//     Eigen::MatrixXcd H_z = C_n * tmp_z.inverse() * B_n;
+    complex<double> f_z = myFr->get_cplx_f_at( test_f_idx );
+    tmp_z = ( f_z * E_n - A_n );
+    H_z = C_n * tmp_z.inverse() * B_n;
 
-//     cout << H_z << endl;
+    cout << H_z << endl;
 
-//     cout << myFData.get_cplxData_at_f( test_idx ) << endl;
+    cout << myFr->get_cplxData_at_f( test_f_idx ) << endl;
 
 // // ---------------------------------------------------------------------- <<<<<
 
