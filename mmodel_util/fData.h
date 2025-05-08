@@ -123,6 +123,9 @@ public:
 //      Data Editing
 // ====================================================================== >>>>>
 
+    /*
+    */
+    static void copy_data( fData& tarObj, const fData& refObj );
 
 
     /*
@@ -254,7 +257,7 @@ public:
     Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
 
     // Set the complex data at the target frequency index.
-    Eigen::MatrixXcd set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat );
+    void set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat );
     // Obtain the complex data matrix at the target frequency index.
     Eigen::MatrixXcd get_cplxData_at_f( int f_idx ) const;
     

@@ -612,7 +612,7 @@ Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
 }
 
 
-Eigen::MatrixXcd fData::set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat ){
+void fData::set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat ){
     this->Xr_vec.set( f_idx, new_mat.real() );
     this->Xi_vec.set( f_idx, new_mat.imag() );
 }

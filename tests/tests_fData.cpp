@@ -362,3 +362,37 @@ void tests::fData_test_2( unsigned int test_idx ){
     }
 
 }
+
+
+
+void tests::fData_setFunc_tests( unsigned int test_idx ){
+
+    int case_cnt = 0;
+
+    // 0- Test set IO.
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        unsigned int new_out = 4;
+        unsigned int new_in = 3;
+        myF.set_IO_cnt( new_in, new_out );
+
+        bool match_bool = true;
+        match_bool = match_bool && ( myF.get_f_cnt() == 0 );
+        match_bool = match_bool && ( myF.get_out_cnt() == new_out );
+        match_bool = match_bool && ( myF.get_in_cnt() == new_in );
+        cout << "Set IO expected outcome match: " << match_bool << endl;
+
+    }
+
+    
+
+    case_cnt++;
+
+}
