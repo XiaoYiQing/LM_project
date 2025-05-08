@@ -365,7 +365,7 @@ void tests::LM_eng_full_SFML_testrun(){
 
 
     // Size of reduced frequency data array.
-    unsigned int fr_len = 120;
+    unsigned int fr_len = 20;
 
 
 // ---------------------------------------------------------------------- >>>>>
@@ -438,21 +438,33 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXcd myLM_re_tmp = ( myTMat_R_herm*myLM )*myTMat_L;
     Eigen::MatrixXcd mySLM_re_tmp = ( myTMat_R_herm*mySLM )*myTMat_L;
     Eigen::MatrixXcd myW_re_tmp = myW*myTMat_L;
-    Eigen::MatrixXcd myL_re_tmp = myTMat_R_herm*myF;
+    Eigen::MatrixXcd myF_re_tmp = myTMat_R_herm*myF;
 
     // Check for real matrices.
     bool match_bool = true;
     match_bool = match_bool && ( myLM_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
     match_bool = match_bool && ( mySLM_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
     match_bool = match_bool && ( myW_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
-    match_bool = match_bool && ( myL_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myF_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
     cout << "SFLM real matrices check: " << match_bool << endl;
 
     // Obtain purely real defintion of the matrices.
     Eigen::MatrixXd myLM_re = myLM_re_tmp.real();
     Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
     Eigen::MatrixXd myW_re = myW_re_tmp.real();
-    Eigen::MatrixXd myL_re = myL_re_tmp.real();
+    Eigen::MatrixXd myF_re = myF_re_tmp.real();
+
+
+    // Generate a random test point.
+    unsigned int test_f_idx = utils::rIntGen( 0, myFr->get_f_cnt() - 1, 1 )->at(0);
+    complex<double> test_f = myFr->get_cplx_f_at( test_f_idx );
+    Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
+    Eigen::MatrixXcd ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - tmpAns;
+
+    match_bool = true;
+    match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+    cout << "Full sized LM system evaluation test: " << match_bool << endl;
+
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -478,28 +490,54 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd V = svdResObj.matrixV();
 
 
-    std::cout << std::fixed << std::setprecision(12);
-    cout << singVals << endl;
+    // std::cout << std::fixed << std::setprecision(12);
+    // cout << singVals << endl;
+
+    // Perform the model reduction to obtain usable E, A, B, C matrices.
+    Eigen::MatrixXcd E_n = -1*( U.transpose() * myLM_re * V );
+    Eigen::MatrixXcd A_n = -1*( U.transpose() * mySLM_re * V );
+    Eigen::MatrixXcd C_n = myW_re * V;
+    Eigen::MatrixXcd B_n = U.transpose() * myF_re;
 
 // ---------------------------------------------------------------------- <<<<<
 
 
-// ---------------------------------------------------------------------- >>>>>
-//      SVD Model Order Reduction
-// ---------------------------------------------------------------------- >>>>>
+// // ---------------------------------------------------------------------- >>>>>
+// //      SVD Model Order Reduction
+// // ---------------------------------------------------------------------- >>>>>
 
-    // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 100;
+//     // Define the number of singular values to retain.
+//     unsigned int svd_ret_cnt = 20;
 
-    Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
+//     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
-    Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
+//     Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
 
-    Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
-
-    int lol = 0;
+//     Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
 
 
-// ---------------------------------------------------------------------- >>>>>
+//     // Perform the model reduction to obtain usable E, A, B, C matrices.
+//     Eigen::MatrixXcd E_n = -1*( U_r.transpose() * myLM_re * V_r );
+//     Eigen::MatrixXcd A_n = -1*( U_r.transpose() * mySLM_re * V_r );
+//     Eigen::MatrixXcd C_n = myW_re * V_r;
+//     Eigen::MatrixXcd B_n = U_r.transpose() * myF_re;
+
+// // ---------------------------------------------------------------------- >>>>>
+
+
+// // ---------------------------------------------------------------------- >>>>>
+// //      Model Evaluation
+// // ---------------------------------------------------------------------- >>>>>
+
+//     unsigned int test_idx = 100;
+//     complex<double> f_z = myFData.get_cplx_f_at( test_idx );
+//     Eigen::MatrixXcd tmp_z = ( f_z * E_n - A_n );
+//     Eigen::MatrixXcd H_z = C_n * tmp_z.inverse() * B_n;
+
+//     cout << H_z << endl;
+
+//     cout << myFData.get_cplxData_at_f( test_idx ) << endl;
+
+// // ---------------------------------------------------------------------- <<<<<
 
 }
