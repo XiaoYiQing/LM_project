@@ -618,7 +618,6 @@ void fData::set_fval_at( unsigned int f_idx, double f_val ){
 double fData::get_fval_at( unsigned int f_idx ) const{
     return this->f_vec( f_idx );
 }
-
 void fData::set_fval_block( unsigned int lead, const Eigen::VectorXd& f_blk ){
 
     // Empty case, which does nothing and return.
@@ -635,7 +634,7 @@ void fData::set_fval_block( unsigned int lead, const Eigen::VectorXd& f_blk ){
     for( unsigned int z = 0; z < f_blk.size(); z++ ){
         this->f_vec(z) = f_blk(z);
     }
-    
+
 }
 
 std::complex<double> fData::get_cplx_f_at( unsigned int f_idx ) const{

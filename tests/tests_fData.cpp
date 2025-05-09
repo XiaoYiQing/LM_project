@@ -392,7 +392,45 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
     }
 
     case_cnt++;
-    // 1- Test set_cplxData_block.
+    // 1- Test set_fval_block.
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        // Set the block's insert start point.
+        unsigned int lead = 10;
+        // Set the block size (Number of frequency data to insert).
+        unsigned int block_size = 4;
+
+        Eigen::VectorXd f_blk = Eigen::VectorXd( block_size );
+        for( unsigned int z = 0; z < block_size; z++ ){
+            f_blk(z) = z * utils::rDoubleGen( 0.0, 10.0, 1 )->at(0);
+        }
+
+        myF.set_fval_block( lead, f_blk );
+
+        bool match_bool = true;
+        for( unsigned int z = 0; z < block_size; z++ ){
+            
+            match_bool = match_bool && ( myF.get_fval_at(z) == f_blk(z) );
+            if( !match_bool ){
+                break;
+            }
+
+        }
+
+        cout << "Freq Block insert test match: " << match_bool << endl;
+
+    }
+
+
+    case_cnt++;
+    // 2- Test set_cplxData_block.
     if( test_idx == case_cnt ){
 
         // Define our frequency data object.
@@ -434,10 +472,10 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
             if( !match_bool ){
                 break;
             }
-            
+
         }
 
-        cout << "Block insert test match: " << match_bool << endl;
+        cout << "Freq Data Block insert test match: " << match_bool << endl;
 
     }
     
