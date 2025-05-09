@@ -129,7 +129,6 @@ public:
     */
     static void copy_data( fData& tarObj, const fData& refObj );
 
-
     /*
     Set the settings of the target objects to match those of the reference object.
     NOTE: Settings copying does NOT perform any kind of data format conversion.
@@ -240,28 +239,28 @@ public:
     double get_f_scale_num() const;
 
     // Set the frequency value at the target frequency index.
-    void set_fval_at( int f_idx, double f_val );
+    void set_fval_at( unsigned int f_idx, double f_val );
     // Obtain the frequency value at target frequency index.
-    double get_fval_at( int f_idx ) const;
+    double get_fval_at( unsigned int f_idx ) const;
 
     // Obtain the complex frequency value at target frequency index.
     // TODO: Consider putting the 2*pi scaling in the future.
-    std::complex<double> get_cplx_f_at( int f_idx ) const;
+    std::complex<double> get_cplx_f_at( unsigned int f_idx ) const;
 
     // Set the real part data matrix at target frequency index.
-    void set_reData_at_f( int f_idx, const Eigen::MatrixXd& new_rePart );
+    void set_reData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_rePart );
     // Obtain the real part data matrix at target frequency index.
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
 
     // Set the real part data matrix at target frequency index.
-    void set_imData_at_f( int f_idx, const Eigen::MatrixXd& new_imPart );
+    void set_imData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_imPart );
     // Obtain the imaginary part data matrix at target frequency index.
-    Eigen::MatrixXd get_imData_at_f( int f_idx ) const;
+    Eigen::MatrixXd get_imData_at_f( unsigned int f_idx ) const;
 
     // Set the complex data at the target frequency index.
-    void set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat );
+    void set_cplxData_at_f( unsigned int f_idx, Eigen::MatrixXcd& new_mat );
     // Obtain the complex data matrix at the target frequency index.
-    Eigen::MatrixXcd get_cplxData_at_f( int f_idx ) const;
+    Eigen::MatrixXcd get_cplxData_at_f( unsigned int f_idx ) const;
     
 
     // Obtain the f vector.

@@ -594,17 +594,23 @@ double fData::get_f_scale_num() const{
     return get_METRIC_PREFIX_val( this->f_pref );
 }
 
-void fData::set_fval_at( int f_idx, double f_val ){
+void fData::set_fval_at( unsigned int f_idx, double f_val ){
+    if( f_idx >= this->get_f_cnt() ){
+        throw std::out_of_range( "Target frequency index out of range." );
+    }
     this->f_vec( f_idx ) = f_val;
 }
-double fData::get_fval_at( int f_idx ) const{
+double fData::get_fval_at( unsigned int f_idx ) const{
     return this->f_vec( f_idx );
 }
-std::complex<double> fData::get_cplx_f_at( int f_idx ) const{
+std::complex<double> fData::get_cplx_f_at( unsigned int f_idx ) const{
     return std::complex<double>( 0, this->f_vec( f_idx ) );
 }
 
-void fData::set_reData_at_f( int f_idx, const Eigen::MatrixXd& new_rePart ){
+void fData::set_reData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_rePart ){
+    if( f_idx >= this->get_f_cnt() ){
+        throw std::out_of_range( "Target frequency index out of range." );
+    }
     if( new_rePart.rows() != this->IOcnt[1] || new_rePart.cols() != this->IOcnt[0] ){
         throw std::invalid_argument( "Given matrix must share the expected dimensions." );
     }
@@ -614,19 +620,31 @@ Eigen::MatrixXd fData::get_reData_at_f( int f_idx ) const{
     return this->Xr_vec.at( f_idx );
 }
 
-void fData::set_imData_at_f( int f_idx, const Eigen::MatrixXd& new_imPart ){
+void fData::set_imData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_imPart ){
+    if( f_idx >= this->get_f_cnt() ){
+        throw std::out_of_range( "Target frequency index out of range." );
+    }
+    if( new_imPart.rows() != this->IOcnt[1] || new_imPart.cols() != this->IOcnt[0] ){
+        throw std::invalid_argument( "Given matrix must share the expected dimensions." );
+    }
     this->Xi_vec.set( f_idx, new_imPart );
 }
-Eigen::MatrixXd fData::get_imData_at_f( int f_idx ) const{
+Eigen::MatrixXd fData::get_imData_at_f( unsigned int f_idx ) const{
     return this->Xi_vec.at( f_idx );
 }
 
 
-void fData::set_cplxData_at_f( int f_idx, Eigen::MatrixXcd& new_mat ){
+void fData::set_cplxData_at_f( unsigned int f_idx, Eigen::MatrixXcd& new_mat ){
+    if( f_idx >= this->get_f_cnt() ){
+        throw std::out_of_range( "Target frequency index out of range." );
+    }
+    if( new_mat.rows() != this->IOcnt[1] || new_mat.cols() != this->IOcnt[0] ){
+        throw std::invalid_argument( "Given matrix must share the expected dimensions." );
+    }
     this->Xr_vec.set( f_idx, new_mat.real() );
     this->Xi_vec.set( f_idx, new_mat.imag() );
 }
-Eigen::MatrixXcd fData::get_cplxData_at_f( int f_idx ) const{
+Eigen::MatrixXcd fData::get_cplxData_at_f( unsigned int f_idx ) const{
 
     Eigen::MatrixXcd cplxMat( Xr_vec.rows(), Xr_vec.cols() );
     for( unsigned int i = 0; i < Xr_vec.rows(); i++ ) {
