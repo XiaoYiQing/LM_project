@@ -671,6 +671,29 @@ Eigen::MatrixXcd fData::get_cplxData_at_f( unsigned int f_idx ) const{
 
 }
 
+void fData::set_cplxData_block( unsigned int lead, const Matrix3DXd& newBlk_re, const Matrix3DXd& newBlk_im ){
+
+    // Empty case, which does nothing and return.
+    if( newBlk_re.isEmpty() || newBlk_im.isEmpty() ){
+        return;
+    }
+
+    // Check for validity of the arguments.
+    if( !Matrix3DXd::same_size( newBlk_re.at(0), newBlk_im.at(0) ) ){
+        throw std::invalid_argument( "The real and imaginary part must have consistent matrix sizes." );
+    }
+    if( this->get_f_cnt() <= lead + newBlk_re.levels() ){
+        throw std::out_of_range( "The current data array's size cannot accomodate the specified data block at the specified lead point." );
+    }
+
+    // Insert the data.
+    for( unsigned int z = 0; z < newBlk_re.levels(); z++ ){
+        this->Xr_vec.set( z, newBlk_re.at(z) );
+        this->Xi_vec.set( z, newBlk_im.at(z) );
+    }
+
+}
+
 Eigen::VectorXd fData::getF_vec() const{
     // Eigen::VectorXd tmp = this->f_vec;
     return this->f_vec;

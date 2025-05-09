@@ -268,7 +268,12 @@ public:
     void set_cplxData_at_f( unsigned int f_idx, Eigen::MatrixXcd& new_mat );
     // Obtain the complex data matrix at the target frequency index.
     Eigen::MatrixXcd get_cplxData_at_f( unsigned int f_idx ) const;
-    
+
+    /*
+    Replace the block of continuous data within the frequency data array with the given block.
+    - lead: the starting index of the block.
+    */
+    void set_cplxData_block( unsigned int lead, const Matrix3DXd& newBlk_re, const Matrix3DXd& newBlk_im );
 
     // Obtain the f vector.
     Eigen::VectorXd getF_vec() const;

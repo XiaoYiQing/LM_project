@@ -391,6 +391,40 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
 
     }
 
+
+    // 1- Test set_cplxData_block.
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
+
+        unsigned int row_cnt = myF.get_out_cnt();
+        unsigned int col_cnt = myF.get_in_cnt();
+
+        bool match_bool = true;
+
+        // Set the block's insert start point.
+        unsigned int lead = 10;
+        // Set the block size (Number of frequency data to insert).
+        unsigned int block_size = 3;
+
+        Matrix3DXd newBlk_re = Matrix3DXd( row_cnt, col_cnt, block_size );
+        Matrix3DXd newBlk_im = Matrix3DXd( row_cnt, col_cnt, block_size );
+        for( unsigned int z = 0; z < block_size; z++ ){
+            Eigen::MatrixXd mat_z = Eigen::MatrixXd( row_cnt, col_cnt );
+            mat_z.Ones();
+            mat_z *= z;
+            newBlk_re.set( z, mat_z );
+            newBlk_im.set( z, mat_z );
+        }
+
+        
+
+    }
     
 
     case_cnt++;

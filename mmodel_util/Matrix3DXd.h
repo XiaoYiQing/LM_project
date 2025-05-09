@@ -232,7 +232,7 @@ public:
     unsigned int levels() const;
 
     // Determine if the matrix is empty. True if matrix vector is empty.
-    bool isEmpty();
+    bool isEmpty() const;
 
     /*
     Return the 2D matrix at the target index of the vector of 2D matrix.

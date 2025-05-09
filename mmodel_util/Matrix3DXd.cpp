@@ -509,7 +509,7 @@ unsigned int Matrix3DXd::levels() const{
     return Mat3D.size();
 }
 
-bool Matrix3DXd::isEmpty(){
+bool Matrix3DXd::isEmpty() const{
     return this->Mat3D.size() == 0;
 }
 
