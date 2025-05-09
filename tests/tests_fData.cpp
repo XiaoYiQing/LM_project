@@ -391,7 +391,7 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
 
     }
 
-
+    case_cnt++;
     // 1- Test set_cplxData_block.
     if( test_idx == case_cnt ){
 
@@ -405,24 +405,39 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
         unsigned int row_cnt = myF.get_out_cnt();
         unsigned int col_cnt = myF.get_in_cnt();
 
-        bool match_bool = true;
+        
 
         // Set the block's insert start point.
         unsigned int lead = 10;
         // Set the block size (Number of frequency data to insert).
-        unsigned int block_size = 3;
+        unsigned int block_size = 4;
 
         Matrix3DXd newBlk_re = Matrix3DXd( row_cnt, col_cnt, block_size );
         Matrix3DXd newBlk_im = Matrix3DXd( row_cnt, col_cnt, block_size );
         for( unsigned int z = 0; z < block_size; z++ ){
             Eigen::MatrixXd mat_z = Eigen::MatrixXd( row_cnt, col_cnt );
-            mat_z.Ones();
-            mat_z *= z;
+            mat_z.setOnes();
+            mat_z *= z * utils::rDoubleGen( 0.0, 10.0, 1 )->at(0);
             newBlk_re.set( z, mat_z );
             newBlk_im.set( z, mat_z );
         }
 
-        
+        myF.set_cplxData_block( lead, newBlk_re, newBlk_im );
+
+
+        bool match_bool = true;
+        for( unsigned int z = 0; z < block_size; z++ ){
+            
+            Eigen::MatrixXcd mat_z = myF.get_cplxData_at_f( z );
+            match_bool = match_bool && ( mat_z.real() == newBlk_re.at(z) );
+            match_bool = match_bool && ( mat_z.imag() == newBlk_im.at(z) );
+            if( !match_bool ){
+                break;
+            }
+            
+        }
+
+        cout << "Block insert test match: " << match_bool << endl;
 
     }
     
