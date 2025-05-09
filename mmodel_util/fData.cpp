@@ -582,7 +582,7 @@ void fData::set_out_cnt( unsigned int new_out_cnt ){
     this->Xi_vec.clear();
     
 }
-int fData::get_out_cnt() const
+unsigned int fData::get_out_cnt() const
     { return this->IOcnt[1]; }
 
 void fData::set_in_cnt( unsigned int new_in_cnt ){
@@ -596,10 +596,10 @@ void fData::set_in_cnt( unsigned int new_in_cnt ){
     this->Xi_vec.clear();
     
 }
-int fData::get_in_cnt() const
+unsigned int fData::get_in_cnt() const
     { return this->IOcnt[0]; }
 
-int fData::get_f_cnt() const
+unsigned int fData::get_f_cnt() const
     { return this->f_vec.size(); }
 
 string fData::get_f_scale_str() const
@@ -631,7 +631,7 @@ void fData::set_fval_block( unsigned int lead, const Eigen::VectorXd& f_blk ){
     }
 
     // Insert the data.
-    for( unsigned int z = 0; z < f_blk.size(); z++ ){
+    for( unsigned int z = 0; z < (unsigned int) f_blk.size(); z++ ){
         this->f_vec(z) = f_blk(z);
     }
 

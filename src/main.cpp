@@ -55,12 +55,12 @@ int main() {
 
     // tests::fData_test_1( 6 );
     // tests::fData_test_2( 3 );
-    tests::fData_setFunc_tests( 1 );
+    // tests::fData_setFunc_tests( 1 );
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
-    // tests::LM_eng_full_SFML_testrun();
+    tests::LM_eng_full_SFML_testrun();
 
 
     return 0; 

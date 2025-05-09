@@ -230,16 +230,16 @@ public:
     */
     void set_out_cnt( unsigned int new_out_cnt );
     // Obtain the number of outputs (Number of rows in a data matrix).
-    int get_out_cnt() const;
+    unsigned int get_out_cnt() const;
     /*
     Set the number of inputs.
     NOTE: This function expunges existing frequency data.
     */
     void set_in_cnt( unsigned int new_in_cnt );
     // Obtain the number of inputs (Number of columns in a data matrix).
-    int get_in_cnt() const;
+    unsigned int get_in_cnt() const;
     // Obtain the number of frequency points.
-    int get_f_cnt() const;
+    unsigned int get_f_cnt() const;
     // Obtain the string representation of the frequency scale or metric prefix.
     string get_f_scale_str() const;
     // Obtain the numerical value of the frequency scale or metric prefix.
