@@ -410,18 +410,18 @@ bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
 
 }
 
-void Matrix3DXd::reInit( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx ){
+void Matrix3DXd::reInit( unsigned int row_cnt, unsigned int col_cnt, unsigned int lvl_cnt ){
 
-    if( row_idx == 0 || col_idx == 0 || lvl_idx == 0 ){
+    if( row_cnt == 0 || col_cnt == 0 || lvl_cnt == 0 ){
         throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
     }
 
     this->Mat3D.clear();
 
-    Eigen::MatrixXd firstMat = Eigen::MatrixXd( row_idx, col_idx );
+    Eigen::MatrixXd firstMat = Eigen::MatrixXd( row_cnt, col_cnt );
     firstMat.setZero();
     this->push_back( firstMat );
-    this->reserve( lvl_idx );
+    this->reserve( lvl_cnt );
 
 }
 

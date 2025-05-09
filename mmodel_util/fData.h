@@ -124,6 +124,13 @@ public:
 // ====================================================================== >>>>>
 
     /*
+    Re-initialize the fData by setting the f vector and the f data vector to
+    only zeros values with the given number of ports and frequency points.
+    This function does not affect format settings.
+    */
+    void reInit( unsigned int out_cnt, unsigned int in_cnt, unsigned int f_cnt );
+
+    /*
     Set the data of the target objects to match those of the reference object.
     NOTE: Data copying does NOT perform settings copying such as frequency data type and format.
     */

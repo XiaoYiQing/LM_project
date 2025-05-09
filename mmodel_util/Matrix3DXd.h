@@ -187,7 +187,7 @@ public:
     is empty (or emptied) and requires a new start with specificed number of rows and columns.
     WARNING: This function erases all current 3D matrix entries.
     */
-    void reInit( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
+    void reInit( unsigned int row_cnt, unsigned int col_cnt, unsigned int lvl_cnt );
 
     /*
     Clear all existing 2D matrices.

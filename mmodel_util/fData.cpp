@@ -187,6 +187,21 @@ fData::fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec ){
 //      Data Editing
 // ====================================================================== >>>>>
 
+void fData::reInit( unsigned int out_cnt, unsigned int in_cnt, unsigned int f_cnt ){
+
+    if( out_cnt == 0 || in_cnt == 0 || f_cnt == 0 ){
+        throw std::domain_error( "Cannot re-initialize with empty data vectors." );
+    }
+
+    this->f_vec.resize( f_cnt );
+    this->f_vec.setZero();
+    this->Xr_vec.reInit( out_cnt, in_cnt, f_cnt );
+    this->Xi_vec.reInit( out_cnt, in_cnt, f_cnt );
+    this->IOcnt[0] = in_cnt;
+    this->IOcnt[1] = out_cnt;
+
+}
+
 void fData::copy_data( fData& tarObj, const fData& refObj ){
 
     tarObj.IOcnt[0] = refObj.IOcnt[0];
