@@ -250,6 +250,13 @@ public:
     // Obtain the frequency value at target frequency index.
     double get_fval_at( unsigned int f_idx ) const;
 
+    /*
+    Replace the block of continuous frequency within the frequency vector with the given block.
+    - lead: the starting index of the block.
+    - f_blk: the block of frequency to insert.
+    */
+    void set_fval_block( unsigned int lead, const Eigen::VectorXd& f_blk );
+
     // Obtain the complex frequency value at target frequency index.
     // TODO: Consider putting the 2*pi scaling in the future.
     std::complex<double> get_cplx_f_at( unsigned int f_idx ) const;
@@ -272,6 +279,8 @@ public:
     /*
     Replace the block of continuous data within the frequency data array with the given block.
     - lead: the starting index of the block.
+    - newBlk_re: insert block real part.
+    - newBlk_im: insert block imag part.
     */
     void set_cplxData_block( unsigned int lead, const Matrix3DXd& newBlk_re, const Matrix3DXd& newBlk_im );
 

@@ -618,6 +618,26 @@ void fData::set_fval_at( unsigned int f_idx, double f_val ){
 double fData::get_fval_at( unsigned int f_idx ) const{
     return this->f_vec( f_idx );
 }
+
+void fData::set_fval_block( unsigned int lead, const Eigen::VectorXd& f_blk ){
+
+    // Empty case, which does nothing and return.
+    if( f_blk.size() == 0 ){
+        return;
+    }
+
+    // Check for validity of the arguments.
+    if( this->get_f_cnt() <= lead + f_blk.size() ){
+        throw std::out_of_range( "The current data array's size cannot accomodate the specified data block at the specified lead point." );
+    }
+
+    // Insert the data.
+    for( unsigned int z = 0; z < f_blk.size(); z++ ){
+        this->f_vec(z) = f_blk(z);
+    }
+    
+}
+
 std::complex<double> fData::get_cplx_f_at( unsigned int f_idx ) const{
     return std::complex<double>( 0, this->f_vec( f_idx ) );
 }
