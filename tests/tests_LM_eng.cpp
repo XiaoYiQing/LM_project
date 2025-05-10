@@ -519,7 +519,8 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 64;
+    // unsigned int svd_ret_cnt = 64;
+    unsigned int svd_ret_cnt = 65;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
@@ -536,22 +537,47 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
 
-// // ---------------------------------------------------------------------- >>>>>
-// //      Model Evaluation
-// // ---------------------------------------------------------------------- >>>>>
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
 
-    complex<double> f_z = myFr->get_cplx_f_at( test_f_idx );
-    tmp_z = ( f_z * E_n - A_n );
-    H_z = C_n * tmp_z.inverse() * B_n;
-    cout << H_z << endl;
-    cout << myFr->get_cplxData_at_f( test_f_idx ) << endl;
-
-    // Create an evaluated data object.
-    fData eval_FData = fData();
-    fData::copy_settings( eval_FData, myFData );
+    // complex<double> f_z = myFr->get_cplx_f_at( test_f_idx );
+    // tmp_z = ( f_z * E_n - A_n );
+    // H_z = C_n * tmp_z.inverse() * B_n;
+    // cout << H_z << endl;
+    // cout << myFr->get_cplxData_at_f( test_f_idx ) << endl;
 
     
 
-// // ---------------------------------------------------------------------- <<<<<
+    // Define the test frequency vector.
+    Eigen::VectorXd testFVec = myFData.getF_vec();
+    // Create an evaluated data object.
+    fData eval_FData = fData();
+    fData::copy_settings( eval_FData, myFData );
+    eval_FData.reInit( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() );
+
+    // Compute the approximate set of frequency data.
+    for( unsigned int z = 0; z < (unsigned int) testFVec.size(); z++ ){
+        complex<double> f_z = complex<double>( 0, testFVec(z) );
+        tmp_z = ( f_z * E_n - A_n );
+        H_z = C_n * tmp_z.inverse() * B_n;
+        eval_FData.set_cplxData_at_f( z, H_z );
+    }
+
+    // Create a vector of matrices representing the difference between the original and the 
+    // approximate data.
+    Matrix3DXd H_diff_re = Matrix3DXd( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() ); 
+    Matrix3DXd H_diff_im = Matrix3DXd( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() ); 
+    for( unsigned int z = 0; z < (unsigned int) testFVec.size(); z++ ){
+        Eigen::MatrixXcd tmp_mat_z = myFData.get_cplxData_at_f(z) - eval_FData.get_cplxData_at_f(z);
+        H_diff_re.set( z, tmp_mat_z.real() );
+        H_diff_im.set( z, tmp_mat_z.imag() );
+    }
+
+    // Compute the RMS error.
+    double total_RMS_err = Matrix3DXd::RMS_total_comp( H_diff_re, H_diff_im );
+    cout << "The total RMS error: " << total_RMS_err << endl;
+
+// ---------------------------------------------------------------------- <<<<<
 
 }
