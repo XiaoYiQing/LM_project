@@ -856,8 +856,9 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             char keyChar = options.at(0)[0];
             fData::METRIC_PREFIX f_pref =  fData::get_METRIC_PREFIX( string( 1, keyChar ) );
             cout << fData::get_METRIC_PREFIX_Str( f_pref ) << endl;
+            tarFData.f_pref = f_pref;
         }
-        tarFData.f_pref = f_pref;
+        
         // Obtain the f data type.
         tarFData.fD_type = fData::get_FDATA_TYPE( options.at(1) );
         // Obtain the f data format.

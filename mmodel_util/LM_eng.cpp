@@ -56,6 +56,11 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData
             lead_x = i*out_cnt;
             lead_y = j*in_cnt;
 
+            cout << f2_i << endl;
+            cout << f2_D_i << endl;
+            cout << f1_j << endl;
+            cout << f1_D_j << endl;
+
             // Compute the current Loewner Matrix block.
             LM_ij = ( f2_D_i - f1_D_j )/( f2_i - f1_j );
 

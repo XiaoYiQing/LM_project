@@ -456,7 +456,6 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
     Eigen::MatrixXd myW_re = myW_re_tmp.real();
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
-    
 
     // Generate a random test point.
     unsigned int test_f_idx = utils::rIntGen( 0, myFr->get_f_cnt() - 1, 1 )->at(0);
@@ -526,7 +525,6 @@ void tests::LM_eng_full_SFML_testrun(){
 
     Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
     Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
-
 
     // Perform the model reduction to obtain usable E, A, B, C matrices.
     Eigen::MatrixXcd E_n = -1*( U_r.transpose() * myLM_re * V_r );
