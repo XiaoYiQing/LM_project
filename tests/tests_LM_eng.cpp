@@ -456,7 +456,7 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
     Eigen::MatrixXd myW_re = myW_re_tmp.real();
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
-
+    
 
     // Generate a random test point.
     unsigned int test_f_idx = utils::rIntGen( 0, myFr->get_f_cnt() - 1, 1 )->at(0);
@@ -538,16 +538,28 @@ void tests::LM_eng_full_SFML_testrun(){
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      Model Evaluation
+//      Stability Check
 // ---------------------------------------------------------------------- >>>>>
 
-    // complex<double> f_z = myFr->get_cplx_f_at( test_f_idx );
-    // tmp_z = ( f_z * E_n - A_n );
-    // H_z = C_n * tmp_z.inverse() * B_n;
-    // cout << H_z << endl;
-    // cout << myFr->get_cplxData_at_f( test_f_idx ) << endl;
+    Eigen::MatrixXcd LMAO_MAT = E_n.inverse() * A_n;
 
-    
+    Eigen::ComplexEigenSolver< Eigen::MatrixXcd > mySolver( LMAO_MAT );
+    // Check if the computation was successful
+    if ( mySolver.info() != Eigen::Success ) {
+        std::cerr << "Failed to compute eigenvalues." << std::endl;
+        return;
+    }
+
+    // Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
+    // cout << eigeVals_1 << endl;
+    // cout << LMAO_MAT << endl;
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
 
     // Define the test frequency vector.
     Eigen::VectorXd testFVec = myFData.getF_vec();
