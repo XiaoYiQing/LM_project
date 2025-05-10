@@ -548,9 +548,12 @@ void tests::LM_eng_full_SFML_testrun(){
         return;
     }
 
-    // Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
+    Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
     // cout << eigeVals_1 << endl;
-    // cout << LMAO_MAT << endl;
+
+    // Determine if the system is stable (Maximum poles real part is negative).
+    bool is_stab = 0 > eigeVals_1.real().maxCoeff();
+    cout << "Is stable: " << is_stab << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 
