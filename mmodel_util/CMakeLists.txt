@@ -8,6 +8,8 @@ set( mmodel_util_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Matrix3DXd.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/LM_eng.h
 	${CMAKE_CURRENT_SOURCE_DIR}/LM_eng.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/LTI_descSyst.h
+	${CMAKE_CURRENT_SOURCE_DIR}/LTI_descSyst.cpp
 )
 
 add_library(mmodel_util ${mmodel_util_SOURCES})
