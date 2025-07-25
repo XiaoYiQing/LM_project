@@ -379,6 +379,7 @@ void tests::LM_eng_full_SFML_testrun(){
     // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
     string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
 
+    // Obtain the data from the target data file and insert into the fData object.
     fData::read_sXp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
@@ -519,7 +520,7 @@ void tests::LM_eng_full_SFML_testrun(){
 
     // Define the number of singular values to retain.
     // unsigned int svd_ret_cnt = 64;
-    unsigned int svd_ret_cnt = 65;
+    unsigned int svd_ret_cnt = 66;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
@@ -549,7 +550,6 @@ void tests::LM_eng_full_SFML_testrun(){
     }
 
     Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
-    // cout << eigeVals_1 << endl;
 
     // Determine if the system is stable (Maximum poles real part is negative).
     bool is_stab = 0 > eigeVals_1.real().maxCoeff();

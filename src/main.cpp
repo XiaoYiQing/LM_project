@@ -37,8 +37,6 @@ int main() {
 
     int err_ret_val = 1;
 
-    
-
     // Test aspectes of the Eigen library.
     // int testCase = 3;
 

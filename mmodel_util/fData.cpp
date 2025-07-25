@@ -7,7 +7,7 @@ using namespace std;
 
 
 // ====================================================================== >>>>>
-//      Class Enum "CHK_PIECE" Help Functions
+//      Class Enum "METRIC_PREFIX" Help Functions
 // ====================================================================== >>>>>
 
 string fData::get_METRIC_PREFIX_Str( fData::METRIC_PREFIX tar_METRIC_PREFIX ){
