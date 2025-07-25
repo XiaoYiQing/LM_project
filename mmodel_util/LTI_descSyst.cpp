@@ -35,7 +35,7 @@ LTI_descSyst::LTI_descSyst(){
 Check if the system matrices are consistent with transfer function matrices requirements.
 A consistent system return an empty string.
 */
-string LTI_descSyst::consistency_check(){
+string LTI_descSyst::consistency_check() const{
 
     string err_msg = "";
     if( this->A.rows() != this->E.rows() || this->A.cols() != this->E.cols() ){
@@ -59,21 +59,48 @@ string LTI_descSyst::consistency_check(){
     }
 
     return err_msg;
-    
+
 }
 
 // Obtain the number of outputs.
-unsigned int LTI_descSyst::get_output_cnt(){
+unsigned int LTI_descSyst::get_output_cnt() const{
     return static_cast<unsigned int>( this->B.cols() );
 }
 // Obtain the number of inputs.
-unsigned int LTI_descSyst::get_input_cnt(){
+unsigned int LTI_descSyst::get_input_cnt() const{
     return static_cast<unsigned int>( this->C.rows() );
 }
 // Obtain the order of the system.
-unsigned int LTI_descSyst::get_order(){
+unsigned int LTI_descSyst::get_order() const{
     return static_cast<unsigned int>( this->A.rows() );
 }
 
 // ====================================================================== <<<<<
 
+
+
+// ====================================================================== >>>>>
+//      Access Function
+// ====================================================================== >>>>>
+
+Eigen::MatrixXd LTI_descSyst::get_E() const{
+    return this->E;
+}
+Eigen::MatrixXd LTI_descSyst::get_A() const{
+    return this->A;
+}
+Eigen::MatrixXd LTI_descSyst::get_B() const{
+    return this->B;
+}
+Eigen::MatrixXd LTI_descSyst::get_C() const{
+    return this->C;
+}
+Eigen::MatrixXd LTI_descSyst::get_D() const{
+    return this->D;
+}
+
+Eigen::MatrixXd LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in ){
+    this->E = *E_in;
+}
+
+// ====================================================================== <<<<<

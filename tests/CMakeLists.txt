@@ -12,6 +12,8 @@ set( tests_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_numUtils.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LM_eng.h
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LM_eng.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_LTI_descSyst.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_LTI_descSyst.cpp
 )
 
 add_library(tests ${tests_SOURCES})
