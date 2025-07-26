@@ -137,6 +137,16 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "Stability check 2: passed" << endl;
         }
 
+        *A_ptr = -1*Eigen::MatrixXd::Identity( n-1, n-1 );
+        mySyst.set_A( A_ptr );
+        is_stab = mySyst.is_stable();
+        if( is_stab ){
+            cout << "Failed test: inconsistent system found stable." << endl;
+            return;
+        }else{
+            cout << "Stability check 3: passed" << endl;
+        }
+
 
 
     }
