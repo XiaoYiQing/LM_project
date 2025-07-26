@@ -1,7 +1,7 @@
 #ifndef LTI_DESCSYST_H
 #define LTI_DESCSYST_H
 
-
+#include <chrono>
 #include <Eigen/Dense>
 #include <iostream>
 #include <magic_enum.hpp>
@@ -50,6 +50,11 @@ unsigned int get_output_cnt() const;
 unsigned int get_input_cnt() const;
 // Obtain the order of the system.
 unsigned int get_order() const;
+/* 
+Check stability of the system.
+WARNING: Depending on the order of the system, this can be costly in computation time.
+*/
+bool is_stable() const;
 
 // ====================================================================== <<<<<
 

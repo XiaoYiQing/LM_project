@@ -8,6 +8,7 @@
 
 #include "fData.h"
 #include "LM_eng.h"
+#include "LTI_descSyst.h"
 
 
 extern string RES_PATH_XYQ_str;
