@@ -31,6 +31,13 @@ LTI_descSyst::LTI_descSyst(){
 //      Specialized Operations
 // ====================================================================== >>>>>
 
+bool LTI_descSyst::is_consistent() const{
+
+    string tmp_str = this->consistency_check();
+    return tmp_str.empty();
+
+}
+
 /*
 Check if the system matrices are consistent with transfer function matrices requirements.
 A consistent system return an empty string.
@@ -99,8 +106,15 @@ Eigen::MatrixXd LTI_descSyst::get_D() const{
     return this->D;
 }
 
-Eigen::MatrixXd LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in ){
-    this->E = *E_in;
-}
+void LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in )
+    { this->E = *E_in; }
+void LTI_descSyst::set_A( const shared_ptr< const Eigen::MatrixXd > A_in )
+    { this->A = *A_in; }
+void LTI_descSyst::set_B( const shared_ptr< const Eigen::MatrixXd > B_in )
+    { this->B = *B_in; }
+void LTI_descSyst::set_C( const shared_ptr< const Eigen::MatrixXd > C_in )
+    { this->C = *C_in; }
+void LTI_descSyst::set_D( const shared_ptr< const Eigen::MatrixXd > D_in )
+    { this->D = *D_in; }
 
 // ====================================================================== <<<<<

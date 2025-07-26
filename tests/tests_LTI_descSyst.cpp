@@ -1,0 +1,90 @@
+#include "tests_LTI_descSyst.h"
+
+
+
+
+void tests::LTI_descSyst_test_1( unsigned int test_idx ){
+
+    // Number of inputs.
+    unsigned int m = 7;
+    
+    // Number of outputs.
+    unsigned int p = 5;
+
+    // System order
+    unsigned int n = 40;
+
+    
+    shared_ptr< Eigen::MatrixXd >E_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
+    shared_ptr< Eigen::MatrixXd >A_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
+    shared_ptr< Eigen::MatrixXd >B_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, p ) );
+    shared_ptr< Eigen::MatrixXd >C_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, n ) );
+    shared_ptr< Eigen::MatrixXd >D_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, p ) );
+
+
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( E_ptr );
+    if( mySyst.is_consistent() ){
+        cout << "Consistency should be false!" << endl;
+        return;
+    }
+    mySyst.set_A( A_ptr );
+    if( mySyst.is_consistent() ){
+        cout << "Consistency should be false!" << endl;
+        return;
+    }
+    mySyst.set_B( B_ptr );
+    if( mySyst.is_consistent() ){
+        cout << "Consistency should be false!" << endl;
+        return;
+    }
+    mySyst.set_C( C_ptr );
+    if( mySyst.is_consistent() ){
+        cout << "Consistency should be false!" << endl;
+        return;
+    }
+    mySyst.set_D( D_ptr );
+    if( !mySyst.is_consistent() ){
+        cout << "Consistency should be true!" << endl;
+        return;
+    }
+
+    if( mySyst.get_input_cnt() != m ){
+        cout << "Input count mismatch." << endl;
+        return;
+    }
+    if( mySyst.get_output_cnt() != p ){
+        cout << "Output count mismatch." << endl;
+        return;
+    }
+    if( mySyst.get_order() != n ){
+        cout << "Order mismatch." << endl;
+        return;
+    }
+
+    if( mySyst.get_E() != *E_ptr ){
+        cout << "Matrix E compare failed." << endl;
+        return;
+    }
+    if( mySyst.get_A() != *A_ptr ){
+        cout << "Matrix A compare failed." << endl;
+        return;
+    }
+    if( mySyst.get_B() != *B_ptr ){
+        cout << "Matrix B compare failed." << endl;
+        return;
+    }
+    if( mySyst.get_C() != *C_ptr ){
+        cout << "Matrix C compare failed." << endl;
+        return;
+    }
+    if( mySyst.get_D() != *D_ptr ){
+        cout << "Matrix D compare failed." << endl;
+        return;
+    }
+
+    cout << "All tests passed!" << endl;
+
+    int lol = 1;
+
+}

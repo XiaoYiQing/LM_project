@@ -22,8 +22,10 @@
 #include "tests_Eigen.h"
 #include "tests_fData.h"
 #include "tests_LM_eng.h"
+#include "tests_LTI_descSyst.h"
 #include "tests_Matrix3DXd.h"
 #include "tests_numUtils.h"
+
 
 
 using namespace std;
@@ -58,8 +60,10 @@ int main() {
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
-    tests::LM_eng_full_SFML_testrun();
+    
+    // tests::LM_eng_full_SFML_testrun();
 
+    tests::LTI_descSyst_test_1( 0 );
 
     return 0; 
 
