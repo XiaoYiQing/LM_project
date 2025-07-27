@@ -113,8 +113,6 @@ bool LTI_descSyst::is_stable() const{
 
 Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
 
-
-
     Eigen::MatrixXcd tmp_1 = ( f_tar * this->E - this->A );
     Eigen::MatrixXcd B_tmp = this->B;
 
@@ -126,12 +124,9 @@ Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
         return -1*Eigen::MatrixXcd::Ones(1,1);
     }
 
-    // auto tmp_2 = lu.solve( this->B );
     Eigen::MatrixXcd tmp_2 = lu.solve( B_tmp );
     Eigen::MatrixXcd H_z = this->C * tmp_2;
     
-    // Eigen::MatrixXcd H_z = Eigen::MatrixXcd::Ones(1,1);
-
     return H_z;
 
 }
