@@ -99,6 +99,122 @@ Matrix3DXcd::Matrix3DXcd( vector< Eigen::MatrixXcd > Mat3D ){
 
 
 // ====================================================================== >>>>>
+//      Operators
+// ====================================================================== >>>>>
+
+
+Matrix3DXcd Matrix3DXcd::operator+(const Matrix3DXcd tarMat) const{
+
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXcd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXcd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+
+    Matrix3DXcd resMat;
+    resMat.reInit( this->rows(), this->cols(), currLevels );
+
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        resMat.set( z, this->Mat3D.at(z).array() + tarMat.at(z).array() );
+    }
+
+    return resMat;
+
+}
+
+Matrix3DXcd Matrix3DXcd::operator*(const double scalar) const {
+
+    // Obtain 3D matrix level count.
+    unsigned int lvl_cnt = Mat3D.size();
+    // New 3D matrix definition.
+    Matrix3DXcd Mat3D_res = Matrix3DXcd( this->Mat3D );
+    // Apply individual 3D matrix scalar multiplication.
+    for( unsigned int i = 0; i < lvl_cnt; i++ ){
+        Mat3D_res.Mat3D[i] *= scalar;
+    }
+    
+    return Mat3D_res;
+}
+
+Matrix3DXcd& Matrix3DXcd::operator*=(const double scalar){
+
+    // Obtain 3D matrix level count.
+    unsigned int lvl_cnt = this->Mat3D.size();
+    // Apply individual 3D matrix scalar multiplication.
+    for( unsigned int i = 0; i < lvl_cnt; i++ ){
+        this->Mat3D[i] *= scalar;
+    }
+
+    return *this;
+
+}
+
+Matrix3DXcd Matrix3DXcd::operator*( const Matrix3DXcd tarMat ) const{
+
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXcd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXcd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+
+    Matrix3DXcd resMat;
+    resMat.reInit( this->rows(), this->cols(), currLevels );
+
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        resMat.set( z, this->Mat3D.at(z).array() * tarMat.at(z).array() );
+    }
+
+    return resMat;
+
+}
+
+Matrix3DXcd Matrix3DXcd::operator/(const Matrix3DXcd tarMat) const{
+    
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXcd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXcd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+
+    Matrix3DXcd resMat;
+    resMat.reInit( this->rows(), this->cols(), currLevels );
+
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        try{
+            resMat.set( z, this->Mat3D.at(z).array() / tarMat.at(z).array() );
+        // Catch the division by 0 case.
+        }catch( const std::runtime_error& e ){
+            cerr << e.what() << endl;
+            return resMat;
+        }
+    }
+
+    return resMat;
+
+}
+
+// ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
 //      Operations
 // ====================================================================== >>>>>
 

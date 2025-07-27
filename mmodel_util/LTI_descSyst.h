@@ -9,6 +9,7 @@
 #include <string>   
 #include <vector> 
 
+#include "Matrix3DXcd.h"
 
 
 using namespace std;
@@ -61,6 +62,14 @@ Evaluate the transfer function represented by the current system at the
 target frequency.
 */
 Eigen::MatrixXcd tf_eval( complex<double> ) const;
+
+/*
+Evaluate the transfer function represented by the current system at the 
+target frequency.
+Input is vector of complex<double>.
+Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
+*/
+Matrix3DXcd tf_eval( vector< complex<double> > ) const;
 
 // ====================================================================== <<<<<
 

@@ -118,7 +118,6 @@ Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
 
     // Solve system using LU decomposition
     Eigen::FullPivLU<Eigen::MatrixXcd> lu( tmp_1 );
-    
     if(!lu.isInvertible()) {
         std::cerr << "Matrix is singular or nearly singular." << std::endl;
         return -1*Eigen::MatrixXcd::Ones(1,1);
@@ -128,6 +127,37 @@ Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
     Eigen::MatrixXcd H_z = this->C * tmp_2;
     
     return H_z;
+
+}
+
+
+Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> > f_vec ) const{
+
+    unsigned int eval_cnt = f_vec.size();
+
+    Matrix3DXcd res_var = Matrix3DXcd( this->get_input_cnt(), this->get_output_cnt(),
+        eval_cnt );
+
+    Eigen::MatrixXcd B_tmp = this->B;
+
+    for( unsigned int z = 0; z < eval_cnt; z++ ){
+
+        Eigen::MatrixXcd tmp_1 = ( f_vec[z] * this->E - this->A );
+
+        // Solve system using LU decomposition
+        Eigen::FullPivLU<Eigen::MatrixXcd> lu( tmp_1 );
+        if(!lu.isInvertible()) {
+            std::cerr << "Matrix is singular or nearly singular." << std::endl;
+            return Matrix3DXcd(1,1,1);
+        }
+        Eigen::MatrixXcd tmp_2 = lu.solve( B_tmp );
+        Eigen::MatrixXcd H_z = this->C * tmp_2;
+        
+        res_var.set( z, H_z );
+
+    }
+
+    return res_var;
 
 }
 

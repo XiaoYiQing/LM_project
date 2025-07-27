@@ -185,11 +185,21 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         Eigen::MatrixXcd expect_mat = -4*Eigen::MatrixXcd::Ones( m, p );
 
         if( eval_mat == expect_mat ){
-            cout << "Test 1 passed" << endl;
+            cout << "Test 1 passed: single f evaluation." << endl;
         }else{
-            cout << "Test 1 failed" << endl;
+            cout << "Test 1 failed: single f evaluation." << endl;
         }
 
+
+        vector< complex<double> > test_arr = { complex<double>(0,0), complex<double>(0.5,0),
+            complex<double>(0,0.5) };
+        Matrix3DXcd eval_arr = mySyst.tf_eval( test_arr );
+
+        cout << eval_arr.at(0) << endl;
+        cout << eval_arr.at(1) << endl;
+        cout << eval_arr.at(2) << endl;
+
     }
+
 
 }
