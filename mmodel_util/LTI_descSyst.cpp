@@ -90,7 +90,7 @@ bool LTI_descSyst::is_stable() const{
         return false;
     }
 
-    // Compute E^(-1)*A
+    // Compute E^(-1)*A as solution x to E*x = A
     auto solver = this->E.fullPivHouseholderQr(); // or other suitable decomposition
     Eigen::MatrixXd pole_mat = solver.solve( this->A );
 
@@ -107,6 +107,32 @@ bool LTI_descSyst::is_stable() const{
     bool is_stab = 0 > eigeVals_1.real().maxCoeff();
 
     return is_stab;
+
+}
+
+
+Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
+
+
+
+    Eigen::MatrixXcd tmp_1 = ( f_tar * this->E - this->A );
+    Eigen::MatrixXcd B_tmp = this->B;
+
+    // Solve system using LU decomposition
+    Eigen::FullPivLU<Eigen::MatrixXcd> lu( tmp_1 );
+    
+    if(!lu.isInvertible()) {
+        std::cerr << "Matrix is singular or nearly singular." << std::endl;
+        return -1*Eigen::MatrixXcd::Ones(1,1);
+    }
+
+    // auto tmp_2 = lu.solve( this->B );
+    Eigen::MatrixXcd tmp_2 = lu.solve( B_tmp );
+    Eigen::MatrixXcd H_z = this->C * tmp_2;
+    
+    // Eigen::MatrixXcd H_z = Eigen::MatrixXcd::Ones(1,1);
+
+    return H_z;
 
 }
 

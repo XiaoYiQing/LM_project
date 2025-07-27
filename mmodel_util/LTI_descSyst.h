@@ -56,6 +56,12 @@ WARNING: Depending on the order of the system, this can be costly in computation
 */
 bool is_stable() const;
 
+/*
+Evaluate the transfer function represented by the current system at the 
+target frequency.
+*/
+Eigen::MatrixXcd tf_eval( complex<double> ) const;
+
 // ====================================================================== <<<<<
 
 

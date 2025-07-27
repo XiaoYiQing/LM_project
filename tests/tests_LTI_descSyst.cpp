@@ -147,7 +147,48 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "Stability check 3: passed" << endl;
         }
 
+    }
 
+    case_cnt++;
+    // 2- Transfer function eval test.
+    if( case_cnt == case_idx ){
+
+        // Number of inputs.
+        unsigned int m = 2;
+        
+        // Number of outputs.
+        unsigned int p = 2;
+
+        // System order
+        unsigned int n = 4;
+        
+        shared_ptr< Eigen::MatrixXd >E_ptr = 
+            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+        shared_ptr< Eigen::MatrixXd >A_ptr = 
+            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+        shared_ptr< Eigen::MatrixXd >B_ptr = 
+            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
+        shared_ptr< Eigen::MatrixXd >C_ptr = 
+            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
+        shared_ptr< Eigen::MatrixXd >D_ptr = 
+            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
+
+        LTI_descSyst mySyst = LTI_descSyst();
+        mySyst.set_E( E_ptr );
+        mySyst.set_A( A_ptr );
+        mySyst.set_B( B_ptr );
+        mySyst.set_C( C_ptr );
+        mySyst.set_D( D_ptr );
+
+        double test_val = 0;
+        Eigen::MatrixXcd eval_mat = mySyst.tf_eval( test_val );
+        Eigen::MatrixXcd expect_mat = -4*Eigen::MatrixXcd::Ones( m, p );
+
+        if( eval_mat == expect_mat ){
+            cout << "Test 1 passed" << endl;
+        }else{
+            cout << "Test 1 failed" << endl;
+        }
 
     }
 
