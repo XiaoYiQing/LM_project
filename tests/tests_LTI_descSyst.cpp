@@ -195,9 +195,30 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             complex<double>(0,0.5) };
         Matrix3DXcd eval_arr = mySyst.tf_eval( test_arr );
 
-        cout << eval_arr.at(0) << endl;
-        cout << eval_arr.at(1) << endl;
-        cout << eval_arr.at(2) << endl;
+        Matrix3DXcd expect_arr = Matrix3DXcd( m, p, test_arr.size() );
+
+        Eigen::MatrixXcd tmp = (Eigen::MatrixXcd(2, 2) << 
+        std::complex<double>(-4,0), std::complex<double>(-4,0),
+        std::complex<double>(-4,0), std::complex<double>(-4,0)).finished();
+        expect_arr.set( 0, tmp );
+        tmp = (Eigen::MatrixXcd(2, 2) << 
+        std::complex<double>(-8,0), std::complex<double>(-8,0),
+        std::complex<double>(-8,0), std::complex<double>(-8,0)).finished();
+        expect_arr.set( 1, tmp );
+        tmp = (Eigen::MatrixXcd(2, 2) << 
+        std::complex<double>(-3.2,-1.6), std::complex<double>(-3.2,-1.6),
+        std::complex<double>(-3.2,-1.6), std::complex<double>(-3.2,-1.6)).finished();
+        expect_arr.set( 2, tmp );
+
+        bool test_pass = true;
+        for( unsigned int z = 0; z < test_arr.size(); z++ ){
+            test_pass = test_pass && ( eval_arr.at(z) == expect_arr.at(z) );
+        }
+        if( test_pass ){
+            cout << "Test 2 passed: multi f evaluation." << endl;
+        }else{
+            cout << "Test 2 failed: multi f evaluation." << endl;
+        }
 
     }
 
