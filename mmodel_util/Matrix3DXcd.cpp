@@ -74,7 +74,7 @@ Matrix3DXcd::Matrix3DXcd( unsigned int row_idx, unsigned int col_idx, unsigned i
     this->reInit( row_idx, col_idx, lvl_idx );
 }
 
-Matrix3DXcd::Matrix3DXcd( vector< Eigen::MatrixXcd > Mat3D ){
+Matrix3DXcd::Matrix3DXcd( const vector< Eigen::MatrixXcd >& Mat3D ){
 
     this->num_thresh = Matrix3DXcd::DEF_NUM_THRESH;
 
@@ -92,6 +92,39 @@ Matrix3DXcd::Matrix3DXcd( vector< Eigen::MatrixXcd > Mat3D ){
         throw std::invalid_argument( "Matrix3DXcd can only be initialized with a vector of Eigen::MatrixXcd matrices with consistent dimensions." );
     }
 
+
+}
+
+Matrix3DXcd::Matrix3DXcd( const Matrix3DXd& rePart, const Matrix3DXd& imPart ){
+
+    this->num_thresh = Matrix3DXcd::DEF_NUM_THRESH;
+
+    // Check for real and imaginary parts consistency.
+    unsigned int level_cnt = rePart.levels();
+    unsigned int row_cnt = rePart.rows();
+    unsigned int col_cnt = rePart.cols();
+    if( level_cnt != imPart.levels() || row_cnt != imPart.rows() || 
+        col_cnt != imPart.cols() ){
+        throw std::invalid_argument( "The real and imaginary parts must have the same number of entries." );
+    }
+
+    // Fill the class matrix vector with complex matrices obtained through combination
+    // of real and imaginary part matrices.
+    this->reInit( row_cnt, col_cnt, level_cnt );
+    Eigen::MatrixXcd mat_z = Eigen::MatrixXd::Zero( row_cnt, col_cnt );
+    Eigen::MatrixXd re_z = Eigen::MatrixXd::Zero( row_cnt, col_cnt );
+    Eigen::MatrixXd im_z = Eigen::MatrixXd::Zero( row_cnt, col_cnt );
+    for( unsigned int z = 0; z < level_cnt; z++ ){
+        re_z = rePart.at(z);
+        im_z = imPart.at(z);
+
+        for( unsigned int i = 0; i < row_cnt; i++ ){
+        for( unsigned int j = 0; j < row_cnt; j++ ){
+            mat_z(i,j) = complex<double>( re_z(i,j), im_z(i,j) );
+        }}
+
+        this->Mat3D.at(z) = mat_z;
+    }
 
 }
 

@@ -789,37 +789,22 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 //      Model Evaluation
 // ---------------------------------------------------------------------- >>>>>
 
-    // Define the test frequency vector.
-    Eigen::VectorXd testFVec = myFData.getF_vec();
-    // Create an evaluated data object.
-    fData eval_FData = fData();
-    fData::copy_settings( eval_FData, myFData );
-    eval_FData.reInit( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() );
-
-    // Compute the approximate set of frequency data.
-    for( unsigned int z = 0; z < (unsigned int) testFVec.size(); z++ ){
-        complex<double> f_z = complex<double>( 0, testFVec(z) );
-        tmp_z = ( f_z * E_n - A_n );
-        H_z = C_n * tmp_z.inverse() * B_n;
-        eval_FData.set_cplxData_at_f( z, H_z );
+    // Generate an frequency evaluation array.
+    Eigen::VectorXd tmp_vec = myFData.getF_vec();
+    vector< complex<double> > testFVec2 = vector< complex<double> >( tmp_vec.size() );
+    for( int z = 0; z < tmp_vec.size(); z++ ){
+        testFVec2[z] = complex<double>( 0.0, tmp_vec(z) );
     }
 
-    // Create a vector of matrices representing the difference between the original and the 
-    // approximate data.
-    Matrix3DXd H_diff_re = Matrix3DXd( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() ); 
-    Matrix3DXd H_diff_im = Matrix3DXd( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() ); 
-    for( unsigned int z = 0; z < (unsigned int) testFVec.size(); z++ ){
-        Eigen::MatrixXcd tmp_mat_z = myFData.get_cplxData_at_f(z) - eval_FData.get_cplxData_at_f(z);
-        H_diff_re.set( z, tmp_mat_z.real() );
-        H_diff_im.set( z, tmp_mat_z.imag() );
-    }
+    // Evaluate the transfer function over the specified frequency range.
+    Matrix3DXcd H_app_mat_arr = mySyst.tf_eval( testFVec2 );
+    // Obtain the original data as a array of complex matrices.
+    Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
 
-    // Compute the RMS error.
-    double total_RMS_err = Matrix3DXd::RMS_total_comp( H_diff_re, H_diff_im );
-    cout << "The total RMS error: " << total_RMS_err << endl;
+    Matrix3DXcd H_diff = H_orig_mat_arr + (H_app_mat_arr*-1);
 
-
-    
+    double total_RMS_err2 = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error 2: " << total_RMS_err2 << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 

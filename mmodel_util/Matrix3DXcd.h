@@ -5,9 +5,11 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <magic_enum.hpp>
+#include <stdexcept>
 #include <string>   
 #include <vector> 
 
+#include "Matrix3DXd.h"
 
 using namespace std;
 
@@ -74,7 +76,9 @@ public:
 
     Matrix3DXcd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
 
-    Matrix3DXcd( vector< Eigen::MatrixXcd > Mat3D );
+    Matrix3DXcd( const vector< Eigen::MatrixXcd >& Mat3D );
+
+    Matrix3DXcd( const Matrix3DXd& rePart, const Matrix3DXd& imPart );
 
 // ====================================================================== <<<<<
 
