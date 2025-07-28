@@ -60,6 +60,8 @@ WARNING: Depending on the order of the system, this can be costly in computation
 */
 bool is_stable() const;
 
+Eigen::VectorXcd get_poles() const;
+
 /*
 Evaluate the transfer function represented by the current system at the 
 target frequency.

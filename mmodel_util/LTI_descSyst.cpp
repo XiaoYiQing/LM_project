@@ -125,6 +125,33 @@ bool LTI_descSyst::is_stable() const{
 
 }
 
+Eigen::VectorXcd LTI_descSyst::get_poles() const{
+
+    // Verify if the current system is legitimate.
+    if( !this->is_consistent() ){
+        cout << "System is inconsistent: cannot generate poles." << endl;
+        return Eigen::VectorXcd::Zero(0);
+    }
+
+    // Compute E^(-1)*A as solution x to E*x = A
+    auto solver = this->E.fullPivHouseholderQr(); // or other suitable decomposition
+    Eigen::MatrixXd pole_mat = solver.solve( this->A );
+
+    // Compute eigenvalues of E^(-1)*A
+    Eigen::ComplexEigenSolver< Eigen::MatrixXcd > mySolver( pole_mat );
+    // Check if the computation was successful
+    if ( mySolver.info() != Eigen::Success ) {
+        std::cerr << "Failed to compute eigenvalues." << std::endl;
+        return Eigen::VectorXcd::Zero(0);
+    }
+
+    // Determine if the system is stable (Maximum poles real part is negative).
+    Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
+
+    return eigeVals_1;
+    
+}
+
 
 Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
 

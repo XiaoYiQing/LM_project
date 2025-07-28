@@ -777,23 +777,10 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 //      Stability Check
 // ---------------------------------------------------------------------- >>>>>
 
-    Eigen::MatrixXcd LMAO_MAT = E_n.inverse() * A_n;
-
-    Eigen::ComplexEigenSolver< Eigen::MatrixXcd > mySolver( LMAO_MAT );
-    // Check if the computation was successful
-    if ( mySolver.info() != Eigen::Success ) {
-        std::cerr << "Failed to compute eigenvalues." << std::endl;
-        return;
-    }
-
-    Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
-
     // Determine if the system is stable (Maximum poles real part is negative).
-    bool is_stab = 0 > eigeVals_1.real().maxCoeff();
+    Eigen::VectorXcd poles = mySyst.get_poles();
+    bool is_stab = 0 > poles.real().maxCoeff();
     cout << "Is stable: " << is_stab << endl;
-
-    bool is_stab_tmp = mySyst.is_stable();
-    cout << "Is stable 2: " << is_stab_tmp << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -830,6 +817,9 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXd::RMS_total_comp( H_diff_re, H_diff_im );
     cout << "The total RMS error: " << total_RMS_err << endl;
+
+
+    
 
 // ---------------------------------------------------------------------- <<<<<
 
