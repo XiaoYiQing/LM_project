@@ -28,8 +28,8 @@ public:
 
 LTI_descSyst();
 
-LTI_descSyst( Eigen::MatrixXd E_in, Eigen::MatrixXd A_in, Eigen::MatrixXd B_in, 
-    Eigen::MatrixXd C_in, Eigen::MatrixXd D_in );
+LTI_descSyst( Eigen::MatrixXd& E_in, Eigen::MatrixXd& A_in, Eigen::MatrixXd& B_in, 
+    Eigen::MatrixXd& C_in, Eigen::MatrixXd& D_in );
 
 // ====================================================================== <<<<<
 
@@ -74,7 +74,7 @@ target frequency.
 Input is vector of complex<double>.
 Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
 */
-Matrix3DXcd tf_eval( vector< complex<double> > ) const;
+Matrix3DXcd tf_eval( vector< complex<double> >& ) const;
 
 // ====================================================================== <<<<<
 

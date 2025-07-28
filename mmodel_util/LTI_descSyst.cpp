@@ -22,8 +22,8 @@ LTI_descSyst::LTI_descSyst(){
 
 }
 
-LTI_descSyst::LTI_descSyst( Eigen::MatrixXd E_in, Eigen::MatrixXd A_in, Eigen::MatrixXd B_in, 
-    Eigen::MatrixXd C_in, Eigen::MatrixXd D_in ){
+LTI_descSyst::LTI_descSyst( Eigen::MatrixXd& E_in, Eigen::MatrixXd& A_in, Eigen::MatrixXd& B_in, 
+    Eigen::MatrixXd& C_in, Eigen::MatrixXd& D_in ){
 
     this->E = E_in;
     this->A = A_in;
@@ -173,7 +173,7 @@ Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
 }
 
 
-Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> > f_vec ) const{
+Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> >& f_vec ) const{
 
     unsigned int eval_cnt = f_vec.size();
 
