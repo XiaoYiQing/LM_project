@@ -28,8 +28,8 @@ public:
 
 LTI_descSyst();
 
-LTI_descSyst( Eigen::MatrixXd E, Eigen::MatrixXd A, Eigen::MatrixXd B, 
-    Eigen::MatrixXd C, Eigen::MatrixXd D );
+LTI_descSyst( Eigen::MatrixXd E_in, Eigen::MatrixXd A_in, Eigen::MatrixXd B_in, 
+    Eigen::MatrixXd C_in, Eigen::MatrixXd D_in );
 
 // ====================================================================== <<<<<
 

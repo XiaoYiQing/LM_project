@@ -702,7 +702,6 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system evaluation test: " << match_bool << endl;
 
-
 // ---------------------------------------------------------------------- <<<<<
 
 
@@ -762,13 +761,14 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
 
     // Perform the model reduction to obtain usable E, A, B, C matrices.
-    Eigen::MatrixXcd E_n = -1*( U_r.transpose() * myLM_re * V_r );
-    Eigen::MatrixXcd A_n = -1*( U_r.transpose() * mySLM_re * V_r );
-    Eigen::MatrixXcd C_n = myW_re * V_r;
-    Eigen::MatrixXcd B_n = U_r.transpose() * myF_re;
+    Eigen::MatrixXd E_n = -1*( U_r.transpose() * myLM_re * V_r );
+    Eigen::MatrixXd A_n = -1*( U_r.transpose() * mySLM_re * V_r );
+    Eigen::MatrixXd C_n = myW_re * V_r;
+    Eigen::MatrixXd B_n = U_r.transpose() * myF_re;
+    Eigen::MatrixXd D_n = Eigen::MatrixXd::Zero( out_cnt, out_cnt );
 
     // Model generation.
-    
+    LTI_descSyst mySyst = LTI_descSyst( E_n, A_n, B_n, C_n, D_n );
 
 // ---------------------------------------------------------------------- >>>>>
 
@@ -792,7 +792,8 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     bool is_stab = 0 > eigeVals_1.real().maxCoeff();
     cout << "Is stable: " << is_stab << endl;
 
-
+    bool is_stab_tmp = mySyst.is_stable();
+    cout << "Is stable 2: " << is_stab_tmp << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 

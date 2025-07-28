@@ -22,14 +22,18 @@ LTI_descSyst::LTI_descSyst(){
 
 }
 
-LTI_descSyst::LTI_descSyst( Eigen::MatrixXd E, Eigen::MatrixXd A, Eigen::MatrixXd B, 
-    Eigen::MatrixXd C, Eigen::MatrixXd D ){
+LTI_descSyst::LTI_descSyst( Eigen::MatrixXd E_in, Eigen::MatrixXd A_in, Eigen::MatrixXd B_in, 
+    Eigen::MatrixXd C_in, Eigen::MatrixXd D_in ){
 
-    this->E = E;
-    this->A = A;
-    this->B = B;
-    this->C = C;
-    this->D = D;
+    this->E = E_in;
+    this->A = A_in;
+    this->B = B_in;
+    this->C = C_in;
+    this->D = D_in;
+
+    if( !this->is_consistent() ){
+        cout << "WARNING: initialize LTI system has inconsistent matrix sizes." << endl;
+    }
     
 }
 
