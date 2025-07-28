@@ -88,7 +88,10 @@ public:
 // ====================================================================== >>>>>
 
     // Overloading the addition operator with another matrix of the same class.
-    Matrix3DXcd operator+(const Matrix3DXcd tarMat) const;
+    Matrix3DXcd operator+(const Matrix3DXcd& tarMat) const;
+
+    // Overloading the substraction operator with another matrix of the same class.
+    Matrix3DXcd operator-(const Matrix3DXcd& tarMat) const;
 
     // Overloading the multiplication operator for scalar multiplication.
     Matrix3DXcd operator*(const double scalar) const;
@@ -97,10 +100,10 @@ public:
     Matrix3DXcd& operator*=(const double scalar);
 
     // Overloading the multiplication operator with another matrix of the same class.
-    Matrix3DXcd operator*(const Matrix3DXcd tarMat) const;
+    Matrix3DXcd operator*(const Matrix3DXcd& tarMat) const;
 
     // Overloading the division oeprator with anothe matrix of the same class.
-    Matrix3DXcd operator/(const Matrix3DXcd tarMat) const;
+    Matrix3DXcd operator/(const Matrix3DXcd& tarMat) const;
 
 // ====================================================================== <<<<<
 

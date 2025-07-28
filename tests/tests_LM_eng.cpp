@@ -789,20 +789,21 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 //      Model Evaluation
 // ---------------------------------------------------------------------- >>>>>
 
-    // Generate an frequency evaluation array.
-    Eigen::VectorXd tmp_vec = myFData.getF_vec();
-    vector< complex<double> > testFVec2 = vector< complex<double> >( tmp_vec.size() );
-    for( int z = 0; z < tmp_vec.size(); z++ ){
-        testFVec2[z] = complex<double>( 0.0, tmp_vec(z) );
+    // Generate a frequency evaluation array.
+    Eigen::VectorXd tmp_fvec = myFData.getF_vec();
+    vector< complex<double> > testFVec2 = vector< complex<double> >( tmp_fvec.size() );
+    for( int z = 0; z < tmp_fvec.size(); z++ ){
+        testFVec2[z] = complex<double>( 0.0, tmp_fvec(z) );
     }
 
-    // Evaluate the transfer function over the specified frequency range.
+    // Evaluate the transfer function over the specified frequency array values.
     Matrix3DXcd H_app_mat_arr = mySyst.tf_eval( testFVec2 );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
+    // Compute the difference between the original and approximated frequency data.
+    Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
 
-    Matrix3DXcd H_diff = H_orig_mat_arr + (H_app_mat_arr*-1);
-
+    // Compute the RMS error.
     double total_RMS_err2 = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error 2: " << total_RMS_err2 << endl;
 

@@ -136,7 +136,7 @@ Matrix3DXcd::Matrix3DXcd( const Matrix3DXd& rePart, const Matrix3DXd& imPart ){
 // ====================================================================== >>>>>
 
 
-Matrix3DXcd Matrix3DXcd::operator+(const Matrix3DXcd tarMat) const{
+Matrix3DXcd Matrix3DXcd::operator+(const Matrix3DXcd& tarMat) const{
 
     unsigned int currLevels = this->levels();
 
@@ -155,6 +155,31 @@ Matrix3DXcd Matrix3DXcd::operator+(const Matrix3DXcd tarMat) const{
 
     for( unsigned int z = 0; z < currLevels; z++ ){
         resMat.set( z, this->Mat3D.at(z).array() + tarMat.at(z).array() );
+    }
+
+    return resMat;
+
+}
+
+Matrix3DXcd Matrix3DXcd::operator-(const Matrix3DXcd& tarMat) const{
+
+    unsigned int currLevels = this->levels();
+
+    if( currLevels != tarMat.levels() ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+    if( !Matrix3DXcd::consist_check( tarMat ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has inconsistent dimensions." );
+    }
+    if( !Matrix3DXcd::same_size( tarMat.at(0), this->Mat3D.at(0) ) ){
+        throw std::invalid_argument( "Element-wise multipying matrix has mismatched dimensions." );
+    }
+
+    Matrix3DXcd resMat;
+    resMat.reInit( this->rows(), this->cols(), currLevels );
+
+    for( unsigned int z = 0; z < currLevels; z++ ){
+        resMat.set( z, this->Mat3D.at(z).array() - tarMat.at(z).array() );
     }
 
     return resMat;
@@ -188,7 +213,7 @@ Matrix3DXcd& Matrix3DXcd::operator*=(const double scalar){
 
 }
 
-Matrix3DXcd Matrix3DXcd::operator*( const Matrix3DXcd tarMat ) const{
+Matrix3DXcd Matrix3DXcd::operator*( const Matrix3DXcd& tarMat ) const{
 
     unsigned int currLevels = this->levels();
 
@@ -213,7 +238,7 @@ Matrix3DXcd Matrix3DXcd::operator*( const Matrix3DXcd tarMat ) const{
 
 }
 
-Matrix3DXcd Matrix3DXcd::operator/(const Matrix3DXcd tarMat) const{
+Matrix3DXcd Matrix3DXcd::operator/(const Matrix3DXcd& tarMat) const{
     
     unsigned int currLevels = this->levels();
 
