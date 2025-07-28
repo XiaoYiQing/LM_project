@@ -28,6 +28,9 @@ public:
 
 LTI_descSyst();
 
+LTI_descSyst( Eigen::MatrixXd E, Eigen::MatrixXd A, Eigen::MatrixXd B, 
+    Eigen::MatrixXd C, Eigen::MatrixXd D );
+
 // ====================================================================== <<<<<
 
 

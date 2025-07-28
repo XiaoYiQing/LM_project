@@ -363,7 +363,6 @@ void tests::LM_eng_test_3( unsigned int test_idx ){
 
 void tests::LM_eng_full_SFML_testrun(){
 
-
     // Size of reduced frequency data array.
     unsigned int fr_len = 100;
 
@@ -594,3 +593,244 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- <<<<<
 
 }
+
+
+
+void tests::LM_eng_full_SFML_testrun_v2(){
+
+    // Size of reduced frequency data array.
+    unsigned int fr_len = 100;
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define our frequency data object.
+    fData myFData;
+    // Define the full file name.
+    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+
+    // Obtain the data from the target data file and insert into the fData object.
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+    
+    // Create a subset linear index array.
+    vector< unsigned int > fr_idx_arr = 
+        utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, fr_len );
+    // Create a fData subset.
+    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+
+    // Generate two partitions from this data subset.
+    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    // Generate the two partitions with their complex conjugates inserted 
+    // in interleaving fashion.
+    shared_ptr<fData> myFrc1 = myFrs.at(0)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = myFrs.at(1)->gen_cplx_conj_comb();
+
+    // Obtain base parameters of the two partitions.
+    bool f1_has_DC_pt = myFrc1->hasDC();
+    bool f2_has_DC_pt = myFrc2->hasDC();
+    unsigned int out_cnt = myFrc1->get_out_cnt();
+    // Partition sizes before cconj injection.
+    unsigned int fr1_len = myFrs.at(0)->get_f_cnt();  
+    unsigned int fr2_len = myFrs.at(1)->get_f_cnt();
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM System Construct
+// ---------------------------------------------------------------------- >>>>>
+
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
+    // Construct the W matrix vector using partition 1.
+    Eigen::MatrixXcd myW = *LM_UTIL::build_W( *myFrc1 );
+    // Construct the F matrix vector using partition 2.
+    Eigen::MatrixXcd myF = *LM_UTIL::build_F( *myFrc2 );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM System Real Transform
+// ---------------------------------------------------------------------- >>>>>
+
+    // Build the left and right transformation matrices.
+    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    // Obtain the hermitian of the right transform matrix.
+    Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
+
+    // Perform the transformation.
+    Eigen::MatrixXcd myLM_re_tmp = ( myTMat_R_herm*myLM )*myTMat_L;
+    Eigen::MatrixXcd mySLM_re_tmp = ( myTMat_R_herm*mySLM )*myTMat_L;
+    Eigen::MatrixXcd myW_re_tmp = myW*myTMat_L;
+    Eigen::MatrixXcd myF_re_tmp = myTMat_R_herm*myF;
+
+    // Check for real matrices.
+    bool match_bool = true;
+    match_bool = match_bool && ( myLM_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( mySLM_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myW_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myF_re_tmp.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    cout << "SFLM real matrices check: " << match_bool << endl;
+
+    // Obtain purely real defintion of the matrices.
+    Eigen::MatrixXd myLM_re = myLM_re_tmp.real();
+    Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
+    Eigen::MatrixXd myW_re = myW_re_tmp.real();
+    Eigen::MatrixXd myF_re = myF_re_tmp.real();
+
+    // Generate a random test point.
+    unsigned int test_f_idx = utils::rIntGen( 0, myFr->get_f_cnt() - 1, 1 )->at(0);
+    complex<double> test_f = myFr->get_cplx_f_at( test_f_idx );
+    Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
+    Eigen::MatrixXcd ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - tmpAns;
+
+    match_bool = true;
+    match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+    cout << "Full sized LM system evaluation test: " << match_bool << endl;
+
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM Pencil Generation and SVD
+// ---------------------------------------------------------------------- >>>>>
+
+    // Obtain a reference frequency value.
+    // double ref_f = myFr->get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
+    double ref_f = myFr->get_fval_at( myFr->get_f_cnt() - 1 );
+    
+    // Construct the LM pencil.
+    shared_ptr<Eigen::MatrixXd> LM_pen = 
+        LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
+
+    // Perform SVD.
+    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    // Get the singular values
+    Eigen::VectorXd singVals = svdResObj.singularValues();
+    // Get the left singular vectors (U)
+    Eigen::MatrixXd U = svdResObj.matrixU();
+    // Get the right singular vectors (V)
+    Eigen::MatrixXd V = svdResObj.matrixV();
+
+
+    // std::cout << std::fixed << std::setprecision(12);
+    // cout << singVals << endl;
+
+    // Perform the model reduction to obtain usable E, A, B, C matrices.
+    Eigen::MatrixXcd E_full = -1*( U.transpose() * myLM_re * V );
+    Eigen::MatrixXcd A_full = -1*( U.transpose() * mySLM_re * V );
+    Eigen::MatrixXcd C_full = myW_re * V;
+    Eigen::MatrixXcd B_full = U.transpose() * myF_re;
+
+    Eigen::MatrixXcd tmp_z = ( test_f * E_full - A_full );
+    Eigen::MatrixXcd H_z = C_full * tmp_z.inverse() * B_full;
+
+    match_bool = true;
+    ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - H_z;
+    match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+    cout << "Full sized LM system post-SVD evaluation test: " << match_bool << endl;
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      SVD Model Order Reduction
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define the number of singular values to retain.
+    // unsigned int svd_ret_cnt = 64;
+    unsigned int svd_ret_cnt = 66;
+
+    Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
+
+    Eigen::MatrixXd U_r = U.block( 0, 0, U.rows(), svd_ret_cnt );
+    Eigen::MatrixXd V_r = V.block( 0, 0, V.rows(), svd_ret_cnt );
+
+    // Perform the model reduction to obtain usable E, A, B, C matrices.
+    Eigen::MatrixXcd E_n = -1*( U_r.transpose() * myLM_re * V_r );
+    Eigen::MatrixXcd A_n = -1*( U_r.transpose() * mySLM_re * V_r );
+    Eigen::MatrixXcd C_n = myW_re * V_r;
+    Eigen::MatrixXcd B_n = U_r.transpose() * myF_re;
+
+    // Model generation.
+    
+
+// ---------------------------------------------------------------------- >>>>>
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Stability Check
+// ---------------------------------------------------------------------- >>>>>
+
+    Eigen::MatrixXcd LMAO_MAT = E_n.inverse() * A_n;
+
+    Eigen::ComplexEigenSolver< Eigen::MatrixXcd > mySolver( LMAO_MAT );
+    // Check if the computation was successful
+    if ( mySolver.info() != Eigen::Success ) {
+        std::cerr << "Failed to compute eigenvalues." << std::endl;
+        return;
+    }
+
+    Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
+
+    // Determine if the system is stable (Maximum poles real part is negative).
+    bool is_stab = 0 > eigeVals_1.real().maxCoeff();
+    cout << "Is stable: " << is_stab << endl;
+
+
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define the test frequency vector.
+    Eigen::VectorXd testFVec = myFData.getF_vec();
+    // Create an evaluated data object.
+    fData eval_FData = fData();
+    fData::copy_settings( eval_FData, myFData );
+    eval_FData.reInit( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() );
+
+    // Compute the approximate set of frequency data.
+    for( unsigned int z = 0; z < (unsigned int) testFVec.size(); z++ ){
+        complex<double> f_z = complex<double>( 0, testFVec(z) );
+        tmp_z = ( f_z * E_n - A_n );
+        H_z = C_n * tmp_z.inverse() * B_n;
+        eval_FData.set_cplxData_at_f( z, H_z );
+    }
+
+    // Create a vector of matrices representing the difference between the original and the 
+    // approximate data.
+    Matrix3DXd H_diff_re = Matrix3DXd( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() ); 
+    Matrix3DXd H_diff_im = Matrix3DXd( myFData.get_out_cnt(), myFData.get_in_cnt(), myFData.get_f_cnt() ); 
+    for( unsigned int z = 0; z < (unsigned int) testFVec.size(); z++ ){
+        Eigen::MatrixXcd tmp_mat_z = myFData.get_cplxData_at_f(z) - eval_FData.get_cplxData_at_f(z);
+        H_diff_re.set( z, tmp_mat_z.real() );
+        H_diff_im.set( z, tmp_mat_z.imag() );
+    }
+
+    // Compute the RMS error.
+    double total_RMS_err = Matrix3DXd::RMS_total_comp( H_diff_re, H_diff_im );
+    cout << "The total RMS error: " << total_RMS_err << endl;
+
+// ---------------------------------------------------------------------- <<<<<
+
+}
+

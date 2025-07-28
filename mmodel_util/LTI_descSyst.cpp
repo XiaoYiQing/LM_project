@@ -22,6 +22,17 @@ LTI_descSyst::LTI_descSyst(){
 
 }
 
+LTI_descSyst::LTI_descSyst( Eigen::MatrixXd E, Eigen::MatrixXd A, Eigen::MatrixXd B, 
+    Eigen::MatrixXd C, Eigen::MatrixXd D ){
+
+    this->E = E;
+    this->A = A;
+    this->B = B;
+    this->C = C;
+    this->D = D;
+    
+}
+
 // ====================================================================== <<<<<
 
 

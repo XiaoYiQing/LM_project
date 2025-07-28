@@ -32,10 +32,16 @@ namespace tests{
     void LM_eng_test_3( unsigned int test_idx );
 
     /*
-    Special test which performs the entire SFML (System Format Loewner Matrix) process
+    Special test which performs the entire SFLM (System Format Loewner Matrix) process
     and check for mistakes.
     */
     void LM_eng_full_SFML_testrun();
+
+    /*
+    Special test which performs the entire SFLM process and check for mistakes.
+    v2: Added transfer function class for more modular coding.
+    */
+    void LM_eng_full_SFML_testrun_v2();
 
 }
 
