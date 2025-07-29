@@ -19,8 +19,14 @@ namespace tests{
     case_idx:
         0: base functionalities.
         1: stability.
+        2:
     */
     void LTI_descSyst_test_1( unsigned int case_idx );
+
+    /*
+    Test regular system translation and sparsification.
+    */
+    void LTI_descSyst_test_2( unsigned int case_idx );
 
 
 

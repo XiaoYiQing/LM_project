@@ -153,6 +153,38 @@ Eigen::VectorXcd LTI_descSyst::get_poles(){
     
 }
 
+bool LTI_descSyst::to_reg_syst(){
+
+    // Verify if the current system is legitimate.
+    if( !this->is_consistent() ){
+        cout << "Cannot perform regular system translation: System is inconsistent." << endl;
+        return false;
+    }
+
+    // Compute E^(-1).
+    Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(this->E);
+    if(!lu_decomp.isInvertible()) {
+        std::cerr << "Cannot perform regular system translation: E is singular or too close to being singular." << std::endl;
+        return false;
+    }
+    Eigen::MatrixXd E_inv = lu_decomp.inverse();
+
+    this->A = E_inv * A;
+    this->B = E_inv * B;
+    this->E = Eigen::MatrixXd::Identity( this->E.rows(), this->E.cols() );
+
+    return true;
+
+}
+
+bool LTI_descSyst::gen_sparse_syst(){
+
+
+
+    return false;
+
+}
+
 
 Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
 

@@ -67,6 +67,22 @@ WARNING: Depending on the order of the system, this can be costly in computation
 Eigen::VectorXcd get_poles();
 
 /*
+Transform the current descriptor system into a regular system (E becomes identity).
+WARNING: this operation is irreversible, and is only possible if E is invertible.
+
+Return true if successful.
+*/
+bool to_reg_syst();
+
+/*
+Generate the sparse version of this system, where E becomes the identity matrix and 
+A becomes a diagonal matrix (Transfer function is still identical).
+
+Return true if successful.
+*/
+bool gen_sparse_syst();
+
+/*
 Evaluate the transfer function represented by the current system at the 
 target frequency.
 */
