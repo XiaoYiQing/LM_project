@@ -253,7 +253,53 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
 
-        mySyst.get_poles();
+        cout << "Poles up to date before computation: " << endl;
+        if( mySyst.get_utd_poles() ){
+            cout << "True" << endl;
+        }else{
+            cout << "False" << endl;
+        }
+        Eigen::VectorXcd currPoles = mySyst.get_poles();
+        cout << "Poles up to date after computation: " << endl;
+        if( mySyst.get_utd_poles() ){
+            cout << "True" << endl;
+        }else{
+            cout << "False" << endl;
+        }
+
+        mySyst.set_E( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Identity( n-1, n-1 ) ) );
+        cout << "Poles up to date after inserting inconsistent E: " << endl;
+        if( mySyst.is_stable() ){
+            cout << "True" << endl;
+        }else{
+            cout << "False" << endl;
+        }
+
+        mySyst.set_E( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Identity( n, n ) ) );
+        cout << "Poles up to date after modifying E: " << endl;
+        if( mySyst.get_utd_poles() ){
+            cout << "True" << endl;
+        }else{
+            cout << "False" << endl;
+        }
+        currPoles = mySyst.get_poles();
+        cout << "Poles up to date after modifying E AND computing the poles: " << endl;
+        if( mySyst.get_utd_poles() ){
+            cout << "True" << endl;
+        }else{
+            cout << "False" << endl;
+        }
+
+        mySyst.set_B( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Ones( n, p ) ) );
+        mySyst.set_C( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Ones( m, n ) ) );
+        mySyst.set_D( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Zero( m, p ) ) );
+        cout << "Poles up to date after modifying B, C, and D: " << endl;
+        if( mySyst.get_utd_poles() ){
+            cout << "True" << endl;
+        }else{
+            cout << "False" << endl;
+        }
+
 
     }
 

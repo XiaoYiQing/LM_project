@@ -125,6 +125,11 @@ Eigen::VectorXcd LTI_descSyst::get_poles(){
         cout << "System is inconsistent: cannot generate poles." << endl;
         return Eigen::VectorXcd::Zero(0);
     }
+
+    // Directly return currently stored poles if they were up-to-date already.
+    if( this->utd_poles ){
+        return this->poles;
+    }
     
     // Compute E^(-1)*A as solution x to E*x = A
     auto solver = this->E.fullPivHouseholderQr(); // or other suitable decomposition
@@ -237,5 +242,9 @@ void LTI_descSyst::set_C( const shared_ptr< const Eigen::MatrixXd > C_in )
     { this->C = *C_in; }
 void LTI_descSyst::set_D( const shared_ptr< const Eigen::MatrixXd > D_in )
     { this->D = *D_in; }
+
+bool LTI_descSyst::get_utd_poles() const{
+    return this->utd_poles;
+}
 
 // ====================================================================== <<<<<
