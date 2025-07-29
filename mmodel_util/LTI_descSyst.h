@@ -58,9 +58,12 @@ unsigned int get_order() const;
 Check stability of the system.
 WARNING: Depending on the order of the system, this can be costly in computation time.
 */
-bool is_stable() const;
-
-Eigen::VectorXcd get_poles() const;
+bool is_stable();
+/*
+Compute the poles of the system, if possible, and return them.
+WARNING: Depending on the order of the system, this can be costly in computation time.
+*/
+Eigen::VectorXcd get_poles();
 
 /*
 Evaluate the transfer function represented by the current system at the 
@@ -95,6 +98,8 @@ void set_B( const shared_ptr< const Eigen::MatrixXd > B_in );
 void set_C( const shared_ptr< const Eigen::MatrixXd > C_in );
 void set_D( const shared_ptr< const Eigen::MatrixXd > D_in );
 
+bool get_utd_poles() const;
+
 // ====================================================================== <<<<<
 
 protected:
@@ -117,6 +122,10 @@ protected:
 
     // Boolean indicating if the current computed poles are up-to-date.
     bool utd_poles;
+    // Vector holding the poles of the system. Initially empty, but is filled
+    // when appropriate function is called.
+    Eigen::VectorXcd poles;
+
     // Boolean indicating if the sparse version is up-to-date.
     bool utd_sparse_syst;
 

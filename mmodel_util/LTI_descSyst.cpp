@@ -105,23 +105,27 @@ unsigned int LTI_descSyst::get_order() const{
     return static_cast<unsigned int>( this->A.rows() );
 }
 
-bool LTI_descSyst::is_stable() const{
+bool LTI_descSyst::is_stable(){
 
     Eigen::VectorXcd eigeVals_1 = this->get_poles();
+    if( eigeVals_1.size() == 0 ){
+        return false;
+    }
+    // Determine stability (all poles must have negative real part).
     bool is_stab = 0 > eigeVals_1.real().maxCoeff();
 
     return is_stab;
 
 }
 
-Eigen::VectorXcd LTI_descSyst::get_poles() const{
+Eigen::VectorXcd LTI_descSyst::get_poles(){
 
     // Verify if the current system is legitimate.
     if( !this->is_consistent() ){
         cout << "System is inconsistent: cannot generate poles." << endl;
         return Eigen::VectorXcd::Zero(0);
     }
-
+    
     // Compute E^(-1)*A as solution x to E*x = A
     auto solver = this->E.fullPivHouseholderQr(); // or other suitable decomposition
     Eigen::MatrixXd pole_mat = solver.solve( this->A );
@@ -135,9 +139,12 @@ Eigen::VectorXcd LTI_descSyst::get_poles() const{
     }
 
     // Determine if the system is stable (Maximum poles real part is negative).
-    Eigen::VectorXcd eigeVals_1 = mySolver.eigenvalues();
+    this->poles = mySolver.eigenvalues();
+    // Update the up-to-date boolean.
+    this->utd_poles = true;
 
-    return eigeVals_1;
+    // Return the poles.
+    return this->poles;
     
 }
 
@@ -216,10 +223,14 @@ Eigen::MatrixXd LTI_descSyst::get_D() const{
     return this->D;
 }
 
-void LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in )
-    { this->E = *E_in; }
-void LTI_descSyst::set_A( const shared_ptr< const Eigen::MatrixXd > A_in )
-    { this->A = *A_in; }
+void LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in ){ 
+    this->E = *E_in;
+    this->utd_poles = false;
+}
+void LTI_descSyst::set_A( const shared_ptr< const Eigen::MatrixXd > A_in ){ 
+    this->A = *A_in; 
+    this->utd_poles = false;
+}
 void LTI_descSyst::set_B( const shared_ptr< const Eigen::MatrixXd > B_in )
     { this->B = *B_in; }
 void LTI_descSyst::set_C( const shared_ptr< const Eigen::MatrixXd > C_in )

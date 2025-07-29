@@ -61,9 +61,9 @@ int main() {
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
     
-    // tests::LTI_descSyst_test_1( 2 );
+    tests::LTI_descSyst_test_1( 3 );
 
-    tests::LM_eng_full_SFML_testrun_v2();
+    // tests::LM_eng_full_SFML_testrun_v2();
 
 
     return 0; 
