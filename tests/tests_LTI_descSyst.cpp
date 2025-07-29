@@ -353,8 +353,17 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
 
         Matrix3DXcd app_data_diff = desc_app_data - reg_app_data;
         double RMS_err = Matrix3DXcd::RMS_total_comp( app_data_diff );
+        double RMS_1 = Matrix3DXcd::RMS_total_comp( desc_app_data );
+        double RMS_2 = Matrix3DXcd::RMS_total_comp( reg_app_data );
 
+        cout << "RMS desc: " << RMS_1 << endl;
+        cout << "RMS reg: " << RMS_2 << endl;
         cout << "RMS error between desc and reg systems: " << RMS_err << endl;
+        if( RMS_err < 1e-9 ){
+            cout << "RMS error is acceptable: test passed." << endl;
+        }else{
+            cout << "RMS error is too large: test failed." << endl;
+        }
 
     }
 
