@@ -114,6 +114,12 @@ protected:
     // Matrix D.
     Eigen::MatrixXd D;
 
+
+    // Boolean indicating if the current computed poles are up-to-date.
+    bool utd_poles;
+    // Boolean indicating if the sparse version is up-to-date.
+    bool utd_sparse_syst;
+
 // ====================================================================== <<<<<
 
 };
