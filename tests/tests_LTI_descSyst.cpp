@@ -300,7 +300,6 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "False" << endl;
         }
 
-
     }
 
 }

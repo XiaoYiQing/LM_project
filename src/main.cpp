@@ -6,6 +6,7 @@
 #endif
 
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <iostream>
 #include <filesystem>
 #include <fstream>

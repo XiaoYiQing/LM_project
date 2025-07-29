@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <iostream>
 #include <magic_enum.hpp>
 #include <memory>
@@ -99,6 +100,9 @@ void set_C( const shared_ptr< const Eigen::MatrixXd > C_in );
 void set_D( const shared_ptr< const Eigen::MatrixXd > D_in );
 
 bool get_utd_poles() const;
+Eigen::VectorXcd get_poles() const;
+
+bool get_utd_sparse_syst() const;
 
 // ====================================================================== <<<<<
 
@@ -119,6 +123,7 @@ protected:
     // Matrix D.
     Eigen::MatrixXd D;
 
+    
 
     // Boolean indicating if the current computed poles are up-to-date.
     bool utd_poles;
@@ -128,6 +133,13 @@ protected:
 
     // Boolean indicating if the sparse version is up-to-date.
     bool utd_sparse_syst;
+    // The sparse matrix A.
+    Eigen::SparseMatrix<double> As;
+    // The left transformation matrix for sparsifying the transfer function.
+    Eigen::MatrixXd Ts_L;
+    // The right transformation matrix for sparsifying the transfer function.
+    Eigen::MatrixXd Ts_R;
+
 
 // ====================================================================== <<<<<
 
