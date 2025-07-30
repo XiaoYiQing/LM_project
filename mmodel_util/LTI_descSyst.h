@@ -77,6 +77,8 @@ bool to_reg_syst();
 /*
 Generate the sparse version of this system, where E becomes the identity matrix and 
 A becomes a diagonal matrix (Transfer function is still identical).
+WARNING: this operation starts with regular system translation, which is irreversible
+if successful.
 
 Return true if successful.
 */
