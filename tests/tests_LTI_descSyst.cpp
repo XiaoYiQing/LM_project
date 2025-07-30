@@ -312,7 +312,25 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
     // Initialize test case index.
     int case_cnt = 0;
 
-    // 0- Regular system translation test.
+    // 0- Real matrix to complex eigenvalues test.
+    if( case_cnt == case_idx ){
+        
+        Eigen::MatrixXd A(2,2);
+        A << 0, -1, 1, 0;
+
+        // Eigen-decomposition
+        Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(A);
+        if (eigensolver.info() != Eigen::Success) {
+            cerr << "Unexpected error, could not perform eigendecomposition." << std::endl;
+            return;
+        }
+        Eigen::VectorXcd eigvals = eigensolver.eigenvalues();
+        cout << eigvals << endl;
+
+    }
+
+    // 1- Regular system translation test.
+    case_cnt++;
     if( case_cnt == case_idx ){
 
         // Number of inputs.
@@ -368,9 +386,8 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
     }
 
 
-    // Initialize test case index.
+    // 2- Diagonalization.
     case_cnt++;
-    // 1- Diagonalization.
     if( case_cnt == case_idx ){
 
         // Number of inputs.
@@ -378,7 +395,7 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         // Number of outputs.
         unsigned int p = 2;
         // System order
-        unsigned int n = 4;
+        unsigned int n = 10;
         
         shared_ptr< Eigen::MatrixXd >E_ptr = 
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );

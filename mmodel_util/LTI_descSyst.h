@@ -85,6 +85,9 @@ bool gen_sparse_syst();
 /*
 Evaluate the transfer function represented by the current system at the 
 target frequency.
+
+WARNING: transfer function evaluation can be expensive depending on the order of the system.
+    Consider using the sparse transfer function evaluation, if permissible.
 */
 Eigen::MatrixXcd tf_eval( complex<double> ) const;
 
@@ -93,8 +96,23 @@ Evaluate the transfer function represented by the current system at the
 target frequency.
 Input is vector of complex<double>.
 Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
+
+WARNING: transfer function evaluation can be expensive depending on the order of the system.
+    Consider using the sparse transfer function evaluation, if permissible.
 */
 Matrix3DXcd tf_eval( vector< complex<double> >& ) const;
+
+/*
+Evaluate the transfer function using the sparse representation at the target
+frequency.
+
+WARNING: if the sparse representation has not yet been calculated, this 
+fnction call will start the sparse system computation and could add unintended
+computation time.
+Furthermore, this function fails and return an empty matrix if the system cannot
+be sparsified.
+*/
+Eigen::MatrixXcd tf_sparse_eval( complex<double> ) const;
 
 // ====================================================================== <<<<<
 
@@ -150,11 +168,11 @@ protected:
     // Boolean indicating if the sparse version is up-to-date.
     bool utd_sparse_syst;
     // The sparse matrix A.
-    Eigen::SparseMatrix<double> As;
+    Eigen::SparseMatrix< complex<double> > As;
     // The left transformation matrix for sparsifying the transfer function.
-    Eigen::MatrixXd Ts_L;
+    Eigen::MatrixXcd Ts_L;
     // The right transformation matrix for sparsifying the transfer function.
-    Eigen::MatrixXd Ts_R;
+    Eigen::MatrixXcd Ts_R;
 
 
 // ====================================================================== <<<<<

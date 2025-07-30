@@ -185,17 +185,18 @@ bool LTI_descSyst::gen_sparse_syst(){
     }
 
     // Eigen-decomposition
-    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigensolver(this->A);
+    Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(this->A);
     if (eigensolver.info() != Eigen::Success) {
         cerr << "System sparsification failed: Eigen decomposition on A failed." << std::endl;
         return false;
     }
-    Eigen::VectorXd eigvals = eigensolver.eigenvalues();
+    Eigen::VectorXcd eigvals = eigensolver.eigenvalues();
+    cout << eigvals << endl;
     this->As = eigvals.asDiagonal();
     this->Ts_L = eigensolver.eigenvectors();
 
     // Compute Q^(-1).
-    Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(Ts_L);
+    Eigen::FullPivLU<Eigen::MatrixXcd> lu_decomp(Ts_L);
     if(!lu_decomp.isInvertible()) {
         std::cerr << "Cannot continue sparsification process: Eigenvector matrix is unexpectedly singular." << std::endl;
         return false;
@@ -287,10 +288,12 @@ Eigen::MatrixXd LTI_descSyst::get_D() const{
 void LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in ){ 
     this->E = *E_in;
     this->utd_poles = false;
+    this->utd_sparse_syst = false;
 }
 void LTI_descSyst::set_A( const shared_ptr< const Eigen::MatrixXd > A_in ){ 
     this->A = *A_in; 
     this->utd_poles = false;
+    this->utd_sparse_syst = false;
 }
 void LTI_descSyst::set_B( const shared_ptr< const Eigen::MatrixXd > B_in )
     { this->B = *B_in; }
