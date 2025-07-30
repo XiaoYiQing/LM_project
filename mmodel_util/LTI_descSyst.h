@@ -114,7 +114,7 @@ computation time.
 Furthermore, this function fails and return an empty matrix if the system cannot
 be sparsified.
 */
-Eigen::MatrixXcd tf_sparse_eval( complex<double> ) const;
+Eigen::MatrixXcd tf_sparse_eval( complex<double> );
 
 // ====================================================================== <<<<<
 

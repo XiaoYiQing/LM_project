@@ -461,6 +461,19 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
 
         mySyst.gen_sparse_syst();
 
+        shared_ptr<vector<double>> test_num_arr = utils::rDoubleGen( 0, 10, 2 );
+        complex<double> test_pt( test_num_arr->at(0), test_num_arr->at(1) );
+        
+        Eigen::MatrixXcd H_diff = mySyst.tf_eval( test_pt ) - mySyst.tf_sparse_eval( test_pt );
+
+        // Compute sum of squares
+        double max_err_term = H_diff.array().abs().maxCoeff();
+        if( max_err_term < 1.0e-9 ){
+            cout << "Sparse system transfer function eval test 1: passed." << endl;
+        }else{
+            cout << "Sparse system transfer function eval test 1: failed." << endl;
+        }
+
     }
 
 

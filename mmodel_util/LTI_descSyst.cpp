@@ -260,6 +260,22 @@ Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> >& f_vec ) const{
 
 }
 
+Eigen::MatrixXcd LTI_descSyst::tf_sparse_eval( complex<double> f_tar ){
+
+    // Evaluate ( s*I - As )^(-1)
+    Eigen::SparseMatrix< complex<double> > pencil( As.rows(), As.cols() );
+    pencil.setIdentity();
+    pencil = f_tar*pencil;
+    pencil = pencil - 1*this->As;
+    pencil = pencil.cwiseInverse();
+
+    // Evaluate Cs* ( s*I - As )^(-1) * Bs + D
+    Eigen::MatrixXcd finalAns = this->C*this->Ts_L*pencil*this->Ts_R*this->B + this->D;
+
+    return finalAns;
+
+}
+
 // ====================================================================== <<<<<
 
 

@@ -7,6 +7,7 @@
 #include <string>
 
 #include "LTI_descSyst.h"
+#include "numUtils.h"
 
 extern string RES_PATH_XYQ_str;
 
