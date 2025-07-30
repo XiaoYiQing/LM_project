@@ -138,6 +138,10 @@ Eigen::VectorXcd get_poles() const;
 
 bool get_utd_sparse_syst() const;
 
+Eigen::SparseMatrix< complex<double> > get_As() const;
+Eigen::MatrixXcd get_Ts_L() const;
+Eigen::MatrixXcd get_Ts_R() const;
+
 // ====================================================================== <<<<<
 
 protected:

@@ -191,7 +191,6 @@ bool LTI_descSyst::gen_sparse_syst(){
         return false;
     }
     Eigen::VectorXcd eigvals = eigensolver.eigenvalues();
-    cout << eigvals << endl;
     this->As = eigvals.asDiagonal();
     this->Ts_L = eigensolver.eigenvectors();
 
@@ -311,6 +310,16 @@ Eigen::VectorXcd LTI_descSyst::get_poles() const{
 
 bool LTI_descSyst::get_utd_sparse_syst() const{
     return this->utd_sparse_syst;
+}
+
+Eigen::SparseMatrix< complex<double> > LTI_descSyst::get_As() const{
+    return this->As;
+}
+Eigen::MatrixXcd LTI_descSyst::get_Ts_L() const{
+    return this->Ts_L;
+}
+Eigen::MatrixXcd LTI_descSyst::get_Ts_R() const{
+    return this->Ts_R;
 }
 
 // ====================================================================== <<<<<
