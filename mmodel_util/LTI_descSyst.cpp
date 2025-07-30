@@ -179,9 +179,33 @@ bool LTI_descSyst::to_reg_syst(){
 
 bool LTI_descSyst::gen_sparse_syst(){
 
+    if( !this->to_reg_syst() ){
+        cerr << "System sparsification failed: cannot translate into regular system." << endl;
+        return false;
+    }
 
+    // Eigen-decomposition
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigensolver(this->A);
+    if (eigensolver.info() != Eigen::Success) {
+        cerr << "System sparsification failed: Eigen decomposition on A failed." << std::endl;
+        return false;
+    }
+    Eigen::VectorXd eigvals = eigensolver.eigenvalues();
+    this->As = eigvals.asDiagonal();
+    this->Ts_L = eigensolver.eigenvectors();
 
-    return false;
+    // Compute Q^(-1).
+    Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(Ts_L);
+    if(!lu_decomp.isInvertible()) {
+        std::cerr << "Cannot continue sparsification process: Eigenvector matrix is unexpectedly singular." << std::endl;
+        return false;
+    }
+    this->Ts_R = lu_decomp.inverse();
+
+    // Update the up-to-date boolean.
+    utd_sparse_syst = true;
+
+    return true;
 
 }
 
