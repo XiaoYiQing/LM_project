@@ -16,8 +16,10 @@ void tests::Matrix3DXd_test_1( int case_idx ){
 
         try{
             Matrix3DXd my_3D_mat = Matrix3DXd( tmp_mat_vec );
-        }catch (const std::out_of_range& e){
+            cout << "Empty vector initialization test: Failed!" << endl;
+        }catch ( const std::out_of_range& e ){
             cerr << e.what() << endl;
+            cout << "Empty vector initialization test: Passed!" << endl;
             // return;
         }
 
@@ -28,13 +30,10 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         test_1_check = test_1_check && my_3D_mat2.levels() == 0;
         cout << "Emtpy initialization test 1: ";
         if( test_1_check ){
-            cout << "Passed" << endl;
+            cout << "Passed!" << endl;
         }else{
-            cout << "Failed" << endl;
+            cout << "Failed!" << endl;
         }
-
-        
-
 
     }
 
@@ -50,10 +49,18 @@ void tests::Matrix3DXd_test_1( int case_idx ){
             tmp_mat_vec.push_back( tmpMat );
         }
 
+        unsigned int test_idx = 2;
+        double multiplier = 3.0;
         Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
-        cout << my3DMat.at(2) << endl;
-        Matrix3DXd my3DMat2 = my3DMat*3;
-        cout << my3DMat2.at(2) << endl;
+        Matrix3DXd my3DMat2 = my3DMat*multiplier;
+
+        cout << "Emtpy initialization test 1: ";
+        if(  multiplier*tmp_mat_vec.at( test_idx ) == my3DMat2.at( test_idx ) ){
+            cout << "Passed!" << endl;
+        }else{
+            cout << "Failed!" << endl;
+        }
+
                 
     }
     
