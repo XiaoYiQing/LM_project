@@ -114,7 +114,18 @@ computation time.
 Furthermore, this function fails and return an empty matrix if the system cannot
 be sparsified.
 */
-Eigen::MatrixXcd tf_sparse_eval( complex<double> );
+Eigen::MatrixXcd tf_sparse_eval( complex<double> ) const;
+
+/*
+Evaluate the transfer function represented by the current system at the 
+target frequency.
+Input is vector of complex<double>.
+Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
+
+WARNING: transfer function evaluation can be expensive depending on the order of the system.
+    Consider using the sparse transfer function evaluation, if permissible.
+*/
+Matrix3DXcd tf_sparse_eval( vector< complex<double> >& ) const;
 
 // ====================================================================== <<<<<
 

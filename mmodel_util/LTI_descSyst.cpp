@@ -260,7 +260,12 @@ Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> >& f_vec ) const{
 
 }
 
-Eigen::MatrixXcd LTI_descSyst::tf_sparse_eval( complex<double> f_tar ){
+Eigen::MatrixXcd LTI_descSyst::tf_sparse_eval( complex<double> f_tar ) const{
+
+    if( !this->utd_sparse_syst ){
+        cerr << "Cannot evaluate transfer function via sparse system: sparse system currently not updated" << endl;
+        return Eigen::MatrixXcd::Zero(0,0);
+    }
 
     // Evaluate ( s*I - As )^(-1)
     Eigen::SparseMatrix< complex<double> > pencil( As.rows(), As.cols() );
@@ -273,6 +278,39 @@ Eigen::MatrixXcd LTI_descSyst::tf_sparse_eval( complex<double> f_tar ){
     Eigen::MatrixXcd finalAns = this->C*this->Ts_L*pencil*this->Ts_R*this->B + this->D;
 
     return finalAns;
+
+}
+
+
+Matrix3DXcd LTI_descSyst::tf_sparse_eval( vector< complex<double> >& f_vec ) const{
+
+    if( !this->utd_sparse_syst ){
+        cerr << "Cannot evaluate transfer function via sparse system: sparse system currently not updated" << endl;
+        return Matrix3DXcd();
+    }
+
+    // Obtain the number of evluation points.
+    unsigned int eval_cnt = f_vec.size();
+
+    // Initialize return variable.
+    Matrix3DXcd res_var = Matrix3DXcd( this->get_input_cnt(), this->get_output_cnt(),
+        eval_cnt );
+
+    // Compute the sparse system B and C matrices.
+    Eigen::MatrixXcd Bs = this->Ts_R*this->B;
+    Eigen::MatrixXcd Cs = this->C*this->Ts_L;
+
+    // Set the identity matrix.
+    Eigen::SparseMatrix< complex<double> > idenMat( As.rows(), As.cols() );
+    idenMat.setIdentity();
+
+    // Evaluate the sparse transfer function at all given evaluation points.
+    for( unsigned int z = 0; z < eval_cnt; z++ ){
+        res_var.set( z, Cs*( ( ( f_vec.at(z)*idenMat - 1*this->As ).cwiseInverse() )*Bs ) + this->D );
+    }
+
+    // Return the evaluated data.
+    return res_var;
 
 }
 

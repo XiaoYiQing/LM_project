@@ -430,7 +430,7 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
     }
 
 
-    // 2- Diagonalization.
+    // 2- Sparse system transfer function evaluation.
     case_cnt++;
     if( case_cnt == case_idx ){
 
@@ -472,6 +472,28 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
             cout << "Sparse system transfer function eval test 1: passed." << endl;
         }else{
             cout << "Sparse system transfer function eval test 1: failed." << endl;
+        }
+
+        // Generate a number of complex test points.
+        unsigned int test_cnt = 10;
+        shared_ptr<vector<double>> rePart = utils::rDoubleGen( 0, 10, test_cnt );
+        shared_ptr<vector<double>> imPart = utils::rDoubleGen( 0, 10, test_cnt );
+        vector< complex<double> > test_pt_arr( test_cnt );
+        for( unsigned int z = 0; z < test_cnt; z++ ){
+            test_pt_arr.at(z) = complex<double>( rePart->at(z), imPart->at(z) );
+        }
+
+        // Evaluate the system's transfer function at the test points.
+        Matrix3DXcd std_appr_data = mySyst.tf_eval( test_pt_arr );
+        Matrix3DXcd sp_appr_data = mySyst.tf_sparse_eval( test_pt_arr );
+
+        Matrix3DXcd appr_data_diff = std_appr_data - sp_appr_data;
+
+        double tot_RMS_err = Matrix3DXcd::RMS_total_comp( appr_data_diff );
+        if( tot_RMS_err < 1.0e-9 ){
+            cout << "Sparse system transfer function eval test 2: passed." << endl;
+        }else{
+            cout << "Sparse system transfer function eval test 2: failed." << endl;
         }
 
     }
