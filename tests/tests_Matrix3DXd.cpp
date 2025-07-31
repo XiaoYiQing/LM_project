@@ -18,8 +18,21 @@ void tests::Matrix3DXd_test_1( int case_idx ){
             Matrix3DXd my_3D_mat = Matrix3DXd( tmp_mat_vec );
         }catch (const std::out_of_range& e){
             cerr << e.what() << endl;
-            return;
+            // return;
         }
+
+        Matrix3DXd my_3D_mat2 = Matrix3DXd( 0, 0, 0 );
+        bool test_1_check = my_3D_mat2.isEmpty() == true;
+        test_1_check = test_1_check && my_3D_mat2.rows() == 0;
+        test_1_check = test_1_check && my_3D_mat2.cols() == 0;
+        test_1_check = test_1_check && my_3D_mat2.levels() == 0;
+        cout << "Emtpy initialization test 1: ";
+        if( test_1_check ){
+            cout << "Passed" << endl;
+        }else{
+            cout << "Failed" << endl;
+        }
+
 
     }
 

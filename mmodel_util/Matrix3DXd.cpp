@@ -438,7 +438,9 @@ bool Matrix3DXd::mat3DValidInCheck( const Eigen::MatrixXd& val ){
 void Matrix3DXd::reInit( unsigned int row_cnt, unsigned int col_cnt, unsigned int lvl_cnt ){
 
     if( row_cnt == 0 || col_cnt == 0 || lvl_cnt == 0 ){
-        throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
+        // throw std::domain_error( "2D matrix vector cannot reserve if its 2D matrices have 0 row or column." );
+        this->Mat3D.clear();
+        return;
     }
 
     this->Mat3D.clear();
