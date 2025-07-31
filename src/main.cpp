@@ -49,7 +49,7 @@ int main() {
 
     // tests::numUtils_test_1(4);
 
-    tests::Matrix3DXd_test_1(0);
+    tests::Matrix3DXd_test_1(1);
     // tests::Matrix3DXd_test_2_ops(3);
     // tests::Matrix3DXd_test_3_spec_ops(0);
     // tests::Matrix3DXd_test_4_supp(0);
