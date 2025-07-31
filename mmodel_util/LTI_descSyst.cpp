@@ -286,7 +286,7 @@ Matrix3DXcd LTI_descSyst::tf_sparse_eval( vector< complex<double> >& f_vec ) con
 
     if( !this->utd_sparse_syst ){
         cerr << "Cannot evaluate transfer function via sparse system: sparse system currently not updated" << endl;
-        return Matrix3DXcd();
+        return Matrix3DXcd(0,0,0);
     }
 
     // Obtain the number of evluation points.

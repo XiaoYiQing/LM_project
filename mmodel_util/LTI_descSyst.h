@@ -108,11 +108,8 @@ Matrix3DXcd tf_eval( vector< complex<double> >& ) const;
 Evaluate the transfer function using the sparse representation at the target
 frequency.
 
-WARNING: if the sparse representation has not yet been calculated, this 
-fnction call will start the sparse system computation and could add unintended
-computation time.
-Furthermore, this function fails and return an empty matrix if the system cannot
-be sparsified.
+WARNING: if the sparse representation is not up-to-date, this 
+function returns an empty result.
 */
 Eigen::MatrixXcd tf_sparse_eval( complex<double> ) const;
 
@@ -122,8 +119,8 @@ target frequency.
 Input is vector of complex<double>.
 Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
 
-WARNING: transfer function evaluation can be expensive depending on the order of the system.
-    Consider using the sparse transfer function evaluation, if permissible.
+WARNING: if the sparse representation is not up-to-date, this 
+function returns an empty result.
 */
 Matrix3DXcd tf_sparse_eval( vector< complex<double> >& ) const;
 

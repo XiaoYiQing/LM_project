@@ -439,7 +439,7 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         // Number of outputs.
         unsigned int p = 2;
         // System order
-        unsigned int n = 10;
+        unsigned int n = 80;
         
         shared_ptr< Eigen::MatrixXd >E_ptr = 
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
@@ -475,7 +475,7 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         }
 
         // Generate a number of complex test points.
-        unsigned int test_cnt = 10;
+        unsigned int test_cnt = 50;
         shared_ptr<vector<double>> rePart = utils::rDoubleGen( 0, 10, test_cnt );
         shared_ptr<vector<double>> imPart = utils::rDoubleGen( 0, 10, test_cnt );
         vector< complex<double> > test_pt_arr( test_cnt );
@@ -484,9 +484,20 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         }
 
         // Evaluate the system's transfer function at the test points.
+        auto start = std::chrono::high_resolution_clock::now();
         Matrix3DXcd std_appr_data = mySyst.tf_eval( test_pt_arr );
-        Matrix3DXcd sp_appr_data = mySyst.tf_sparse_eval( test_pt_arr );
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> duration = end - start;
+        cout << "Non-sparse TF eval time (ms): " << duration.count() << endl;
 
+        start = std::chrono::high_resolution_clock::now();
+        Matrix3DXcd sp_appr_data = mySyst.tf_sparse_eval( test_pt_arr );
+        end = std::chrono::high_resolution_clock::now();
+        duration = end - start;
+        cout << "Sparse TF eval time (ms): " << duration.count() << endl;
+        
+
+        // Compute difference in evaluation between using sparse and standard matrices.
         Matrix3DXcd appr_data_diff = std_appr_data - sp_appr_data;
 
         double tot_RMS_err = Matrix3DXcd::RMS_total_comp( appr_data_diff );

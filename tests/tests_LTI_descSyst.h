@@ -1,6 +1,7 @@
 #ifndef TESTS_LTI_DESCSYST
 #define TESTS_LTI_DESCSYST
 
+#include <chrono>
 #include <Eigen/Dense>
 #include <iostream>
 #include <memory>
