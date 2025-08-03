@@ -459,6 +459,7 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
 
+        // Generate the sparse system.
         mySyst.gen_sparse_syst();
 
         shared_ptr<vector<double>> test_num_arr = utils::rDoubleGen( 0, 10, 2 );

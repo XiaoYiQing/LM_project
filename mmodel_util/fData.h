@@ -27,6 +27,11 @@ public:
     */
     static void read_sXp_file( fData& tarFData, const string& fullFileName );
 
+    /*
+    Function to retrieve freq. data from S-parameter file data generated from the 
+    LTspice software.
+    */
+    static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName )
 
 // ====================================================================== >>>>>
 //      Class Enum "METRIC_PREFIX" Help Functions
