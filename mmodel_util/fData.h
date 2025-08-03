@@ -30,8 +30,12 @@ public:
     /*
     Function to retrieve freq. data from S-parameter file data generated from the 
     LTspice software.
+    NOTE:
+    - LTspice only provides two-port network S-parameters by default (That is S11, S12, 
+        S21, S22), so the parser will only extract 2x2 S-parameter matrices.
+
     */
-    static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName )
+    static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName );
 
 // ====================================================================== >>>>>
 //      Class Enum "METRIC_PREFIX" Help Functions

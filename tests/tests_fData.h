@@ -32,6 +32,11 @@ namespace tests{
     */
     void fData_setFunc_tests( unsigned int test_idx );
 
+    /*
+    Test the parser for LTspice data files.
+    */
+    void fData_LTspice_data_read_test();
+
 }
 
 

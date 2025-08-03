@@ -483,3 +483,24 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
     case_cnt++;
 
 }
+
+
+
+
+void tests::fData_LTspice_data_read_test(){
+
+    // Define our frequency data object.
+    fData myF;
+
+    // 0- Basic file reading test.
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+    fData::read_LTspice_Sp_file( myF, fullFileName );
+
+    // cout << myF.get_f_cnt() << endl;
+    // cout << myF.get_f_scale_str() << endl;
+    // cout << myF.get_f_scale_num() << endl;
+    // cout << myF.get_reData_at_f( 10 ) << endl;
+    // cout << myF.get_imData_at_f( 10 ) << endl;
+
+}

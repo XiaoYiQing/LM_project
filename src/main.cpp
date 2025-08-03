@@ -57,13 +57,14 @@ int main() {
     // tests::fData_test_1( 6 );
     // tests::fData_test_2( 3 );
     // tests::fData_setFunc_tests( 1 );
+    tests::fData_LTspice_data_read_test();
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
     
     // tests::LTI_descSyst_test_1( 3 );
-    tests::LTI_descSyst_test_2( 2 );
+    // tests::LTI_descSyst_test_2( 2 );
 
     // tests::LM_eng_full_SFML_testrun_v2();
 
