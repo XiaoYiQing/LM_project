@@ -1001,7 +1001,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
 
     // Define array of index pairs for indicating the order of S-parameter data
     // being presented in the data text file.
-    vector< std::pair<int,int> > Sp_order;
+    vector< std::pair<unsigned int, unsigned int> > Sp_order;
 
     // Read this first word, which is expected to be "Freq."
     iss >> word;
@@ -1022,7 +1022,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     int start_index = 1;    int length = 2;
 
     // Initialize temporary S-parameter number.
-    std::pair<int,int> tmp_S_val = std::pair<int,int>(0,0);
+    std::pair<unsigned int,unsigned int> tmp_S_val = 
+        std::pair<unsigned int,unsigned int>(0,0);
 
     while( iss >> word ){
         cout << word << endl;
@@ -1054,6 +1055,15 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
 
     // Obtain the number of S-parameters.
     unsigned int Sp_cnt = Sp_order.size();
+    double tmp_d_sqrt = sqrt( (double) Sp_cnt );
+    int port_cnt_tmp = (int) tmp_d_sqrt;
+    if( tmp_d_sqrt - port_cnt_tmp != 0 ){
+        throw std::invalid_argument( "Number of ports should be a square number." );
+    }
+
+    // UPdate the port count.
+    tarFData.IOcnt[0] = port_cnt_tmp;
+    tarFData.IOcnt[1] = port_cnt_tmp;
 
     // for( pair<int,int> z: Sp_order){
     //     cout << z.first << z.second << endl;
@@ -1068,11 +1078,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
 
     // File parsing control variables.
     unsigned int line_idx = 0;
-    unsigned int data_idx = 0;
     unsigned int res_blk_size = 200;
-    unsigned int curr_vec_size = 0;
-    // Temporary data value to be used during translation from string to double.
-    double tmp_val = 0;
+
 
     // The frequency vector.
     vector< double > f_vec;
@@ -1080,17 +1087,23 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     tarFData.Xr_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
     tarFData.Xi_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
 
-
     // Reach the second line.
     getline( inputFile, line );
 
     // Temporary variable for storing the current double being read.
     double tmp_d = 0.0;
+    string tmp_s = "";
+    
+    pair<string,string> units = pair<string,string>( "", "" );
 
-    // regex pattern(R"(\.s(\d+)p)");
+    // Regex for filtering the magnitude value.
     regex pat_mag(R"(.*\((.*),.*)");
-    regex pat_phase(R"(.*,(.*)\))");
+    // Regex for separating the magnitude numeric value from its unit.
     regex pat_mag_unit( R"(^([^a-zA-Z]*e[^a-zA-Z]*)(.*))" );
+    // Regex for filtering the phase value.
+    regex pat_phase(R"(.*,(.*)\))");
+
+    
 
     do{
 
@@ -1101,13 +1114,14 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         iss >> word;
         // Translate the word into a double value freq.
         tmp_d = std::stod( word );
-        cout << tmp_d << endl;
+        f_vec.push_back( tmp_d );
 
         for( unsigned int z = 0; z < Sp_cnt; z++ ){
-            // Obtain the next S-parameter value.
+            // Obtain the next S-parameter value in string.
             iss >> word;
             cout << word << endl;
 
+            // Parse the magnitude.
             if ( regex_match( word, matches, pat_mag ) ){
                 xValue = matches[1];
 
@@ -1118,16 +1132,30 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
                 if( matches.size() != 3 ){
                     throw std::invalid_argument( "LTspice parser encountered unexpected data pattern. ABORT." );
                 }
-                f_vec.push_back( std::stod( matches[1] ) );
+                cout << matches[0] << endl;
+                cout << matches[1] << endl;
+                cout << matches[2] << endl;
+                tmp_d = std::stod( matches[1] );
+                tarFData.Xr_vec.set( Sp_order.at(z).first - 1, Sp_order.at(z).second - 1, 
+                    line_idx, tmp_d );
 
             }
+
+            // Parse the phase.
             if ( regex_match( word, matches, pat_phase ) ){
                 xValue = matches[1];
                 cout << "Phase 0: " << matches[0] << endl;
                 cout << "Phase 1: " << matches[1] << endl;
+                tmp_s = matches[1];
+                tmp_d = std::stod( tmp_s.substr( 0, tmp_s.length()-1 ) );
+                cout << tmp_d << endl;
+                tarFData.Xi_vec.set( Sp_order.at(z).first - 1, Sp_order.at(z).second - 1, 
+                    line_idx, tmp_d );
             }
 
         }
+
+        line_idx++;
 
         int lol = 0;
 
