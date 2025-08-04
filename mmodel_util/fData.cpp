@@ -1094,7 +1094,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     double tmp_d = 0.0;
     string tmp_s = "";
     
-    pair<string,string> units = pair<string,string>( "", "" );
+    // Variable for keeping track 
+    pair<string,string> exp_units = pair<string,string>( "dB", "\u00B0" );
 
     // Regex for filtering the magnitude value.
     regex pat_mag(R"(.*\((.*),.*)");
@@ -1102,6 +1103,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     regex pat_mag_unit( R"(^([^a-zA-Z]*e[^a-zA-Z]*)(.*))" );
     // Regex for filtering the phase value.
     regex pat_phase(R"(.*,(.*)\))");
+    // Regex for separating the phase numeric value from its unit.
+    regex pat_phase_unit( R"(^([0-9.+-]+e[0-9.+-]+)(.*))" );
 
     
 
@@ -1117,40 +1120,48 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         f_vec.push_back( tmp_d );
 
         for( unsigned int z = 0; z < Sp_cnt; z++ ){
+            
             // Obtain the next S-parameter value in string.
             iss >> word;
-            cout << word << endl;
 
             // Parse the magnitude.
             if ( regex_match( word, matches, pat_mag ) ){
+
+                // Obtain the full magnitude string.
                 xValue = matches[1];
-
-                cout << "Magnitude 0: " << matches[0] << endl;
-                cout << "Magnitude 1: " << matches[1] << endl;
-
+                // Separate the magnitude numerical value from its unit.
                 regex_match( xValue, matches, pat_mag_unit );
                 if( matches.size() != 3 ){
                     throw std::invalid_argument( "LTspice parser encountered unexpected data pattern. ABORT." );
                 }
-                cout << matches[0] << endl;
-                cout << matches[1] << endl;
-                cout << matches[2] << endl;
-                tmp_d = std::stod( matches[1] );
+                // Save the magnitude.
                 tarFData.Xr_vec.set( Sp_order.at(z).first - 1, Sp_order.at(z).second - 1, 
-                    line_idx, tmp_d );
+                    line_idx, std::stod( matches[1] ) );
+                // Check unit consistency.
+                if( exp_units.first != matches[2] ){
+                    throw std::invalid_argument( "Unexpected magnitude unit. Should be " + exp_units.first );
+                }
 
             }
 
             // Parse the phase.
             if ( regex_match( word, matches, pat_phase ) ){
+
+                // Obtain the full phase string.
                 xValue = matches[1];
-                cout << "Phase 0: " << matches[0] << endl;
-                cout << "Phase 1: " << matches[1] << endl;
-                tmp_s = matches[1];
-                tmp_d = std::stod( tmp_s.substr( 0, tmp_s.length()-1 ) );
-                cout << tmp_d << endl;
+                // Separate the phase numerical value from its unit.
+                regex_match( xValue, matches, pat_phase_unit );
+                if( matches.size() != 3 ){
+                    throw std::invalid_argument( "LTspice parser encountered unexpected data pattern. ABORT." );
+                }
+                // Save the phase.
                 tarFData.Xi_vec.set( Sp_order.at(z).first - 1, Sp_order.at(z).second - 1, 
-                    line_idx, tmp_d );
+                    line_idx, std::stod( matches[1] ) );
+                // Check unit consistency.
+                if( exp_units.second != matches[2] ){
+                    throw std::invalid_argument( "Unexpected phase unit. Should be " + exp_units.first );
+                }
+
             }
 
         }

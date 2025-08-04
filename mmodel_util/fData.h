@@ -33,7 +33,7 @@ public:
     NOTE:
     - LTspice only provides two-port network S-parameters by default (That is S11, S12, 
         S21, S22), so the parser will only extract 2x2 S-parameter matrices.
-
+    - This parser only reads data given in the (dB,degree (non-radian)) format.
     */
     static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName );
 
