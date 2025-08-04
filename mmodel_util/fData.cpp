@@ -1009,9 +1009,6 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         throw::invalid_argument( "LTspice S-parameter data file has unexpected pattern. Parsing aborted." );
     }
 
-    /*
-    Regex for determining the positive integer value X in the pattern ".sXp".
-    */
     // regex pattern for identifying S-parameter names;
     regex pat_Sname(R"(S\d\d\([^\)]*\))");
     // The match result variable.
@@ -1026,7 +1023,6 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         std::pair<unsigned int,unsigned int>(0,0);
 
     while( iss >> word ){
-        cout << word << endl;
         
         if ( regex_match( word, matches, pat_Sname ) ) {
             if ( matches.size() == 1 ) { // Check if we have a match for the integer
@@ -1057,6 +1053,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     unsigned int Sp_cnt = Sp_order.size();
     double tmp_d_sqrt = sqrt( (double) Sp_cnt );
     int port_cnt_tmp = (int) tmp_d_sqrt;
+    // Make sure the number of parameters is a square number.
     if( tmp_d_sqrt - port_cnt_tmp != 0 ){
         throw std::invalid_argument( "Number of ports should be a square number." );
     }
@@ -1065,36 +1062,46 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     tarFData.IOcnt[0] = port_cnt_tmp;
     tarFData.IOcnt[1] = port_cnt_tmp;
 
-    // for( pair<int,int> z: Sp_order){
-    //     cout << z.first << z.second << endl;
-    // }
 
+    fData::METRIC_PREFIX f_pref = METRIC_PREFIX::NONE;
+    tarFData.f_pref = f_pref;
+    // Set freq data type to S by default.
+    tarFData.fD_type = fData::FDATA_TYPE::S;
+    // Set freq data format to dB by default.
+    tarFData.fD_format = fData::FDATA_FORMAT::DB;
+    // Set input impedance to 50 ohms by default.
+    // NOTE: LTspice data file does not provide input impedance.
+    tarFData.systImp = 50.0;
+    
 // ---------------------------------------------------------------------- <<<<<
 
 
 // ---------------------------------------------------------------------- >>>>>
 //      File Data Read
 // ---------------------------------------------------------------------- >>>>>
-
+    
     // File parsing control variables.
     unsigned int line_idx = 0;
     unsigned int res_blk_size = 200;
-
+    unsigned int curr_vec_size = 0;
 
     // The frequency vector.
     vector< double > f_vec;
+    f_vec.reserve( res_blk_size );
     // Initialize the vector of matrices.
     tarFData.Xr_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
     tarFData.Xi_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
 
-    // Reach the second line.
-    getline( inputFile, line );
+    // Update vector size.
+    curr_vec_size = tarFData.Xr_vec.levels();
+
+    
 
     // Temporary variable for storing the current double being read.
     double tmp_d = 0.0;
     string tmp_s = "";
     
-    // Variable for keeping track 
+    // Variable for expected magnitude and phase units (dB,degree).
     pair<string,string> exp_units = pair<string,string>( "dB", "\u00B0" );
 
     // Regex for filtering the magnitude value.
@@ -1107,7 +1114,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     regex pat_phase_unit( R"(^([0-9.+-]+e[0-9.+-]+)(.*))" );
 
     
-
+    // Reach the second line, which is the first data line.
+    getline( inputFile, line );
     do{
 
         // Set the stream for the current line.
@@ -1120,7 +1128,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         f_vec.push_back( tmp_d );
 
         for( unsigned int z = 0; z < Sp_cnt; z++ ){
-            
+
             // Obtain the next S-parameter value in string.
             iss >> word;
 
@@ -1167,14 +1175,29 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         }
 
         line_idx++;
+        // Increase the data arrays reserved space if current limit reached.
+        if( line_idx >= curr_vec_size ){
 
-        int lol = 0;
+            f_vec.reserve( line_idx + res_blk_size );
+            tarFData.Xr_vec.reserve( line_idx + res_blk_size );
+            tarFData.Xi_vec.reserve( line_idx + res_blk_size );
+
+            curr_vec_size += res_blk_size;
+
+        }
 
     }while( getline( inputFile, line ) );
 
+    // Deallocate unused reserved memory from the vectors.
+    f_vec.shrink_to_fit();
+    tarFData.f_vec = Eigen::Map<Eigen::VectorXd>( f_vec.data(), f_vec.size() );
+    tarFData.Xr_vec.resize( line_idx );
+    tarFData.Xr_vec.shrink_to_fit();
+    tarFData.Xi_vec.resize( line_idx );
+    tarFData.Xi_vec.shrink_to_fit();
+
 // ---------------------------------------------------------------------- <<<<<
 
-
-
+    return;
 
 }
