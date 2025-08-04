@@ -972,7 +972,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      File Parameters Read
+//      File First Line Read (Parameters Line)
 // ---------------------------------------------------------------------- >>>>>
 
     // Open the input file stream.
@@ -1012,8 +1012,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     /*
     Regex for determining the positive integer value X in the pattern ".sXp".
     */
-    // regex pattern(R"(\.s(\d+)p)");
-    regex pattern(R"(S\d\d\([^\)]*\))");
+    // regex pattern for identifying S-parameter names;
+    regex pat_Sname(R"(S\d\d\([^\)]*\))");
     // The match result variable.
     smatch matches;
     // The exact number of the match in string.
@@ -1022,16 +1022,27 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     int start_index = 1;    int length = 2;
 
     // Initialize temporary S-parameter number.
-    double tmp_S_val = 0;
+    std::pair<int,int> tmp_S_val = std::pair<int,int>(0,0);
+
     while( iss >> word ){
         cout << word << endl;
         
-        if ( regex_match( word, matches, pattern ) ) {
-            cout << matches.size() << endl;
+        if ( regex_match( word, matches, pat_Sname ) ) {
             if ( matches.size() == 1 ) { // Check if we have a match for the integer
-                xValue = matches[0]; // Get the captured group (X)
-                tmp_S_val = stoi( xValue.substr( start_index, length ) );
-                cout << tmp_S_val << endl;
+                try {
+                    xValue = matches[0]; // Get the captured group (X)
+                    tmp_S_val.first = stoi( xValue.substr( start_index, 1 ) );
+                    tmp_S_val.second = stoi( xValue.substr( start_index+1, 1 ) );
+                    Sp_order.push_back( tmp_S_val );
+                } catch (const std::invalid_argument& e) {
+                    cout << "Invalid input: The string does not contain a valid integer." << std::endl;
+                    cout << e.what() << endl;
+                    return;
+                } catch (const std::out_of_range& e) {
+                    cout << "Invalid input: The integer is out of range." << std::endl;
+                    cout << e.what() << endl;
+                    return;
+                }
             }
         } else {
             cout << "No match found." << endl;
@@ -1041,8 +1052,90 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     }
 
 
+    // Obtain the number of S-parameters.
+    unsigned int Sp_cnt = Sp_order.size();
 
+    // for( pair<int,int> z: Sp_order){
+    //     cout << z.first << z.second << endl;
+    // }
 
 // ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      File Data Read
+// ---------------------------------------------------------------------- >>>>>
+
+    // File parsing control variables.
+    unsigned int line_idx = 0;
+    unsigned int data_idx = 0;
+    unsigned int res_blk_size = 200;
+    unsigned int curr_vec_size = 0;
+    // Temporary data value to be used during translation from string to double.
+    double tmp_val = 0;
+
+    // The frequency vector.
+    vector< double > f_vec;
+    // Initialize the vector of matrices.
+    tarFData.Xr_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
+    tarFData.Xi_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
+
+
+    // Reach the second line.
+    getline( inputFile, line );
+
+    // Temporary variable for storing the current double being read.
+    double tmp_d = 0.0;
+
+    // regex pattern(R"(\.s(\d+)p)");
+    regex pat_mag(R"(.*\((.*),.*)");
+    regex pat_phase(R"(.*,(.*)\))");
+    regex pat_mag_unit( R"(^([^a-zA-Z]*e[^a-zA-Z]*)(.*))" );
+
+    do{
+
+        // Set the stream for the current line.
+        istringstream iss(line);
+
+        // Read the current frequency word.
+        iss >> word;
+        // Translate the word into a double value freq.
+        tmp_d = std::stod( word );
+        cout << tmp_d << endl;
+
+        for( unsigned int z = 0; z < Sp_cnt; z++ ){
+            // Obtain the next S-parameter value.
+            iss >> word;
+            cout << word << endl;
+
+            if ( regex_match( word, matches, pat_mag ) ){
+                xValue = matches[1];
+
+                cout << "Magnitude 0: " << matches[0] << endl;
+                cout << "Magnitude 1: " << matches[1] << endl;
+
+                regex_match( xValue, matches, pat_mag_unit );
+                if( matches.size() != 3 ){
+                    throw std::invalid_argument( "LTspice parser encountered unexpected data pattern. ABORT." );
+                }
+                f_vec.push_back( std::stod( matches[1] ) );
+
+            }
+            if ( regex_match( word, matches, pat_phase ) ){
+                xValue = matches[1];
+                cout << "Phase 0: " << matches[0] << endl;
+                cout << "Phase 1: " << matches[1] << endl;
+            }
+
+        }
+
+        int lol = 0;
+
+    }while( getline( inputFile, line ) );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+
 
 }
