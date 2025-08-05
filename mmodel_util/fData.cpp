@@ -1073,6 +1073,14 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     // NOTE: LTspice data file does not provide input impedance.
     tarFData.systImp = 50.0;
     
+    // Add multiplier modifiers for the data depending on the format of the data
+    // being parsed.
+    double Xi_fac = 1.0;
+    if( tarFData.fD_format == fData::FDATA_FORMAT::DB || 
+        tarFData.fD_format == fData::FDATA_FORMAT::MA ){
+        Xi_fac = std::numbers::pi/180;
+    }
+
 // ---------------------------------------------------------------------- <<<<<
 
 
@@ -1164,7 +1172,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
                 }
                 // Save the phase.
                 tarFData.Xi_vec.set( Sp_order.at(z).first - 1, Sp_order.at(z).second - 1, 
-                    line_idx, std::stod( matches[1] ) );
+                    line_idx, Xi_fac*std::stod( matches[1] ) );
                 // Check unit consistency.
                 if( exp_units.second != matches[2] ){
                     throw std::invalid_argument( "Unexpected phase unit. Should be " + exp_units.first );
