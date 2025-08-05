@@ -789,6 +789,9 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 //      Model Evaluation
 // ---------------------------------------------------------------------- >>>>>
 
+    // Compute the sparse system.
+    mySyst.gen_sparse_syst();
+
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
     vector< complex<double> > testFVec2 = vector< complex<double> >( tmp_fvec.size() );
@@ -797,7 +800,7 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = mySyst.tf_eval( testFVec2 );
+    Matrix3DXcd H_app_mat_arr = mySyst.tf_sparse_eval( testFVec2 );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
