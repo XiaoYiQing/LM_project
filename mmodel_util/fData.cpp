@@ -869,10 +869,11 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
     // Add multiplier modifiers for the data depending on the format of the data
     // being parsed.
+    double myPI = 2*std::asin(1.0);
     double Xi_fac = 1.0;
     if( tarFData.fD_format == fData::FDATA_FORMAT::DB || 
         tarFData.fD_format == fData::FDATA_FORMAT::MA ){
-        Xi_fac = std::numbers::pi/180;
+        Xi_fac = myPI/180;
     }
 
 // ---------------------------------------------------------------------- <<<<<
@@ -1075,10 +1076,11 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     
     // Add multiplier modifiers for the data depending on the format of the data
     // being parsed.
+    double myPI = 2*std::asin(1.0);
     double Xi_fac = 1.0;
     if( tarFData.fD_format == fData::FDATA_FORMAT::DB || 
         tarFData.fD_format == fData::FDATA_FORMAT::MA ){
-        Xi_fac = std::numbers::pi/180;
+        Xi_fac = myPI/180;
     }
 
 // ---------------------------------------------------------------------- <<<<<

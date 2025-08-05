@@ -995,6 +995,7 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     Eigen::VectorXcd poles = mySyst.get_poles();
     bool is_stab = 0 > poles.real().maxCoeff();
     cout << "Is stable: " << is_stab << endl;
+    cout << "Max pole real part: " << poles.real().maxCoeff() << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 
