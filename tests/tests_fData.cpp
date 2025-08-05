@@ -497,10 +497,18 @@ void tests::fData_LTspice_data_read_test(){
     string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
     fData::read_LTspice_Sp_file( myF, fullFileName );
 
-    // cout << myF.get_f_cnt() << endl;
-    // cout << myF.get_f_scale_str() << endl;
-    // cout << myF.get_f_scale_num() << endl;
-    // cout << myF.get_reData_at_f( 10 ) << endl;
-    // cout << myF.get_imData_at_f( 10 ) << endl;
+    cout << myF.get_f_cnt() << endl;
+    cout << myF.get_f_scale_str() << endl;
+    cout << myF.get_f_scale_num() << endl;
+
+    cout << "dB data:" << endl;
+    cout << myF.get_reData_at_f( 10 ) << endl;
+    cout << myF.get_imData_at_f( 10 ) << endl;
+
+    cout << "RI data:" << endl;
+    myF.data_format_Switch( fData::FDATA_FORMAT::RI );  
+    cout << myF.get_reData_at_f( 10 ) << endl;
+    cout << myF.get_imData_at_f( 10 ) << endl;
+    
 
 }

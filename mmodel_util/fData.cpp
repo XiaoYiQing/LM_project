@@ -867,6 +867,14 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         tarFData.systImp = std::stod( options.at(4) );
     }
 
+    // Add multiplier modifiers for the data depending on the format of the data
+    // being parsed.
+    double Xi_fac = 1.0;
+    if( tarFData.fD_format == fData::FDATA_FORMAT::DB || 
+        tarFData.fD_format == fData::FDATA_FORMAT::MA ){
+        Xi_fac = std::numbers::pi/180;
+    }
+
 // ---------------------------------------------------------------------- <<<<<
 
     
@@ -918,7 +926,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
                 tarFData.Xr_vec.set( i, j, line_idx, tmp_val );
                 // Read the next data phase.
                 iss >> word;    tmp_val = std::stod( word );
-                tarFData.Xi_vec.set( i, j, line_idx, tmp_val );
+                tarFData.Xi_vec.set( i, j, line_idx, tmp_val*Xi_fac );
             }
         }
 
@@ -962,10 +970,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     std::string fileStem = fullFilePath.stem().string();
     std::string fileExt = fullFilePath.extension().string();
 
-
     if( fileExt != ".txt" ){
         throw std::invalid_argument( "Expected data file to be in .txt format." );
-        return;
     }
 
 // ---------------------------------------------------------------------- <<<<<
@@ -984,14 +990,8 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         cout << "File read successful." << endl;
     }
     
-    // If the first character of a line is == comm_mark, the line is a comment.
-    string comm_mark = "!";
-    // If the first character of a line is == opt_line_mark, the line holds the various
-    // options of the data format.
-    string opt_line_mark = "#";
     // The variables holding the line and word currently read, respectively.
     string line, word;
-
 
     // Obtain the first line.
     getline( inputFile, line );
@@ -1009,7 +1009,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
         throw::invalid_argument( "LTspice S-parameter data file has unexpected pattern. Parsing aborted." );
     }
 
-    // regex pattern for identifying S-parameter names;
+    // regex pattern for identifying S-parameter indices;
     regex pat_Sname(R"(S\d\d\([^\)]*\))");
     // The match result variable.
     smatch matches;
