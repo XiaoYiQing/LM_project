@@ -43,6 +43,11 @@ namespace tests{
     */
     void LM_eng_full_SFML_testrun_v2();
 
+    /*
+    General run for testing various examples.
+    */
+    void LM_eng_full_SFML_testrun_gen();
+
 }
 
 #endif  // TESTS_LM_ENG_H
