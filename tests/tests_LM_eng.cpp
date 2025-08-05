@@ -608,9 +608,9 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
     // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
-    // string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
 
     // Obtain the data from the target data file and insert into the fData object.
     fData::read_sXp_file( myFData, fullFileName );
@@ -751,8 +751,7 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    // unsigned int svd_ret_cnt = 12;
-    unsigned int svd_ret_cnt = 49;
+    unsigned int svd_ret_cnt = 12;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
@@ -827,12 +826,10 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-    // string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+    string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
 
     // Obtain the data from the target data file and insert into the fData object.
-    // fData::read_LTspice_Sp_file( myFData, fullFileName );
-    fData::read_sXp_file( myFData, fullFileName );
+    fData::read_LTspice_Sp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
     myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
@@ -919,7 +916,7 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     match_bool = true;
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
-    cout << ansDiff << endl;
+    
 // ---------------------------------------------------------------------- <<<<<
 
 
@@ -970,7 +967,7 @@ void tests::LM_eng_full_SFML_testrun_gen(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 12;
+    unsigned int svd_ret_cnt = 10;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
