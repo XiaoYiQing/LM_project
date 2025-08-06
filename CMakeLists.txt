@@ -4,7 +4,7 @@ project(MyFuncs)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+# set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -12,6 +12,9 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 # Create our main executable.
 add_executable( myapp src/main.cpp )
+
+
+
 
 
 
@@ -33,6 +36,35 @@ FetchContent_MakeAvailable(eigen)
 target_link_libraries(myapp PUBLIC Eigen3::Eigen)
 
 # ======================================================================= <<<<<
+
+
+# ======================================================================= >>>>>
+#   plplot Portable Project Inclusion
+# ======================================================================= >>>>>
+
+# include(FetchContent)
+
+# FetchContent_Declare(
+#     plplot
+#     GIT_REPOSITORY git://git.code.sf.net/p/plplot/plplot
+#     GIT_SHALLOW OFF
+# )
+
+# FetchContent_MakeAvailable(plplot)
+
+# target_link_libraries(myapp PUBLIC PLPLOT::plplot)
+
+# # Add a sub directory.
+# add_subdirectory( plplot )
+# target_link_libraries( myapp PUBLIC plplot )
+
+# # Locate the PLplot package
+# set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/install")
+# find_package(PLplot REQUIRED)
+# target_link_libraries(myapp PUBLIC PLplot::plplot)
+
+# ======================================================================= <<<<<
+
 
 
 # ======================================================================= >>>>>
