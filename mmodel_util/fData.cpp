@@ -730,10 +730,72 @@ Matrix3DXd fData::getXi_vec() const
 //      Printing
 // ====================================================================== >>>>>
 
-void fData::print_to( const string& fullFileName, int options ){
+void fData::print_to( const string& fileDir, const string& fileStem, int options ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      File Name Editing
+// ---------------------------------------------------------------------- >>>>>
+
+    string fileExt = ".txt";
+    string fileName = fileStem + fileExt;
+    string fullFileName = fileDir + fileName;
+
+// ---------------------------------------------------------------------- <<<<<
 
 
-    
+// ---------------------------------------------------------------------- >>>>>
+//      Stream Prep
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the file stream.
+    std::ofstream file(fullFileName);
+    if (!file.is_open()) {
+        throw::invalid_argument( "Cannot open stream for specified file. ABORT." );
+    }
+
+    // Obtain the data count of the current frequency data.
+    unsigned int data_cnt = this->f_vec.size();
+    // Obtain the number of inputs and outputs.
+    unsigned int row_cnt = this->get_out_cnt();
+    unsigned int col_cnt = this->get_in_cnt();
+
+    // Initialize temporary complex variable.
+    complex<double> tmp_cplx = 0;
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Write to Stream
+// ---------------------------------------------------------------------- >>>>>
+
+    for( unsigned int z = 0; z < data_cnt; z++ ){
+
+        Eigen::MatrixXd Xr_z = this->Xr_vec.at(z);
+        Eigen::MatrixXd Xi_z = this->Xi_vec.at(z);
+
+        switch( this->fD_format ){
+            case( FDATA_FORMAT::RI ):
+            case( FDATA_FORMAT::MA ):
+            case( FDATA_FORMAT::DB ):
+        }
+
+        // Write matrix data
+        for (unsigned int i = 0; i < row_cnt; ++i) {
+            for (unsigned int j = 0; j < col_cnt; ++j) {
+                tmp_cplx = complex<double>( Xr_z(i,j), Xi_z(i,j) );
+                file << tmp_cplx;
+                if (j < col_cnt - 1) file << " ";
+            }
+            file << "\n";
+        }
+
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+    // Close the file once all is done.
+    file.close();
 
 }
 

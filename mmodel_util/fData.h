@@ -309,7 +309,7 @@ public:
 //      Printing
 // ====================================================================== >>>>>
 
-void print_to( const string& fullFileName, int options );
+    void print_to( const string& fileDir, const string& fileStem, int options );
 
 // ====================================================================== <<<<<
 
