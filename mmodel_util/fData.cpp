@@ -774,11 +774,11 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
         Eigen::MatrixXd Xr_z = this->Xr_vec.at(z);
         Eigen::MatrixXd Xi_z = this->Xi_vec.at(z);
 
-        switch( this->fD_format ){
-            case( FDATA_FORMAT::RI ):
-            case( FDATA_FORMAT::MA ):
-            case( FDATA_FORMAT::DB ):
-        }
+        // switch( this->fD_format ){
+        //     case FDATA_FORMAT::RI:
+        //     case FDATA_FORMAT::MA:
+        //     case FDATA_FORMAT::DB:
+        // }
 
         // Write matrix data
         for (unsigned int i = 0; i < row_cnt; ++i) {

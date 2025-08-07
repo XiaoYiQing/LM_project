@@ -37,6 +37,11 @@ namespace tests{
     */
     void fData_LTspice_data_read_test();
 
+    /*
+    Test for writing the data to a file.
+    */
+    void fData_print_test();
+
 }
 
 
