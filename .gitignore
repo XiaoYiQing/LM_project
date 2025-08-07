@@ -26,3 +26,4 @@ _deps
 CMakeUserPresets.json
 build/
 .vscode/
+data_output/
