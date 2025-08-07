@@ -738,7 +738,7 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
 
     string fileExt = ".txt";
     string fileName = fileStem + fileExt;
-    string fullFileName = fileDir + fileName;
+    string fullFileName = fileDir + "/" + fileName;
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -762,11 +762,48 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
     // Initialize temporary complex variable.
     complex<double> tmp_cplx = 0;
 
+    // Set the precision of the number being printed.
+    unsigned int precision = 10;
 // ---------------------------------------------------------------------- <<<<<
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      Write to Stream
+//      Write Info Lines
+// ---------------------------------------------------------------------- >>>>>
+
+    string fType = get_FDATA_TYPE_Str( this->fD_type );
+    file << "Freq" << " ";
+    for (unsigned int i = 0; i < row_cnt; ++i) {
+    for (unsigned int j = 0; j < col_cnt; ++j) {
+        file << fType << std::to_string(i+1) << std::to_string(j+1) << "a ";
+        file << fType << std::to_string(i+1) << std::to_string(j+1) << "b ";
+    }
+    }
+    string a_str = "NONE";
+    string b_str = "NONE";
+    switch( this->fD_format ){
+    case FDATA_FORMAT::RI:
+        a_str = "re";
+        b_str = "im";
+        break;
+    case FDATA_FORMAT::MA:
+        a_str = "mag";
+        b_str = "phase(rad)";
+        break;
+    case FDATA_FORMAT::DB:
+        a_str = "mag(dB)";
+        b_str = "phase(rad)";
+        break;
+    }
+    file << "a=[" << a_str <<"],b=[" << b_str <<"]";
+    file << "\n";
+
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Write Data Lines
 // ---------------------------------------------------------------------- >>>>>
 
     for( unsigned int z = 0; z < data_cnt; z++ ){
@@ -780,15 +817,25 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
         //     case FDATA_FORMAT::DB:
         // }
 
+        // Print the frequency value of the current point.
+        file << std::scientific << std::setprecision(precision) << this->f_vec(z) << " ";
+
         // Write matrix data
         for (unsigned int i = 0; i < row_cnt; ++i) {
             for (unsigned int j = 0; j < col_cnt; ++j) {
-                tmp_cplx = complex<double>( Xr_z(i,j), Xi_z(i,j) );
-                file << tmp_cplx;
+                if( Xr_z(i,j) >= 0 ){
+                    file << "+";
+                }
+                file << std::scientific << std::setprecision(precision) << Xr_z(i,j) << " ";
+                if( Xi_z(i,j) >= 0 ){
+                    file << "+";
+                }
+                file << std::scientific << std::setprecision(precision) << Xi_z(i,j);
                 if (j < col_cnt - 1) file << " ";
             }
-            file << "\n";
+            if (i < row_cnt - 1) file << " ";
         }
+        file << "\n";
 
     }
 

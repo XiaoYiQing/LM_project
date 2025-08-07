@@ -522,5 +522,10 @@ void tests::fData_print_test(){
     // Define the full file name.
     string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
     fData::read_sXp_file( myF, fullFileName );
-    
-}
+
+    string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
+    string targetStemName = "tmp_data_file";
+
+    myF.print_to( targetDir, targetStemName, 0 );
+
+}   
