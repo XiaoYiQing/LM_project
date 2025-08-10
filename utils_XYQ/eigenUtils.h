@@ -22,7 +22,8 @@ namespace utils{
 //      Write to File
 // ====================================================================== >>>>>
 
-
+    void vec_to_file( const string& fileDir, const string& fileStem, 
+        const Eigen::VectorXd& tarVec, int options );
 
 // ====================================================================== <<<<<
 
