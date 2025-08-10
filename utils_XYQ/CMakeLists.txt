@@ -2,6 +2,8 @@
 # Create a list of variables, where the entries are the c++ and header files within the
 # current directory.
 set( utils_XYQ_SOURCES 
+	${CMAKE_CURRENT_SOURCE_DIR}/eigenUtils.h
+	${CMAKE_CURRENT_SOURCE_DIR}/eigenUtils.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/timeUtils.h
 	${CMAKE_CURRENT_SOURCE_DIR}/timeUtils.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/numUtils.h
@@ -11,3 +13,4 @@ set( utils_XYQ_SOURCES
 
 add_library(utils_XYQ ${utils_XYQ_SOURCES})
 
+target_link_libraries( utils_XYQ PRIVATE Eigen3::Eigen )

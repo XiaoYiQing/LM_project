@@ -10,7 +10,7 @@
 #include <magic_enum.hpp>
 #include <regex>
 #include <sstream>
-#include <string>   
+#include <string>
 #include <vector>  
 
 #include "Matrix3DXd.h"
