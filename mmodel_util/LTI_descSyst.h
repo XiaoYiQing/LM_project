@@ -18,7 +18,7 @@ using namespace std;
 
 
 
-class LTI_descSyst{ 
+class LTI_descSyst{
 
 
 public:

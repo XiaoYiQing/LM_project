@@ -13,6 +13,23 @@
 
 using namespace std;
 
+
+class LM_eng{
+
+public: 
+
+    LM_eng();
+
+protected:
+
+    // The starting frequency data from which the LM is to be constructed.
+    fData orig_fData;
+
+    
+
+};
+
+
 namespace LM_UTIL{
 
 
@@ -80,6 +97,7 @@ namespace LM_UTIL{
     
 
 }
+
 
 
 
