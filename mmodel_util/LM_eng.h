@@ -66,9 +66,18 @@ protected:
     Eigen::MatrixXcd F_re;
 
     // The starting frequency data from which the LM is to be constructed.
-    fData orig_fData;
+    fData myFData;
     // The current LTI system.
     LTI_descSyst curr_LTI_syst;
+
+    // The reduced frequency array size (training set size).
+    unsigned int s1_fr_len = 100;
+    // Frequency partition 1 has DC point.
+    bool f1_has_DC_pt = false;
+    // Frequency partition 2 has DC point.
+    bool f2_has_DC_pt = false;
+    // The two frequency data partitions.
+    vector< shared_ptr<fData> > myFrs;
 
 };
 

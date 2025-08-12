@@ -2,6 +2,9 @@
 
 
 
+// ====================================================================== >>>>>
+//      Constructor
+// ====================================================================== >>>>>
 
 LM_eng::LM_eng(){
 
@@ -9,10 +12,67 @@ LM_eng::LM_eng(){
 
 LM_eng::LM_eng( const fData& inData ){
 
-    this->orig_fData = inData;
+    this->myFData = inData;
     flag1_data_set = true;
 
 }
+
+// ====================================================================== <<<<<
+
+
+
+
+// ====================================================================== >>>>>
+//      Major LM System Steps
+// ====================================================================== >>>>>
+
+void LM_eng::step1_fData_partition(){
+
+    // Create a subset linear index array.
+    vector< unsigned int > fr_idx_arr = 
+        utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
+    // Create a fData subset.
+    shared_ptr<fData> myFr = this->myFData.red_partit( fr_idx_arr );
+
+    // Reset the frequency partition variables.
+    myFrs.at(0).reset();
+    myFrs.at(1).reset();
+    // Generate two partitions from this data subset.
+    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+
+    // Obtain base parameters of the two partitions.
+    this->f1_has_DC_pt = myFrs.at(0)->hasDC();
+    this->f2_has_DC_pt = myFrs.at(1)->hasDC();
+
+    // Set the tracking flag for step 1.
+    flag1_data_set = true;
+
+}
+
+void LM_eng::step2_LM_construct(){
+
+    // Generate the two partitions with their complex conjugates inserted 
+    // in interleaving fashion.
+    shared_ptr<fData> myFrc1 = this->myFrs.at(0)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = this->myFrs.at(1)->gen_cplx_conj_comb();
+
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    this->LM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    this->SLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
+    // Construct the W matrix vector using partition 1.
+    this->W = *LM_UTIL::build_W( *myFrc1 );
+    // Construct the F matrix vector using partition 2.
+    this->F = *LM_UTIL::build_F( *myFrc2 );
+
+    // Set the tracking flag for step 1.
+    flag2_LM_const = true;
+
+}
+
+
+// ====================================================================== <<<<<
+
 
 
 
