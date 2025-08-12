@@ -48,6 +48,11 @@ namespace tests{
     */
     void LM_eng_full_SFML_testrun_gen();
 
+    /*
+    Test the class object of the LM_eng.
+    */
+    void LM_eng_class_test();
+
 }
 
 #endif  // TESTS_LM_ENG_H

@@ -9,7 +9,7 @@
 #include <vector> 
 
 #include "fData.h"
-
+#include "LTI_descSyst.h"
 
 using namespace std;
 
@@ -18,14 +18,49 @@ class LM_eng{
 
 public: 
 
+// ====================================================================== >>>>>
+//      Constructor
+// ====================================================================== >>>>>
+
     LM_eng();
+
+    LM_eng( const fData& inData );
+
+// ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
+//      Major LM System Steps
+// ====================================================================== >>>>>
+
+    
+
+// ====================================================================== <<<<<
+
 
 protected:
 
+    bool flag1_data_set = false;
+    bool flag2_LM_const = false;
+    bool flag3_re_trans = false;
+    bool flag4_pen_SVD = false;
+    bool flag5_tf_set = false;
+
+    // The Loewner Matrices.
+    Eigen::MatrixXcd LM;
+    Eigen::MatrixXcd SLM;
+    Eigen::MatrixXcd W;
+    Eigen::MatrixXcd F;
+    // The Real Loewner Matrices.
+    Eigen::MatrixXcd LM_re;
+    Eigen::MatrixXcd SLM_re;
+    Eigen::MatrixXcd W_re;
+    Eigen::MatrixXcd F_re;
+
     // The starting frequency data from which the LM is to be constructed.
     fData orig_fData;
-
-    
+    // The current LTI system.
+    LTI_descSyst curr_LTI_syst;
 
 };
 

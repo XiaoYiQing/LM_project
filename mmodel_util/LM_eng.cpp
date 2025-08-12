@@ -3,6 +3,18 @@
 
 
 
+LM_eng::LM_eng(){
+
+}
+
+LM_eng::LM_eng( const fData& inData ){
+
+    this->orig_fData = inData;
+    flag1_data_set = true;
+
+}
+
+
 
 shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){
 
