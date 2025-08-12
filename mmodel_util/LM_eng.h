@@ -43,7 +43,7 @@ public:
 
     void step4_LM_pencil_SVD();
 
-    void step5_LM_to_tf();
+    shared_ptr<LTI_descSyst> step5_LM_to_tf( unsigned int singVal_idx );
 
 // ====================================================================== <<<<<
 
@@ -55,7 +55,6 @@ protected:
     bool flag2_LM_const = false;
     bool flag3_re_trans = false;
     bool flag4_pen_SVD = false;
-    bool flag5_tf_set = false;
 
     // The Loewner Matrices.
     Eigen::MatrixXcd LM;
@@ -63,10 +62,16 @@ protected:
     Eigen::MatrixXcd W;
     Eigen::MatrixXcd F;
     // The Real Loewner Matrices.
-    Eigen::MatrixXcd LM_re;
-    Eigen::MatrixXcd SLM_re;
-    Eigen::MatrixXcd W_re;
-    Eigen::MatrixXcd F_re;
+    Eigen::MatrixXd LM_re;
+    Eigen::MatrixXd SLM_re;
+    Eigen::MatrixXd W_re;
+    Eigen::MatrixXd F_re;
+    // The reference frequency magnitude.
+    double ref_f_mag = 0;
+    // The singular values of the LM pencil.
+    Eigen::VectorXd singVals;
+    // The singular vectors of the LM pencil.
+    Eigen::MatrixXd U, V;
 
     // The starting frequency data from which the LM is to be constructed.
     fData myFData;

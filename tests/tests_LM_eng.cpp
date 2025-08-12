@@ -1055,5 +1055,7 @@ void tests::LM_eng_class_test(){
 
     myEng.step3_LM_re_trans();
 
+    myEng.step4_LM_pencil_SVD();
+
 
 }

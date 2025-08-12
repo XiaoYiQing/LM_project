@@ -120,21 +120,85 @@ void LM_eng::step3_LM_re_trans(){
     cout << "SFLM real matrices check: " << match_bool << endl;
 
     // Obtain purely real defintion of the matrices.
-    Eigen::MatrixXd myLM_re = myLM_re_tmp.real();
-    Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
-    Eigen::MatrixXd myW_re = myW_re_tmp.real();
-    Eigen::MatrixXd myF_re = myF_re_tmp.real();
+    this->LM_re = myLM_re_tmp.real();
+    this->SLM_re = mySLM_re_tmp.real();
+    this->W_re = myW_re_tmp.real();
+    this->F_re = myF_re_tmp.real();
 
     // Generate a random test point and evaluate the full LM transfer function.
     unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
     complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
-    Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
+    Eigen::MatrixXcd tmpAns = 
+        this->W_re*( ( - test_f*this->LM_re + this->SLM_re ).inverse() )*this->F_re;
     Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
     match_bool = true;
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
     
     this->flag3_re_trans = true;
+
+}
+
+
+void LM_eng::step4_LM_pencil_SVD(){
+
+    if( !flag3_re_trans ){
+        throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
+    }
+
+    // Obtain a reference frequency value.
+    this->ref_f_mag = this->myFr->get_fval_at( this->myFr->get_f_cnt() - 1 );
+    
+    // Construct the LM pencil.
+    shared_ptr<Eigen::MatrixXd> LM_pen = 
+        LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
+
+    // Perform SVD.
+    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    // Get the singular values
+    this->singVals = svdResObj.singularValues();
+    // Get the left singular vectors (U)
+    this->U = svdResObj.matrixU();
+    // Get the right singular vectors (V)
+    this->V = svdResObj.matrixV();
+
+    flag4_pen_SVD = true;
+
+}
+
+
+shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int singVal_idx ){
+
+    if( !flag4_pen_SVD ){
+        throw::runtime_error( "Step 5 cannot be executed: step 4 not set (LM pencil SVD)." );
+    }
+
+    if( singVal_idx >= singVals.size() ){
+        throw::out_of_range( "Specified singular value index is out of range of available singular values." );
+    }
+
+    // Define number of outputs.
+    unsigned int out_cnt = this->myFr->get_out_cnt();
+    // Define number of singular values to be kept.
+    unsigned int svd_ret_cnt = singVal_idx + 1;
+
+    Eigen::VectorXd singVals_r = this->singVals.segment( 0, svd_ret_cnt );
+
+    Eigen::MatrixXd U_r = this->U.block( 0, 0, U.rows(), svd_ret_cnt );
+    Eigen::MatrixXd V_r = this->V.block( 0, 0, V.rows(), svd_ret_cnt );
+
+    // Perform the model reduction to obtain usable E, A, B, C matrices.
+    Eigen::MatrixXd E_n = -1*( U_r.transpose() * this->LM_re * V_r );
+    Eigen::MatrixXd A_n = -1*( U_r.transpose() * this->SLM_re * V_r );
+    Eigen::MatrixXd C_n = this->W_re * V_r;
+    Eigen::MatrixXd B_n = U_r.transpose() * this->F_re;
+    Eigen::MatrixXd D_n = Eigen::MatrixXd::Zero( out_cnt, out_cnt );
+
+    // Model generation.
+    shared_ptr<LTI_descSyst> mySyst = 
+        make_shared<LTI_descSyst>( E_n, A_n, B_n, C_n, D_n );
+
+    return mySyst;
 
 }
 
