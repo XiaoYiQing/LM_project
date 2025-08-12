@@ -197,6 +197,12 @@ public:
     vector< shared_ptr<fData> > gen_2_partit() const;
 
     /*
+    Create two index arrays having mutually exclusive indices which
+    can serve to create two partitions from the existing f data set.
+    */
+    vector< vector< unsigned int > > gen_2_partit_idx_arr() const;
+
+    /*
     Create two partitions from the original frequency data set.
     Partition 1 is decided by the input index array.
     Partition 2 receives all leftover.

@@ -18,6 +18,8 @@ class LM_eng{
 
 public: 
 
+    static const double NUM_THRESH;
+
 // ====================================================================== >>>>>
 //      Constructor
 // ====================================================================== >>>>>
@@ -76,6 +78,8 @@ protected:
     bool f1_has_DC_pt = false;
     // Frequency partition 2 has DC point.
     bool f2_has_DC_pt = false;
+    // The reduced frequency set.
+    shared_ptr<fData> myFr;
     // The two frequency data partitions.
     vector< shared_ptr<fData> > myFrs;
 

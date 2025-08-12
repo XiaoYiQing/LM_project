@@ -2,6 +2,8 @@
 
 
 
+const double LM_eng::NUM_THRESH = 1.0e-12;
+
 // ====================================================================== >>>>>
 //      Constructor
 // ====================================================================== >>>>>
@@ -31,12 +33,15 @@ void LM_eng::step1_fData_partition(){
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
+
+    // Reset the reduced frequency set variable.
+    this->myFr.reset();
     // Create a fData subset.
-    shared_ptr<fData> myFr = this->myFData.red_partit( fr_idx_arr );
+    this->myFr = this->myFData.red_partit( fr_idx_arr );
 
     // Reset the frequency partition variables.
-    myFrs.at(0).reset();
-    myFrs.at(1).reset();
+    this->myFrs.at(0).reset();
+    this->myFrs.at(1).reset();
     // Generate two partitions from this data subset.
     vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
 
@@ -70,6 +75,52 @@ void LM_eng::step2_LM_construct(){
 
 }
 
+
+void LM_eng::step3_LM_re_trans(){
+
+    // Partition sizes before cconj injection.
+    unsigned int out_cnt = myFrs.at(0)->get_out_cnt();
+    unsigned int in_cnt = myFrs.at(0)->get_in_cnt();
+    unsigned int fr1_len = myFrs.at(0)->get_f_cnt();  
+    unsigned int fr2_len = myFrs.at(1)->get_f_cnt();
+
+    // Build the left and right transformation matrices.
+    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    // Obtain the hermitian of the right transform matrix.
+    Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
+
+    // Perform the transformation.
+    Eigen::MatrixXcd myLM_re_tmp = ( myTMat_R_herm*this->LM )*myTMat_L;
+    Eigen::MatrixXcd mySLM_re_tmp = ( myTMat_R_herm*this->SLM )*myTMat_L;
+    Eigen::MatrixXcd myW_re_tmp = this->W*myTMat_L;
+    Eigen::MatrixXcd myF_re_tmp = myTMat_R_herm*this->F;
+
+    // Check for real matrices.
+    bool match_bool = true;
+    match_bool = match_bool && ( myLM_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
+    match_bool = match_bool && ( mySLM_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
+    match_bool = match_bool && ( myW_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
+    match_bool = match_bool && ( myF_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
+    cout << "SFLM real matrices check: " << match_bool << endl;
+
+    // Obtain purely real defintion of the matrices.
+    Eigen::MatrixXd myLM_re = myLM_re_tmp.real();
+    Eigen::MatrixXd mySLM_re = mySLM_re_tmp.real();
+    Eigen::MatrixXd myW_re = myW_re_tmp.real();
+    Eigen::MatrixXd myF_re = myF_re_tmp.real();
+
+    // Generate a random test point.
+    unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
+    complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
+    Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
+    Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
+    match_bool = true;
+    match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+    cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
+    
+
+}
 
 // ====================================================================== <<<<<
 
