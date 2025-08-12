@@ -50,7 +50,8 @@ public:
 
 protected:
 
-    bool flag1_data_set = false;
+    bool flag0_data_set = false;
+    bool flag1_data_prep = false;
     bool flag2_LM_const = false;
     bool flag3_re_trans = false;
     bool flag4_pen_SVD = false;
@@ -81,7 +82,8 @@ protected:
     // The reduced frequency set.
     shared_ptr<fData> myFr;
     // The two frequency data partitions.
-    vector< shared_ptr<fData> > myFrs;
+    vector< unsigned int > partit1IdxArr;
+    vector< unsigned int > partit2IdxArr;
 
 };
 

@@ -459,12 +459,12 @@ vector< vector< unsigned int > > fData::gen_2_partit_idx_arr() const{
 
     // Obtain the size of the frequency data set.
     unsigned int fSize = this->f_vec.size();
-
-    vector< vector< unsigned int > > retVec;
-
+    
     // Generate the frequency partition index arrays (Interleaving).
-    retVec.at(0) = utils::gen_even_idx_arr( 0, fSize - 1 );
-    retVec.at(1) = utils::gen_odd_idx_arr( 0, fSize - 1 );
+    vector< unsigned int > tmp1 = utils::gen_even_idx_arr( 0, fSize - 1 );
+    vector< unsigned int > tmp2 = utils::gen_odd_idx_arr( 0, fSize - 1 );
+    // Initialize the return vector with the two index arrays.
+    vector< vector< unsigned int > > retVec = { tmp1, tmp2 };
 
     return retVec;
 

@@ -1049,4 +1049,11 @@ void tests::LM_eng_class_test(){
 
     LM_eng myEng( myFData );
 
+    myEng.step1_fData_partition();
+
+    myEng.step2_LM_construct();
+
+    myEng.step3_LM_re_trans();
+
+
 }

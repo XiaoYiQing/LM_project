@@ -15,7 +15,7 @@ LM_eng::LM_eng(){
 LM_eng::LM_eng( const fData& inData ){
 
     this->myFData = inData;
-    flag1_data_set = true;
+    flag0_data_set = true;
 
 }
 
@@ -30,6 +30,10 @@ LM_eng::LM_eng( const fData& inData ){
 
 void LM_eng::step1_fData_partition(){
 
+    if( !flag0_data_set ){
+        throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
+    }
+
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
@@ -39,27 +43,34 @@ void LM_eng::step1_fData_partition(){
     // Create a fData subset.
     this->myFr = this->myFData.red_partit( fr_idx_arr );
 
-    // Reset the frequency partition variables.
-    this->myFrs.at(0).reset();
-    this->myFrs.at(1).reset();
-    // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    // Generate the partition index arrays.
+    vector< vector< unsigned int > > index_arrs = this->myFr->gen_2_partit_idx_arr();
+    this->partit1IdxArr = index_arrs.at(0);
+    this->partit2IdxArr = index_arrs.at(1);
 
-    // Obtain base parameters of the two partitions.
-    this->f1_has_DC_pt = myFrs.at(0)->hasDC();
-    this->f2_has_DC_pt = myFrs.at(1)->hasDC();
+    // Check for DC point in either partitions.
+    this->f1_has_DC_pt = myFr->get_fval_at( partit1IdxArr.at(0) ) == 0;
+    this->f2_has_DC_pt = myFr->get_fval_at( partit2IdxArr.at(0) ) == 0;
 
     // Set the tracking flag for step 1.
-    flag1_data_set = true;
+    this->flag1_data_prep = true;
 
 }
 
 void LM_eng::step2_LM_construct(){
 
+    if( !flag1_data_prep ){
+        throw::runtime_error( "Step 2 cannot be executed: step 1 not set (data prep)." );
+    }
+
+    // Create a fData partitions.
+    shared_ptr<fData> myFr1 = this->myFr->red_partit( this->partit1IdxArr );
+    shared_ptr<fData> myFr2 = this->myFr->red_partit( this->partit2IdxArr );
+
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
-    shared_ptr<fData> myFrc1 = this->myFrs.at(0)->gen_cplx_conj_comb();
-    shared_ptr<fData> myFrc2 = this->myFrs.at(1)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc1 = myFr1->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = myFr2->gen_cplx_conj_comb();
 
     // Construct the Loewner Matrix using the two cconj injected partitions.
     this->LM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
@@ -71,22 +82,26 @@ void LM_eng::step2_LM_construct(){
     this->F = *LM_UTIL::build_F( *myFrc2 );
 
     // Set the tracking flag for step 1.
-    flag2_LM_const = true;
+    this->flag2_LM_const = true;
 
 }
 
 
 void LM_eng::step3_LM_re_trans(){
+    
+    if( !flag2_LM_const ){
+        throw::runtime_error( "Step 3 cannot be executed: step 2 not set (LM construction)." );
+    }
 
     // Partition sizes before cconj injection.
-    unsigned int out_cnt = myFrs.at(0)->get_out_cnt();
-    unsigned int in_cnt = myFrs.at(0)->get_in_cnt();
-    unsigned int fr1_len = myFrs.at(0)->get_f_cnt();  
-    unsigned int fr2_len = myFrs.at(1)->get_f_cnt();
+    unsigned int out_cnt = this->myFr->get_out_cnt();
+    unsigned int in_cnt = this->myFr->get_in_cnt();
+    unsigned int fr1_len = this->partit1IdxArr.size();
+    unsigned int fr2_len = this->partit2IdxArr.size();
 
     // Build the left and right transformation matrices.
-    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
-    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
     // Obtain the hermitian of the right transform matrix.
     Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
@@ -110,7 +125,7 @@ void LM_eng::step3_LM_re_trans(){
     Eigen::MatrixXd myW_re = myW_re_tmp.real();
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
 
-    // Generate a random test point.
+    // Generate a random test point and evaluate the full LM transfer function.
     unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
     complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
     Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
@@ -119,6 +134,7 @@ void LM_eng::step3_LM_re_trans(){
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
     
+    this->flag3_re_trans = true;
 
 }
 
