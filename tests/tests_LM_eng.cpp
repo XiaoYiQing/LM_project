@@ -1029,3 +1029,24 @@ void tests::LM_eng_full_SFML_testrun_gen(){
 
 
 }
+
+
+
+void tests::LM_eng_class_test(){
+
+    // Define our frequency data object.
+    fData myFData;
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+
+    // Obtain the data from the target data file and insert into the fData object.
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+    LM_eng myEng( myFData );
+
+}
