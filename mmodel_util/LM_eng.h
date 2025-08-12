@@ -33,7 +33,15 @@ public:
 //      Major LM System Steps
 // ====================================================================== >>>>>
 
-    
+    void step1_fData_partition();
+
+    void step2_LM_construct();
+
+    void step3_LM_re_trans();
+
+    void step4_LM_pencil_SVD();
+
+    void step5_LM_to_tf();
 
 // ====================================================================== <<<<<
 

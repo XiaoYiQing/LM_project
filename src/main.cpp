@@ -48,7 +48,7 @@ int main() {
 
 
     // tests::numUtils_test_1(4);
-    tests::eigenUtils_test_1(0);
+    // tests::eigenUtils_test_1(0);
 
     // tests::Matrix3DXd_test_1(1);
     // tests::Matrix3DXd_test_2_ops(3);
@@ -64,6 +64,7 @@ int main() {
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
+    tests::LM_eng_class_test();
     
     // tests::LTI_descSyst_test_1( 3 );
     // tests::LTI_descSyst_test_2( 2 );
