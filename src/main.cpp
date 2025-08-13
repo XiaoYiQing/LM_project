@@ -35,6 +35,8 @@ using namespace std;
 string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
 
 
+void singVal_extract_run();
+
 
 int main() {
 
@@ -64,7 +66,7 @@ int main() {
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
-    tests::LM_eng_class_test();
+    // tests::LM_eng_class_test();
     
     // tests::LTI_descSyst_test_1( 3 );
     // tests::LTI_descSyst_test_2( 2 );
@@ -72,7 +74,7 @@ int main() {
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
 
-    
+    singVal_extract_run();
 
     return 0; 
 
@@ -80,3 +82,42 @@ int main() {
 
 
 
+
+
+void singVal_extract_run(){
+
+    // RES_PATH_XYQ_str
+
+    vector<string> file_stem_arr;
+    vector<string> file_path_arr;
+    vector<string> file_ext_arr;
+
+    unsigned int file_cnt = 0;
+
+    file_stem_arr.push_back( "Slink_a=100um_b=400um" );
+    file_path_arr.push_back( RES_PATH_XYQ_str + "/" );
+    file_ext_arr.push_back( ".s2p" );
+    file_cnt++;
+
+    file_stem_arr.push_back( "Slink_a=100um_b=425um" );
+    file_path_arr.push_back( RES_PATH_XYQ_str + "/" );
+    file_ext_arr.push_back( ".s2p" );
+    file_cnt++;
+
+    string fullFileName_z = "";
+    for( unsigned int z = 0; z < file_cnt; z++ ){
+
+        // Assemble current full filename.
+        fullFileName_z = file_path_arr.at(z) + file_stem_arr.at(z) + file_ext_arr.at(z);
+
+        // Define our frequency data object.
+        fData myFData;
+        // Obtain the data from the target data file and insert into the fData object.
+        fData::read_sXp_file( myFData, fullFileName_z );
+
+    }
+
+
+    int lol = 0;
+
+}

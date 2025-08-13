@@ -58,29 +58,39 @@ public:
 //      Access Function
 // ====================================================================== >>>>>
 
+/*
+Get the flag of the specified LM step index.
+*/
+bool get_flag( unsigned int flagIdx ) const;
+
 // Insert new frequency data to the current LM engine.
 void set_fData( const fData& inData );
+
+/*
+Obtain the reference frequency magnitude used to construct the LM pencil.
+*/
+double get_ref_f_mag() const;
 
 // Obtain the current Loewner Matrix pencil's computed singular values.
 Eigen::VectorXd get_singVals() const;
 
 // Obtain the Loewner Matrix.
-Eigen::MatrixXcd get_LM();
+Eigen::MatrixXcd get_LM() const;
 // Obtain the shifted-Loewner Matrix.
-Eigen::MatrixXcd get_SLM();
+Eigen::MatrixXcd get_SLM() const;
 // Obtain the partition 1 data row vector.
-Eigen::MatrixXcd get_W();
+Eigen::MatrixXcd get_W() const;
 // Obtain the partition 2 data column vector.
-Eigen::MatrixXcd get_F();
+Eigen::MatrixXcd get_F() const;
 
 // Obtain the Loewner Matrix after real transform.
-Eigen::MatrixXcd get_LM_re();
+Eigen::MatrixXcd get_LM_re() const;
 // Obtain the shifted-Loewner Matrix after real transform.
-Eigen::MatrixXcd get_SLM_re();
+Eigen::MatrixXcd get_SLM_re() const;
 // Obtain the partition 1 data row vector after real transform.
-Eigen::MatrixXcd get_W_re();
+Eigen::MatrixXcd get_W_re() const;
 // Obtain the partition 2 data column vector after real transform.
-Eigen::MatrixXcd get_F_re();
+Eigen::MatrixXcd get_F_re() const;
 
 // ====================================================================== <<<<<
 
@@ -194,7 +204,7 @@ namespace LM_UTIL{
     shared_ptr<Eigen::MatrixXcd> build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_cplx_blk_cnt );
     
 
-}
+};
 
 
 

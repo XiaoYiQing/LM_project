@@ -173,7 +173,7 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
         throw::runtime_error( "Step 5 cannot be executed: step 4 not set (LM pencil SVD)." );
     }
 
-    if( svd_ret_cnt > singVals.size() ){
+    if( svd_ret_cnt > (unsigned int) singVals.size() ){
         throw::out_of_range( "Specified singular value index is out of range of available singular values." );
     }
 
@@ -207,6 +207,25 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
 //      Access Function
 // ====================================================================== >>>>>
 
+bool LM_eng::get_flag( unsigned int flagIdx ) const{
+
+    switch( flagIdx ){
+    case 0:
+        return this->flag0_data_set;
+    case 1:
+        return this->flag1_data_prep;
+    case 2:
+        return this->flag2_LM_const;
+    case 3:
+        return this->flag3_re_trans;
+    case 4:
+        return this->flag4_pen_SVD;
+    default:
+        throw std::invalid_argument( "Specified flag index does not exist." );
+    };
+
+}
+
 void LM_eng::set_fData( const fData& inData ){
 
     // Set the engine's data with the given data.
@@ -221,6 +240,15 @@ void LM_eng::set_fData( const fData& inData ){
 
 }
 
+double LM_eng::get_ref_f_mag() const{
+
+    if( !this->flag4_pen_SVD ){
+        throw std::runtime_error( "Cannot return LM: step4 (LM pencil SVD) has not been set." );
+    }
+    return this->ref_f_mag;
+
+}
+
 Eigen::VectorXd LM_eng::get_singVals() const{
 
     if( !this->flag4_pen_SVD ){
@@ -231,25 +259,25 @@ Eigen::VectorXd LM_eng::get_singVals() const{
 }
 
 
-Eigen::MatrixXcd LM_eng::get_LM(){
+Eigen::MatrixXcd LM_eng::get_LM() const{
     if( !this->flag2_LM_const ){
         throw std::runtime_error( "Cannot return LM: step2 (LM construction) has not been set." );
     }
     return this->LM;
 }
-Eigen::MatrixXcd LM_eng::get_SLM(){
+Eigen::MatrixXcd LM_eng::get_SLM() const{
     if( !this->flag2_LM_const ){
         throw std::runtime_error( "Cannot return SLM: step2 (LM construction) has not been set." );
     }
     return this->SLM;
 }
-Eigen::MatrixXcd LM_eng::get_W(){
+Eigen::MatrixXcd LM_eng::get_W() const{
     if( !this->flag2_LM_const ){
         throw std::runtime_error( "Cannot return W: step2 (LM construction) has not been set." );
     }
     return this->W;
 }
-Eigen::MatrixXcd LM_eng::get_F(){
+Eigen::MatrixXcd LM_eng::get_F() const{
     if( !this->flag2_LM_const ){
         throw std::runtime_error( "Cannot return F: step2 (LM construction) has not been set." );
     }
@@ -257,25 +285,25 @@ Eigen::MatrixXcd LM_eng::get_F(){
 }
 
 
-Eigen::MatrixXcd LM_eng::get_LM_re(){
+Eigen::MatrixXcd LM_eng::get_LM_re() const{
     if( !this->flag3_re_trans){
         throw std::runtime_error( "Cannot return real LM: step3 (LM real transform) has not been set." );
     }
     return this->LM_re;
 }
-Eigen::MatrixXcd LM_eng::get_SLM_re(){
+Eigen::MatrixXcd LM_eng::get_SLM_re() const{
     if( !this->flag3_re_trans ){
         throw std::runtime_error( "Cannot return real SLM: step3 (LM real transform) has not been set." );
     }
     return this->SLM_re;
 }
-Eigen::MatrixXcd LM_eng::get_W_re(){
+Eigen::MatrixXcd LM_eng::get_W_re() const{
     if( !this->flag3_re_trans ){
         throw std::runtime_error( "Cannot return real W: step3 (LM real transform) has not been set." );
     }
     return this->W_re;
 }
-Eigen::MatrixXcd LM_eng::get_F_re(){
+Eigen::MatrixXcd LM_eng::get_F_re() const{
     if( !this->flag3_re_trans ){
         throw std::runtime_error( "Cannot return real F: step3 (LM real transform) has not been set." );
     }
