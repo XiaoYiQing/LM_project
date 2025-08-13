@@ -167,23 +167,21 @@ void LM_eng::step4_LM_pencil_SVD(){
 }
 
 
-shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int singVal_idx ){
+shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
 
     if( !flag4_pen_SVD ){
         throw::runtime_error( "Step 5 cannot be executed: step 4 not set (LM pencil SVD)." );
     }
 
-    if( singVal_idx >= singVals.size() ){
+    if( svd_ret_cnt > singVals.size() ){
         throw::out_of_range( "Specified singular value index is out of range of available singular values." );
     }
 
     // Define number of outputs.
     unsigned int out_cnt = this->myFr->get_out_cnt();
-    // Define number of singular values to be kept.
-    unsigned int svd_ret_cnt = singVal_idx + 1;
 
-    Eigen::VectorXd singVals_r = this->singVals.segment( 0, svd_ret_cnt );
-
+    // Eigen::VectorXd singVals_r = this->singVals.segment( 0, svd_ret_cnt );
+    
     Eigen::MatrixXd U_r = this->U.block( 0, 0, U.rows(), svd_ret_cnt );
     Eigen::MatrixXd V_r = this->V.block( 0, 0, V.rows(), svd_ret_cnt );
 

@@ -43,7 +43,13 @@ public:
 
     void step4_LM_pencil_SVD();
 
-    shared_ptr<LTI_descSyst> step5_LM_to_tf( unsigned int singVal_idx );
+    /*
+    Given the number of singular values to be kept, create the transfer function
+    of equal order from the LM system.
+    NOTE: the input must be the number of singular values, NOT the singular value index
+    where the cut-off occurs.
+    */
+    shared_ptr<LTI_descSyst> step5_LM_to_tf( unsigned int svd_ret_cnt );
 
 // ====================================================================== <<<<<
 

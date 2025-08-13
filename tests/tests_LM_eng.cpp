@@ -1047,15 +1047,47 @@ void tests::LM_eng_class_test(){
     // Normalize the frequency vector (As much as you can according to metric prefixes).
     myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
 
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process
+// ---------------------------------------------------------------------- >>>>>
+
+    // LM engine initialization.
     LM_eng myEng( myFData );
-
     myEng.step1_fData_partition();
-
     myEng.step2_LM_construct();
-
     myEng.step3_LM_re_trans();
-
     myEng.step4_LM_pencil_SVD();
 
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
+
+    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf(10);
+
+    // Compute the sparse system.
+    myTF->gen_sparse_syst();
+
+    // Generate a frequency evaluation array.
+    Eigen::VectorXd tmp_fvec = myFData.getF_vec();
+    vector< complex<double> > testFVec = vector< complex<double> >( tmp_fvec.size() );
+    for( int z = 0; z < tmp_fvec.size(); z++ ){
+        testFVec[z] = complex<double>( 0.0, tmp_fvec(z) );
+    }
+
+    // Evaluate the transfer function over the specified frequency array values.
+    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    // Obtain the original data as a array of complex matrices.
+    Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
+    // Compute the difference between the original and approximated frequency data.
+    Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
+
+    // Compute the RMS error.
+    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error: " << total_RMS_err << endl;
+
+// ---------------------------------------------------------------------- >>>>>
 
 }
