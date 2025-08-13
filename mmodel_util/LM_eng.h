@@ -54,6 +54,19 @@ public:
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Access Function
+// ====================================================================== >>>>>
+
+// Insert new frequency data to the current LM engine.
+void set_fData( const fData& inData );
+
+// Obtain the current Loewner Matrix pencil's computed singular values.
+Eigen::VectorXd get_singVals() const;
+
+// ====================================================================== <<<<<
+
+
 protected:
 
     bool flag0_data_set = false;
@@ -81,8 +94,6 @@ protected:
 
     // The starting frequency data from which the LM is to be constructed.
     fData myFData;
-    // The current LTI system.
-    LTI_descSyst curr_LTI_syst;
 
     // The reduced frequency array size (training set size).
     unsigned int s1_fr_len = 100;

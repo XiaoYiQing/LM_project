@@ -203,6 +203,36 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Access Function
+// ====================================================================== >>>>>
+
+void LM_eng::set_fData( const fData& inData ){
+
+    // Set the engine's data with the given data.
+    this->myFData = inData;
+
+    // Reset the flags.
+    this->flag0_data_set = false;
+    this->flag1_data_prep = false;
+    this->flag2_LM_const = false;
+    this->flag3_re_trans = false;
+    this->flag4_pen_SVD = false;
+
+}
+
+Eigen::VectorXd LM_eng::get_singVals() const{
+
+    if( flag4_pen_SVD ){
+        throw std::runtime_error( "Cannot return singular values: step4 (LM pencil SVD) has not been set." );
+    }
+
+    return this->singVals;
+
+}
+
+// ====================================================================== <<<<<
+
 
 
 shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){

@@ -1065,7 +1065,10 @@ void tests::LM_eng_class_test(){
 //      Model Evaluation
 // ---------------------------------------------------------------------- >>>>>
 
-    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf(10);
+    // Specify the test system's order.
+    unsigned int tarOrder = 10;
+    // Obtain transfer function at specified system order.
+    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
 
     // Compute the sparse system.
     myTF->gen_sparse_syst();
