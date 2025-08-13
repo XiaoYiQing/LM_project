@@ -64,6 +64,24 @@ void set_fData( const fData& inData );
 // Obtain the current Loewner Matrix pencil's computed singular values.
 Eigen::VectorXd get_singVals() const;
 
+// Obtain the Loewner Matrix.
+Eigen::MatrixXcd get_LM();
+// Obtain the shifted-Loewner Matrix.
+Eigen::MatrixXcd get_SLM();
+// Obtain the partition 1 data row vector.
+Eigen::MatrixXcd get_W();
+// Obtain the partition 2 data column vector.
+Eigen::MatrixXcd get_F();
+
+// Obtain the Loewner Matrix after real transform.
+Eigen::MatrixXcd get_LM_re();
+// Obtain the shifted-Loewner Matrix after real transform.
+Eigen::MatrixXcd get_SLM_re();
+// Obtain the partition 1 data row vector after real transform.
+Eigen::MatrixXcd get_W_re();
+// Obtain the partition 2 data column vector after real transform.
+Eigen::MatrixXcd get_F_re();
+
 // ====================================================================== <<<<<
 
 

@@ -223,13 +223,65 @@ void LM_eng::set_fData( const fData& inData ){
 
 Eigen::VectorXd LM_eng::get_singVals() const{
 
-    if( flag4_pen_SVD ){
+    if( !this->flag4_pen_SVD ){
         throw std::runtime_error( "Cannot return singular values: step4 (LM pencil SVD) has not been set." );
     }
-
     return this->singVals;
 
 }
+
+
+Eigen::MatrixXcd LM_eng::get_LM(){
+    if( !this->flag2_LM_const ){
+        throw std::runtime_error( "Cannot return LM: step2 (LM construction) has not been set." );
+    }
+    return this->LM;
+}
+Eigen::MatrixXcd LM_eng::get_SLM(){
+    if( !this->flag2_LM_const ){
+        throw std::runtime_error( "Cannot return SLM: step2 (LM construction) has not been set." );
+    }
+    return this->SLM;
+}
+Eigen::MatrixXcd LM_eng::get_W(){
+    if( !this->flag2_LM_const ){
+        throw std::runtime_error( "Cannot return W: step2 (LM construction) has not been set." );
+    }
+    return this->W;
+}
+Eigen::MatrixXcd LM_eng::get_F(){
+    if( !this->flag2_LM_const ){
+        throw std::runtime_error( "Cannot return F: step2 (LM construction) has not been set." );
+    }
+    return this->F;
+}
+
+
+Eigen::MatrixXcd LM_eng::get_LM_re(){
+    if( !this->flag3_re_trans){
+        throw std::runtime_error( "Cannot return real LM: step3 (LM real transform) has not been set." );
+    }
+    return this->LM_re;
+}
+Eigen::MatrixXcd LM_eng::get_SLM_re(){
+    if( !this->flag3_re_trans ){
+        throw std::runtime_error( "Cannot return real SLM: step3 (LM real transform) has not been set." );
+    }
+    return this->SLM_re;
+}
+Eigen::MatrixXcd LM_eng::get_W_re(){
+    if( !this->flag3_re_trans ){
+        throw std::runtime_error( "Cannot return real W: step3 (LM real transform) has not been set." );
+    }
+    return this->W_re;
+}
+Eigen::MatrixXcd LM_eng::get_F_re(){
+    if( !this->flag3_re_trans ){
+        throw std::runtime_error( "Cannot return real F: step3 (LM real transform) has not been set." );
+    }
+    return this->F_re;
+}
+
 
 // ====================================================================== <<<<<
 
