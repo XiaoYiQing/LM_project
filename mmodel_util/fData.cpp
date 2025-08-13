@@ -896,7 +896,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     if ( regex_match( fileExt, matches, pattern ) ) {
         if ( matches.size() > 1 ) { // Check if we have a match for the integer
             xValue = matches[1]; // Get the captured group (X)
-            cout << "X: " << xValue << endl; // Output the value of X
+            // cout << "X in .sXp is: " << xValue << endl; // Output the value of X
         }
     } else {
         cout << "No match found." << endl;
@@ -907,7 +907,6 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     int port_cnt_tmp = -1;
     try {
         port_cnt_tmp = std::stoi( xValue );
-        cout << "The integer is: " << port_cnt_tmp << std::endl;
     } catch (const std::invalid_argument& e) {
         cout << "Invalid input: The string does not contain a valid integer." << std::endl;
         cout << e.what() << endl;
@@ -935,7 +934,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         cout << "Failed to read file." << endl;
         return;
     }else{
-        cout << "File read successful." << endl;
+        cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
     }
 
 
@@ -962,17 +961,16 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
         // Check for comment line mark.
         if( word == comm_mark ){
-            cout << "This is a comment!" << endl;
+            //cout << "This is a comment!" << endl;
 
         // Check for option line mark.
         }else if( word == opt_line_mark ){
-            cout << "This is an option!" << endl;
+            //cout << "This is an option!" << endl;
             int opt_idx = 0;
             while( iss >> word ){
                 options.at(opt_idx) = word;
                 opt_idx++;
             }
-            cout << endl;
 
         // Check for end of consecutive series of comment and option lines.
         }else{
@@ -1096,6 +1094,9 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
 // ---------------------------------------------------------------------- <<<<<
 
+    cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
+    cout << endl;
+    
     return;
     
 }
