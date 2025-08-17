@@ -91,17 +91,23 @@ void singVal_extract_run(){
     vector<string> file_stem_arr;
     vector<string> file_path_arr;
     vector<string> file_ext_arr;
+    vector<fData::FDATA_FORMAT> fData_format_arr;
+    vector<fData::METRIC_PREFIX> fData_metPrefix_arr;
 
     unsigned int file_cnt = 0;
 
     file_stem_arr.push_back( "Slink_a=100um_b=400um" );
     file_path_arr.push_back( RES_PATH_XYQ_str + "/" );
     file_ext_arr.push_back( ".s2p" );
+    fData_format_arr.push_back( fData::FDATA_FORMAT::RI );
+    fData_metPrefix_arr.push_back( fData::METRIC_PREFIX::G );
     file_cnt++;
 
     file_stem_arr.push_back( "Slink_a=100um_b=425um" );
     file_path_arr.push_back( RES_PATH_XYQ_str + "/" );
     file_ext_arr.push_back( ".s2p" );
+    fData_format_arr.push_back( fData::FDATA_FORMAT::RI );
+    fData_metPrefix_arr.push_back( fData::METRIC_PREFIX::G );
     file_cnt++;
 
     string fullFileName_z = "";

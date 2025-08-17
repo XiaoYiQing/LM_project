@@ -867,6 +867,10 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
 
 
 
+// ====================================================================== >>>>>
+//      Data From File Utility
+// ====================================================================== >>>>>
+
 void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
 // ---------------------------------------------------------------------- >>>>>
@@ -917,6 +921,11 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         return;
     }
     
+
+    if( port_cnt_tmp == 2 ){
+        read_s2p_file( tarFData, fullFileName );
+    }
+
     // UPdate the port count.
     tarFData.IOcnt[0] = port_cnt_tmp;
     tarFData.IOcnt[1] = port_cnt_tmp;
@@ -1099,6 +1108,201 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     
     return;
     
+}
+
+
+void fData::read_s2p_file( fData& tarFData, const string& fullFileName ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full Name Parsing
+// ---------------------------------------------------------------------- >>>>>
+
+    std::filesystem::path fullFilePath(fullFileName);
+    std::string fileDir = fullFilePath.parent_path().string();
+    std::string fileStem = fullFilePath.stem().string();
+    std::string fileExt = fullFilePath.extension().string();
+    
+// ---------------------------------------------------------------------- <<<<<
+
+    // UPdate the port count.
+    tarFData.IOcnt[0] = 2;
+    tarFData.IOcnt[1] = 2;
+
+// ---------------------------------------------------------------------- >>>>>
+//      File Parameters Read
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the input file stream.
+    std::ifstream inputFile( fullFilePath );
+    if( !inputFile ){
+        cout << "Failed to read file." << endl;
+        return;
+    }else{
+        cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
+    }
+
+
+    // If the first character of a line is == comm_mark, the line is a comment.
+    string comm_mark = "!";
+    // If the first character of a line is == opt_line_mark, the line holds the various
+    // options of the data format.
+    string opt_line_mark = "#";
+    // The variables holding the line and word currently read, respectively.
+    string line, word;
+
+    // Define the data options' default values.
+    vector<string> options = { "GHZ", "S", "MA", "R", "50" };
+    
+    // Boolean flag for indicating whether the line stream has reached the data lines.
+    bool data_reached = false;
+
+    while( !data_reached && getline( inputFile, line ) ){
+
+        // Set the stream for the current line.
+        istringstream iss(line);
+        // Read the first word.
+        iss >> word;
+
+        // Check for comment line mark.
+        if( word == comm_mark ){
+            //cout << "This is a comment!" << endl;
+
+        // Check for option line mark.
+        }else if( word == opt_line_mark ){
+            //cout << "This is an option!" << endl;
+            int opt_idx = 0;
+            while( iss >> word ){
+                options.at(opt_idx) = word;
+                opt_idx++;
+            }
+
+        // Check for end of consecutive series of comment and option lines.
+        }else{
+
+            data_reached = true;
+
+        }
+
+    }
+
+    // If we reached the end of the file without reaching any data line, abort.
+    if( !data_reached ){
+        cout << "The entire file has been read without reaching a data line." << endl;
+        return;
+    }
+
+
+    // Obtain the frequency metric prefix.
+    fData::METRIC_PREFIX f_pref = METRIC_PREFIX::NONE;
+    if( options.at(0).size() == 3 ){
+        char keyChar = options.at(0)[0];
+        fData::METRIC_PREFIX f_pref =  fData::get_METRIC_PREFIX( string( 1, keyChar ) );
+        cout << fData::get_METRIC_PREFIX_Str( f_pref ) << endl;
+        tarFData.f_pref = f_pref;
+    }
+    
+    // Obtain the f data type.
+    tarFData.fD_type = fData::get_FDATA_TYPE( options.at(1) );
+    // Obtain the f data format.
+    tarFData.fD_format = fData::get_FDATA_FORMAT( options.at(2) );
+    // Obtain the input impedance of the measurement.
+    if( options.at(3) == "R" ){
+        tarFData.systImp = std::stod( options.at(4) );
+    }
+
+    // Add multiplier modifiers for the data depending on the format of the data
+    // being parsed.
+    double myPI = 2*std::asin(1.0);
+    double Xi_fac = 1.0;
+    if( tarFData.fD_format == fData::FDATA_FORMAT::DB || 
+        tarFData.fD_format == fData::FDATA_FORMAT::MA ){
+        Xi_fac = myPI/180;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+    
+
+// ---------------------------------------------------------------------- >>>>>
+//      File Data Read
+// ---------------------------------------------------------------------- >>>>>
+
+    // Total number of parameter within the data matrix 
+    // (For example, 2 by 2 S-parameters matrix has 4 individual S-parameters).
+    unsigned int mat_ent_cnt = tarFData.IOcnt[0]*tarFData.IOcnt[1];
+
+    // File parsing control variables.
+    unsigned int line_idx = 0;
+    unsigned int data_idx = 0;
+    unsigned int res_blk_size = 200;
+    unsigned int curr_vec_size = 0;
+    // Temporary data value to be used during translation from string to double.
+    double tmp_val = 0;
+
+    // The frequency vector.
+    vector< double > f_vec;
+    // Initialize the vector of matrices.
+    tarFData.Xr_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
+    tarFData.Xi_vec.reInit( tarFData.IOcnt[1], tarFData.IOcnt[0], res_blk_size );
+
+    f_vec.reserve( res_blk_size );
+
+    // Update vector size.
+    curr_vec_size = tarFData.Xr_vec.levels();
+
+    do{
+
+        // Set the stream for the current line.
+        istringstream iss( line );
+
+        // Read the frequency word.
+        iss >> word;
+        // Translate the word into a double value freq.
+        tmp_val = std::stod( word );
+        // Save the frequency value.
+        f_vec.push_back( tmp_val );
+
+        
+        for( int i = 0; i < tarFData.IOcnt[1]; i++ ){
+            for( int j = 0; j < tarFData.IOcnt[0]; j++ ){
+                // Read the next data mag.
+                iss >> word;    tmp_val = std::stod( word );
+                tarFData.Xr_vec.set( i, j, line_idx, tmp_val );
+                // Read the next data phase.
+                iss >> word;    tmp_val = std::stod( word );
+                tarFData.Xi_vec.set( i, j, line_idx, tmp_val*Xi_fac );
+            }
+        }
+
+        line_idx++;
+        if( line_idx >= curr_vec_size ){
+
+            f_vec.reserve( line_idx + res_blk_size );
+
+            tarFData.Xr_vec.reserve( line_idx + res_blk_size );
+            tarFData.Xi_vec.reserve( line_idx + res_blk_size );
+
+            curr_vec_size += res_blk_size;
+
+        }
+
+    }while( getline( inputFile, line ) );
+
+    // Deallocate unused reserved memory from the vectors.
+    f_vec.shrink_to_fit();
+    tarFData.f_vec = Eigen::Map<Eigen::VectorXd>( f_vec.data(), f_vec.size() );
+    tarFData.Xr_vec.resize( line_idx );
+    tarFData.Xr_vec.shrink_to_fit();
+    tarFData.Xi_vec.resize( line_idx );
+    tarFData.Xi_vec.shrink_to_fit();
+
+// ---------------------------------------------------------------------- <<<<<
+
+    cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
+    cout << endl;
+    
+    return;
+
 }
 
 
@@ -1353,3 +1557,5 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     return;
 
 }
+
+// ====================================================================== <<<<<

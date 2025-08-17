@@ -22,11 +22,22 @@ class fData{
 
 public:
 
+// ====================================================================== >>>>>
+//      Data From File Utility
+// ====================================================================== >>>>>
+
     /*
     Function to retrieve frequency data from files ending with the extension of format
     ".sXp" where X is any positive integer representing number of I/O ports.
     */
     static void read_sXp_file( fData& tarFData, const string& fullFileName );
+
+    /*
+    Read the specific 2-port S-parameter data file, which follows a different parsing
+    rule than 3 or higher number of ports S data files.
+    */
+    static void read_s2p_file( fData& tarFData, const string& fullFileName );
+
 
     /*
     Function to retrieve freq. data from S-parameter file data generated from the 
@@ -37,6 +48,9 @@ public:
     - This parser only reads data given in the (dB,degree (non-radian)) format.
     */
     static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName );
+
+// ====================================================================== <<<<<
+
 
 // ====================================================================== >>>>>
 //      Class Enum "METRIC_PREFIX" Help Functions
