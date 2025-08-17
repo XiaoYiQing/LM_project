@@ -394,10 +394,14 @@ void tests::fData_test_sXp_read(){
         ( myF.get_imData_at_f( 10 ) - phase1 ).cwiseAbs().maxCoeff() < 1e-9;
 
     if( test1_bool ){
-        cout << "Test 1 passed!" << endl;
+        cout << "Test 1 [.s2p file reading] passed!" << endl;
     }else{
-        cout << "Test 1 failed!" << endl;
+        cout << "Test 1 [.s2p file reading] failed!" << endl;
     }
+
+
+    fullFileName = RES_PATH_XYQ_str + "/bondwire_with_strip_design3.s4p";
+    fData::read_sXp_file( myF, fullFileName );
 
 }
 

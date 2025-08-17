@@ -921,7 +921,10 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         return;
     }
     
-
+    /*
+    .s2p file case.
+    The 2-port case is parsed differently from all other cases.
+    */
     if( port_cnt_tmp == 2 ){
         read_s2p_file( tarFData, fullFileName );
         return;
