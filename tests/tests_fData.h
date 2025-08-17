@@ -28,6 +28,11 @@ namespace tests{
     void fData_test_2( unsigned int test_idx );
 
     /*
+    Test the parser for touchstone files.
+    */
+    void fData_test_sXp_read();
+
+    /*
     Test the set functions.
     */
     void fData_setFunc_tests( unsigned int test_idx );
