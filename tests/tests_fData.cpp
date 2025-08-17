@@ -366,7 +366,38 @@ void tests::fData_test_2( unsigned int test_idx ){
 
 void tests::fData_test_sXp_read(){
 
-    
+    // Define our frequency data object.
+    fData myF;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myF, fullFileName );
+
+    bool test1_bool = true;
+
+    test1_bool = test1_bool && myF.get_f_cnt() == 500;
+    test1_bool = test1_bool && myF.get_f_scale_str() == 
+        fData::get_METRIC_PREFIX_Str( fData::METRIC_PREFIX::NONE );
+    test1_bool = test1_bool && myF.get_f_scale_num() == 1;
+
+    Eigen::MatrixXd mag1(2,2);
+    mag1 << -14.56544180548246, -0.1650035838894745,
+        -0.1650035838894637, -14.56394882982146;
+    test1_bool = test1_bool && myF.get_reData_at_f( 10 ) == mag1;
+
+    Eigen::MatrixXd phase1(2,2);
+    phase1 << 18.51450720004394, -70.84049885284401,
+                -70.84049885284401, 20.32410950236233;
+    double myPI = 2*std::asin(1.0);
+    phase1 = phase1 *( myPI/180 );
+    test1_bool = test1_bool && 
+        ( myF.get_imData_at_f( 10 ) - phase1 ).cwiseAbs().maxCoeff() < 1e-9;
+
+    if( test1_bool ){
+        cout << "Test 1 passed!" << endl;
+    }else{
+        cout << "Test 1 failed!" << endl;
+    }
 
 }
 
