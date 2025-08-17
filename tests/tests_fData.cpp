@@ -364,47 +364,89 @@ void tests::fData_test_2( unsigned int test_idx ){
 }
 
 
-void tests::fData_test_sXp_read(){
+void tests::fData_test_sXp_read( unsigned int test_idx ){
 
-    // Define our frequency data object.
-    fData myF;
+    int case_cnt = 0;
 
-    // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
-    fData::read_sXp_file( myF, fullFileName );
+    // 2-port test case.
+    if( test_idx == case_cnt ){
 
-    bool test1_bool = true;
+        // Define our frequency data object.
+        fData myF;
 
-    test1_bool = test1_bool && myF.get_f_cnt() == 500;
-    test1_bool = test1_bool && myF.get_f_scale_str() == 
-        fData::get_METRIC_PREFIX_Str( fData::METRIC_PREFIX::NONE );
-    test1_bool = test1_bool && myF.get_f_scale_num() == 1;
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
 
-    Eigen::MatrixXd mag1(2,2);
-    mag1 << -14.56544180548246, -0.1650035838894745,
-        -0.1650035838894637, -14.56394882982146;
-    test1_bool = test1_bool && myF.get_reData_at_f( 10 ) == mag1;
+        bool test1_bool = true;
 
-    Eigen::MatrixXd phase1(2,2);
-    phase1 << 18.51450720004394, -70.84049885284401,
-                -70.84049885284401, 20.32410950236233;
-    double myPI = 2*std::asin(1.0);
-    phase1 = phase1 *( myPI/180 );
-    test1_bool = test1_bool && 
-        ( myF.get_imData_at_f( 10 ) - phase1 ).cwiseAbs().maxCoeff() < 1e-9;
+        test1_bool = test1_bool && myF.get_f_cnt() == 500;
+        test1_bool = test1_bool && myF.get_f_scale_str() == 
+            fData::get_METRIC_PREFIX_Str( fData::METRIC_PREFIX::NONE );
+        test1_bool = test1_bool && myF.get_f_scale_num() == 1;
 
-    if( test1_bool ){
-        cout << "Test 1 [.s2p file reading] passed!" << endl;
-    }else{
-        cout << "Test 1 [.s2p file reading] failed!" << endl;
+        Eigen::MatrixXd mag1(2,2);
+        mag1 << -14.56544180548246, -0.1650035838894745,
+            -0.1650035838894637, -14.56394882982146;
+        test1_bool = test1_bool && myF.get_reData_at_f( 10 ) == mag1;
+
+        Eigen::MatrixXd phase1(2,2);
+        phase1 << 18.51450720004394, -70.84049885284401,
+                    -70.84049885284401, 20.32410950236233;
+        double myPI = 2*std::asin(1.0);
+        phase1 = phase1 *( myPI/180 );
+        test1_bool = test1_bool && 
+            ( myF.get_imData_at_f( 10 ) - phase1 ).cwiseAbs().maxCoeff() < 1e-9;
+
+        if( test1_bool ){
+            cout << "Test 1 [.s2p file reading] passed!" << endl;
+        }else{
+            cout << "Test 1 [.s2p file reading] failed!" << endl;
+        }
+    
     }
 
+    case_cnt++;
+    // 4-port test case.
+    if( test_idx == case_cnt ){
 
-    fullFileName = RES_PATH_XYQ_str + "/bondwire_with_strip_design3.s4p";
-    fData::read_sXp_file( myF, fullFileName );
+        // Define our frequency data object.
+        fData myF;
 
-    
+        string fullFileName = RES_PATH_XYQ_str + "/bondwire_with_strip_design3.s4p";
+        fData::read_sXp_file( myF, fullFileName );
 
+        bool test_bool = true;
+
+        test_bool = test_bool && myF.get_f_cnt() == 500;
+        test_bool = test_bool && myF.get_f_scale_str() == 
+            fData::get_METRIC_PREFIX_Str( fData::METRIC_PREFIX::G );
+        test_bool = test_bool && myF.get_f_scale_num() == 1e9;
+
+        Eigen::MatrixXd mag1(4,4);
+        mag1 << 0.958817972108667, 0.127454551904343, 0.0019875694004973, 0.00198918738171939, 
+            0.127454551904343, 0.958795780807044, 0.0019278729865623, 0.00192596500436221,
+            0.00198756940049718, 0.00192787298656213, 0.0390404547413966, 0.983742772847083, 
+            0.00198918738171929, 0.00192596500436209, 0.983742772847081, 0.039015297765394;
+        test_bool = test_bool && myF.get_reData_at_f( 10 ) == mag1;
+
+        Eigen::MatrixXd phase1(4,4);
+        phase1 << -51.8369933305439, 29.0982937219069, 42.4317772153111, 42.5781673192973, 
+                29.098293721907,  -52.1954463168092, 42.6420711488167, 42.4834166003759, 
+                42.4317772153035, 42.6420711488151, -147.022259604695, -54.324770082114, 
+                42.5781673192937, 42.4834166003802, -54.3247700821141, -147.059096517886;
+        double myPI = 2*std::asin(1.0);
+        phase1 = phase1 *( myPI/180 );
+        test_bool = test_bool && 
+            ( myF.get_imData_at_f( 10 ) - phase1 ).cwiseAbs().maxCoeff() < 1e-9;
+
+        if( test_bool ){
+            cout << "Test 2 [.s4p file reading] passed!" << endl;
+        }else{
+            cout << "Test 2 [.s4p file reading] failed!" << endl;
+        }
+
+    }
 
 }
 

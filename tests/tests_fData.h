@@ -30,7 +30,7 @@ namespace tests{
     /*
     Test the parser for touchstone files.
     */
-    void fData_test_sXp_read();
+    void fData_test_sXp_read( unsigned int test_idx );
 
     /*
     Test the set functions.
