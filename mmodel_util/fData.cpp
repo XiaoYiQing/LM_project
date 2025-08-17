@@ -1006,7 +1006,6 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     if( options.at(0).size() == 3 ){
         char keyChar = options.at(0)[0];
         fData::METRIC_PREFIX f_pref =  fData::get_METRIC_PREFIX( string( 1, keyChar ) );
-        cout << fData::get_METRIC_PREFIX_Str( f_pref ) << endl;
         tarFData.f_pref = f_pref;
     }
     
@@ -1041,7 +1040,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     unsigned int mat_ent_cnt = tarFData.IOcnt[0]*tarFData.IOcnt[1];
 
     // File parsing control variables.
-    unsigned int line_idx = 0;
+    unsigned int f_idx = 0;
     unsigned int data_idx = 0;
     unsigned int res_blk_size = 200;
     unsigned int curr_vec_size = 0;
@@ -1064,32 +1063,56 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
         // Set the stream for the current line.
         istringstream iss( line );
 
-        // Read the frequency word.
+        // Read the first word (frequency or comment mark).
         iss >> word;
+
+        // Line skip if comment line.
+        if( word == comm_mark ){
+            continue;
+        }
+
         // Translate the word into a double value freq.
         tmp_val = std::stod( word );
         // Save the frequency value.
         f_vec.push_back( tmp_val );
 
-        
-        for( int i = 0; i < tarFData.IOcnt[1]; i++ ){
+        // Read the remaining data from the first line at the current f.
+        for( int j = 0; j < tarFData.IOcnt[0]; j++ ){
+            // Read the next data mag.
+            iss >> word;    tmp_val = std::stod( word );
+            tarFData.Xr_vec.set( 0, j, f_idx, tmp_val );
+            // Read the next data phase.
+            iss >> word;    tmp_val = std::stod( word );
+            tarFData.Xi_vec.set( 0, j, f_idx, tmp_val*Xi_fac );
+        }
+
+        // Read the remaining data lines at the current f.
+        for( int i = 1; i < tarFData.IOcnt[1]; i++ ){
+
+            // Set the stream for the next data line at the current freq. point.
+            getline( inputFile, line );
+            istringstream iss2( line );
+
             for( int j = 0; j < tarFData.IOcnt[0]; j++ ){
+
                 // Read the next data mag.
-                iss >> word;    tmp_val = std::stod( word );
-                tarFData.Xr_vec.set( i, j, line_idx, tmp_val );
+                iss2 >> word;    tmp_val = std::stod( word );
+                tarFData.Xr_vec.set( i, j, f_idx, tmp_val );
                 // Read the next data phase.
-                iss >> word;    tmp_val = std::stod( word );
-                tarFData.Xi_vec.set( i, j, line_idx, tmp_val*Xi_fac );
+                iss2 >> word;    tmp_val = std::stod( word );
+                tarFData.Xi_vec.set( i, j, f_idx, tmp_val*Xi_fac );
+
             }
         }
 
-        line_idx++;
-        if( line_idx >= curr_vec_size ){
 
-            f_vec.reserve( line_idx + res_blk_size );
+        f_idx++;
+        if( f_idx >= curr_vec_size ){
 
-            tarFData.Xr_vec.reserve( line_idx + res_blk_size );
-            tarFData.Xi_vec.reserve( line_idx + res_blk_size );
+            f_vec.reserve( f_idx + res_blk_size );
+
+            tarFData.Xr_vec.reserve( f_idx + res_blk_size );
+            tarFData.Xi_vec.reserve( f_idx + res_blk_size );
 
             curr_vec_size += res_blk_size;
 
@@ -1100,9 +1123,9 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     // Deallocate unused reserved memory from the vectors.
     f_vec.shrink_to_fit();
     tarFData.f_vec = Eigen::Map<Eigen::VectorXd>( f_vec.data(), f_vec.size() );
-    tarFData.Xr_vec.resize( line_idx );
+    tarFData.Xr_vec.resize( f_idx );
     tarFData.Xr_vec.shrink_to_fit();
-    tarFData.Xi_vec.resize( line_idx );
+    tarFData.Xi_vec.resize( f_idx );
     tarFData.Xi_vec.shrink_to_fit();
 
 // ---------------------------------------------------------------------- <<<<<
@@ -1110,6 +1133,8 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
     cout << endl;
     
+    cout << "Frequency count: " << tarFData.get_f_cnt() << endl;
+
     return;
     
 }
