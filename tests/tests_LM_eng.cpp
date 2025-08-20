@@ -838,18 +838,41 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      Full LM Process
+//      Full LM Process Step 1 Checks
 // ---------------------------------------------------------------------- >>>>>
 
     // LM engine initialization.
     LM_eng myEng( myFData );
     myEng.step1_fData_partition();
-    myEng.step2_LM_construct();
-    myEng.step3_LM_re_trans();
-    myEng.step4_LM_pencil_SVD();
+
+    shared_ptr<fData> Frc1 = myEng.get_Frc1();
+    shared_ptr<fData> Frc2 = myEng.get_Frc2();
+
+    bool t1bool = true;
+    t1bool = t1bool && ( Frc1->get_f_cnt() == Frc2->get_f_cnt() - 1 );
+    t1bool = t1bool && ( Frc1->get_fval_at(0) == 0 );
+    if( t1bool ){
+        cout << "DC case step 1 test: passed!" << endl;
+    }else{
+        cout << "DC case step 1 test: failed!" << endl;
+    }
+    
 
 // ---------------------------------------------------------------------- <<<<<
 
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process Step 2 Checks
+// ---------------------------------------------------------------------- >>>>>
+
+    myEng.step2_LM_construct();
+    myEng.get_LM();
+
+
+// ---------------------------------------------------------------------- <<<<<
+
+    myEng.step3_LM_re_trans();
+    myEng.step4_LM_pencil_SVD();
 
 }
 
