@@ -249,6 +249,20 @@ double LM_eng::get_ref_f_mag() const{
 
 }
 
+
+unsigned int LM_eng::get_out_cnt() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return output count: step1 (data preparation) has not been set." );
+    }
+    return this->myFData.get_out_cnt();
+}
+unsigned int LM_eng::get_in_cnt() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return output count: step1 (data preparation) has not been set." );
+    }
+    return this->myFData.get_in_cnt();
+}
+
 Eigen::VectorXd LM_eng::get_singVals() const{
 
     if( !this->flag4_pen_SVD ){

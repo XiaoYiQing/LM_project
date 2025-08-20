@@ -866,7 +866,18 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 // ---------------------------------------------------------------------- >>>>>
 
     myEng.step2_LM_construct();
-    myEng.get_LM();
+    Eigen::MatrixXcd my_LM = myEng.get_LM();
+    Eigen::MatrixXcd my_SLM = myEng.get_SLM();
+
+    unsigned int out_cnt = myEng.get_out_cnt();
+    unsigned int in_cnt = myEng.get_in_cnt();
+    unsigned int Frc1_len = Frc1->get_f_cnt();
+    unsigned int Frc2_len = Frc2->get_f_cnt();
+
+    cout << my_LM.rows() << endl;
+    cout << my_LM.cols() << endl;
+
+    bool t2bool = true;
 
 
 // ---------------------------------------------------------------------- <<<<<
