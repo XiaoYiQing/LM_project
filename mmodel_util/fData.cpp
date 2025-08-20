@@ -1131,9 +1131,9 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 // ---------------------------------------------------------------------- <<<<<
 
     cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
-    cout << endl;
-    
     cout << "Frequency count: " << tarFData.get_f_cnt() << endl;
+    cout << "Port count: " << tarFData.get_f_cnt() << endl;
+    cout << endl;
 
     return;
     

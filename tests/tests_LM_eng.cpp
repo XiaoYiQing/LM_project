@@ -813,6 +813,34 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 }
 
 
+void tests::LM_eng_full_SFML_dc_case_run(){
+
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+    
+    // Define our frequency data object.
+    fData myF;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myF, fullFileName );
+
+    // Obtain the data from the target data file and insert into the fData object.
+    fData::read_LTspice_Sp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+    
+// ---------------------------------------------------------------------- <<<<<
+
+
+}
+
 
 void tests::LM_eng_full_SFML_testrun_gen(){
 

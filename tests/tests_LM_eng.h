@@ -44,6 +44,12 @@ namespace tests{
     void LM_eng_full_SFML_testrun_v2();
 
     /*
+    Specific run for the SFLM process when the zero frequency data point is present
+    in the initial data set.
+    */
+    void LM_eng_full_SFML_dc_case_run();
+
+    /*
     General run for testing various examples.
     */
     void LM_eng_full_SFML_testrun_gen();
