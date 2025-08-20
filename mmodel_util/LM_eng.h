@@ -74,6 +74,12 @@ double get_ref_f_mag() const;
 // Obtain the current Loewner Matrix pencil's computed singular values.
 Eigen::VectorXd get_singVals() const;
 
+
+shared_ptr<fData> get_Fr1() const;
+shared_ptr<fData> get_Fr2() const;
+shared_ptr<fData> get_Frc1() const;
+shared_ptr<fData> get_Frc2() const;
+
 // Obtain the Loewner Matrix.
 Eigen::MatrixXcd get_LM() const;
 // Obtain the shifted-Loewner Matrix.
@@ -91,6 +97,8 @@ Eigen::MatrixXcd get_SLM_re() const;
 Eigen::MatrixXcd get_W_re() const;
 // Obtain the partition 2 data column vector after real transform.
 Eigen::MatrixXcd get_F_re() const;
+
+
 
 // ====================================================================== <<<<<
 

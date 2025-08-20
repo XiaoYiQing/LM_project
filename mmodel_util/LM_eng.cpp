@@ -259,6 +259,33 @@ Eigen::VectorXd LM_eng::get_singVals() const{
 }
 
 
+shared_ptr<fData> LM_eng::get_Fr1() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return reduced frequency partition 1: step1 (data preparation) has not been set." );
+    }
+    return this->myFr->red_partit( this->partit1IdxArr );
+}
+shared_ptr<fData> LM_eng::get_Fr2() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return reduced frequency partition 2: step1 (data preparation) has not been set." );
+    }
+    return this->myFr->red_partit( this->partit2IdxArr );
+}
+
+shared_ptr<fData> LM_eng::get_Frc1() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 1: step1 (data preparation) has not been set." );
+    }
+    return this->myFr->red_partit( this->partit1IdxArr )->gen_cplx_conj_comb();
+}
+shared_ptr<fData> LM_eng::get_Frc2() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 2: step1 (data preparation) has not been set." );
+    }
+    return this->myFr->red_partit( this->partit2IdxArr )->gen_cplx_conj_comb();
+}
+
+
 Eigen::MatrixXcd LM_eng::get_LM() const{
     if( !this->flag2_LM_const ){
         throw std::runtime_error( "Cannot return LM: step2 (LM construction) has not been set." );
