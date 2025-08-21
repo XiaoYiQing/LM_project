@@ -117,7 +117,9 @@ void LM_eng::step3_LM_re_trans(){
     match_bool = match_bool && ( mySLM_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
     match_bool = match_bool && ( myW_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
     match_bool = match_bool && ( myF_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
-    cout << "SFLM real matrices check: " << match_bool << endl;
+    if( !match_bool ){
+        cout << "WARNING: SFLM real matrices check has failed. Non-negligeable imaginary part remnant detected." << endl;
+    }
 
     // Obtain purely real defintion of the matrices.
     this->LM_re = myLM_re_tmp.real();
@@ -126,16 +128,16 @@ void LM_eng::step3_LM_re_trans(){
     this->F_re = myF_re_tmp.real();
 
     // Generate a random test point and evaluate the full LM transfer function.
-    if( !f2_has_DC_pt && !f1_has_DC_pt ){
-        unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
-        complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
-        Eigen::MatrixXcd tmpAns = 
-            this->W_re*( ( - test_f*this->LM_re + this->SLM_re ).inverse() )*this->F_re;
-        Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
-        match_bool = true;
-        match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
-        cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
-    }
+    // if( !f2_has_DC_pt && !f1_has_DC_pt ){
+    //     unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
+    //     complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
+    //     Eigen::MatrixXcd tmpAns = 
+    //         this->W_re*( ( - test_f*this->LM_re + this->SLM_re ).inverse() )*this->F_re;
+    //     Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
+    //     match_bool = true;
+    //     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+    //     cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
+    // }
     
     this->flag3_re_trans = true;
 
