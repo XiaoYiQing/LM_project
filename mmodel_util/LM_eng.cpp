@@ -361,14 +361,14 @@ Eigen::VectorXd LM_eng::get_singVals() const{
 // Obtain the left singular vectors generated from the current LM pencil.
 Eigen::MatrixXd LM_eng::get_U() const{
     if( !this->flag4_pen_SVD ){
-        throw std::runtime_error( "Cannot return singular vectors: step4 (LM pencil SVD) has not been set." );
+        throw std::runtime_error( "Cannot return left singular vectors: step4 (LM pencil SVD) has not been set." );
     }
     return this->U;
 }
-// Obtain the left singular vectors generated from the current LM pencil.
+// Obtain the right singular vectors generated from the current LM pencil.
 Eigen::MatrixXd LM_eng::get_V() const{
     if( !this->flag4_pen_SVD ){
-        throw std::runtime_error( "Cannot return singular vectors: step4 (LM pencil SVD) has not been set." );
+        throw std::runtime_error( "Cannot return right singular vectors: step4 (LM pencil SVD) has not been set." );
     }
     return this->V;
 }

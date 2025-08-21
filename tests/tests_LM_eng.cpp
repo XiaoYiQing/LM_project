@@ -912,7 +912,20 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 // ---------------------------------------------------------------------- >>>>>
 
     myEng.step4_LM_pencil_SVD();
-    
+    Eigen::MatrixXd my_U = myEng.get_U();
+    Eigen::MatrixXd my_V = myEng.get_V();
+
+    bool t4bool = true;
+    t4bool = t4bool && ( my_U.rows() == Frc2_len*in_cnt );
+    t4bool = t4bool && ( my_V.rows() == Frc1_len*out_cnt );
+    t4bool = t4bool && ( my_U.cols() == Frc2_len*in_cnt );
+    t4bool = t4bool && ( my_V.cols() == Frc1_len*out_cnt );
+    if( t4bool ){
+        cout << "DC case step 4 test: passed!" << endl;
+    }else{
+        cout << "DC case step 4 test: failed!" << endl;
+    }
+
 // ---------------------------------------------------------------------- <<<<<
 
 }
