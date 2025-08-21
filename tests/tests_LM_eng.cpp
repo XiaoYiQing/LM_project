@@ -874,15 +874,38 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     unsigned int Frc1_len = Frc1->get_f_cnt();
     unsigned int Frc2_len = Frc2->get_f_cnt();
 
-    cout << my_LM.rows() << endl;
-    cout << my_LM.cols() << endl;
 
     bool t2bool = true;
-
+    t2bool = t2bool && ( Frc1_len*out_cnt == my_LM.cols() );
+    t2bool = t2bool && ( Frc2_len*in_cnt == my_LM.rows() );
+    if( t2bool ){
+        cout << "DC case step 2 test: passed!" << endl;
+    }else{
+        cout << "DC case step 2 test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process Step 3 Checks
+// ---------------------------------------------------------------------- >>>>>
+
     myEng.step3_LM_re_trans();
+    Eigen::MatrixXcd my_LM_re = myEng.get_LM_re();
+    Eigen::MatrixXcd my_SLM_re = myEng.get_SLM_re();
+
+    bool t3bool = true;
+    t3bool = t3bool && ( my_LM_re.rows() == Frc2_len*in_cnt );
+    t3bool = t3bool && ( my_LM_re.cols() == Frc1_len*out_cnt );
+    if( t3bool ){
+        cout << "DC case step 3 test: passed!" << endl;
+    }else{
+        cout << "DC case step 3 test: failed!" << endl;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
     myEng.step4_LM_pencil_SVD();
 
 }

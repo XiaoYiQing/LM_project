@@ -103,13 +103,13 @@ void LM_eng::step3_LM_re_trans(){
     Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
     Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
     // Obtain the hermitian of the right transform matrix.
-    Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
+    Eigen::MatrixXcd myTMat_L_herm = myTMat_L.conjugate().transpose();
 
     // Perform the transformation.
-    Eigen::MatrixXcd myLM_re_tmp = ( myTMat_R_herm*this->LM )*myTMat_L;
-    Eigen::MatrixXcd mySLM_re_tmp = ( myTMat_R_herm*this->SLM )*myTMat_L;
-    Eigen::MatrixXcd myW_re_tmp = this->W*myTMat_L;
-    Eigen::MatrixXcd myF_re_tmp = myTMat_R_herm*this->F;
+    Eigen::MatrixXcd myLM_re_tmp = ( myTMat_L_herm*this->LM )*myTMat_R;
+    Eigen::MatrixXcd mySLM_re_tmp = ( myTMat_L_herm*this->SLM )*myTMat_R;
+    Eigen::MatrixXcd myW_re_tmp = this->W*myTMat_R;
+    Eigen::MatrixXcd myF_re_tmp = myTMat_L_herm*this->F;
 
     // Check for real matrices.
     bool match_bool = true;
@@ -126,14 +126,16 @@ void LM_eng::step3_LM_re_trans(){
     this->F_re = myF_re_tmp.real();
 
     // Generate a random test point and evaluate the full LM transfer function.
-    unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
-    complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
-    Eigen::MatrixXcd tmpAns = 
-        this->W_re*( ( - test_f*this->LM_re + this->SLM_re ).inverse() )*this->F_re;
-    Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
-    match_bool = true;
-    match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
-    cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
+    if( !f2_has_DC_pt && !f1_has_DC_pt ){
+        unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
+        complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
+        Eigen::MatrixXcd tmpAns = 
+            this->W_re*( ( - test_f*this->LM_re + this->SLM_re ).inverse() )*this->F_re;
+        Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
+        match_bool = true;
+        match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
+        cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
+    }
     
     this->flag3_re_trans = true;
 
@@ -621,8 +623,8 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
     unsigned int col_cnt = 2*sub_blk_cnt*sub_mat_size;
 
     if( has_DC_pt ){
-        row_cnt += sub_mat_size;
-        col_cnt += sub_mat_size;        
+        row_cnt -= sub_mat_size;
+        col_cnt -= sub_mat_size;    
     }
 
     // Complex 1.
@@ -643,12 +645,16 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
     
     // Initialize current sub-block's lead coordinate.
     unsigned int lead_x = 0;
+    // Initialize iteration index.
+    unsigned int z = 0;
+    // In case of DC point, fill the first block, then increment the iteration index.
     if( has_DC_pt ){
         T_mat->block( lead_x, lead_x, sub_mat_size, sub_mat_size ) = I_mat;
         lead_x += sub_mat_size;
+        z++;
     }
 
-    for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
+    for( ; z < sub_blk_cnt; z++ ){
 
         // Insert the current sub-block.
         T_mat->block( lead_x, lead_x, 2*sub_mat_size, 2*sub_mat_size ) = T_unit;
