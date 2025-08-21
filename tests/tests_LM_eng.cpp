@@ -912,10 +912,12 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 // ---------------------------------------------------------------------- >>>>>
 
     myEng.step4_LM_pencil_SVD();
+    Eigen::VectorXd my_singVals = myEng.get_singVals();
     Eigen::MatrixXd my_U = myEng.get_U();
     Eigen::MatrixXd my_V = myEng.get_V();
 
     bool t4bool = true;
+    t4bool = t4bool && ( my_singVals.size() == Frc1_len*out_cnt );
     t4bool = t4bool && ( my_U.rows() == Frc2_len*in_cnt );
     t4bool = t4bool && ( my_V.rows() == Frc1_len*out_cnt );
     t4bool = t4bool && ( my_U.cols() == Frc2_len*in_cnt );
@@ -926,7 +928,45 @@ void tests::LM_eng_full_SFML_dc_case_run(){
         cout << "DC case step 4 test: failed!" << endl;
     }
 
+    // Write the singular values to external file.
+    string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
+    string targetStemName = "tmp_data_file";
+    utils::vec_to_file( targetDir, targetStemName, my_singVals, 0 );
+
 // ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
+
+    // Specify the test system's order.
+    unsigned int tarOrder = 70;
+    // Obtain transfer function at specified system order.
+    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+
+    // Compute the sparse system.
+    myTF->gen_sparse_syst();
+
+    // Generate a frequency evaluation array.
+    Eigen::VectorXd tmp_fvec = myFData.getF_vec();
+    vector< complex<double> > testFVec = vector< complex<double> >( tmp_fvec.size() );
+    for( int z = 0; z < tmp_fvec.size(); z++ ){
+        testFVec[z] = complex<double>( 0.0, tmp_fvec(z) );
+    }
+
+    // Evaluate the transfer function over the specified frequency array values.
+    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    // Obtain the original data as a array of complex matrices.
+    Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
+    // Compute the difference between the original and approximated frequency data.
+    Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
+
+    // Compute the RMS error.
+    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error: " << total_RMS_err << endl;
+
+// ---------------------------------------------------------------------- >>>>>
 
 }
 

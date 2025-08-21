@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 
+#include "eigenUtils.h"
 #include "fData.h"
 #include "LM_eng.h"
 #include "LTI_descSyst.h"
