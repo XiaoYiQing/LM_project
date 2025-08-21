@@ -76,9 +76,6 @@ unsigned int get_out_cnt() const;
 // Obtain the number of inputs.
 unsigned int get_in_cnt() const;
 
-// Obtain the current Loewner Matrix pencil's computed singular values.
-Eigen::VectorXd get_singVals() const;
-
 // Obtain the frequency partition 1 data.
 shared_ptr<fData> get_Fr1() const;
 // Obtain the frequency partition 2 data.
@@ -107,6 +104,12 @@ Eigen::MatrixXcd get_W_re() const;
 Eigen::MatrixXcd get_F_re() const;
 
 
+// Obtain the current Loewner Matrix pencil's computed singular values.
+Eigen::VectorXd get_singVals() const;
+// Obtain the left singular vectors generated from the current LM pencil.
+Eigen::MatrixXd get_U() const;
+// Obtain the left singular vectors generated from the current LM pencil.
+Eigen::MatrixXd get_V() const;
 
 // ====================================================================== <<<<<
 

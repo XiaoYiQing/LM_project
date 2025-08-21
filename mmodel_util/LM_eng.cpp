@@ -267,14 +267,6 @@ unsigned int LM_eng::get_in_cnt() const{
     return this->myFData.get_in_cnt();
 }
 
-Eigen::VectorXd LM_eng::get_singVals() const{
-
-    if( !this->flag4_pen_SVD ){
-        throw std::runtime_error( "Cannot return singular values: step4 (LM pencil SVD) has not been set." );
-    }
-    return this->singVals;
-
-}
 
 
 shared_ptr<fData> LM_eng::get_Fr1() const{
@@ -355,6 +347,31 @@ Eigen::MatrixXcd LM_eng::get_F_re() const{
     return this->F_re;
 }
 
+
+
+Eigen::VectorXd LM_eng::get_singVals() const{
+
+    if( !this->flag4_pen_SVD ){
+        throw std::runtime_error( "Cannot return singular values: step4 (LM pencil SVD) has not been set." );
+    }
+    return this->singVals;
+
+}
+
+// Obtain the left singular vectors generated from the current LM pencil.
+Eigen::MatrixXd LM_eng::get_U() const{
+    if( !this->flag4_pen_SVD ){
+        throw std::runtime_error( "Cannot return singular vectors: step4 (LM pencil SVD) has not been set." );
+    }
+    return this->U;
+}
+// Obtain the left singular vectors generated from the current LM pencil.
+Eigen::MatrixXd LM_eng::get_V() const{
+    if( !this->flag4_pen_SVD ){
+        throw std::runtime_error( "Cannot return singular vectors: step4 (LM pencil SVD) has not been set." );
+    }
+    return this->V;
+}
 
 // ====================================================================== <<<<<
 
