@@ -8,6 +8,7 @@
 #include <string>   
 #include <vector> 
 
+#include "eigenUtils.h"
 #include "fData.h"
 #include "LTI_descSyst.h"
 

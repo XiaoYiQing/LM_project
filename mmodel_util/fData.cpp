@@ -903,8 +903,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
             // cout << "X in .sXp is: " << xValue << endl; // Output the value of X
         }
     } else {
-        cout << "No match found." << endl;
-        return;
+        throw std::invalid_argument( "File extension is not that of a touchstone file. Parsing aborted." );
     }
     
     
@@ -944,8 +943,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
     // Open the input file stream.
     std::ifstream inputFile( fullFilePath );
     if( !inputFile ){
-        cout << "Failed to read file." << endl;
-        return;
+        throw std::invalid_argument( "Failed to open stream for .sXp file. Abort parsing." );
     }else{
         cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
     }

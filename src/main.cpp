@@ -87,9 +87,11 @@ int main() {
 
     // singVal_extract_run();
 
-    // LM_eng::print_singVals( "CMakeLists.txt", "HOHO" );
-    LM_eng::print_singVals( "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/CMakeLists.txt", "HOHO" );
-    
+    string data_fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=475um.s2p";
+    string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
+    LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+
+
     return 0; 
 
 }
