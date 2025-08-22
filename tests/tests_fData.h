@@ -11,6 +11,8 @@
 
 
 extern string RES_PATH_XYQ_str;
+extern string SRC_PATH_XYQ_str;
+
 
 using namespace std;
 

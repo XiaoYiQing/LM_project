@@ -28,7 +28,15 @@ public:
 //      Static Support Functions
 // ====================================================================== >>>>>
 
-    static shared_ptr<LM_eng> gen_singVals( const string& fullFileName );
+    /*
+    Highly specific support function which creates a LM_eng based on the 
+    data file specified by "fullFileName" and goes through the SFML process
+    to generate singular values of real Loewner Matrix system.
+    The singular values are then saved at the target directory "destDir" as
+    a simple text file.
+    */
+    static shared_ptr<LM_eng> print_singVals( const string& fullFileName, 
+        const string& destDir );
 
 // ====================================================================== <<<<<
 
