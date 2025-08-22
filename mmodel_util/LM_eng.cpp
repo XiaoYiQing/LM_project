@@ -4,6 +4,65 @@
 
 const double LM_eng::NUM_THRESH = 1.0e-12;
 
+
+// ====================================================================== >>>>>
+//      Static Support Functions
+// ====================================================================== >>>>>
+
+shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName, 
+    const string& destDir ){
+
+    // Obtain the specific parts of the full file name (dir, stem, ext).
+    std::filesystem::path fullFilePath( fullFileName );
+    std::string fileDir = fullFilePath.parent_path().string();
+    std::string fileStem = fullFilePath.stem().string();
+    std::string fileExt = fullFilePath.extension().string();
+    // Abort if any element is missing, abort the operation.
+    if( fileDir.size() == 0 || fileStem.size() == 0 || fileExt.size() == 0 ){
+        throw std::invalid_argument( "Full file name incomplete." );
+    }
+
+    // Size of reduced frequency data array.
+    unsigned int fr_len = 100;
+    // Define our frequency data object.
+    fData myFData;
+    // Try to obtain data from specified data file.
+    try{
+        // Obtain the data from the target data file and insert into the fData object.
+        fData::read_sXp_file( myFData, fullFileName );
+    }catch( const std::invalid_argument& e ){
+        std::cerr << "print_singVals aborted: " << e.what() << '\n';
+        shared_ptr<LM_eng> tmp;
+        return tmp; 
+    }
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+
+
+    // LM engine initialization.
+    LM_eng myEng( myFData );
+    try{
+        myEng.step1_fData_partition();
+        myEng.step2_LM_construct();
+        myEng.step3_LM_re_trans();
+        myEng.step4_LM_pencil_SVD();
+    }catch( const std::runtime_error& e ){
+        std::cerr << "print_singVals aborted: " << e.what() << '\n';
+        shared_ptr<LM_eng> tmp;
+        return tmp; 
+    }
+
+
+    shared_ptr<LM_eng> tmp;
+    return tmp;
+
+}
+
+// ====================================================================== <<<<<
+
+
 // ====================================================================== >>>>>
 //      Constructor
 // ====================================================================== >>>>>

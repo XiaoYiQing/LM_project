@@ -83,10 +83,13 @@ int main() {
 
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
-    tests::LM_eng_full_SFML_dc_case_run();
+    // tests::LM_eng_full_SFML_dc_case_run();
 
     // singVal_extract_run();
 
+    // LM_eng::print_singVals( "CMakeLists.txt", "HOHO" );
+    LM_eng::print_singVals( "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/CMakeLists.txt", "HOHO" );
+    
     return 0; 
 
 }
