@@ -5,6 +5,13 @@
 #else
 #endif
 
+// Preprocessor variable created when running CMAKE process which indicates
+// the source directory.
+#ifndef SRC_PATH_XYQ
+#   define SRC_PATH_XYQ ""
+#else
+#endif
+
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <iostream>
@@ -33,6 +40,8 @@ using namespace std;
 
 // Global string variable holding the full path of the extra resource directory.
 string RES_PATH_XYQ_str = string( RES_PATH_XYQ );
+// Global string variable holding the full path of the source directory.
+string SRC_PATH_XYQ_str = string( SRC_PATH_XYQ );
 
 
 void singVal_extract_run();

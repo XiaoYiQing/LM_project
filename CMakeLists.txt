@@ -80,6 +80,7 @@ target_include_directories(myapp PUBLIC
 
 # Create a variable that you can access directly during runtime as a preprocessor definition.
 target_compile_definitions( myapp
+    PRIVATE SRC_PATH_XYQ="${CMAKE_SOURCE_DIR}"
     PRIVATE RES_PATH_XYQ="${RES_XYQ_DIR_SRC}"
 )
 

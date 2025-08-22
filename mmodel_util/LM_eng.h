@@ -18,7 +18,19 @@ class LM_eng{
 
 public: 
 
+    /*
+    Numerical threshold utilized by instances of this class for determining nullity.
+    If a number's magnitude is smaller than this threshold, it is considered a zero.
+    */
     static const double NUM_THRESH;
+
+// ====================================================================== >>>>>
+//      Static Support Functions
+// ====================================================================== >>>>>
+
+    static shared_ptr<LM_eng> gen_singVals( const string& fullFileName );
+
+// ====================================================================== <<<<<
 
 // ====================================================================== >>>>>
 //      Constructor

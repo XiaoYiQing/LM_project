@@ -2,168 +2,6 @@
 
 
 
-void tests::LM_eng_full_SFML_dc_case_run(){
-
-    // Size of reduced frequency data array.
-    unsigned int fr_len = 100;
-
-// ---------------------------------------------------------------------- >>>>>
-//      Initialization (Data)
-// ---------------------------------------------------------------------- >>>>>
-    
-    // Define our frequency data object.
-    fData myFData;
-
-    // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/bondwire_with_strip_design3.s4p";
-    fData::read_sXp_file( myFData, fullFileName );
-
-    // Switch the data format into real + imaginary format.
-    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-    // Normalize the frequency vector (As much as you can according to metric prefixes).
-    myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
-
-// ---------------------------------------------------------------------- <<<<<
-
-
-// ---------------------------------------------------------------------- >>>>>
-//      Full LM Process Step 1 Checks
-// ---------------------------------------------------------------------- >>>>>
-
-    // LM engine initialization.
-    LM_eng myEng( myFData );
-    myEng.step1_fData_partition();
-
-    shared_ptr<fData> Frc1 = myEng.get_Frc1();
-    shared_ptr<fData> Frc2 = myEng.get_Frc2();
-
-    bool t1bool = true;
-    t1bool = t1bool && ( Frc1->get_f_cnt() == Frc2->get_f_cnt() - 1 );
-    t1bool = t1bool && ( Frc1->get_fval_at(0) == 0 );
-    if( t1bool ){
-        cout << "DC case step 1 test: passed!" << endl;
-    }else{
-        cout << "DC case step 1 test: failed!" << endl;
-    }
-    
-
-// ---------------------------------------------------------------------- <<<<<
-
-
-// ---------------------------------------------------------------------- >>>>>
-//      Full LM Process Step 2 Checks
-// ---------------------------------------------------------------------- >>>>>
-
-    myEng.step2_LM_construct();
-    Eigen::MatrixXcd my_LM = myEng.get_LM();
-    Eigen::MatrixXcd my_SLM = myEng.get_SLM();
-
-    unsigned int out_cnt = myEng.get_out_cnt();
-    unsigned int in_cnt = myEng.get_in_cnt();
-    unsigned int Frc1_len = Frc1->get_f_cnt();
-    unsigned int Frc2_len = Frc2->get_f_cnt();
-
-
-    bool t2bool = true;
-    t2bool = t2bool && ( Frc1_len*out_cnt == my_LM.cols() );
-    t2bool = t2bool && ( Frc2_len*in_cnt == my_LM.rows() );
-    if( t2bool ){
-        cout << "DC case step 2 test: passed!" << endl;
-    }else{
-        cout << "DC case step 2 test: failed!" << endl;
-    }
-
-// ---------------------------------------------------------------------- <<<<<
-
-
-// ---------------------------------------------------------------------- >>>>>
-//      Full LM Process Step 3 Checks
-// ---------------------------------------------------------------------- >>>>>
-
-    myEng.step3_LM_re_trans();
-    Eigen::MatrixXcd my_LM_re = myEng.get_LM_re();
-    Eigen::MatrixXcd my_SLM_re = myEng.get_SLM_re();
-
-    bool t3bool = true;
-    t3bool = t3bool && ( my_LM_re.rows() == Frc2_len*in_cnt );
-    t3bool = t3bool && ( my_LM_re.cols() == Frc1_len*out_cnt );
-    if( t3bool ){
-        cout << "DC case step 3 test: passed!" << endl;
-    }else{
-        cout << "DC case step 3 test: failed!" << endl;
-    }
-
-// ---------------------------------------------------------------------- <<<<<
-
-
-// ---------------------------------------------------------------------- >>>>>
-//      Full LM Process Step 4 Checks
-// ---------------------------------------------------------------------- >>>>>
-
-    myEng.step4_LM_pencil_SVD();
-    Eigen::VectorXd my_singVals = myEng.get_singVals();
-    Eigen::MatrixXd my_U = myEng.get_U();
-    Eigen::MatrixXd my_V = myEng.get_V();
-
-    bool t4bool = true;
-    t4bool = t4bool && ( my_singVals.size() == Frc1_len*out_cnt );
-    t4bool = t4bool && ( my_U.rows() == Frc2_len*in_cnt );
-    t4bool = t4bool && ( my_V.rows() == Frc1_len*out_cnt );
-    t4bool = t4bool && ( my_U.cols() == Frc2_len*in_cnt );
-    t4bool = t4bool && ( my_V.cols() == Frc1_len*out_cnt );
-    if( t4bool ){
-        cout << "DC case step 4 test: passed!" << endl;
-    }else{
-        cout << "DC case step 4 test: failed!" << endl;
-    }
-
-    // Write the singular values to external file.
-    string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
-    string targetStemName = "tmp_data_file";
-    utils::vec_to_file( targetDir, targetStemName, my_singVals, 0 );
-
-// ---------------------------------------------------------------------- <<<<<
-
-
-// ---------------------------------------------------------------------- >>>>>
-//      Model Evaluation
-// ---------------------------------------------------------------------- >>>>>
-
-    // Specify the test system's order.
-    unsigned int tarOrder = 70;
-    // Obtain transfer function at specified system order.
-    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
-
-    // Compute the sparse system.
-    myTF->gen_sparse_syst();
-
-    // Generate a frequency evaluation array.
-    Eigen::VectorXd tmp_fvec = myFData.getF_vec();
-    vector< complex<double> > testFVec = vector< complex<double> >( tmp_fvec.size() );
-    for( int z = 0; z < tmp_fvec.size(); z++ ){
-        testFVec[z] = complex<double>( 0.0, tmp_fvec(z) );
-    }
-
-    // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
-    // Obtain the original data as a array of complex matrices.
-    Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
-    // Compute the difference between the original and approximated frequency data.
-    Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
-
-    // Compute the RMS error.
-    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
-    cout << "The total RMS error: " << total_RMS_err << endl;
-
-    // Get stability confirmation.
-    bool isStab = myTF->is_stable();
-    cout << "System stability: " << isStab << endl;
-
-// ---------------------------------------------------------------------- >>>>>
-
-}
-
-
 void tests::LM_eng_full_SFML_testrun_gen(){
 
     // Size of reduced frequency data array.
@@ -440,6 +278,168 @@ void tests::LM_eng_class_test(){
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
+
+// ---------------------------------------------------------------------- >>>>>
+
+}
+
+
+void tests::LM_eng_full_SFML_dc_case_run(){
+
+    // Size of reduced frequency data array.
+    unsigned int fr_len = 100;
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+    
+    // Define our frequency data object.
+    fData myFData;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/bondwire_with_strip_design3.s4p";
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process Step 1 Checks
+// ---------------------------------------------------------------------- >>>>>
+
+    // LM engine initialization.
+    LM_eng myEng( myFData );
+    myEng.step1_fData_partition();
+
+    shared_ptr<fData> Frc1 = myEng.get_Frc1();
+    shared_ptr<fData> Frc2 = myEng.get_Frc2();
+
+    bool t1bool = true;
+    t1bool = t1bool && ( Frc1->get_f_cnt() == Frc2->get_f_cnt() - 1 );
+    t1bool = t1bool && ( Frc1->get_fval_at(0) == 0 );
+    if( t1bool ){
+        cout << "DC case step 1 test: passed!" << endl;
+    }else{
+        cout << "DC case step 1 test: failed!" << endl;
+    }
+    
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process Step 2 Checks
+// ---------------------------------------------------------------------- >>>>>
+
+    myEng.step2_LM_construct();
+    Eigen::MatrixXcd my_LM = myEng.get_LM();
+    Eigen::MatrixXcd my_SLM = myEng.get_SLM();
+
+    unsigned int out_cnt = myEng.get_out_cnt();
+    unsigned int in_cnt = myEng.get_in_cnt();
+    unsigned int Frc1_len = Frc1->get_f_cnt();
+    unsigned int Frc2_len = Frc2->get_f_cnt();
+
+
+    bool t2bool = true;
+    t2bool = t2bool && ( Frc1_len*out_cnt == my_LM.cols() );
+    t2bool = t2bool && ( Frc2_len*in_cnt == my_LM.rows() );
+    if( t2bool ){
+        cout << "DC case step 2 test: passed!" << endl;
+    }else{
+        cout << "DC case step 2 test: failed!" << endl;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process Step 3 Checks
+// ---------------------------------------------------------------------- >>>>>
+
+    myEng.step3_LM_re_trans();
+    Eigen::MatrixXcd my_LM_re = myEng.get_LM_re();
+    Eigen::MatrixXcd my_SLM_re = myEng.get_SLM_re();
+
+    bool t3bool = true;
+    t3bool = t3bool && ( my_LM_re.rows() == Frc2_len*in_cnt );
+    t3bool = t3bool && ( my_LM_re.cols() == Frc1_len*out_cnt );
+    if( t3bool ){
+        cout << "DC case step 3 test: passed!" << endl;
+    }else{
+        cout << "DC case step 3 test: failed!" << endl;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full LM Process Step 4 Checks
+// ---------------------------------------------------------------------- >>>>>
+
+    myEng.step4_LM_pencil_SVD();
+    Eigen::VectorXd my_singVals = myEng.get_singVals();
+    Eigen::MatrixXd my_U = myEng.get_U();
+    Eigen::MatrixXd my_V = myEng.get_V();
+
+    bool t4bool = true;
+    t4bool = t4bool && ( my_singVals.size() == Frc1_len*out_cnt );
+    t4bool = t4bool && ( my_U.rows() == Frc2_len*in_cnt );
+    t4bool = t4bool && ( my_V.rows() == Frc1_len*out_cnt );
+    t4bool = t4bool && ( my_U.cols() == Frc2_len*in_cnt );
+    t4bool = t4bool && ( my_V.cols() == Frc1_len*out_cnt );
+    if( t4bool ){
+        cout << "DC case step 4 test: passed!" << endl;
+    }else{
+        cout << "DC case step 4 test: failed!" << endl;
+    }
+
+    // Write the singular values to external file.
+    string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
+    string targetStemName = "tmp_data_file";
+    utils::vec_to_file( targetDir, targetStemName, my_singVals, 0 );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
+
+    // Specify the test system's order.
+    unsigned int tarOrder = 70;
+    // Obtain transfer function at specified system order.
+    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+
+    // Compute the sparse system.
+    myTF->gen_sparse_syst();
+
+    // Generate a frequency evaluation array.
+    Eigen::VectorXd tmp_fvec = myFData.getF_vec();
+    vector< complex<double> > testFVec = vector< complex<double> >( tmp_fvec.size() );
+    for( int z = 0; z < tmp_fvec.size(); z++ ){
+        testFVec[z] = complex<double>( 0.0, tmp_fvec(z) );
+    }
+
+    // Evaluate the transfer function over the specified frequency array values.
+    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    // Obtain the original data as a array of complex matrices.
+    Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
+    // Compute the difference between the original and approximated frequency data.
+    Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
+
+    // Compute the RMS error.
+    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error: " << total_RMS_err << endl;
+
+    // Get stability confirmation.
+    bool isStab = myTF->is_stable();
+    cout << "System stability: " << isStab << endl;
 
 // ---------------------------------------------------------------------- >>>>>
 
