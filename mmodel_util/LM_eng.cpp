@@ -34,8 +34,17 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
 
     // Parse LTspice text data output format.
     if( fileExt == ".txt" ){
-
-        fData::read_LTspice_Sp_file( myFData, fullFileName );
+        try{
+            fData::read_LTspice_Sp_file( myFData, fullFileName );
+        }catch( const std::invalid_argument& e ){
+            std::cerr << "print_singVals aborted: " << e.what() << '\n';
+            shared_ptr<LM_eng> tmp;
+            return tmp; 
+        }catch( const std::runtime_error& e ){
+            std::cerr << "print_singVals aborted: " << e.what() << '\n';
+            shared_ptr<LM_eng> tmp;
+            return tmp; 
+        }
 
     // Parse touchstone files.
     }else if( regex_match( fileExt, matches, pattern ) ){
@@ -45,6 +54,10 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
             // Obtain the data from the target data file and insert into the fData object.
             fData::read_sXp_file( myFData, fullFileName );
         }catch( const std::invalid_argument& e ){
+            std::cerr << "print_singVals aborted: " << e.what() << '\n';
+            shared_ptr<LM_eng> tmp;
+            return tmp; 
+        }catch( const std::runtime_error& e ){
             std::cerr << "print_singVals aborted: " << e.what() << '\n';
             shared_ptr<LM_eng> tmp;
             return tmp; 

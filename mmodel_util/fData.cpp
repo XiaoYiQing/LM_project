@@ -991,8 +991,7 @@ void fData::read_sXp_file( fData& tarFData, const string& fullFileName ){
 
     // If we reached the end of the file without reaching any data line, abort.
     if( !data_reached ){
-        cout << "The entire file has been read without reaching a data line." << endl;
-        return;
+        throw std::runtime_error( "The entire file has been read without reaching a data line." );
     }
 
 
@@ -1355,8 +1354,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     // Open the input file stream.
     std::ifstream inputFile( fullFilePath );
     if( !inputFile ){
-        cout << "Failed to read file." << endl;
-        return;
+        throw std::invalid_argument( "LTspice S-parameter data file parsing failed: failed to open stream." );
     }else{
         cout << "File read successful." << endl;
     }
@@ -1393,6 +1391,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     std::pair<unsigned int,unsigned int> tmp_S_val = 
         std::pair<unsigned int,unsigned int>(0,0);
 
+    // Read the S-parameter labels following the "Freq. keyword."
     while( iss >> word ){
         
         if ( regex_match( word, matches, pat_Sname ) ) {
@@ -1413,8 +1412,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
                 }
             }
         } else {
-            cout << "No match found." << endl;
-            return;
+            throw::invalid_argument( "LTspice S-parameter data file failed: unrecognized pattern amongst the S-param labels." );
         }
 
     }
@@ -1426,7 +1424,7 @@ void fData::read_LTspice_Sp_file( fData& tarFData, const string& fullFileName ){
     int port_cnt_tmp = (int) tmp_d_sqrt;
     // Make sure the number of parameters is a square number.
     if( tmp_d_sqrt - port_cnt_tmp != 0 ){
-        throw std::invalid_argument( "Number of ports should be a square number." );
+        throw std::invalid_argument( "LTspice S-parameter data file failed: Number of total S-parameters is not a square number." );
     }
 
     // UPdate the port count.
