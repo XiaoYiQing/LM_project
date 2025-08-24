@@ -34,6 +34,7 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
 
     // Parse LTspice text data output format.
     if( fileExt == ".txt" ){
+        
         try{
             fData::read_LTspice_Sp_file( myFData, fullFileName );
         }catch( const std::invalid_argument& e ){
