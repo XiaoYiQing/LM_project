@@ -364,6 +364,39 @@ void tests::fData_test_2( unsigned int test_idx ){
 }
 
 
+void tests::fData_enum_test( unsigned int test_idx ){
+
+    int case_cnt = 0;
+    /*
+    Test failure in retrieving higher prefix due to out of bound case.
+    */
+    if( test_idx == case_cnt ){
+
+        fData::METRIC_PREFIX nextPrefix = fData::METRIC_PREFIX::NONE;
+        fData::METRIC_PREFIX testPrefix = static_cast<fData::METRIC_PREFIX>( fData::METRIC_PREFIX_Count - 1 );
+
+        bool test_bool = true;
+        try{
+            nextPrefix = fData::get_higher_prefix( testPrefix );
+        }catch( const std::out_of_range& e ){
+            cout << e.what() << endl;
+            test_bool = true;
+        }catch( ... ){
+            test_bool = false;
+        }
+        
+        if( test_bool ){
+            cout << "get_higher_prefix out of bound failure test: passed!" << endl;
+        }else{
+            cout << "get_higher_prefix out of bound failure test: failed!" << endl;
+        }
+        
+
+    }
+
+}
+
+
 void tests::fData_test_sXp_read( unsigned int test_idx ){
 
     int case_cnt = 0;

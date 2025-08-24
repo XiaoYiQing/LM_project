@@ -69,7 +69,7 @@ public:
 
     // Obtain the string of the target enum case (Uses magic enum).
     static string get_METRIC_PREFIX_Str( METRIC_PREFIX tar_METRIC_PREFIX );
-    // Obtain the enum matching the enum integer index.
+    // Obtain the enum matching the enum integer index (return -1 if failed).
     static METRIC_PREFIX get_METRIC_PREFIX_AtIdx( int idx );
     // Obtain the prefix using the equivalent string symbol.
     static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );

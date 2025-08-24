@@ -18,8 +18,7 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX_AtIdx( int idx ){
     if( idx >= 0 && idx < fData::METRIC_PREFIX_Count ){
         return static_cast<fData::METRIC_PREFIX>(idx);
     }else{
-        cout << "Invalid int index for accessing enum \"METRIC_PREFIX\"." << endl;
-        return static_cast<fData::METRIC_PREFIX>(-1);
+        throw std::out_of_range( "Specific enum index is out of range." );
     }
 }
 
@@ -70,6 +69,31 @@ double fData::get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX ){
     };
 
     return retVal;
+
+}
+
+fData::METRIC_PREFIX fData::get_higher_prefix( METRIC_PREFIX tar_METRIC_PREFIX ){
+
+    // Obtain the index equivalent to the target enum.
+    auto currIdx_tmp = magic_enum::enum_index( tar_METRIC_PREFIX );
+    int currIdx = -1;
+    if( currIdx_tmp ){
+        currIdx = *currIdx_tmp;
+    }else{
+        throw std::invalid_argument( "Given metric prefix is unrecognized. Abort." );
+    }
+
+    // Initialize next prefix.
+    METRIC_PREFIX nextPrefix = static_cast<fData::METRIC_PREFIX>(-1);
+    // Obtain the next higher metric prefix.
+    try{
+        METRIC_PREFIX nextPrefix = get_METRIC_PREFIX_AtIdx( currIdx + 1 );
+    }catch( const std::out_of_range& e ){
+        cout << e.what() << endl;
+        throw std::out_of_range( "Specific enum index is out of range." );
+    }
+
+    return nextPrefix;
 
 }
 

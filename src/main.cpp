@@ -87,11 +87,12 @@ int main() {
 
     // singVal_extract_run();
 
-    string data_fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
-    // string data_fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=475um.s2p";
-    string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
-    LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+    // string data_fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+    // // string data_fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=475um.s2p";
+    // string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
+    // LM_eng::print_singVals( data_fullFileName, dest_dirPath );
 
+    tests::fData_enum_test(0);
 
     return 0; 
 

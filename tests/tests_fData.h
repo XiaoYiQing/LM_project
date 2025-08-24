@@ -30,6 +30,11 @@ namespace tests{
     void fData_test_2( unsigned int test_idx );
 
     /*
+    fData class related enums tests.
+    */
+    void fData_enum_test( unsigned int test_idx );
+
+    /*
     Test the parser for touchstone files.
     */
     void fData_test_sXp_read( unsigned int test_idx );
