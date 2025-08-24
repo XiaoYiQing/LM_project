@@ -368,14 +368,28 @@ void tests::fData_enum_test( unsigned int test_idx ){
 
     int case_cnt = 0;
     /*
-    Test failure in retrieving higher prefix due to out of bound case.
+    Test get_METRIC_PREFIX_next.
     */
     if( test_idx == case_cnt ){
 
+        // Initialize prefix variable.
         fData::METRIC_PREFIX nextPrefix = fData::METRIC_PREFIX::NONE;
-        
+        // Initialize test boolean.
         bool test_bool = true;
 
+        // Standard test.
+        nextPrefix = fData::get_METRIC_PREFIX_next( fData::METRIC_PREFIX::k, true );
+        test_bool = test_bool && nextPrefix == fData::METRIC_PREFIX::M;
+        nextPrefix = fData::get_METRIC_PREFIX_next( fData::METRIC_PREFIX::k, false );
+        test_bool = test_bool && nextPrefix == fData::METRIC_PREFIX::h;
+        if( test_bool ){
+            cout << "get_METRIC_PREFIX_next standard test: passed!" << endl;
+        }else{
+            cout << "get_METRIC_PREFIX_next standard test: failed!" << endl;
+        }
+
+        // Reset test boolean.
+        test_bool = true;
         // Try to get next higher prefix at the highest defined prefix enum.
         fData::METRIC_PREFIX testPrefix = static_cast<fData::METRIC_PREFIX>( fData::METRIC_PREFIX_Count - 1 );
         try{
@@ -387,7 +401,7 @@ void tests::fData_enum_test( unsigned int test_idx ){
             test_bool = test_bool && false;
         }
         
-        // Try to get next higher prefix at the highest defined prefix enum.
+        // Try to get next lower prefix at the highest defined prefix enum.
         testPrefix = static_cast<fData::METRIC_PREFIX>( 0 );
         try{
             nextPrefix = fData::get_METRIC_PREFIX_next( testPrefix, false );

@@ -92,9 +92,8 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PRE
         }else{
             nextPrefix = get_METRIC_PREFIX_AtIdx( currIdx - 1 );
         }
-    }catch( const std::out_of_range& e ){
-        cout << e.what() << endl;
-        throw std::out_of_range( "Specific enum index is out of range." );
+    }catch( ... ){
+        throw;
     }
 
     return nextPrefix;
