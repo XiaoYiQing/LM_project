@@ -75,6 +75,8 @@ public:
     static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );
     // Obtain the numerical value of the metric prefix.
     static double get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX );
+    // Obtain the next higher prefix TODO
+    static METRIC_PREFIX get_higher_prefix( METRIC_PREFIX tar_METRIC_PREFIX );
 
 // ====================================================================== <<<<<
 
@@ -178,6 +180,12 @@ public:
     Switch the data prefix, which applies the corresponding rescaling to the f vector.
     */
     void data_prefix_switch( METRIC_PREFIX newPref );
+
+    /*
+    Normalize the frequency array. NOTE: this function simply selects an appropriate
+    metric prefix switch such TODO.
+    */
+    void f_normalize();
 
 // ====================================================================== <<<<<
 
