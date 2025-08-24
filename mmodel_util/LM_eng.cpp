@@ -50,6 +50,9 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
             return tmp; 
         }
 
+    // Unrecognized extension case.
+    }else{
+        throw std::invalid_argument( "print_singVals aborted: target data file has unrecognized extension." );
     }
 
     

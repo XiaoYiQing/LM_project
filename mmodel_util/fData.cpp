@@ -256,8 +256,7 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             Xi_vec = quot;
             
         }else{
-            cerr << "An impossible outcome has been reached. Abort" << endl;
-            return;
+            throw std::invalid_argument( "fData::data_format_Switch: specified data format change impossible." );
         }
 
         break;
@@ -284,8 +283,7 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             Xi_vec = quot;
 
         }else{
-            cerr << "An impossible outcome has been reached. Abort" << endl;
-            return;
+            throw std::invalid_argument( "fData::data_format_Switch: specified data format change impossible." );
         }
 
         break;
@@ -316,8 +314,7 @@ void fData::data_format_Switch( FDATA_FORMAT newFormat ){
             this->Xr_vec = this->Xr_vec*Xi_vec_cos;
 
         }else{
-            cerr << "An impossible outcome has been reached. Abort" << endl;
-            return;
+            throw std::invalid_argument( "fData::data_format_Switch: specified data format change impossible." );
         }
 
         break;
