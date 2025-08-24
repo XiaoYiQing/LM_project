@@ -22,19 +22,38 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
         throw std::invalid_argument( "Full file name incomplete." );
     }
 
-    // Size of reduced frequency data array.
-    unsigned int fr_len = 100;
+    /*
+    Regex for determining the positive integer value X in the pattern ".sXp".
+    */
+    regex pattern(R"(\.s(\d+)p)");
+    // The match result variable.
+    smatch matches;
+
     // Define our frequency data object.
     fData myFData;
-    // Try to obtain data from specified data file.
-    try{
-        // Obtain the data from the target data file and insert into the fData object.
-        fData::read_sXp_file( myFData, fullFileName );
-    }catch( const std::invalid_argument& e ){
-        std::cerr << "print_singVals aborted: " << e.what() << '\n';
-        shared_ptr<LM_eng> tmp;
-        return tmp; 
+
+    // Parse LTspice text data output format.
+    if( fileExt == ".txt" ){
+
+        fData::read_LTspice_Sp_file( myFData, fullFileName );
+
+    // Parse touchstone files.
+    }else if( regex_match( fileExt, matches, pattern ) ){
+
+        // Try to obtain data from specified data file.
+        try{
+            // Obtain the data from the target data file and insert into the fData object.
+            fData::read_sXp_file( myFData, fullFileName );
+        }catch( const std::invalid_argument& e ){
+            std::cerr << "print_singVals aborted: " << e.what() << '\n';
+            shared_ptr<LM_eng> tmp;
+            return tmp; 
+        }
+
     }
+
+    
+    
     // Switch the data format into real + imaginary format.
     myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
     // Normalize the frequency vector (As much as you can according to metric prefixes).
