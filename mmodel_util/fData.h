@@ -62,7 +62,7 @@ public:
     In the order defined:
         pico, nano, micro, micro (alt), milli, centi, deci, deca, hecto, kilo, mega, giga, tera
     */
-    enum class METRIC_PREFIX{ NONE, p, n, μ, mu, m, c, d, da, h, k, M, G, T };
+    enum class METRIC_PREFIX{ p, n, μ, mu, m, c, d, NONE, da, h, k, M, G, T };
 
     // The number of enum entries in the enum "METRIC_PREFIX" (Uses magic enum).
     const static int METRIC_PREFIX_Count = (int) magic_enum::enum_count<METRIC_PREFIX>();
@@ -75,8 +75,12 @@ public:
     static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );
     // Obtain the numerical value of the metric prefix.
     static double get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX );
-    // Obtain the next higher prefix TODO
-    static METRIC_PREFIX get_higher_prefix( METRIC_PREFIX tar_METRIC_PREFIX );
+    /* 
+    Obtain the next prefix. 
+    If "higher": next higher prefix.
+    else: next lower prefix.
+    */
+    static METRIC_PREFIX get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PREFIX, bool higher );
 
 // ====================================================================== <<<<<
 

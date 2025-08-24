@@ -373,22 +373,35 @@ void tests::fData_enum_test( unsigned int test_idx ){
     if( test_idx == case_cnt ){
 
         fData::METRIC_PREFIX nextPrefix = fData::METRIC_PREFIX::NONE;
-        fData::METRIC_PREFIX testPrefix = static_cast<fData::METRIC_PREFIX>( fData::METRIC_PREFIX_Count - 1 );
-
+        
         bool test_bool = true;
+
+        // Try to get next higher prefix at the highest defined prefix enum.
+        fData::METRIC_PREFIX testPrefix = static_cast<fData::METRIC_PREFIX>( fData::METRIC_PREFIX_Count - 1 );
         try{
-            nextPrefix = fData::get_higher_prefix( testPrefix );
+            nextPrefix = fData::get_METRIC_PREFIX_next( testPrefix, true );
         }catch( const std::out_of_range& e ){
             cout << e.what() << endl;
-            test_bool = true;
+            test_bool = test_bool && true;
         }catch( ... ){
-            test_bool = false;
+            test_bool = test_bool && false;
         }
         
+        // Try to get next higher prefix at the highest defined prefix enum.
+        testPrefix = static_cast<fData::METRIC_PREFIX>( 0 );
+        try{
+            nextPrefix = fData::get_METRIC_PREFIX_next( testPrefix, false );
+        }catch( const std::out_of_range& e ){
+            cout << e.what() << endl;
+            test_bool = test_bool && true;
+        }catch( ... ){
+            test_bool = test_bool && false;
+        }
+
         if( test_bool ){
-            cout << "get_higher_prefix out of bound failure test: passed!" << endl;
+            cout << "get_METRIC_PREFIX_next out of bound failure test: passed!" << endl;
         }else{
-            cout << "get_higher_prefix out of bound failure test: failed!" << endl;
+            cout << "get_METRIC_PREFIX_next out of bound failure test: failed!" << endl;
         }
         
 

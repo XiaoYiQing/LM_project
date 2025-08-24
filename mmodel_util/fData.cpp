@@ -72,7 +72,7 @@ double fData::get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX ){
 
 }
 
-fData::METRIC_PREFIX fData::get_higher_prefix( METRIC_PREFIX tar_METRIC_PREFIX ){
+fData::METRIC_PREFIX fData::get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PREFIX, bool higher ){
 
     // Obtain the index equivalent to the target enum.
     auto currIdx_tmp = magic_enum::enum_index( tar_METRIC_PREFIX );
@@ -87,7 +87,11 @@ fData::METRIC_PREFIX fData::get_higher_prefix( METRIC_PREFIX tar_METRIC_PREFIX )
     METRIC_PREFIX nextPrefix = static_cast<fData::METRIC_PREFIX>(-1);
     // Obtain the next higher metric prefix.
     try{
-        METRIC_PREFIX nextPrefix = get_METRIC_PREFIX_AtIdx( currIdx + 1 );
+        if( higher ){
+            nextPrefix = get_METRIC_PREFIX_AtIdx( currIdx + 1 );
+        }else{
+            nextPrefix = get_METRIC_PREFIX_AtIdx( currIdx - 1 );
+        }
     }catch( const std::out_of_range& e ){
         cout << e.what() << endl;
         throw std::out_of_range( "Specific enum index is out of range." );
