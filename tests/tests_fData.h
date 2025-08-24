@@ -52,7 +52,7 @@ namespace tests{
     /*
     Test for writing the data to a file.
     */
-    void fData_print_test();
+    void fData_print_test( unsigned int test_idx );
 
 }
 

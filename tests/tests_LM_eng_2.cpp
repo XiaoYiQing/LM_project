@@ -444,3 +444,14 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 // ---------------------------------------------------------------------- >>>>>
 
 }
+
+
+
+void tests::LM_eng_print_singVals(){
+
+    string data_fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+    // string data_fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=475um.s2p";
+    string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
+    LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+
+}

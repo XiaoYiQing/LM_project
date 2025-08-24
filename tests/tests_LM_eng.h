@@ -13,6 +13,7 @@
 
 
 extern string RES_PATH_XYQ_str;
+extern string SRC_PATH_XYQ_str;
 
 
 namespace tests{
@@ -59,6 +60,11 @@ namespace tests{
     in the initial data set.
     */
     void LM_eng_full_SFML_dc_case_run();
+
+    /*
+    Test the automatic singular value to file printing function.
+    */
+    void LM_eng_print_singVals();
 
 }
 

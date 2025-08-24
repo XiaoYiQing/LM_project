@@ -660,18 +660,24 @@ void tests::fData_LTspice_data_read_test(){
 }
 
 
-void tests::fData_print_test(){
+void tests::fData_print_test( unsigned int test_idx ){
 
-    // Define our frequency data object.
-    fData myF;
+    int case_cnt = 0;
+    // 0- Standard touchstone test case.
+    if( test_idx == case_cnt ){
 
-    // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-    fData::read_sXp_file( myF, fullFileName );
+        // Define our frequency data object.
+        fData myF;
 
-    string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
-    string targetStemName = "tmp_data_file";
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myF, fullFileName );
 
-    myF.print_to( targetDir, targetStemName, 0 );
+        string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
+        string targetStemName = "tmp_data_file";
+
+        myF.print_to( targetDir, targetStemName, 0 );
+
+    }
 
 }   

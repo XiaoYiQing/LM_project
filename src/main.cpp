@@ -68,11 +68,11 @@ int main() {
 
     // tests::fData_test_1( 0 );
     // tests::fData_test_2( 3 );
-    tests::fData_enum_test(0);
+    // tests::fData_enum_test(0);
     // tests::fData_test_sXp_read(1);
     // tests::fData_setFunc_tests( 1 );
     // tests::fData_LTspice_data_read_test();
-    // tests::fData_print_test();
+    // tests::fData_print_test(0);
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
@@ -85,14 +85,9 @@ int main() {
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
     // tests::LM_eng_full_SFML_dc_case_run();
+    tests::LM_eng_print_singVals();
 
     // singVal_extract_run();
-
-    // string data_fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
-    // // string data_fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=475um.s2p";
-    // string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
-    // LM_eng::print_singVals( data_fullFileName, dest_dirPath );
-
 
     return 0; 
 

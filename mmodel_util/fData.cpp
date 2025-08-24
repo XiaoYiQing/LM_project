@@ -375,7 +375,15 @@ void fData::data_prefix_switch( METRIC_PREFIX newPref ){
 
 void fData::f_normalize(){
 
+    this->f_pref;
+    this->f_vec;
 
+    // Obtain the current prefix value.
+    double f_pref_val = get_METRIC_PREFIX_val( f_pref );
+    // Obtain the highest f value.
+    double f_abs_max = f_vec.cwiseAbs().maxCoeff();
+
+    
 
 }
 
