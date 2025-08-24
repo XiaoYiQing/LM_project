@@ -373,7 +373,9 @@ void fData::data_prefix_switch( METRIC_PREFIX newPref ){
 }
 
 
-void f_normalize(  ){
+void fData::f_normalize(){
+
+
 
 }
 
