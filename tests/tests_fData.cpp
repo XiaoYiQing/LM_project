@@ -681,3 +681,22 @@ void tests::fData_print_test( unsigned int test_idx ){
     }
 
 }   
+
+
+void tests::fData_f_normalize_test( unsigned int test_idx ){
+
+    // Define our frequency data object.
+    fData myF;
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+    // Parse target data file and insert freq data into the fData object.
+    fData::read_LTspice_Sp_file( myF, fullFileName );
+    
+    // Switch the data format to real/imaginary.
+    myF.data_format_Switch( fData::FDATA_FORMAT::RI );
+
+
+    // Perform normalization of the freq vector.
+    myF.f_normalize();
+
+}

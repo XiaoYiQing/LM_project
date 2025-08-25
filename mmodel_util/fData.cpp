@@ -100,6 +100,40 @@ fData::METRIC_PREFIX fData::get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PRE
 
 }
 
+
+fData::METRIC_PREFIX fData::get_METRIC_PREFIX_for_val( double tarVal ){
+
+    METRIC_PREFIX curr_pref = static_cast<fData::METRIC_PREFIX>(0);
+    double curr_pref_val = fData::get_METRIC_PREFIX_val( curr_pref );
+    double next_pref_val = fData::get_METRIC_PREFIX_val( get_METRIC_PREFIX_next( curr_pref, true ) );
+
+    // Special case when target value is less than lowest prefix value.
+    if( tarVal < curr_pref_val ){
+        return curr_pref;
+    }
+
+    // Scan all possible prefixes from lowest to highest.
+    for( unsigned int z = 0; z < fData::METRIC_PREFIX_Count - 1; z++ ){
+
+        // Stop scan when target value lies between the current consecutive 
+        // prefix values.
+        if( tarVal >= curr_pref_val && tarVal < next_pref_val ){
+            break;
+        }
+
+        // Increment the current prefix
+        curr_pref = get_METRIC_PREFIX_next( curr_pref, true );
+        curr_pref_val = fData::get_METRIC_PREFIX_val( curr_pref );
+        if( z < fData::METRIC_PREFIX_Count - 2 ){
+            next_pref_val = fData::get_METRIC_PREFIX_val( get_METRIC_PREFIX_next( curr_pref, true ) );
+        }
+        
+    }
+
+    return curr_pref;
+
+}
+
 // ====================================================================== <<<<<
 
 
@@ -380,10 +414,29 @@ void fData::f_normalize(){
 
     // Obtain the current prefix value.
     double f_pref_val = get_METRIC_PREFIX_val( f_pref );
-    // Obtain the highest f value.
+    // Obtain the highest f magnitude.
     double f_abs_max = f_vec.cwiseAbs().maxCoeff();
+    // Calculate the largest f magnitude.
+    double currMaxMag = f_abs_max * f_pref_val;
 
-    
+    METRIC_PREFIX curr_f_pref = f_pref;
+    METRIC_PREFIX upper_f_pref = f_pref;
+    METRIC_PREFIX lower_f_pref = f_pref;
+
+    double curr_f_pref_val = f_pref_val;
+    double upper_f_pref_val = f_pref_val;
+    double lower_f_pref_val = f_pref_val;
+
+    bool cond = false;
+    while( !cond ){
+
+        upper_f_pref = get_METRIC_PREFIX_next( curr_f_pref, true );
+        lower_f_pref = get_METRIC_PREFIX_next( curr_f_pref, false );
+
+
+    }
+
+    int lol = 0;
 
 }
 

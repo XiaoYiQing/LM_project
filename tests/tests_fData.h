@@ -54,6 +54,11 @@ namespace tests{
     */
     void fData_print_test( unsigned int test_idx );
 
+    /*
+    Test for the frequency vector normalization.
+    */
+    void fData_f_normalize_test( unsigned int test_idx );
+
 }
 
 

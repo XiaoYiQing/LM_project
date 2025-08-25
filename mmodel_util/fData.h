@@ -75,12 +75,15 @@ public:
     static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );
     // Obtain the numerical value of the metric prefix.
     static double get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX );
+    
     /* 
     Obtain the next prefix. 
     If "higher": next higher prefix.
     else: next lower prefix.
     */
     static METRIC_PREFIX get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PREFIX, bool higher );
+    // Obtain the appropriate prefix for the given value.
+    static METRIC_PREFIX get_METRIC_PREFIX_for_val( double tarVal );
 
 // ====================================================================== <<<<<
 
