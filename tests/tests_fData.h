@@ -1,6 +1,7 @@
 #ifndef TESTS_FDATA_H
 #define TESTS_FDATA_H
 
+#include <cstdio>
 #include <Eigen/Dense>
 #include <iostream>
 #include <string>

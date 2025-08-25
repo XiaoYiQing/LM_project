@@ -690,17 +690,47 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
     if( test_idx == case_cnt ){
 
         bool test_bool = true;
-        double testVal = 1e-16;
         fData::METRIC_PREFIX curr_pref;
         string err_msg = "get_METRIC_PREFIX_for_val test: failed at ";
 
-        curr_pref = fData::get_METRIC_PREFIX_for_val( testVal );
-        
+        char buf[64];
+
+        vector<double> testVal_vec = { 1e-16, 1e-12, 1e-9, 1e-6, 
+            1e-3, 1e-2, 1e-1, 1, 1e+1, 1e2, 1e3, 1e6, 1e9, 1e12 };
+        vector<fData::METRIC_PREFIX> test_pref_vec = {
+            fData::METRIC_PREFIX::p,
+            fData::METRIC_PREFIX::p,
+            fData::METRIC_PREFIX::n,
+            fData::METRIC_PREFIX::mu,
+            fData::METRIC_PREFIX::m,
+            fData::METRIC_PREFIX::c,
+            fData::METRIC_PREFIX::d,
+            fData::METRIC_PREFIX::NONE,
+            fData::METRIC_PREFIX::da,
+            fData::METRIC_PREFIX::h,
+            fData::METRIC_PREFIX::k,
+            fData::METRIC_PREFIX::M,
+            fData::METRIC_PREFIX::G,
+            fData::METRIC_PREFIX::T
+        };
+
+        for( unsigned int z = 0; z < testVal_vec.size(); z++ ){
+            curr_pref = fData::get_METRIC_PREFIX_for_val( testVal_vec.at(z) );
+            if( curr_pref != test_pref_vec.at(z) ){
+                test_bool = false;
+                std::snprintf( buf, sizeof(buf), "%.6e", testVal_vec.at(z) );
+                cout << err_msg + string( buf ) << endl;
+            }
+        }
+
+        if( test_bool ){
+            cout << "get_METRIC_PREFIX_for_val test: passed!" << endl;
+        }
 
     }
 
 
-    // 0- f_normalize tests
+    // 1- f_normalize tests
     case_cnt++;
     if( test_idx == case_cnt ){
 
