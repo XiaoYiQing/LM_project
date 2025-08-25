@@ -683,20 +683,45 @@ void tests::fData_print_test( unsigned int test_idx ){
 }   
 
 
-void tests::fData_f_normalize_test( unsigned int test_idx ){
+void tests::fData_prefix_manip_test( unsigned int test_idx ){
 
-    // Define our frequency data object.
-    fData myF;
-    // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
-    // Parse target data file and insert freq data into the fData object.
-    fData::read_LTspice_Sp_file( myF, fullFileName );
+    int case_cnt = 0;
+    // 0- get_METRIC_PREFIX_for_val tests
+    if( test_idx == case_cnt ){
+
+        bool test_bool = true;
+        double testVal = 1e-16;
+        fData::METRIC_PREFIX curr_pref;
+        string err_msg = "get_METRIC_PREFIX_for_val test: failed at ";
+
+        curr_pref = fData::get_METRIC_PREFIX_for_val( testVal );
+        
+
+    }
+
+
+    // 0- f_normalize tests
+    case_cnt++;
+    if( test_idx == case_cnt ){
+
+        // Define our frequency data object.
+        fData myF;
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+        // Parse target data file and insert freq data into the fData object.
+        fData::read_LTspice_Sp_file( myF, fullFileName );
+        
+        // Switch the data format to real/imaginary.
+        myF.data_format_Switch( fData::FDATA_FORMAT::RI );
+
+        // Perform normalization of the freq vector.
+        myF.f_normalize();
+
+    }
+
     
-    // Switch the data format to real/imaginary.
-    myF.data_format_Switch( fData::FDATA_FORMAT::RI );
 
 
-    // Perform normalization of the freq vector.
-    myF.f_normalize();
+    
 
 }

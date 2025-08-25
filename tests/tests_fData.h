@@ -55,9 +55,9 @@ namespace tests{
     void fData_print_test( unsigned int test_idx );
 
     /*
-    Test for the frequency vector normalization.
+    Test for fData support functions performing manipulations on prefix or scale.
     */
-    void fData_f_normalize_test( unsigned int test_idx );
+    void fData_prefix_manip_test( unsigned int test_idx );
 
 }
 
