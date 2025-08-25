@@ -407,7 +407,7 @@ void fData::data_prefix_switch( METRIC_PREFIX newPref ){
 }
 
 
-void fData::f_normalize(){
+void fData::f_rescale(){
 
     this->f_pref;
     this->f_vec;
@@ -418,25 +418,10 @@ void fData::f_normalize(){
     double f_abs_max = f_vec.cwiseAbs().maxCoeff();
     // Calculate the largest f magnitude.
     double currMaxMag = f_abs_max * f_pref_val;
-
-    METRIC_PREFIX curr_f_pref = f_pref;
-    METRIC_PREFIX upper_f_pref = f_pref;
-    METRIC_PREFIX lower_f_pref = f_pref;
-
-    double curr_f_pref_val = f_pref_val;
-    double upper_f_pref_val = f_pref_val;
-    double lower_f_pref_val = f_pref_val;
-
-    bool cond = false;
-    while( !cond ){
-
-        upper_f_pref = get_METRIC_PREFIX_next( curr_f_pref, true );
-        lower_f_pref = get_METRIC_PREFIX_next( curr_f_pref, false );
-
-
-    }
-
-    int lol = 0;
+    // Obtain the appropriate prefix for classifying the max f value.
+    fData::METRIC_PREFIX tar_pref = fData::get_METRIC_PREFIX_for_val( currMaxMag );
+    // Switch to this new prefix.
+    this->data_prefix_switch( tar_pref );
 
 }
 

@@ -696,7 +696,7 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
         char buf[64];
 
         vector<double> testVal_vec = { 1e-16, 1e-12, 1e-9, 1e-6, 
-            1e-3, 1e-2, 1e-1, 1, 1e+1, 1e2, 1e3, 1e6, 1e9, 1e12 };
+            1e-3, 1e-2, 1e-1, 1, 1e+1, 1e2, 1e3, 1e6, 1e9, 1e12, 1e14 };
         vector<fData::METRIC_PREFIX> test_pref_vec = {
             fData::METRIC_PREFIX::p,
             fData::METRIC_PREFIX::p,
@@ -711,6 +711,7 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
             fData::METRIC_PREFIX::k,
             fData::METRIC_PREFIX::M,
             fData::METRIC_PREFIX::G,
+            fData::METRIC_PREFIX::T,
             fData::METRIC_PREFIX::T
         };
 
@@ -730,7 +731,7 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
     }
 
 
-    // 1- f_normalize tests
+    // 1- f_rescale tests
     case_cnt++;
     if( test_idx == case_cnt ){
 
@@ -744,8 +745,12 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
         // Switch the data format to real/imaginary.
         myF.data_format_Switch( fData::FDATA_FORMAT::RI );
 
+        cout << myF.get_fval_at( 250 ) << endl;
+
         // Perform normalization of the freq vector.
-        myF.f_normalize();
+        myF.f_rescale();
+
+        cout << myF.get_fval_at( 250 ) << endl;
 
     }
 
