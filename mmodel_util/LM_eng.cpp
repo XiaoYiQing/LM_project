@@ -332,13 +332,15 @@ void LM_eng::set_fData( const fData& inData ){
     this->myFData = inData;
 
     // Reset the flags.
-    this->flag0_data_set = false;
+    this->flag0_data_set = true;
     this->flag1_data_prep = false;
     this->flag2_LM_const = false;
     this->flag3_re_trans = false;
     this->flag4_pen_SVD = false;
 
 }
+
+
 
 double LM_eng::get_ref_f_mag() const{
 

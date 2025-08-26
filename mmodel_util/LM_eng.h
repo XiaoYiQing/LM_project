@@ -86,6 +86,8 @@ bool get_flag( unsigned int flagIdx ) const;
 
 // Insert new frequency data to the current LM engine.
 void set_fData( const fData& inData );
+// Obtain the current fData.
+fData get_fData() const;
 
 /*
 Obtain the reference frequency magnitude used to construct the LM pencil.
