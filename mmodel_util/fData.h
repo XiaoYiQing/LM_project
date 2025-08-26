@@ -192,7 +192,7 @@ public:
     Normalize the frequency array. NOTE: this function simply selects an appropriate
     metric prefix switch such TODO.
     */
-    void f_normalize();
+    void f_rescale();
 
 // ====================================================================== <<<<<
 

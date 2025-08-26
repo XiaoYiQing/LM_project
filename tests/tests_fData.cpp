@@ -735,22 +735,53 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
     case_cnt++;
     if( test_idx == case_cnt ){
 
+        bool test_bool = true;
+
         // Define our frequency data object.
         fData myF;
         // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+        string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
         // Parse target data file and insert freq data into the fData object.
         fData::read_LTspice_Sp_file( myF, fullFileName );
         
         // Switch the data format to real/imaginary.
         myF.data_format_Switch( fData::FDATA_FORMAT::RI );
 
-        cout << myF.get_fval_at( 250 ) << endl;
+        // Define the number of samples.
+        unsigned int samp_cnt = 10;
+        // Define the expected rescaling factor.
+        double rescale_fact = 1e6;
+        // Define the numerical threshold.
+        double num_thresh = 1e-9;
 
+        // Select a random sample point.
+        shared_ptr<vector<int>> samp_idx_vec = utils::rIntGen( 1, myF.get_f_cnt() - 1, samp_cnt );
+
+        // Obtain f samples before rescaling.
+        vector<double> f_samp_vec_bef( samp_cnt );
+        for( unsigned int z = 0; z < samp_idx_vec->size(); z++ ){
+            f_samp_vec_bef.at(z) = myF.get_fval_at( samp_idx_vec->at(z) );
+        }
         // Perform normalization of the freq vector.
         myF.f_rescale();
+        // Obtain f samples after rescaling.
+        vector<double> f_samp_vec_aft( samp_cnt );
+        for( unsigned int z = 0; z < samp_idx_vec->size(); z++ ){
+            f_samp_vec_aft.at(z) = myF.get_fval_at( samp_idx_vec->at(z) );
+        }
 
-        cout << myF.get_fval_at( 250 ) << endl;
+        // Verify if the scaling is correctly applied to all samples.
+        for( unsigned int z = 0; z < samp_idx_vec->size(); z++ ){
+            test_bool = test_bool && 
+                ( f_samp_vec_aft.at(z)/f_samp_vec_bef.at(z) - rescale_fact < num_thresh );    
+        }
+        
+
+        if( test_bool ){
+            cout << "f_rescale test: passed!" << endl;
+        }else{
+            cout << "f_rescale test: failed!" << endl;
+        }
 
     }
 
