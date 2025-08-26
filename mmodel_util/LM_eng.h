@@ -171,8 +171,11 @@ protected:
     bool f1_has_DC_pt = false;
     // Frequency partition 2 has DC point.
     bool f2_has_DC_pt = false;
+
     // The reduced frequency set.
     shared_ptr<fData> myFr;
+    // The reduced frequency index array.
+    vector< unsigned int > fr_idx_arr;
     // The two frequency data partitions.
     vector< unsigned int > partit1IdxArr;
     vector< unsigned int > partit2IdxArr;

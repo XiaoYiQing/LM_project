@@ -131,13 +131,13 @@ void LM_eng::step1_fData_partition(){
     }
 
     // Create a subset linear index array.
-    vector< unsigned int > fr_idx_arr = 
+    this->fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
 
     // Reset the reduced frequency set variable.
     this->myFr.reset();
     // Create a fData subset.
-    this->myFr = this->myFData.red_partit( fr_idx_arr );
+    this->myFr = this->myFData.red_partit( this->fr_idx_arr );
 
     // Generate the partition index arrays.
     vector< vector< unsigned int > > index_arrs = this->myFr->gen_2_partit_idx_arr();
