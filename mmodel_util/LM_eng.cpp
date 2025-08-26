@@ -340,6 +340,12 @@ void LM_eng::set_fData( const fData& inData ){
 
 }
 
+fData LM_eng::get_fData() const{
+    if( !this->flag0_data_set ){
+        throw std::runtime_error( "Cannot return fData: step1 (data set) has not been set." );
+    }
+    return this->myFData;
+}
 
 
 double LM_eng::get_ref_f_mag() const{
