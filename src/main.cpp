@@ -27,6 +27,7 @@
 
 #include "fData.h"
 #include "numUtils.h"
+#include "orchestrators.h"
 #include "tests_Eigen.h"
 #include "tests_fData.h"
 #include "tests_LM_eng.h"
@@ -88,8 +89,7 @@ int main() {
     // tests::LM_eng_full_SFML_dc_case_run();
     // tests::LM_eng_print_singVals();
 
-    singVal_extract_run();
-
+    FCT_SCR::singVal_extract_run();
 
     return 0; 
 
