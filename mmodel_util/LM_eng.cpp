@@ -70,7 +70,6 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
     }
 
     
-    
     // Switch the data format into real + imaginary format.
     myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
     // Normalize the frequency vector (As much as you can according to metric prefixes).

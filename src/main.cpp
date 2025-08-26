@@ -73,7 +73,7 @@ int main() {
     // tests::fData_setFunc_tests( 1 );
     // tests::fData_LTspice_data_read_test();
     // tests::fData_print_test(0);
-    tests::fData_prefix_manip_test(1);
+    // tests::fData_prefix_manip_test(1);
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
@@ -86,7 +86,7 @@ int main() {
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
     // tests::LM_eng_full_SFML_dc_case_run();
-    // tests::LM_eng_print_singVals();
+    tests::LM_eng_print_singVals();
 
     // singVal_extract_run();
 
