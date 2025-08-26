@@ -86,9 +86,9 @@ int main() {
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
     // tests::LM_eng_full_SFML_dc_case_run();
-    tests::LM_eng_print_singVals();
+    // tests::LM_eng_print_singVals();
 
-    // singVal_extract_run();
+    singVal_extract_run();
 
 
     return 0; 
@@ -102,6 +102,9 @@ int main() {
 void singVal_extract_run(){
 
     // RES_PATH_XYQ_str
+
+    // Define the destination directory.
+    string data_dest_dir = SRC_PATH_XYQ_str + "/data_output/singVals_depo";
 
     vector<string> file_stem_arr;
     vector<string> file_path_arr;
@@ -131,10 +134,9 @@ void singVal_extract_run(){
         // Assemble current full filename.
         fullFileName_z = file_path_arr.at(z) + file_stem_arr.at(z) + file_ext_arr.at(z);
 
-        // Define our frequency data object.
-        fData myFData;
-        // Obtain the data from the target data file and insert into the fData object.
-        fData::read_sXp_file( myFData, fullFileName_z );
+        // Perform the automated <data parsing> + <SFML process> + 
+        // <singVals print> process.
+        LM_eng::print_singVals( fullFileName_z, data_dest_dir );
 
     }
 

@@ -454,8 +454,5 @@ void tests::LM_eng_print_singVals(){
     
     shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
 
-    myFData = my_LM_eng->get_fData();
-
-
 
 }
