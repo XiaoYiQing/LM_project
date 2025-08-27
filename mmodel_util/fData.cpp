@@ -199,11 +199,11 @@ fData::FDATA_FORMAT fData::get_FDATA_FORMAT( string strSymbol ){
 //      General Static Support Functions
 // ====================================================================== >>>>>
 
-vector< vector< unsigned int > > fData::gen_2_partit_idx_arr( unsigned int maxSize ){
+vector< vector< unsigned int > > fData::gen_2_partit_idx_arr( unsigned int origSize ){
     
     // Generate the frequency partition index arrays (Interleaving).
-    vector< unsigned int > tmp1 = utils::gen_even_idx_arr( 0, maxSize - 1 );
-    vector< unsigned int > tmp2 = utils::gen_odd_idx_arr( 0, maxSize - 1 );
+    vector< unsigned int > tmp1 = utils::gen_even_idx_arr( 0, origSize - 1 );
+    vector< unsigned int > tmp2 = utils::gen_odd_idx_arr( 0, origSize - 1 );
     // Initialize the return vector with the two index arrays.
     vector< vector< unsigned int > > retVec = { tmp1, tmp2 };
 

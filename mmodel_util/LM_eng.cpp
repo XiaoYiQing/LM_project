@@ -174,10 +174,12 @@ void LM_eng::step1_fData_partition(){
     }
 
     // Create a fData subset.
-    shared_ptr<fData> myFr = this->myFData.red_partit( this->fr_idx_arr );
+    // shared_ptr<fData> myFr = this->myFData.red_partit( this->fr_idx_arr );
 
     // Generate the relative partition index arrays.
-    vector< vector< unsigned int > > index_arrs = myFr->gen_2_partit_idx_arr();
+    // vector< vector< unsigned int > > index_arrs = myFr->gen_2_partit_idx_arr();
+    vector< vector< unsigned int > > index_arrs = 
+        fData::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
     vector< unsigned int > p1IdxArr_tmp = index_arrs.at(0);
     vector< unsigned int > p2IdxArr_tmp = index_arrs.at(1);
 

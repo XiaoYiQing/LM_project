@@ -141,7 +141,11 @@ public:
 //      General Static Support Functions
 // ====================================================================== >>>>>
 
-static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int maxSize );
+/*
+Create two index arrays having mutually exclusive indices which
+can serve to create two partitions from the existing original set.
+*/
+static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origSize );
 
 // ====================================================================== <<<<<
 
