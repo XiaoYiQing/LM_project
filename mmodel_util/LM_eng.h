@@ -56,11 +56,12 @@ public:
 //      Major LM System Steps
 // ====================================================================== >>>>>
 
-    // The pre-SFML process step, which is simply setting the frequency data.
+    /*
+    The pre-SFML process step, which is simply setting the frequency data.
+    */ 
     void step0_fData_set( const fData& inData );
 
     void step1_fData_partition();
-    void step1_fData_partition( const vector< unsigned int >& fr_idx_arr_in );
 
     void step2_LM_construct();
 

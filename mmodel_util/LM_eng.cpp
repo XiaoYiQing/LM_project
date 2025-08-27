@@ -135,6 +135,10 @@ void LM_eng::step0_fData_set( const fData& inData ){
     this->flag3_re_trans = false;
     this->flag4_pen_SVD = false;
 
+    // Create a subset linear index array.
+    this->fr_idx_arr = 
+        utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
+
 }
 
 void LM_eng::step1_fData_partition(){
@@ -142,24 +146,6 @@ void LM_eng::step1_fData_partition(){
     if( !flag0_data_set ){
         throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
     }
-
-    // Create a subset linear index array.
-    this->fr_idx_arr = 
-        utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
-
-    // Continue the partitioning process with the default partitioning process.
-    step1_fData_partition( fr_idx_arr );
-
-}
-
-void LM_eng::step1_fData_partition( const vector< unsigned int >& fr_idx_arr_in ){
-
-    if( !flag0_data_set ){
-        throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
-    }
-
-    // Assign the reduced partition index vector to the local variable.
-    this->fr_idx_arr = fr_idx_arr_in;
 
     // Create a fData subset.
     shared_ptr<fData> myFr = this->myFData.red_partit( this->fr_idx_arr );
@@ -190,6 +176,7 @@ void LM_eng::step1_fData_partition( const vector< unsigned int >& fr_idx_arr_in 
     this->flag1_data_prep = true;
 
 }
+
 
 void LM_eng::step2_LM_construct(){
 
