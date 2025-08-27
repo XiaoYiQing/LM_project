@@ -134,6 +134,15 @@ void LM_eng::step1_fData_partition(){
     this->fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
 
+    // Continue the partitioning process with the default partitioning process.
+    step1_fData_partition( fr_idx_arr );
+
+}
+
+void LM_eng::step1_fData_partition( const vector< unsigned int >& fr_idx_arr_in ){
+
+    this->fr_idx_arr = fr_idx_arr_in;
+
     // Create a fData subset.
     shared_ptr<fData> myFr = this->myFData.red_partit( this->fr_idx_arr );
 
@@ -161,12 +170,6 @@ void LM_eng::step1_fData_partition(){
 
     // Set the tracking flag for step 1.
     this->flag1_data_prep = true;
-
-}
-
-void LM_eng::step1_fData_partition( vector< unsigned int > fr_idx_arr_in ){
-
-
 
 }
 
