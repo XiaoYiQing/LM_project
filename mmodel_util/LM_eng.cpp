@@ -173,11 +173,7 @@ void LM_eng::step1_fData_partition(){
         throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
     }
 
-    // Create a fData subset.
-    // shared_ptr<fData> myFr = this->myFData.red_partit( this->fr_idx_arr );
-
     // Generate the relative partition index arrays.
-    // vector< vector< unsigned int > > index_arrs = myFr->gen_2_partit_idx_arr();
     vector< vector< unsigned int > > index_arrs = 
         fData::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
     vector< unsigned int > p1IdxArr_tmp = index_arrs.at(0);
@@ -203,6 +199,31 @@ void LM_eng::step1_fData_partition(){
     // Set the tracking flag for step 1.
     this->flag1_data_prep = true;
 
+}
+
+
+void LM_eng::step1_fData_partition( const vector<unsigned int>& p1IdxVec, 
+    const vector<unsigned int>& p2IdxVec ){
+    
+    if( !flag0_data_set ){
+        throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
+    }
+
+    /*
+    0- Check for total index count matching reduced f set count.
+    1- Check out of bound indexing.
+    2- Check for repeated indices.
+    3- Check for identical indices across partitions.
+    */
+
+    unsigned int f1_size = p1IdxVec.size();
+    unsigned int f2_size = p2IdxVec.size();
+    if( f1_size + f2_size != this->fr_idx_arr.size() ){
+        throw std::invalid_argument( "The total number of entries from the two partitions must match the reduced f set size." );
+    }
+
+    
+    
 }
 
 

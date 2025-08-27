@@ -72,7 +72,9 @@ public:
     void step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in );
 
     void step1_fData_partition();
-
+    void step1_fData_partition( const vector<unsigned int>& p1IdxVec, 
+        const vector<unsigned int>& p2IdxVec );
+    
     void step2_LM_construct();
 
     void step3_LM_re_trans();
