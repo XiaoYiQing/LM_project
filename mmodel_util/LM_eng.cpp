@@ -125,8 +125,22 @@ LM_eng::LM_eng( const fData& inData ){
 
 void LM_eng::step0_fData_set( const fData& inData ){
 
+    // Create a subset linear index array.
+    vector<unsigned int> fr_idx_arr_in = 
+        utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, s1_fr_len );
+
+    // Go through the official step 0 function.
+    step0_fData_set( inData, fr_idx_arr_in );
+
+}
+
+void LM_eng::step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in ){
+
     // Set the engine's data with the given data.
     this->myFData = inData;
+
+    // Assign the local reduced set index vector.
+    this->fr_idx_arr = fr_idx_arr_in;
 
     // Reset the flags.
     this->flag0_data_set = true;
@@ -134,10 +148,6 @@ void LM_eng::step0_fData_set( const fData& inData ){
     this->flag2_LM_const = false;
     this->flag3_re_trans = false;
     this->flag4_pen_SVD = false;
-
-    // Create a subset linear index array.
-    this->fr_idx_arr = 
-        utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
 
 }
 

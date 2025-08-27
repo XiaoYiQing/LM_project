@@ -60,6 +60,7 @@ public:
     The pre-SFML process step, which is simply setting the frequency data.
     */ 
     void step0_fData_set( const fData& inData );
+    void step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in );
 
     void step1_fData_partition();
 
