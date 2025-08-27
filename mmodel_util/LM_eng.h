@@ -56,8 +56,11 @@ public:
 //      Major LM System Steps
 // ====================================================================== >>>>>
 
+    // The pre-SFML process step, which is simply setting the frequency data.
+    void step0_fData_set( const fData& inData );
+
     void step1_fData_partition();
-    void step1_fData_partition( vector< unsigned int > fr_idx_arr_in );
+    void step1_fData_partition( const vector< unsigned int >& fr_idx_arr_in );
 
     void step2_LM_construct();
 
@@ -86,7 +89,8 @@ Get the flag of the specified LM step index.
 bool get_flag( unsigned int flagIdx ) const;
 
 // Insert new frequency data to the current LM engine.
-void set_fData( const fData& inData );
+// void set_fData( const fData& inData );
+
 // Obtain the current fData.
 fData get_fData() const;
 

@@ -110,8 +110,7 @@ LM_eng::LM_eng(){
 
 LM_eng::LM_eng( const fData& inData ){
 
-    this->myFData = inData;
-    flag0_data_set = true;
+    this->step0_fData_set( inData );
 
 }
 
@@ -123,6 +122,20 @@ LM_eng::LM_eng( const fData& inData ){
 // ====================================================================== >>>>>
 //      Major LM System Steps
 // ====================================================================== >>>>>
+
+void LM_eng::step0_fData_set( const fData& inData ){
+
+    // Set the engine's data with the given data.
+    this->myFData = inData;
+
+    // Reset the flags.
+    this->flag0_data_set = true;
+    this->flag1_data_prep = false;
+    this->flag2_LM_const = false;
+    this->flag3_re_trans = false;
+    this->flag4_pen_SVD = false;
+
+}
 
 void LM_eng::step1_fData_partition(){
 
@@ -141,6 +154,11 @@ void LM_eng::step1_fData_partition(){
 
 void LM_eng::step1_fData_partition( const vector< unsigned int >& fr_idx_arr_in ){
 
+    if( !flag0_data_set ){
+        throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
+    }
+
+    // Assign the reduced partition index vector to the local variable.
     this->fr_idx_arr = fr_idx_arr_in;
 
     // Create a fData subset.
@@ -346,19 +364,19 @@ bool LM_eng::get_flag( unsigned int flagIdx ) const{
 
 }
 
-void LM_eng::set_fData( const fData& inData ){
+// void LM_eng::set_fData( const fData& inData ){
 
-    // Set the engine's data with the given data.
-    this->myFData = inData;
+//     // Set the engine's data with the given data.
+//     this->myFData = inData;
 
-    // Reset the flags.
-    this->flag0_data_set = true;
-    this->flag1_data_prep = false;
-    this->flag2_LM_const = false;
-    this->flag3_re_trans = false;
-    this->flag4_pen_SVD = false;
+//     // Reset the flags.
+//     this->flag0_data_set = true;
+//     this->flag1_data_prep = false;
+//     this->flag2_LM_const = false;
+//     this->flag3_re_trans = false;
+//     this->flag4_pen_SVD = false;
 
-}
+// }
 
 fData LM_eng::get_fData() const{
     if( !this->flag0_data_set ){
