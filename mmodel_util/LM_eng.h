@@ -1,6 +1,7 @@
 #ifndef LM_ENG_H
 #define LM_ENG_H
 
+#include <algorithm>
 #include <Eigen/Dense>
 #include <iostream>
 #include <fstream>

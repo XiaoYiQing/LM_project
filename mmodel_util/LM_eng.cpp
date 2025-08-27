@@ -128,8 +128,8 @@ void LM_eng::step0_fData_set( const fData& inData ){
     // Create a subset linear index array.
     vector<unsigned int> fr_idx_arr_in = 
         utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, s1_fr_len );
-
-    // Go through the official step 0 function.
+    
+    // Follow the standard step 0 procedure.
     step0_fData_set( inData, fr_idx_arr_in );
 
 }
@@ -139,8 +139,23 @@ void LM_eng::step0_fData_set( const fData& inData, const vector<unsigned int>& f
     // Set the engine's data with the given data.
     this->myFData = inData;
 
+    vector<unsigned int> fr_idx_arr_in_tmp = fr_idx_arr_in;
+    // Sort the input index vector in ascending order.
+    std::sort( fr_idx_arr_in_tmp.begin(), fr_idx_arr_in_tmp.end() );
+
+    // Check for repeated indices.
+    for( unsigned int z = 0; z < fr_idx_arr_in_tmp.size() - 1; z++ ){
+        if( fr_idx_arr_in_tmp.at(z) == fr_idx_arr_in_tmp.at(z+1) ){
+            throw std::invalid_argument( "Repeated entries in the reduced frequency set index vector." );
+        }
+    }
+    // Check for out of bound indexing.
+    if( fr_idx_arr_in_tmp.at( fr_idx_arr_in_tmp.size()-1 >= myFData.get_f_cnt() ) ){
+        throw std::out_of_range( "Reduced frequency set index vector has indices exceeding number of available frequency entries." );
+    }
+
     // Assign the local reduced set index vector.
-    this->fr_idx_arr = fr_idx_arr_in;
+    this->fr_idx_arr = fr_idx_arr_in_tmp;
 
     // Reset the flags.
     this->flag0_data_set = true;
