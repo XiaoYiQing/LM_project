@@ -26,6 +26,14 @@ public:
     */
     static const double NUM_THRESH;
 
+    /*
+    Standard reduced frequency set size. This is the number of frequency entries to be
+    extracted from the original fData set to create a subset fData. This subset fData
+    is the one used to construct the SFLM system, because the full set fData is usually
+    too large and overkill.
+    */
+    static const unsigned int STD_RED_FSET_SIZE;
+
 // ====================================================================== >>>>>
 //      Static Support Functions
 // ====================================================================== >>>>>
@@ -173,8 +181,6 @@ protected:
     // The starting frequency data from which the LM is to be constructed.
     fData myFData;
 
-    // The reduced frequency array size (training set size).
-    unsigned int s1_fr_len = 100;
     // Frequency partition 1 has DC point.
     bool f1_has_DC_pt = false;
     // Frequency partition 2 has DC point.

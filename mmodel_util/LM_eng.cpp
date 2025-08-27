@@ -4,6 +4,7 @@
 
 const double LM_eng::NUM_THRESH = 1.0e-12;
 
+const unsigned int LM_eng::STD_RED_FSET_SIZE = 100;
 
 // ====================================================================== >>>>>
 //      Static Support Functions
@@ -127,7 +128,7 @@ void LM_eng::step0_fData_set( const fData& inData ){
 
     // Create a subset linear index array.
     vector<unsigned int> fr_idx_arr_in = 
-        utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, s1_fr_len );
+        utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, STD_RED_FSET_SIZE );
     
     // Follow the standard step 0 procedure.
     step0_fData_set( inData, fr_idx_arr_in );
