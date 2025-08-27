@@ -84,7 +84,7 @@ int main() {
 
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
-    // tests::LM_eng_full_SFML_dc_case_run();
+    tests::LM_eng_full_SFML_dc_case_run();
     // tests::LM_eng_print_singVals();
 
     // FCT_SCR::singVal_extract_run();

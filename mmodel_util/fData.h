@@ -217,7 +217,7 @@ public:
     /*
     Create a reduced set of frequency data using a subset index array.
     */
-    shared_ptr<fData> red_partit( vector< unsigned int > fr_idx_vec );
+    shared_ptr<fData> red_partit( vector< unsigned int > fr_idx_vec ) const;
 
     /*
     Create two partitions from the original frequency data set.

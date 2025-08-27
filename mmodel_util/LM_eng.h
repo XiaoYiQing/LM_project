@@ -173,7 +173,7 @@ protected:
     bool f2_has_DC_pt = false;
 
     // The reduced frequency set.
-    shared_ptr<fData> myFr;
+    // shared_ptr<fData> myFr;
     // The reduced frequency index array.
     vector< unsigned int > fr_idx_arr;
     // The two frequency data partitions.

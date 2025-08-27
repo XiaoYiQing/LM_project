@@ -134,19 +134,30 @@ void LM_eng::step1_fData_partition(){
     this->fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, this->myFData.get_f_cnt() - 1, s1_fr_len );
 
-    // Reset the reduced frequency set variable.
-    this->myFr.reset();
     // Create a fData subset.
-    this->myFr = this->myFData.red_partit( this->fr_idx_arr );
+    shared_ptr<fData> myFr = this->myFData.red_partit( this->fr_idx_arr );
 
-    // Generate the partition index arrays.
-    vector< vector< unsigned int > > index_arrs = this->myFr->gen_2_partit_idx_arr();
-    this->partit1IdxArr = index_arrs.at(0);
-    this->partit2IdxArr = index_arrs.at(1);
+    // Generate the relative partition index arrays.
+    vector< vector< unsigned int > > index_arrs = myFr->gen_2_partit_idx_arr();
+    vector< unsigned int > p1IdxArr_tmp = index_arrs.at(0);
+    vector< unsigned int > p2IdxArr_tmp = index_arrs.at(1);
+
+    // Generate the true partition index arrays.
+    partit1IdxArr.clear();
+    partit1IdxArr.reserve( p1IdxArr_tmp.size() );
+    for ( unsigned int z = 0; z < p1IdxArr_tmp.size(); z++ ) {
+        partit1IdxArr.push_back( fr_idx_arr[ p1IdxArr_tmp[z] ] );
+    }
+    partit2IdxArr.clear();
+    partit2IdxArr.reserve( p2IdxArr_tmp.size() );
+    for ( unsigned int z = 0; z < p2IdxArr_tmp.size(); z++ ) {
+        partit2IdxArr.push_back( fr_idx_arr[ p2IdxArr_tmp[z] ] );
+    }
+
 
     // Check for DC point in either partitions.
-    this->f1_has_DC_pt = myFr->get_fval_at( partit1IdxArr.at(0) ) == 0;
-    this->f2_has_DC_pt = myFr->get_fval_at( partit2IdxArr.at(0) ) == 0;
+    this->f1_has_DC_pt = this->myFData.get_fval_at( partit1IdxArr.at(0) ) == 0;
+    this->f2_has_DC_pt = this->myFData.get_fval_at( partit2IdxArr.at(0) ) == 0;
 
     // Set the tracking flag for step 1.
     this->flag1_data_prep = true;
@@ -160,8 +171,8 @@ void LM_eng::step2_LM_construct(){
     }
 
     // Create a fData partitions.
-    shared_ptr<fData> myFr1 = this->myFr->red_partit( this->partit1IdxArr );
-    shared_ptr<fData> myFr2 = this->myFr->red_partit( this->partit2IdxArr );
+    shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+    shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
@@ -189,9 +200,9 @@ void LM_eng::step3_LM_re_trans(){
         throw::runtime_error( "Step 3 cannot be executed: step 2 not set (LM construction)." );
     }
 
-    // Partition sizes before cconj injection.
-    unsigned int out_cnt = this->myFr->get_out_cnt();
-    unsigned int in_cnt = this->myFr->get_in_cnt();
+    // General partition data characteristics.
+    unsigned int out_cnt = this->myFData.get_out_cnt();
+    unsigned int in_cnt = this->myFData.get_in_cnt();
     unsigned int fr1_len = this->partit1IdxArr.size();
     unsigned int fr2_len = this->partit2IdxArr.size();
 
@@ -247,7 +258,7 @@ void LM_eng::step4_LM_pencil_SVD(){
     }
 
     // Obtain a reference frequency value.
-    this->ref_f_mag = this->myFr->get_fval_at( this->myFr->get_f_cnt() - 1 );
+    this->ref_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     
     // Construct the LM pencil.
     shared_ptr<Eigen::MatrixXd> LM_pen = 
@@ -278,7 +289,7 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
     }
 
     // Define number of outputs.
-    unsigned int out_cnt = this->myFr->get_out_cnt();
+    unsigned int out_cnt = this->myFData.get_out_cnt();
 
     // Eigen::VectorXd singVals_r = this->singVals.segment( 0, svd_ret_cnt );
     
@@ -377,26 +388,26 @@ shared_ptr<fData> LM_eng::get_Fr1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return this->myFr->red_partit( this->partit1IdxArr );
+    return this->myFData.red_partit( this->partit1IdxArr );
 }
 shared_ptr<fData> LM_eng::get_Fr2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return this->myFr->red_partit( this->partit2IdxArr );
+    return this->myFData.red_partit( this->partit2IdxArr );
 }
 
 shared_ptr<fData> LM_eng::get_Frc1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return this->myFr->red_partit( this->partit1IdxArr )->gen_cplx_conj_comb();
+    return this->myFData.red_partit( this->partit1IdxArr )->gen_cplx_conj_comb();
 }
 shared_ptr<fData> LM_eng::get_Frc2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return this->myFr->red_partit( this->partit2IdxArr )->gen_cplx_conj_comb();
+    return this->myFData.red_partit( this->partit2IdxArr )->gen_cplx_conj_comb();
 }
 
 
