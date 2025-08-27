@@ -164,6 +164,12 @@ void LM_eng::step1_fData_partition(){
 
 }
 
+void LM_eng::step1_fData_partition( vector< unsigned int > fr_idx_arr_in ){
+
+
+
+}
+
 void LM_eng::step2_LM_construct(){
 
     if( !flag1_data_prep ){

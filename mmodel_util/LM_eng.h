@@ -57,6 +57,7 @@ public:
 // ====================================================================== >>>>>
 
     void step1_fData_partition();
+    void step1_fData_partition( vector< unsigned int > fr_idx_arr_in );
 
     void step2_LM_construct();
 
@@ -174,10 +175,17 @@ protected:
 
     // The reduced frequency set.
     // shared_ptr<fData> myFr;
-    // The reduced frequency index array.
+    // The reduced frequency set index array.
     vector< unsigned int > fr_idx_arr;
-    // The two frequency data partitions.
+    /*
+    The index array of partition 1 of the reduced frequency set.
+    NOTE: Indexing with respect to the full fData myFData.
+    */
     vector< unsigned int > partit1IdxArr;
+    /*
+    The index array of partition 2 of the reduced frequency set.
+    NOTE: Indexing with respect to the full fData myFData.
+    */
     vector< unsigned int > partit2IdxArr;
 
 };
