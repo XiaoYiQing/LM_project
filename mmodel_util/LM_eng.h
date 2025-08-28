@@ -208,6 +208,11 @@ protected:
 
 namespace LM_UTIL{
 
+    /*
+    Create two index arrays having mutually exclusive indices which
+    can serve to create two partitions from the existing original set.
+    */
+    vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origSize );
 
     /*
     Construct a Loewner Matrix.

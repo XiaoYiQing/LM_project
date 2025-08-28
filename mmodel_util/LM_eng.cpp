@@ -175,7 +175,7 @@ void LM_eng::step1_fData_partition(){
 
     // Generate the interleaving relative partition index arrays.
     vector< vector< unsigned int > > index_arrs = 
-        fData::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
+        LM_UTIL::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
     vector< unsigned int > f1IdxVec = index_arrs.at(0);
     vector< unsigned int > f2IdxVec = index_arrs.at(1);
 
@@ -569,6 +569,20 @@ Eigen::MatrixXd LM_eng::get_V() const{
 }
 
 // ====================================================================== <<<<<
+
+
+
+vector< vector< unsigned int > > LM_UTIL::gen_2_partit_idx_arr( unsigned int origSize ){
+    
+    // Generate the frequency partition index arrays (Interleaving).
+    vector< unsigned int > tmp1 = utils::gen_even_idx_arr( 0, origSize - 1 );
+    vector< unsigned int > tmp2 = utils::gen_odd_idx_arr( 0, origSize - 1 );
+    // Initialize the return vector with the two index arrays.
+    vector< vector< unsigned int > > retVec = { tmp1, tmp2 };
+
+    return retVec;
+
+}
 
 
 
