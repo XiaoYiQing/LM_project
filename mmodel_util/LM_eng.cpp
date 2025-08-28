@@ -346,9 +346,14 @@ void LM_eng::step4_LM_pencil_SVD(){
     // Obtain a reference frequency value.
     this->ref_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     
+    shared_ptr<Eigen::MatrixXd> LM_pen;
     // Construct the LM pencil.
-    shared_ptr<Eigen::MatrixXd> LM_pen = 
-        LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
+    try{
+        LM_pen = LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
+    }catch( const invalid_argument& e ){
+        cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
+        throw;
+    }
 
     // Perform SVD.
     Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
