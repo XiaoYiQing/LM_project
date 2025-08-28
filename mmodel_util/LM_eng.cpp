@@ -311,7 +311,7 @@ void LM_eng::step3_LM_re_trans(){
     match_bool = match_bool && ( myW_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
     match_bool = match_bool && ( myF_re_tmp.imag().cwiseAbs().maxCoeff() < LM_eng::NUM_THRESH );
     if( !match_bool ){
-        cout << "WARNING: SFLM real matrices check has failed. Non-negligeable imaginary part remnant detected." << endl;
+        throw std::runtime_error( "Step 3 has failed due to non-negligeable imaginary part remaining in transformed matrices." );
     }
 
     // Obtain purely real defintion of the matrices.
