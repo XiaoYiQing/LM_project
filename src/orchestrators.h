@@ -25,7 +25,20 @@ namespace FCT_SCR{
     */
     void singVal_extract_run();
 
-
+    /*
+    Function performs a full SFLM run based on the given data.
+    Inputs:
+    - src_data: the frequency data object with which the system is going to be 
+        constructed and tested.
+    - f_r_idx_vec: the index vector with which a subset fData of "src_data" is created.
+        This subset fData is the one actually used to construct the LM system.
+        The remaining data in "src_data" are used for validation.
+    - f1_idx_vec: the index vector creating partition #1 from the subset fData.
+    - f2_idx_vec: the index vector creating partition #2 from the subset fData.
+    */
+    shared_ptr<LM_eng> SFLM_full_run( const fData& src_data, 
+        vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
+        vector<unsigned int> f2_idx_vec );
 
 };
 
