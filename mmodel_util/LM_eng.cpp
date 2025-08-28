@@ -260,13 +260,19 @@ void LM_eng::step2_LM_construct(){
     shared_ptr<fData> myFrc2 = myFr2->gen_cplx_conj_comb();
 
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    this->LM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
-    // Construct the Loewner Matrix using the two cconj injected partitions.
-    this->SLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
-    // Construct the W matrix vector using partition 1.
-    this->W = *LM_UTIL::build_W( *myFrc1 );
-    // Construct the F matrix vector using partition 2.
-    this->F = *LM_UTIL::build_F( *myFrc2 );
+    try{
+        this->LM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
+        // Construct the Loewner Matrix using the two cconj injected partitions.
+        this->SLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
+        // Construct the W matrix vector using partition 1.
+        this->W = *LM_UTIL::build_W( *myFrc1 );
+        // Construct the F matrix vector using partition 2.
+        this->F = *LM_UTIL::build_F( *myFrc2 );
+    }catch(...){
+        cerr << "step2_LM_construct exception rethrow log." << endl;
+        // Rethrow exception.
+        throw;
+    }
 
     // Set the tracking flag for step 1.
     this->flag2_LM_const = true;
