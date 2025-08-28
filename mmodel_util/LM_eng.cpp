@@ -179,51 +179,88 @@ void LM_eng::step1_fData_partition(){
     vector< unsigned int > p1IdxArr_tmp = index_arrs.at(0);
     vector< unsigned int > p2IdxArr_tmp = index_arrs.at(1);
 
-    // Generate the true partition index arrays.
-    partit1IdxArr.clear();
-    partit1IdxArr.reserve( p1IdxArr_tmp.size() );
-    for ( unsigned int z = 0; z < p1IdxArr_tmp.size(); z++ ) {
-        partit1IdxArr.push_back( fr_idx_arr[ p1IdxArr_tmp[z] ] );
-    }
-    partit2IdxArr.clear();
-    partit2IdxArr.reserve( p2IdxArr_tmp.size() );
-    for ( unsigned int z = 0; z < p2IdxArr_tmp.size(); z++ ) {
-        partit2IdxArr.push_back( fr_idx_arr[ p2IdxArr_tmp[z] ] );
-    }
+    step1_fData_partition( p1IdxArr_tmp, p2IdxArr_tmp );
+
+    // // Generate the f1 partition index array with respect to the original fdata.
+    // partit1IdxArr.clear();
+    // partit1IdxArr.reserve( p1IdxArr_tmp.size() );
+    // for ( unsigned int z = 0; z < p1IdxArr_tmp.size(); z++ ) {
+    //     partit1IdxArr.push_back( fr_idx_arr[ p1IdxArr_tmp[z] ] );
+    // }
+    // // Generate the f2 partition index array with respect to the original fdata.
+    // partit2IdxArr.clear();
+    // partit2IdxArr.reserve( p2IdxArr_tmp.size() );
+    // for ( unsigned int z = 0; z < p2IdxArr_tmp.size(); z++ ) {
+    //     partit2IdxArr.push_back( fr_idx_arr[ p2IdxArr_tmp[z] ] );
+    // }
 
 
-    // Check for DC point in either partitions.
-    this->f1_has_DC_pt = this->myFData.get_fval_at( partit1IdxArr.at(0) ) == 0;
-    this->f2_has_DC_pt = this->myFData.get_fval_at( partit2IdxArr.at(0) ) == 0;
+    // // Check for DC point in either partitions.
+    // this->f1_has_DC_pt = this->myFData.get_fval_at( partit1IdxArr.at(0) ) == 0;
+    // this->f2_has_DC_pt = this->myFData.get_fval_at( partit2IdxArr.at(0) ) == 0;
 
-    // Set the tracking flag for step 1.
-    this->flag1_data_prep = true;
+    // // Set the tracking flag for step 1.
+    // this->flag1_data_prep = true;
 
 }
 
 
-void LM_eng::step1_fData_partition( const vector<unsigned int>& p1IdxVec, 
-    const vector<unsigned int>& p2IdxVec ){
+void LM_eng::step1_fData_partition( const vector<unsigned int>& f1IdxVec, 
+    const vector<unsigned int>& f2IdxVec ){
     
     if( !flag0_data_set ){
         throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
     }
 
-    /*
-    0- Check for total index count matching reduced f set count.
-    1- Check out of bound indexing.
-    2- Check for repeated indices.
-    3- Check for identical indices across partitions.
-    */
+    // Obtain the size of the reduced frequency set.
+    unsigned int fr_len = this->fr_idx_arr.size();
+    unsigned int f1_size = f1IdxVec.size();
+    unsigned int f2_size = f2IdxVec.size();
 
-    unsigned int f1_size = p1IdxVec.size();
-    unsigned int f2_size = p2IdxVec.size();
-    if( f1_size + f2_size != this->fr_idx_arr.size() ){
+    // Check if total entries between the two partitions add up to the
+    // reduced f set size.
+    if( f1_size + f2_size != fr_len ){
         throw std::invalid_argument( "The total number of entries from the two partitions must match the reduced f set size." );
     }
 
+    // Create a full array from the concatenated f1 and f2 index arrays.
+    vector< unsigned int > full_idx_vec = f1IdxVec;
+    full_idx_vec.reserve( fr_len );
+    full_idx_vec.insert( full_idx_vec.end(), f2IdxVec.begin(), f2IdxVec.end());
+    // Sort array in ascending order.
+    std::sort( full_idx_vec.begin(), full_idx_vec.end() );
+
+    // Check for out of range indices.
+    if( full_idx_vec.at( fr_len - 1 ) >= fr_len ){
+        throw std::out_of_range( "Out of range index detected in the index arrays." );
+    }
+    // Check for repeated indices.
+    for( unsigned int z = 1; z < fr_len - 1; z++ ){
+        if( full_idx_vec[z] == full_idx_vec[z+1] ){
+            throw std::invalid_argument( "Repeated indices found in the index vectors (must be non repeated in BOTH vectors)." );
+        }
+    }
     
-    
+    // Generate the f1 partition index array with respect to the original fdata.
+    this->partit1IdxArr.clear();
+    this->partit1IdxArr.reserve( f1_size );
+    for ( unsigned int z = 0; z < f1IdxVec.size(); z++ ) {
+        this->partit1IdxArr.push_back( fr_idx_arr[ f1IdxVec[z] ] );
+    }
+    // Generate the f2 partition index array with respect to the original fdata.
+    this->partit2IdxArr.clear();
+    this->partit2IdxArr.reserve( f2_size );
+    for ( unsigned int z = 0; z < f2IdxVec.size(); z++ ) {
+        this->partit2IdxArr.push_back( fr_idx_arr[ f2IdxVec[z] ] );
+    }
+
+    // Check for DC point in either partitions.
+    this->f1_has_DC_pt = this->myFData.get_fval_at( this->partit1IdxArr.at(0) ) == 0;
+    this->f2_has_DC_pt = this->myFData.get_fval_at( this->partit2IdxArr.at(0) ) == 0;
+
+    // Set the tracking flag for step 1.
+    this->flag1_data_prep = true;
+
 }
 
 
