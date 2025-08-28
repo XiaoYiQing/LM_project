@@ -173,34 +173,14 @@ void LM_eng::step1_fData_partition(){
         throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
     }
 
-    // Generate the relative partition index arrays.
+    // Generate the interleaving relative partition index arrays.
     vector< vector< unsigned int > > index_arrs = 
         fData::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
-    vector< unsigned int > p1IdxArr_tmp = index_arrs.at(0);
-    vector< unsigned int > p2IdxArr_tmp = index_arrs.at(1);
+    vector< unsigned int > f1IdxVec = index_arrs.at(0);
+    vector< unsigned int > f2IdxVec = index_arrs.at(1);
 
-    step1_fData_partition( p1IdxArr_tmp, p2IdxArr_tmp );
-
-    // // Generate the f1 partition index array with respect to the original fdata.
-    // partit1IdxArr.clear();
-    // partit1IdxArr.reserve( p1IdxArr_tmp.size() );
-    // for ( unsigned int z = 0; z < p1IdxArr_tmp.size(); z++ ) {
-    //     partit1IdxArr.push_back( fr_idx_arr[ p1IdxArr_tmp[z] ] );
-    // }
-    // // Generate the f2 partition index array with respect to the original fdata.
-    // partit2IdxArr.clear();
-    // partit2IdxArr.reserve( p2IdxArr_tmp.size() );
-    // for ( unsigned int z = 0; z < p2IdxArr_tmp.size(); z++ ) {
-    //     partit2IdxArr.push_back( fr_idx_arr[ p2IdxArr_tmp[z] ] );
-    // }
-
-
-    // // Check for DC point in either partitions.
-    // this->f1_has_DC_pt = this->myFData.get_fval_at( partit1IdxArr.at(0) ) == 0;
-    // this->f2_has_DC_pt = this->myFData.get_fval_at( partit2IdxArr.at(0) ) == 0;
-
-    // // Set the tracking flag for step 1.
-    // this->flag1_data_prep = true;
+    // Continue the partitioning process through the standard function.
+    step1_fData_partition( f1IdxVec, f2IdxVec );
 
 }
 
