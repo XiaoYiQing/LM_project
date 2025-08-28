@@ -100,9 +100,13 @@ shared_ptr<LM_eng> FCT_SCR::SFLM_full_run( const fData& src_data,
         return my_LM_eng;
     }
 
+    // Step 4: LM pencil SVD.
     try{
         my_LM_eng->step4_LM_pencil_SVD();
     }catch( const std::runtime_error& e ){
+        cerr << "SFML process interrupted at step 4: " << e.what() << endl;
+        return my_LM_eng;
+    }catch( const std::invalid_argument& e ){
         cerr << "SFML process interrupted at step 4: " << e.what() << endl;
         return my_LM_eng;
     }

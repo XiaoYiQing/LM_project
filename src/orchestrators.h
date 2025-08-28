@@ -35,6 +35,9 @@ namespace FCT_SCR{
         The remaining data in "src_data" are used for validation.
     - f1_idx_vec: the index vector creating partition #1 from the subset fData.
     - f2_idx_vec: the index vector creating partition #2 from the subset fData.
+    - systOrd: the final transfer function order. Note that this specified number should
+        be less than the size of the Loewner Matrix, as your system cannot be bigger
+        than what the Loewner Matrix can provide.
     */
     shared_ptr<LM_eng> SFLM_full_run( const fData& src_data, 
         vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
