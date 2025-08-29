@@ -111,7 +111,7 @@ void LM_eng::print_singVals( const LM_eng& tar_LM_eng, const string& fileStem,
         cerr << "print_singVals aborted due to unexpected error: " << e.what() << endl;
     } 
 
-    cout << "print_singVals: succesfully written singular values to: ";
+    cout << "print_singVals-> succesfully written singular values to: ";
     cout << destDir << "/" << fileStem << ".txt" << endl;
 
 }

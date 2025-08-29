@@ -451,7 +451,7 @@ void tests::LM_eng_print_singVals( unsigned int test_idx ){
 
     unsigned int case_cnt = 0;
 
-    // 0- LM construct test.
+    // 0- Full process singular values print function.
     if( test_idx == case_cnt ){
 
         string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
@@ -462,6 +462,7 @@ void tests::LM_eng_print_singVals( unsigned int test_idx ){
     }
 
 
+    // 1- Existing LM engine singular values print function.
     case_cnt++;
     if( test_idx == case_cnt ){
 

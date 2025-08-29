@@ -43,19 +43,27 @@ public:
     data file specified by "fullFileName" and goes through the SFML process
     to generate singular values of real Loewner Matrix system.
     The singular values are then saved at the target directory "destDir" as
-    a simple text file.
+    a simple text file using the same file name stem as "fullFileName" with added
+    suffix "_sv".
+    For example, if 
+        - destDir = "C:/project/singVal"
+        - fullFileName = "lowPassFilterV2.s2p" or "lowPassFilterV2.txt"
+
+    Then the generated singular values file will have the full file name:
+        - "C:/project/singVal/lowPassFilterV2_vs.txt"
     */
     static shared_ptr<LM_eng> print_singVals( const string& fullFileName, 
         const string& destDir );
     
     /*
     Print the singular values of the target LM system at the specific directory under
-    the filename based on the given "stem".
+    the filename stem.
     For example, if 
-        destDir = "C:/project/singVal"
-        fileStem = "lowPassFilterV2"
-    Then the generated singular values file will be have the full file name:
-        "C:/project/singVal/lowPassFilterV2.txt"
+        - destDir = "C:/project/singVal"
+        - fileStem = "lowPassFilterV2"
+
+    Then the generated singular values file will have the full file name:
+        - "C:/project/singVal/lowPassFilterV2.txt"
     NOTE: The given "tar_LM_eng" must have generated the singular values already, or
     the process is aborted.
     */
