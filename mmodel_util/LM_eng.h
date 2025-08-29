@@ -35,7 +35,7 @@ public:
     static const unsigned int STD_RED_FSET_SIZE;
 
 // ====================================================================== >>>>>
-//      Static Support Functions
+//      Data Printing Functions
 // ====================================================================== >>>>>
 
     /*
@@ -46,6 +46,20 @@ public:
     a simple text file.
     */
     static shared_ptr<LM_eng> print_singVals( const string& fullFileName, 
+        const string& destDir );
+    
+    /*
+    Print the singular values of the target LM system at the specific directory under
+    the filename based on the given "stem".
+    For example, if 
+        destDir = "C:/project/singVal"
+        fileStem = "lowPassFilterV2"
+    Then the generated singular values file will be have the full file name:
+        "C:/project/singVal/lowPassFilterV2.txt"
+    NOTE: The given "tar_LM_eng" must have generated the singular values already, or
+    the process is aborted.
+    */
+    static void print_singVals( const LM_eng& tar_LM_eng, const string& fileStem, 
         const string& destDir );
 
 // ====================================================================== <<<<<

@@ -75,10 +75,10 @@ void tests::SFLM_full_run_test( unsigned int test_idx ){
 
         // Compute the RMS error.
         double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
-        // cout << "The total RMS error: " << total_RMS_err << endl;
+        cout << "The total RMS error: " << total_RMS_err << endl;
         // Test for stability.
         bool is_stab = myTF->is_stable();
-        // cout << "System stability: " << is_stab << endl;
+        cout << "System stability: " << is_stab << endl;
 
         bool test_bool = true;
         test_bool = test_bool && ( abs( total_RMS_err - 0.00050943459036 ) < 1e-8 );

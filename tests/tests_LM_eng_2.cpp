@@ -447,12 +447,52 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 
 
 
-void tests::LM_eng_print_singVals(){
+void tests::LM_eng_print_singVals( unsigned int test_idx ){
 
-    string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
-    string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
+    unsigned int case_cnt = 0;
+
+    // 0- LM construct test.
+    if( test_idx == case_cnt ){
+
+        string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
+        string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
+        
+        shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+
+    }
+
+
+    case_cnt++;
+    if( test_idx == case_cnt ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
     
-    shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+        // Define our frequency data object.
+        fData myFData;
 
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+        fData::read_sXp_file( myFData, fullFileName );
+
+        // Switch the data format into real + imaginary format.
+        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+        // Normalize the frequency vector (As much as you can according to metric prefixes).
+        myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+
+// ---------------------------------------------------------------------- <<<<<
+
+        // Perform the full LM engine process.
+        LM_eng my_LM_eng( myFData );
+        my_LM_eng.step1_fData_partition();
+        my_LM_eng.step2_LM_construct();
+        my_LM_eng.step3_LM_re_trans();
+        my_LM_eng.step4_LM_pencil_SVD();
+
+        string destDir = SRC_PATH_XYQ_str + "/data_output";
+        LM_eng::print_singVals( my_LM_eng, "Slink_a=100um_b=400um_LOL", destDir );
+            
+    }
 
 }

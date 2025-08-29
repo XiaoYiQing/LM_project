@@ -64,7 +64,7 @@ namespace tests{
     /*
     Test the automatic singular value to file printing function.
     */
-    void LM_eng_print_singVals();
+    void LM_eng_print_singVals( unsigned int test_case );
 
 }
 

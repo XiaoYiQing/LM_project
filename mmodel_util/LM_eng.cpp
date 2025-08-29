@@ -7,7 +7,7 @@ const double LM_eng::NUM_THRESH = 1.0e-12;
 const unsigned int LM_eng::STD_RED_FSET_SIZE = 100;
 
 // ====================================================================== >>>>>
-//      Static Support Functions
+//      Data Printing Functions
 // ====================================================================== >>>>>
 
 shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName, 
@@ -95,6 +95,24 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
     utils::vec_to_file( destDir, dataFileStem, myEng->get_singVals(), 0 );
 
     return myEng;
+
+}
+
+
+void LM_eng::print_singVals( const LM_eng& tar_LM_eng, const string& fileStem, 
+    const string& destDir )
+{
+
+    try{
+        utils::vec_to_file( destDir, fileStem, tar_LM_eng.get_singVals(), 0 );
+    }catch( const runtime_error& e ){
+        cerr << "print_singVals aborted: " << e.what() << endl;
+    }catch( const exception& e ){
+        cerr << "print_singVals aborted due to unexpected error: " << e.what() << endl;
+    } 
+
+    cout << "print_singVals: succesfully written singular values to: ";
+    cout << destDir << "/" << fileStem << ".txt" << endl;
 
 }
 
@@ -350,7 +368,7 @@ void LM_eng::step4_LM_pencil_SVD(){
     // Construct the LM pencil.
     try{
         LM_pen = LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
-    }catch( const invalid_argument& e ){
+    }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
         throw;
     }
