@@ -47,9 +47,10 @@ shared_ptr<LM_eng> FCT_SCR::SFLM_full_run( const fData& src_data,
     vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
     vector<unsigned int> f2_idx_vec ){
     
+    // Declare the LM engine.
     shared_ptr<LM_eng> my_LM_eng;
     
-    // Initialization.
+    // Initialize the LM engine.
     try{
         my_LM_eng = std::make_shared<LM_eng>( LM_eng() );
     }catch( const std::exception& e ){
