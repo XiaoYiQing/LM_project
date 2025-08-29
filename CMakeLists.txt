@@ -13,8 +13,6 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 # Create our main executable.
 add_executable( myapp 
     src/main.cpp 
-    src/orchestrators.h
-    src/orchestrators.cpp
 )
 
 

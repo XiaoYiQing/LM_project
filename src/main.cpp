@@ -34,6 +34,7 @@
 #include "tests_LTI_descSyst.h"
 #include "tests_Matrix3DXd.h"
 #include "tests_numUtils.h"
+#include "tests_orches.h"
 
 
 
@@ -84,10 +85,13 @@ int main() {
 
     // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
-    tests::LM_eng_full_SFML_dc_case_run();
+    // tests::LM_eng_full_SFML_dc_case_run();
     // tests::LM_eng_print_singVals();
 
+    tests::SFLM_full_run_test(0);
     // FCT_SCR::singVal_extract_run();
+
+
 
     return 0; 
 

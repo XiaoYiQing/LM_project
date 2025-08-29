@@ -12,6 +12,8 @@ set( mmodel_util_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/LTI_descSyst.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Matrix3DXcd.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Matrix3DXcd.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/orchestrators.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/orchestrators.cpp
 )
 
 add_library(mmodel_util ${mmodel_util_SOURCES})
