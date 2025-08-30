@@ -88,20 +88,61 @@ public:
 // ====================================================================== >>>>>
 
     /*
-    The pre-SFML process step, which is simply setting the frequency data.
+    The pre-SFML process step, which is simply setting the frequency data as well
+    as selecting the portion of the data being used to construct the LMs and the rest
+    for validation.
     */ 
     void step0_fData_set( const fData& inData );
+    /*
+    The pre-SFML process step, which is simply setting the frequency data as well
+    as selecting the portion of the data being used to construct the LMs and the rest
+    for validation.
+    This function version allows user to specify which portion of the data is used
+    to construct the LMs via specifying "fr_idx_arr_in".
+    */ 
     void step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in );
 
+    /*
+    SFML step where the data selected to construct the LMs are partitioning into 2 
+    partitions.
+    */
     void step1_fData_partition();
-    void step1_fData_partition( const vector<unsigned int>& p1IdxVec, 
-        const vector<unsigned int>& p2IdxVec );
+    /*
+    SFML step where the data selected to construct the LMs are partitioning into 2 
+    partitions.
+    This function version lets the user directly dictate how the two partitions
+    are created. Note that the two index arrays argument must:
+        - have mutually exclusive indices.
+        - have no repeated indices.
+        - have a total of indices equal to the amount of data selected to construct the LMs.
+    */
+    void step1_fData_partition( const vector<unsigned int>& f1IdxVec, 
+        const vector<unsigned int>& f2IdxVec );
     
+    /*
+    SFML step where the LM are constructed using the complex frequency data.
+    As such, the LMs generated at this step are complex and not purely real.
+    */
     void step2_LM_construct();
-
+    
+    /*
+    SFLM step where the complex LMs are transformed into real LMs.
+    */
     void step3_LM_re_trans();
-
+    
+    /*
+    SFLM step where the LM pencil is created and then undergoes singular value 
+    decomposition.
+    */
     void step4_LM_pencil_SVD();
+    /*
+    SFLM step where the LM pencil is created and then undergoes singular value 
+    decomposition.
+    This function version let's the user select the reference frequency.
+    NOTE: the value would normally be chosen from the frequency array with which
+    the LMs were constructed with.
+    */
+    void step4_LM_pencil_SVD( double f_ref );
 
     /*
     Given the number of singular values to be kept, create the transfer function

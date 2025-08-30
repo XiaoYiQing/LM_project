@@ -364,6 +364,42 @@ void LM_eng::step4_LM_pencil_SVD(){
     // Obtain a reference frequency value.
     this->ref_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     
+    try{
+        step4_LM_pencil_SVD( ref_f_mag );
+    }catch( ... ){
+        cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
+        throw;
+    }
+
+    // shared_ptr<Eigen::MatrixXd> LM_pen;
+    // // Construct the LM pencil.
+    // try{
+    //     LM_pen = LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
+    // }catch( ... ){
+    //     cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
+    //     throw;
+    // }
+
+    // // Perform SVD.
+    // Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    // // Get the singular values
+    // this->singVals = svdResObj.singularValues();
+    // // Get the left singular vectors (U)
+    // this->U = svdResObj.matrixU();
+    // // Get the right singular vectors (V)
+    // this->V = svdResObj.matrixV();
+
+    // flag4_pen_SVD = true;
+
+}
+
+
+void LM_eng::step4_LM_pencil_SVD( double f_ref ){
+
+    if( !flag3_re_trans ){
+        throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
+    }
+
     shared_ptr<Eigen::MatrixXd> LM_pen;
     // Construct the LM pencil.
     try{
