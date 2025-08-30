@@ -47,6 +47,8 @@ public:
     - LTspice only provides two-port network S-parameters by default (That is S11, S12, 
         S21, S22), so the parser will only extract 2x2 S-parameter matrices.
     - This parser only reads data given in the (dB,degree (non-radian)) format.
+    - LTspice does not print additional information such as input impedance. As such,
+        such values are set to default (Rin = 50, for example).
     */
     static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName );
 
@@ -203,7 +205,7 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
 
     /*
     Normalize the frequency array. NOTE: this function simply selects an appropriate
-    metric prefix switch such TODO.
+    metric prefix to switch to.
     */
     void f_rescale();
 
@@ -249,9 +251,8 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     Create two partitions from the original frequency data set.
     Partition 1 is decided by the input index array.
     Partition 2 receives all leftover.
-    TODO: verify if partition 1 index array have repeat.
     */
-    vector< shared_ptr<fData> > gen_2_partit( const vector< unsigned int >& p1_idx );
+    // vector< shared_ptr<fData> > gen_2_partit( const vector< unsigned int >& p1_idx );
 
     /*
     Generate a complex conjugate set of data.
