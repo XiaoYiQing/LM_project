@@ -131,6 +131,13 @@ public:
     void step3_LM_re_trans();
     
     /*
+    Special SFLM step where the real Loewner Matrices are constructed directly.
+    However, the complex Loewner Matrices are skipped entirely, and are thus 
+    inaccessible.
+    */
+    void step3skip2_LM_re_construct();
+    
+    /*
     SFLM step where the LM pencil is created and then undergoes singular value 
     decomposition.
     */

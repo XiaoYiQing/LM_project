@@ -355,12 +355,28 @@ void LM_eng::step3_LM_re_trans(){
 }
 
 
+void LM_eng::step3skip2_LM_re_construct(){
+
+    if( !flag1_data_prep ){
+        throw::runtime_error( "Step 3 skipping step 2 cannot be executed: step 1 not set (data prep)." );
+    }
+
+    // General partition data characteristics.
+    unsigned int out_cnt = this->myFData.get_out_cnt();
+    unsigned int in_cnt = this->myFData.get_in_cnt();
+    unsigned int fr1_len = this->partit1IdxArr.size();
+    unsigned int fr2_len = this->partit2IdxArr.size();
+
+}
+
+
 void LM_eng::step4_LM_pencil_SVD(){
 
     if( !flag3_re_trans ){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
     }
 
+    double old_ref_f_mag = this->ref_f_mag;
     // Obtain a reference frequency value.
     this->ref_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     
@@ -368,28 +384,10 @@ void LM_eng::step4_LM_pencil_SVD(){
         step4_LM_pencil_SVD( ref_f_mag );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
+        // Revert reference frequency.
+        this->ref_f_mag = old_ref_f_mag;
         throw;
     }
-
-    // shared_ptr<Eigen::MatrixXd> LM_pen;
-    // // Construct the LM pencil.
-    // try{
-    //     LM_pen = LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
-    // }catch( ... ){
-    //     cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
-    //     throw;
-    // }
-
-    // // Perform SVD.
-    // Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
-    // // Get the singular values
-    // this->singVals = svdResObj.singularValues();
-    // // Get the left singular vectors (U)
-    // this->U = svdResObj.matrixU();
-    // // Get the right singular vectors (V)
-    // this->V = svdResObj.matrixV();
-
-    // flag4_pen_SVD = true;
 
 }
 
