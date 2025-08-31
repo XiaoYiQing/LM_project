@@ -367,6 +367,62 @@ void LM_eng::step3skip2_LM_re_construct(){
     unsigned int fr1_len = this->partit1IdxArr.size();
     unsigned int fr2_len = this->partit2IdxArr.size();
 
+    // Create a fData partitions.
+    shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+    shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
+
+    // Generate the two partitions with their complex conjugates inserted 
+    // in interleaving fashion.
+    shared_ptr<fData> myFrc1 = myFr1->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = myFr2->gen_cplx_conj_comb();
+
+    // Obtain the number of complex conjugated f data points.
+    unsigned int frc1_len = myFrc1->get_f_cnt();
+    unsigned int frc2_len = myFrc2->get_f_cnt();
+
+    // Obtain the expected height and width of the final real LMs.
+    unsigned int LM_h = frc2_len*out_cnt;
+    unsigned int LM_w = frc1_len*in_cnt;
+
+    // Obtain purely real defintion of the matrices.
+    this->LM_re = Eigen::MatrixXd::Zero( LM_h, LM_w );
+    this->SLM_re = Eigen::MatrixXd( LM_h, LM_w );
+    this->W_re = Eigen::MatrixXd( out_cnt, LM_w );
+    this->F_re = Eigen::MatrixXd( LM_h, in_cnt );
+
+    Eigen::MatrixXcd alpha_z = Eigen::MatrixXcd( out_cnt, in_cnt );
+
+    unsigned int lead_x = 0;
+    unsigned int lead_y = 0;
+
+    if( this->f1_has_DC_pt ){
+
+        // Get the DC point data.
+        Eigen::MatrixXcd f1_dc_data = myFr1->get_cplxData_at_f(0);
+        // Define dquare root of 2 that is going to be repeatedly reused.
+        double sqrt_of_2 = std::sqrt(2);
+        // Set block column index to first column block.
+        lead_y = 0;
+
+        for( unsigned int i = 0; i < fr2_len; i++ ){
+
+            alpha_z = myFr2->get_cplxData_at_f(i) - f1_dc_data;
+            alpha_z = sqrt_of_2 * alpha_z/( myFr2->get_cplx_f_at(i) );
+
+            lead_x = i*out_cnt;
+            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = alpha_z;
+
+        }
+
+
+    }else if( this->f2_has_DC_pt ){
+
+
+
+    }
+
+    
+
 }
 
 
