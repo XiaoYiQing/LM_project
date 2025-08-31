@@ -497,3 +497,40 @@ void tests::LM_eng_print_singVals( unsigned int test_idx ){
     }
 
 }
+
+
+
+void tests::LM_eng_steps_test( unsigned int test_idx ){
+
+    unsigned int case_cnt = 0;
+
+    // 0- Full process singular values print function.
+    if( test_idx == case_cnt ){
+
+    
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+    
+        // Define our frequency data object.
+        fData myFData;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/bondwire_with_strip_design3.s4p";
+        fData::read_sXp_file( myFData, fullFileName );
+
+        // Switch the data format into real + imaginary format.
+        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+        // Normalize the frequency vector (As much as you can according to metric prefixes).
+        myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+
+// ---------------------------------------------------------------------- <<<<<
+
+        // Proceed with LM progress.
+        LM_eng my_LM_eng( myFData );
+        my_LM_eng.step1_fData_partition();
+        my_LM_eng.step3skip2_LM_re_construct();
+
+    }
+
+}

@@ -385,42 +385,92 @@ void LM_eng::step3skip2_LM_re_construct(){
     unsigned int LM_w = frc1_len*in_cnt;
 
     // Obtain purely real defintion of the matrices.
-    this->LM_re = Eigen::MatrixXd::Zero( LM_h, LM_w );
+    this->LM_re = Eigen::MatrixXd( LM_h, LM_w );
     this->SLM_re = Eigen::MatrixXd( LM_h, LM_w );
     this->W_re = Eigen::MatrixXd( out_cnt, LM_w );
     this->F_re = Eigen::MatrixXd( LM_h, in_cnt );
 
-    Eigen::MatrixXcd alpha_z = Eigen::MatrixXcd( out_cnt, in_cnt );
+    
 
     unsigned int lead_x = 0;
     unsigned int lead_y = 0;
 
+    // Define dquare root of 2 that is going to be repeatedly reused.
+    double sqrt_of_2 = std::sqrt(2);
+
+    // Repeated temporary variables.
+    Eigen::dcomplex f2_i, f1_j;
+    Eigen::MatrixXcd S1_j = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd S2_i = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd LMt_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd SLMt_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    
+    // DC point affected portion computation.
     if( this->f1_has_DC_pt ){
 
         // Get the DC point data.
         Eigen::MatrixXcd f1_dc_data = myFr1->get_cplxData_at_f(0);
-        // Define dquare root of 2 that is going to be repeatedly reused.
-        double sqrt_of_2 = std::sqrt(2);
+        
         // Set block column index to first column block.
         lead_y = 0;
 
+        this->W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f1_dc_data.real();
+
         for( unsigned int i = 0; i < fr2_len; i++ ){
 
-            alpha_z = myFr2->get_cplxData_at_f(i) - f1_dc_data;
-            alpha_z = sqrt_of_2 * alpha_z/( myFr2->get_cplx_f_at(i) );
+            // Current partition #2 frequency and data.
+            f2_i = myFr2->get_cplx_f_at(i);
+            S2_i = myFr2->get_cplxData_at_f(i);
 
-            lead_x = i*out_cnt;
-            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = alpha_z;
+            LMt_ij = S2_i - f1_dc_data;
+            LMt_ij = sqrt_of_2 * LMt_ij/( f2_i );
+
+            SLMt_ij = sqrt_of_2 * S2_i;
+
+            lead_x = 2*( i*out_cnt );
+            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
+            this->LM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*LMt_ij.imag();
+
+            this->SLM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = SLMt_ij.real();
+            this->SLM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*SLMt_ij.imag();
 
         }
 
 
     }else if( this->f2_has_DC_pt ){
 
+        // Get the DC point data.
+        Eigen::MatrixXcd f2_dc_data = myFr2->get_cplxData_at_f(0);
+        // Set block row index to first row block.
+        lead_x = 0;
 
+        this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
+
+        for( unsigned int j = 0; j < fr2_len; j++ ){
+
+            // Current partition #1 frequency and data.
+            f1_j = myFr1->get_cplx_f_at(j);
+            S1_j = myFr1->get_cplxData_at_f(j);
+
+            LMt_ij = f2_dc_data - S1_j;
+            LMt_ij = -1 * sqrt_of_2 * LMt_ij/( f1_j );
+
+            SLMt_ij = sqrt_of_2 * S1_j;
+
+            lead_y = 2*( j*in_cnt );
+            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
+            this->LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = LMt_ij.imag();
+
+            this->SLM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = SLMt_ij.real();
+            this->SLM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = SLMt_ij.imag();
+
+        }
 
     }
 
+
+    // Remaining standard LM computations.
+    
     
 
 }

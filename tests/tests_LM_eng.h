@@ -66,6 +66,11 @@ namespace tests{
     */
     void LM_eng_print_singVals( unsigned int test_case );
 
+    /*
+    Test the step functions.
+    */
+    void LM_eng_steps_test( unsigned int test_idx );
+
 }
 
 #endif  // TESTS_LM_ENG_H
