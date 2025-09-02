@@ -532,18 +532,37 @@ void LM_eng::step3skip2_LM_re_construct(){
         }
     }
 
-    Eigen::MatrixXcd f2_dc_data( out_cnt, in_cnt );
+    Eigen::MatrixXcd tmp = Eigen::MatrixXcd( out_cnt, in_cnt );
+    // Lead indices reset.
+    lead_y = 0;    lead_x = 0;
+
     for( unsigned int i = i_offset; i < fr2_len; i++ ){
 
         lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
 
-        f2_dc_data = myFr2->get_cplxData_at_f(i);
+        tmp = myFr2->get_cplxData_at_f(i);
 
-        this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
-        this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -f2_dc_data.imag();
+        this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = tmp.real();
+        this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -tmp.imag();
 
     }
     F_re = sqrt_of_2*F_re;
+
+    // Lead indices reset.
+    lead_y = 0;    lead_x = 0;
+
+    for( unsigned int j = j_offset; j < fr1_len; j++ ){
+
+        lead_y = 2*( ( j - j_offset )*in_cnt ) + y_lead_offset;
+
+        S1_j = myFr1->get_cplxData_at_f(j);
+
+        this->W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = S1_j.real();
+        this->W_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = S1_j.imag();
+
+    }
+    W_re = sqrt_of_2*W_re;
+
 
     unsigned int lol = 0;
 
