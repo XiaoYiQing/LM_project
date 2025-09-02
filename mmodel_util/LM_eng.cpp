@@ -399,12 +399,12 @@ void LM_eng::step3skip2_LM_re_construct(){
     double sqrt_of_2 = std::sqrt(2);
 
     // Repeated temporary variables.
-    Eigen::dcomplex f2_i, f1_j;
+    complex<double> f2_i, f1_j;
     Eigen::MatrixXcd S1_j = Eigen::MatrixXcd( out_cnt, in_cnt );
     Eigen::MatrixXcd S2_i = Eigen::MatrixXcd( out_cnt, in_cnt );
     Eigen::MatrixXcd LMt_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
     Eigen::MatrixXcd SLMt_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
-    
+
     // DC point affected portion computation.
     if( this->f1_has_DC_pt ){
 
@@ -446,7 +446,7 @@ void LM_eng::step3skip2_LM_re_construct(){
 
         this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
 
-        for( unsigned int j = 0; j < fr2_len; j++ ){
+        for( unsigned int j = 0; j < fr1_len; j++ ){
 
             // Current partition #1 frequency and data.
             f1_j = myFr1->get_cplx_f_at(j);
@@ -471,7 +471,51 @@ void LM_eng::step3skip2_LM_re_construct(){
 
     // Remaining standard LM computations.
     
-    
+    // Define indexing offsets to take into account of the DC point.
+    unsigned x_lead_offset = 0;   unsigned y_lead_offset = 0;
+    unsigned int i_offset = 0;    unsigned int j_offset = 0;
+    if( this->f1_has_DC_pt ){
+        y_lead_offset = in_cnt;
+        i_offset = 1;
+    }else if( this->f2_has_DC_pt ){
+        x_lead_offset = out_cnt;
+        j_offset = 1;
+    }
+
+    Eigen::MatrixXcd LM_a_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd LM_b_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+
+    for( unsigned int i = 0; i < fr2_len; i++ ){
+        
+        lead_x = 2*( i*out_cnt ) + x_lead_offset;
+
+        for( unsigned int j = 0; j < fr1_len; j++ ){
+
+            lead_y = 2*( j*in_cnt ) + y_lead_offset;
+
+            // Current partition #2 frequency and data.
+            f2_i = myFr2->get_cplx_f_at( i + i_offset );
+            S2_i = myFr2->get_cplxData_at_f( i + i_offset );
+            // Current partition #1 frequency and data.
+            f1_j = myFr1->get_cplx_f_at( j + j_offset );
+            S1_j = myFr1->get_cplxData_at_f( j + j_offset );
+
+            // Current block piece computations.
+            LM_a_ij = ( S2_i - S1_j )/( f2_i - f1_j );
+            LM_b_ij = ( S2_i - S1_j.conjugate() )/( f2_i - conj( f1_j ) );
+
+            // LM current block computation.
+            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
+                LM_a_ij.real() + LM_b_ij.real();
+            this->LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                LM_a_ij.imag() - LM_b_ij.imag();
+            this->LM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
+                - LM_a_ij.imag() - LM_b_ij.imag();
+            this->LM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                LM_a_ij.real() - LM_b_ij.real();
+
+        }
+    }
 
 }
 
