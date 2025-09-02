@@ -395,7 +395,7 @@ void LM_eng::step3skip2_LM_re_construct(){
     unsigned int lead_x = 0;
     unsigned int lead_y = 0;
 
-    // Define dquare root of 2 that is going to be repeatedly reused.
+    // Define square root of 2 that is going to be repeatedly reused.
     double sqrt_of_2 = std::sqrt(2);
 
     // Repeated temporary variables.
@@ -476,35 +476,50 @@ void LM_eng::step3skip2_LM_re_construct(){
     unsigned int i_offset = 0;    unsigned int j_offset = 0;
     if( this->f1_has_DC_pt ){
         y_lead_offset = in_cnt;
-        i_offset = 1;
+        j_offset = 1;
     }else if( this->f2_has_DC_pt ){
         x_lead_offset = out_cnt;
-        j_offset = 1;
+        i_offset = 1;
     }
 
     Eigen::MatrixXcd LM_a_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
     Eigen::MatrixXcd LM_b_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd SLM_a_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd SLM_b_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
 
-    for( unsigned int i = 0; i < fr2_len; i++ ){
+    for( unsigned int i = i_offset; i < fr2_len; i++ ){
         
-        lead_x = 2*( i*out_cnt ) + x_lead_offset;
+        lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
 
-        for( unsigned int j = 0; j < fr1_len; j++ ){
+        for( unsigned int j = j_offset; j < fr1_len; j++ ){
 
-            lead_y = 2*( j*in_cnt ) + y_lead_offset;
+            lead_y = 2*( ( j - j_offset )*in_cnt ) + y_lead_offset;
 
             // Current partition #2 frequency and data.
-            f2_i = myFr2->get_cplx_f_at( i + i_offset );
-            S2_i = myFr2->get_cplxData_at_f( i + i_offset );
+            f2_i = myFr2->get_cplx_f_at( i );
+            S2_i = myFr2->get_cplxData_at_f( i );
             // Current partition #1 frequency and data.
-            f1_j = myFr1->get_cplx_f_at( j + j_offset );
-            S1_j = myFr1->get_cplxData_at_f( j + j_offset );
+            f1_j = myFr1->get_cplx_f_at( j );
+            S1_j = myFr1->get_cplxData_at_f( j );
 
-            // Current block piece computations.
+            // Current block LM pieces computation.
             LM_a_ij = ( S2_i - S1_j )/( f2_i - f1_j );
             LM_b_ij = ( S2_i - S1_j.conjugate() )/( f2_i - conj( f1_j ) );
+            // Current block SLM pieces computation.
+            SLM_a_ij = ( f2_i*S2_i - f1_j*S1_j )/( f2_i - f1_j );
+            SLM_b_ij = ( f2_i*S2_i - conj( f1_j )*S1_j.conjugate() )/
+                ( f2_i - conj( f1_j ) );
 
             // LM current block computation.
+            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
+                LM_a_ij.real() + LM_b_ij.real();
+            this->LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                LM_a_ij.imag() - LM_b_ij.imag();
+            this->LM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
+                - LM_a_ij.imag() - LM_b_ij.imag();
+            this->LM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                LM_a_ij.real() - LM_b_ij.real();
+            // SLM current block computation.
             this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
                 LM_a_ij.real() + LM_b_ij.real();
             this->LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
@@ -516,6 +531,21 @@ void LM_eng::step3skip2_LM_re_construct(){
 
         }
     }
+
+    Eigen::MatrixXcd f2_dc_data( out_cnt, in_cnt );
+    for( unsigned int i = i_offset; i < fr2_len; i++ ){
+
+        lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
+
+        f2_dc_data = myFr2->get_cplxData_at_f(i);
+
+        this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
+        this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -f2_dc_data.imag();
+
+    }
+    F_re = sqrt_of_2*F_re;
+
+    unsigned int lol = 0;
 
 }
 
