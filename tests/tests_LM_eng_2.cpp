@@ -513,24 +513,53 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 // ---------------------------------------------------------------------- >>>>>
     
         // Define our frequency data object.
-        fData myFData;
+        fData myFData1;
 
         // Define the full file name.
         string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/bondwire_with_strip_design3.s4p";
-        fData::read_sXp_file( myFData, fullFileName );
+        fData::read_sXp_file( myFData1, fullFileName );
 
         // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+        myFData1.data_format_Switch( fData::FDATA_FORMAT::RI );
         // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+        myFData1.data_prefix_switch( fData::METRIC_PREFIX::M );
 
 // ---------------------------------------------------------------------- <<<<<
 
-        // Proceed with LM progress.
-        LM_eng my_LM_eng( myFData );
-        my_LM_eng.step1_fData_partition();
-        my_LM_eng.step3skip2_LM_re_construct();
+        unsigned int fr_size = 10;
 
+        // Create a subset linear index array.
+        vector<unsigned int> fr_idx_arr_in = utils::gen_lin_idx_arr( 0, 
+            myFData1.get_f_cnt() - 1, min( fr_size, myFData1.get_f_cnt() ) );
+
+        // LM engine initialization
+        LM_eng my_LM_eng_a;
+        LM_eng my_LM_eng_b;
+
+        my_LM_eng_a.step0_fData_set( myFData1, fr_idx_arr_in );
+        my_LM_eng_b.step0_fData_set( myFData1, fr_idx_arr_in );
+        my_LM_eng_a.step1_fData_partition();
+        my_LM_eng_b.step1_fData_partition();
+
+
+        // Perform the direct real LM computation step.
+        my_LM_eng_a.step3skip2_LM_re_construct();
+        // Perform the standard steps for the copy engine.
+        my_LM_eng_b.step2_LM_construct();
+        my_LM_eng_b.step3_LM_re_trans();
+
+        Eigen::MatrixXd my_LM_a = my_LM_eng_a.get_LM_re();
+        Eigen::MatrixXd my_SLM_a = my_LM_eng_a.get_SLM_re();
+        Eigen::MatrixXd my_F_a = my_LM_eng_a.get_F_re();
+        Eigen::MatrixXd my_W_a = my_LM_eng_a.get_W_re();
+
+        Eigen::MatrixXd my_LM_b = my_LM_eng_b.get_LM_re();
+        Eigen::MatrixXd my_SLM_b = my_LM_eng_b.get_SLM_re();
+        Eigen::MatrixXd my_F_b = my_LM_eng_b.get_F_re();
+        Eigen::MatrixXd my_W_b = my_LM_eng_b.get_W_re();
+            
+        cout << my_LM_a << endl;
+        cout << my_LM_b << endl;
     }
 
 }

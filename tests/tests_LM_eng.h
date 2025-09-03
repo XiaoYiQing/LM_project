@@ -1,7 +1,6 @@
 #ifndef TESTS_LM_ENG_H
 #define TESTS_LM_ENG_H
 
-
 #include <Eigen/Dense>
 #include <iostream>
 #include <string>

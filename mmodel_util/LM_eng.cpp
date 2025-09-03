@@ -546,7 +546,7 @@ void LM_eng::step3skip2_LM_re_construct(){
         this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -tmp.imag();
 
     }
-    F_re = sqrt_of_2*F_re;
+    this->F_re = sqrt_of_2*this->F_re;
 
     // Lead indices reset.
     lead_y = 0;    lead_x = 0;
@@ -561,10 +561,10 @@ void LM_eng::step3skip2_LM_re_construct(){
         this->W_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = S1_j.imag();
 
     }
-    W_re = sqrt_of_2*W_re;
+    this->W_re = sqrt_of_2*this->W_re;
 
 
-    unsigned int lol = 0;
+    this->flag3_re_trans = true;
 
 }
 

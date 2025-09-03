@@ -206,13 +206,13 @@ Eigen::MatrixXcd get_W() const;
 Eigen::MatrixXcd get_F() const;
 
 // Obtain the Loewner Matrix after real transform.
-Eigen::MatrixXcd get_LM_re() const;
+Eigen::MatrixXd get_LM_re() const;
 // Obtain the shifted-Loewner Matrix after real transform.
-Eigen::MatrixXcd get_SLM_re() const;
+Eigen::MatrixXd get_SLM_re() const;
 // Obtain the partition 1 data row vector after real transform.
-Eigen::MatrixXcd get_W_re() const;
+Eigen::MatrixXd get_W_re() const;
 // Obtain the partition 2 data column vector after real transform.
-Eigen::MatrixXcd get_F_re() const;
+Eigen::MatrixXd get_F_re() const;
 
 
 // Obtain the current Loewner Matrix pencil's computed singular values.
