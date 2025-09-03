@@ -520,14 +520,14 @@ void LM_eng::step3skip2_LM_re_construct(){
             this->LM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
                 LM_a_ij.real() - LM_b_ij.real();
             // SLM current block computation.
-            this->LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
-                LM_a_ij.real() + LM_b_ij.real();
-            this->LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
-                LM_a_ij.imag() - LM_b_ij.imag();
-            this->LM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
-                - LM_a_ij.imag() - LM_b_ij.imag();
-            this->LM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
-                LM_a_ij.real() - LM_b_ij.real();
+            this->SLM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
+                SLM_a_ij.real() + SLM_b_ij.real();
+            this->SLM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                SLM_a_ij.imag() - SLM_b_ij.imag();
+            this->SLM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
+                - SLM_a_ij.imag() - SLM_b_ij.imag();
+            this->SLM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                SLM_a_ij.real() - SLM_b_ij.real();
 
         }
     }
@@ -542,11 +542,10 @@ void LM_eng::step3skip2_LM_re_construct(){
 
         tmp = myFr2->get_cplxData_at_f(i);
 
-        this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = tmp.real();
-        this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -tmp.imag();
+        this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*tmp.real();
+        this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -sqrt_of_2*tmp.imag();
 
     }
-    this->F_re = sqrt_of_2*this->F_re;
 
     // Lead indices reset.
     lead_y = 0;    lead_x = 0;
@@ -557,12 +556,10 @@ void LM_eng::step3skip2_LM_re_construct(){
 
         S1_j = myFr1->get_cplxData_at_f(j);
 
-        this->W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = S1_j.real();
-        this->W_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = S1_j.imag();
+        this->W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S1_j.real();
+        this->W_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = sqrt_of_2*S1_j.imag();
 
     }
-    this->W_re = sqrt_of_2*this->W_re;
-
 
     this->flag3_re_trans = true;
 
@@ -779,25 +776,25 @@ Eigen::MatrixXcd LM_eng::get_F() const{
 }
 
 
-Eigen::MatrixXcd LM_eng::get_LM_re() const{
+Eigen::MatrixXd LM_eng::get_LM_re() const{
     if( !this->flag3_re_trans){
         throw std::runtime_error( "Cannot return real LM: step3 (LM real transform) has not been set." );
     }
     return this->LM_re;
 }
-Eigen::MatrixXcd LM_eng::get_SLM_re() const{
+Eigen::MatrixXd LM_eng::get_SLM_re() const{
     if( !this->flag3_re_trans ){
         throw std::runtime_error( "Cannot return real SLM: step3 (LM real transform) has not been set." );
     }
     return this->SLM_re;
 }
-Eigen::MatrixXcd LM_eng::get_W_re() const{
+Eigen::MatrixXd LM_eng::get_W_re() const{
     if( !this->flag3_re_trans ){
         throw std::runtime_error( "Cannot return real W: step3 (LM real transform) has not been set." );
     }
     return this->W_re;
 }
-Eigen::MatrixXcd LM_eng::get_F_re() const{
+Eigen::MatrixXd LM_eng::get_F_re() const{
     if( !this->flag3_re_trans ){
         throw std::runtime_error( "Cannot return real F: step3 (LM real transform) has not been set." );
     }

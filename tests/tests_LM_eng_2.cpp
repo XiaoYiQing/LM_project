@@ -526,7 +526,7 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
 // ---------------------------------------------------------------------- <<<<<
 
-        unsigned int fr_size = 10;
+        unsigned int fr_size = 50;
 
         // Create a subset linear index array.
         vector<unsigned int> fr_idx_arr_in = utils::gen_lin_idx_arr( 0, 
@@ -544,6 +544,8 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
         // Perform the direct real LM computation step.
         my_LM_eng_a.step3skip2_LM_re_construct();
+        
+
         // Perform the standard steps for the copy engine.
         my_LM_eng_b.step2_LM_construct();
         my_LM_eng_b.step3_LM_re_trans();
@@ -557,9 +559,13 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
         Eigen::MatrixXd my_SLM_b = my_LM_eng_b.get_SLM_re();
         Eigen::MatrixXd my_F_b = my_LM_eng_b.get_F_re();
         Eigen::MatrixXd my_W_b = my_LM_eng_b.get_W_re();
-            
-        cout << my_LM_a << endl;
-        cout << my_LM_b << endl;
+        
+
+        cout << ( my_LM_a - my_LM_b ).cwiseAbs().maxCoeff() << endl;
+        cout << ( my_SLM_a - my_SLM_b ).cwiseAbs().maxCoeff() << endl;
+        cout << ( my_F_a - my_F_b ).cwiseAbs().maxCoeff() << endl;
+        cout << ( my_W_a - my_W_b ).cwiseAbs().maxCoeff() << endl;
+
     }
 
 }
