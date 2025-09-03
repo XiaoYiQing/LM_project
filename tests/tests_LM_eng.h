@@ -1,6 +1,7 @@
 #ifndef TESTS_LM_ENG_H
 #define TESTS_LM_ENG_H
 
+#include <chrono>
 #include <Eigen/Dense>
 #include <iostream>
 #include <string>

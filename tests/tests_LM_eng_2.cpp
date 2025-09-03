@@ -507,7 +507,6 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
     // 0- Full process singular values print function.
     if( test_idx == case_cnt ){
 
-    
 // ---------------------------------------------------------------------- >>>>>
 //      Initialization (Data)
 // ---------------------------------------------------------------------- >>>>>
@@ -541,30 +540,51 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
         my_LM_eng_a.step1_fData_partition();
         my_LM_eng_b.step1_fData_partition();
 
-
+        // Record the start time
+        auto start = std::chrono::high_resolution_clock::now();
         // Perform the direct real LM computation step.
         my_LM_eng_a.step3skip2_LM_re_construct();
-        
+        // Record the end time
+        auto end = std::chrono::high_resolution_clock::now();
+        // Calculate the duration in milliseconds
+        std::chrono::duration<double, std::milli> duration = end - start;
+        cout << "Direct real LM comp cost: " << duration.count() << " ms" << endl;
 
+
+        start = std::chrono::high_resolution_clock::now();
         // Perform the standard steps for the copy engine.
         my_LM_eng_b.step2_LM_construct();
         my_LM_eng_b.step3_LM_re_trans();
+        end = std::chrono::high_resolution_clock::now();
+        duration = end - start;
+        cout << "Standard real LM comp cost: " << duration.count() << " ms" << endl;
 
+        
+        // Obtain the real Loewner matrices generated the direct way.
         Eigen::MatrixXd my_LM_a = my_LM_eng_a.get_LM_re();
         Eigen::MatrixXd my_SLM_a = my_LM_eng_a.get_SLM_re();
         Eigen::MatrixXd my_F_a = my_LM_eng_a.get_F_re();
         Eigen::MatrixXd my_W_a = my_LM_eng_a.get_W_re();
-
+        
+        // Obtain the real Loewner matrices generated the standard way.
         Eigen::MatrixXd my_LM_b = my_LM_eng_b.get_LM_re();
         Eigen::MatrixXd my_SLM_b = my_LM_eng_b.get_SLM_re();
         Eigen::MatrixXd my_F_b = my_LM_eng_b.get_F_re();
         Eigen::MatrixXd my_W_b = my_LM_eng_b.get_W_re();
         
+        
+        // Calculate the highest discrepancy in magnitude.
+        bool test_bool = true;
+        test_bool = test_bool && ( ( my_LM_a - my_LM_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        test_bool = test_bool && ( ( my_SLM_a - my_SLM_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        test_bool = test_bool && ( ( my_F_a - my_F_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        test_bool = test_bool && ( ( my_W_a - my_W_b ).cwiseAbs().maxCoeff() < 1e-12 );
 
-        cout << ( my_LM_a - my_LM_b ).cwiseAbs().maxCoeff() << endl;
-        cout << ( my_SLM_a - my_SLM_b ).cwiseAbs().maxCoeff() << endl;
-        cout << ( my_F_a - my_F_b ).cwiseAbs().maxCoeff() << endl;
-        cout << ( my_W_a - my_W_b ).cwiseAbs().maxCoeff() << endl;
+        if( test_bool ){
+            cout << "step3skip2_LM_re_construct test: passed!" << endl;
+        }else{
+            cout << "step3skip2_LM_re_construct test: failed!" << endl;
+        }
 
     }
 
