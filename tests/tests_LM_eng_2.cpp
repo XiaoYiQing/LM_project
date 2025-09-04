@@ -585,6 +585,68 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
         }else{
             cout << "step3skip2_LM_re_construct test: failed!" << endl;
         }
+        
+
+    }
+
+
+    case_cnt++;
+    // 1- Individual LM comp functions.
+    if( test_idx == case_cnt ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+    
+        // Define our frequency data object.
+        fData myFData1;
+
+        // Define the full file name.
+        string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/bondwire_with_strip_design3.s4p";
+        fData::read_sXp_file( myFData1, fullFileName );
+
+        // Switch the data format into real + imaginary format.
+        myFData1.data_format_Switch( fData::FDATA_FORMAT::RI );
+        // Normalize the frequency vector (As much as you can according to metric prefixes).
+        myFData1.data_prefix_switch( fData::METRIC_PREFIX::M );
+
+// ---------------------------------------------------------------------- <<<<<
+
+        unsigned int fr_size = 50;
+
+        // Create a subset linear index array.
+        vector<unsigned int> fr_idx_arr_in = utils::gen_lin_idx_arr( 0, 
+            myFData1.get_f_cnt() - 1, min( fr_size, myFData1.get_f_cnt() ) );
+
+        // LM engine initialization
+        LM_eng my_LM_eng_a;
+
+        // Go through LM construct step until real LM generation.
+        my_LM_eng_a.step0_fData_set( myFData1, fr_idx_arr_in );
+        my_LM_eng_a.step1_fData_partition();
+        my_LM_eng_a.step3skip2_LM_re_construct();
+
+        // Obtain the real Loewner matrices generated the direct way.
+        Eigen::MatrixXd my_LM_a = my_LM_eng_a.get_LM_re();
+        Eigen::MatrixXd my_SLM_a = my_LM_eng_a.get_SLM_re();
+        Eigen::MatrixXd my_F_a = my_LM_eng_a.get_F_re();
+        Eigen::MatrixXd my_W_a = my_LM_eng_a.get_W_re();
+
+        shared_ptr<Eigen::MatrixXd> my_LM_b = 
+            LM_UTIL::build_LM_re( *my_LM_eng_a.get_Fr1(), *my_LM_eng_a.get_Fr2() );
+
+        // Calculate the highest discrepancy in magnitude.
+        bool test_bool = true;
+        test_bool = test_bool && ( ( my_LM_a - *my_LM_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        // test_bool = test_bool && ( ( my_SLM_a - my_SLM_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        // test_bool = test_bool && ( ( my_F_a - my_F_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        // test_bool = test_bool && ( ( my_W_a - my_W_b ).cwiseAbs().maxCoeff() < 1e-12 );
+
+        if( test_bool ){
+            cout << "Individual real LM build functions test: passed!" << endl;
+        }else{
+            cout << "Individual real LM build functions test: failed!" << endl;
+        }
 
     }
 

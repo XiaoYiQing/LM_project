@@ -913,151 +913,6 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData
 }
 
 
-shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fData& myFr2 ){
-    
-    // Obtain the size of the two partitions.
-    unsigned int f1Size = myFr1.get_f_cnt();
-    unsigned int f2Size = myFr2.get_f_cnt();
-    if( f1Size == 0 || f2Size == 0 ){
-        throw std::invalid_argument( "Empty frequency data inputs are not allowed for constructing the Loewner Matrix." );
-    }
-
-    // General partition data characteristics.
-    unsigned int out_cnt = myFr1.get_out_cnt();
-    unsigned int in_cnt = myFr1.get_in_cnt();
-    unsigned int fr1_len = myFr1.get_f_cnt();
-    unsigned int fr2_len = myFr2.get_f_cnt();
-    // Determine if the DC point is present.
-    bool f1_has_DC_pt = myFr1.get_fval_at(0) == 0;
-    bool f2_has_DC_pt = myFr2.get_fval_at(0) == 0;
-
-    // Obtain the number of complex conjugated f data points.
-    unsigned int frc1_len = fr1_len*2;
-    if( f1_has_DC_pt ){ frc1_len--; }
-    unsigned int frc2_len = fr2_len*2;
-    if( f2_has_DC_pt ){ frc2_len--; }
-
-    // Obtain the expected height and width of the final real LMs.
-    unsigned int LM_h = frc2_len*out_cnt;
-    unsigned int LM_w = frc1_len*in_cnt;
-
-    shared_ptr<Eigen::MatrixXd> LM_re;
-    // Obtain purely real defintion of the matrices.
-    *LM_re = Eigen::MatrixXd( LM_h, LM_w );
-
-    unsigned int lead_x = 0;
-    unsigned int lead_y = 0;
-
-    // Define square root of 2 that is going to be repeatedly reused.
-    double sqrt_of_2 = std::sqrt(2);
-    // Repeated temporary variables.
-    complex<double> f2_i, f1_j;
-    Eigen::MatrixXcd S1_j = Eigen::MatrixXcd( out_cnt, in_cnt );
-    Eigen::MatrixXcd S2_i = Eigen::MatrixXcd( out_cnt, in_cnt );
-    Eigen::MatrixXcd LMt_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
-
-    // Define block matrix lead indices.
-    unsigned int lead_x = 0;
-    unsigned int lead_y = 0;
-    
-    // DC point affected portion computation.
-    if( f1_has_DC_pt ){
-
-        // Get the DC point data.
-        Eigen::MatrixXcd f1_dc_data = myFr1.get_cplxData_at_f(0);
-        
-        // Set block column index to first column block.
-        lead_y = 0;
-
-        for( unsigned int i = 0; i < fr2_len; i++ ){
-
-            // Current partition #2 frequency and data.
-            f2_i = myFr2.get_cplx_f_at(i);
-            S2_i = myFr2.get_cplxData_at_f(i);
-
-            LMt_ij = S2_i - f1_dc_data;
-            LMt_ij = sqrt_of_2 * LMt_ij/( f2_i );
-
-            lead_x = 2*( i*out_cnt );
-            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
-            LM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*LMt_ij.imag();
-
-        }
-
-
-    }else if( f2_has_DC_pt ){
-
-        // Get the DC point data.
-        Eigen::MatrixXcd f2_dc_data = myFr2.get_cplxData_at_f(0);
-        // Set block row index to first row block.
-        lead_x = 0;
-
-        for( unsigned int j = 0; j < fr1_len; j++ ){
-
-            // Current partition #1 frequency and data.
-            f1_j = myFr1.get_cplx_f_at(j);
-            S1_j = myFr1.get_cplxData_at_f(j);
-
-            LMt_ij = f2_dc_data - S1_j;
-            LMt_ij = -1 * sqrt_of_2 * LMt_ij/( f1_j );
-
-            lead_y = 2*( j*in_cnt );
-            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
-            LM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = LMt_ij.imag();
-
-        }
-
-    }
-
-    // Remaining standard LM computations.
-    
-    // Define indexing offsets to take into account of the DC point.
-    unsigned x_lead_offset = 0;   unsigned y_lead_offset = 0;
-    unsigned int i_offset = 0;    unsigned int j_offset = 0;
-    if( f1_has_DC_pt ){
-        y_lead_offset = in_cnt;
-        j_offset = 1;
-    }else if( f2_has_DC_pt ){
-        x_lead_offset = out_cnt;
-        i_offset = 1;
-    }
-
-    Eigen::MatrixXcd LM_a_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
-    Eigen::MatrixXcd LM_b_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
-    
-    for( unsigned int i = i_offset; i < fr2_len; i++ ){
-        
-        lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
-
-        for( unsigned int j = j_offset; j < fr1_len; j++ ){
-
-            lead_y = 2*( ( j - j_offset )*in_cnt ) + y_lead_offset;
-
-            // Current partition #2 frequency and data.
-            f2_i = myFr2.get_cplx_f_at( i );
-            S2_i = myFr2.get_cplxData_at_f( i );
-            // Current partition #1 frequency and data.
-            f1_j = myFr1.get_cplx_f_at( j );
-            S1_j = myFr1.get_cplxData_at_f( j );
-
-            // Current block LM pieces computation.
-            LM_a_ij = ( S2_i - S1_j )/( f2_i - f1_j );
-            LM_b_ij = ( S2_i - S1_j.conjugate() )/( f2_i - conj( f1_j ) );
-
-            // LM current block computation.
-            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = 
-                LM_a_ij.real() + LM_b_ij.real();
-            LM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
-                LM_a_ij.imag() - LM_b_ij.imag();
-            LM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
-                - LM_a_ij.imag() - LM_b_ij.imag();
-            LM_re->block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
-                LM_a_ij.real() - LM_b_ij.real();
-
-        }
-    }
-
-}
 
 
 shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fData& f2Data ){
@@ -1210,6 +1065,151 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_F( const fData& f2Data ){
 
     return F;
 
+}
+
+
+
+shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fData& myFr2 ){
+    
+    // Obtain the size of the two partitions.
+    unsigned int f1Size = myFr1.get_f_cnt();
+    unsigned int f2Size = myFr2.get_f_cnt();
+    if( f1Size == 0 || f2Size == 0 ){
+        throw std::invalid_argument( "Empty frequency data inputs are not allowed for constructing the Loewner Matrix." );
+    }
+
+    // General partition data characteristics.
+    unsigned int out_cnt = myFr1.get_out_cnt();
+    unsigned int in_cnt = myFr1.get_in_cnt();
+    unsigned int fr1_len = myFr1.get_f_cnt();
+    unsigned int fr2_len = myFr2.get_f_cnt();
+    // Determine if the DC point is present.
+    bool f1_has_DC_pt = myFr1.get_fval_at(0) == 0;
+    bool f2_has_DC_pt = myFr2.get_fval_at(0) == 0;
+
+    // Obtain the number of complex conjugated f data points.
+    unsigned int frc1_len = fr1_len*2;
+    if( f1_has_DC_pt ){ frc1_len--; }
+    unsigned int frc2_len = fr2_len*2;
+    if( f2_has_DC_pt ){ frc2_len--; }
+
+    // Obtain the expected height and width of the final real LMs.
+    unsigned int LM_h = frc2_len*out_cnt;
+    unsigned int LM_w = frc1_len*in_cnt;
+
+    shared_ptr<Eigen::MatrixXd> LM_re = make_shared<Eigen::MatrixXd>( LM_h, LM_w );
+    
+    // Define square root of 2 that is going to be repeatedly reused.
+    double sqrt_of_2 = std::sqrt(2);
+    // Repeated temporary variables.
+    complex<double> f2_i, f1_j;
+    Eigen::MatrixXcd S1_j = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd S2_i = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd LMt_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+
+    // Define block matrix lead indices.
+    unsigned int lead_x = 0;
+    unsigned int lead_y = 0;
+
+    // DC point affected portion computation.
+    if( f1_has_DC_pt ){
+
+        // Get the DC point data.
+        Eigen::MatrixXcd f1_dc_data = myFr1.get_cplxData_at_f(0);
+        
+        // Set block column index to first column block.
+        lead_y = 0;
+
+        for( unsigned int i = 0; i < fr2_len; i++ ){
+
+            // Current partition #2 frequency and data.
+            f2_i = myFr2.get_cplx_f_at(i);
+            S2_i = myFr2.get_cplxData_at_f(i);
+
+            LMt_ij = S2_i - f1_dc_data;
+            LMt_ij = sqrt_of_2 * LMt_ij/( f2_i );
+
+            lead_x = 2*( i*out_cnt );
+            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
+            LM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*LMt_ij.imag();
+
+        }
+
+
+    }else if( f2_has_DC_pt ){
+
+        // Get the DC point data.
+        Eigen::MatrixXcd f2_dc_data = myFr2.get_cplxData_at_f(0);
+        // Set block row index to first row block.
+        lead_x = 0;
+
+        for( unsigned int j = 0; j < fr1_len; j++ ){
+
+            // Current partition #1 frequency and data.
+            f1_j = myFr1.get_cplx_f_at(j);
+            S1_j = myFr1.get_cplxData_at_f(j);
+
+            LMt_ij = f2_dc_data - S1_j;
+            LMt_ij = -1 * sqrt_of_2 * LMt_ij/( f1_j );
+
+            lead_y = 2*( j*in_cnt );
+            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
+            LM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = LMt_ij.imag();
+
+        }
+
+    }
+
+    // Remaining standard LM computations.
+    
+    // Define indexing offsets to take into account of the DC point.
+    unsigned x_lead_offset = 0;   unsigned y_lead_offset = 0;
+    unsigned int i_offset = 0;    unsigned int j_offset = 0;
+    if( f1_has_DC_pt ){
+        y_lead_offset = in_cnt;
+        j_offset = 1;
+    }else if( f2_has_DC_pt ){
+        x_lead_offset = out_cnt;
+        i_offset = 1;
+    }
+
+    Eigen::MatrixXcd LM_a_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    Eigen::MatrixXcd LM_b_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
+    
+    for( unsigned int i = i_offset; i < fr2_len; i++ ){
+        
+        lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
+
+        for( unsigned int j = j_offset; j < fr1_len; j++ ){
+
+            lead_y = 2*( ( j - j_offset )*in_cnt ) + y_lead_offset;
+
+            // Current partition #2 frequency and data.
+            f2_i = myFr2.get_cplx_f_at( i );
+            S2_i = myFr2.get_cplxData_at_f( i );
+            // Current partition #1 frequency and data.
+            f1_j = myFr1.get_cplx_f_at( j );
+            S1_j = myFr1.get_cplxData_at_f( j );
+
+            // Current block LM pieces computation.
+            LM_a_ij = ( S2_i - S1_j )/( f2_i - f1_j );
+            LM_b_ij = ( S2_i - S1_j.conjugate() )/( f2_i - conj( f1_j ) );
+
+            // LM current block computation.
+            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = 
+                LM_a_ij.real() + LM_b_ij.real();
+            LM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                LM_a_ij.imag() - LM_b_ij.imag();
+            LM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
+                - LM_a_ij.imag() - LM_b_ij.imag();
+            LM_re->block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
+                LM_a_ij.real() - LM_b_ij.real();
+
+        }
+    }
+
+    return LM_re;
+    
 }
 
 
