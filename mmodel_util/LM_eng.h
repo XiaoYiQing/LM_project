@@ -290,6 +290,17 @@ namespace LM_UTIL{
     shared_ptr<Eigen::MatrixXcd> build_LM( const fData& f1Data, const fData& f2Data );
 
     /*
+    Construct a real Loewner Matrix. A number of points need to be considered when
+    utilizing this function:
+    - The given frequency data is going to be inflated with the complete complex 
+        conjugate set (except for the DC point, if present).
+    - If the DC point is present, it must be the first entry of either f1Data or f2Data.
+    - The real Loenwer Matrix is constructed directly rather than through transform 
+        matrix multiplication.
+    */
+    shared_ptr<Eigen::MatrixXd> build_LM_re( const fData& f1Data, const fData& f2Data );
+
+    /*
     Construct a shifted-Loewner Matrix.
     */
     shared_ptr<Eigen::MatrixXcd> build_SLM( const fData& f1Data, const fData& f2Data );
