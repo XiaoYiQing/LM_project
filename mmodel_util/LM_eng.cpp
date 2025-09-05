@@ -1422,6 +1422,72 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_W_re( const fData& myFr1 ){
 }
 
 
+shared_ptr<Eigen::MatrixXd> LM_UTIL::build_F_re( const fData& myFr2 ){
+
+    // General partition data characteristics.
+    unsigned int out_cnt = myFr2.get_out_cnt();
+    unsigned int in_cnt = myFr2.get_in_cnt();
+    unsigned int fr2_len = myFr2.get_f_cnt();
+    // Determine if the DC point is present.
+    bool f2_has_DC_pt = myFr2.get_fval_at(0) == 0;
+
+    // Obtain the number of complex conjugated f data points.
+    unsigned int frc2_len = fr2_len*2;
+    if( f2_has_DC_pt ){ frc2_len--; }
+
+    // Obtain the expected height and width of the final real LMs.
+    unsigned int LM_h = frc2_len*out_cnt;
+
+    shared_ptr<Eigen::MatrixXd> F_re = make_shared<Eigen::MatrixXd>( LM_h, in_cnt );
+    
+    // Define square root of 2 that is going to be repeatedly reused.
+    double sqrt_of_2 = std::sqrt(2);
+    // Repeated temporary variables.
+    Eigen::MatrixXcd S2_i = Eigen::MatrixXcd( out_cnt, in_cnt );
+
+    // Define block matrix lead indices.
+    unsigned int lead_x = 0;
+    unsigned int lead_y = 0;
+
+    // DC point affected portion computation.
+    if( f2_has_DC_pt ){
+
+        // Get the DC point data.
+        Eigen::MatrixXcd f2_dc_data = myFr2.get_cplxData_at_f(0);
+
+        F_re->block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
+
+    }
+
+    // Remaining standard LM computations.
+    
+    // Define indexing offsets to take into account of the DC point.
+    unsigned x_lead_offset = 0; 
+    unsigned int i_offset = 0;    
+    if( f2_has_DC_pt ){
+        x_lead_offset = out_cnt;
+        i_offset = 1;
+    }
+
+    // Lead indices reset.
+    lead_y = 0;    lead_x = 0;
+
+    for( unsigned int i = i_offset; i < fr2_len; i++ ){
+
+        lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
+
+        S2_i = myFr2.get_cplxData_at_f(i);
+
+        F_re->block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S2_i.real();
+        F_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -sqrt_of_2*S2_i.imag();
+
+    }
+
+    return F_re;
+
+}
+
+
 shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM_pencil( complex<double> ref_f, const Eigen::MatrixXcd& LM, const Eigen::MatrixXcd& SLM ){
 
     unsigned int row_cnt = LM.rows();

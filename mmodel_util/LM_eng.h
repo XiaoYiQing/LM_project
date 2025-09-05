@@ -318,7 +318,7 @@ namespace LM_UTIL{
     - The real Loenwer Matrix is constructed directly rather than through transform 
         matrix multiplication.
     */
-    shared_ptr<Eigen::MatrixXd> build_LM_re( const fData& f1Data, const fData& f2Data );
+    shared_ptr<Eigen::MatrixXd> build_LM_re( const fData& myFr1, const fData& myFr2 );
 
     /*
     Construct a real shifted-Loewner Matrix. A number of points need to be considered 
@@ -329,9 +329,29 @@ namespace LM_UTIL{
     - The real Loenwer Matrix is constructed directly rather than through transform 
         matrix multiplication.
     */
-    shared_ptr<Eigen::MatrixXd> build_SLM_re( const fData& f1Data, const fData& f2Data );
+    shared_ptr<Eigen::MatrixXd> build_SLM_re( const fData& myFr1, const fData& myFr2 );
 
-    shared_ptr<Eigen::MatrixXd> build_W_re( const fData& f1Data );
+    /*
+    Construct a real W matrix (partition 1 data vector). A number of points need to be considered 
+    when utilizing this function:
+    - The given frequency data is going to be inflated with the complete complex 
+        conjugate set (except for the DC point, if present).
+    - If the DC point is present, it must be the first entry of either f1Data.
+    - The real matrix is constructed directly rather than through transform 
+        matrix multiplication.
+    */
+    shared_ptr<Eigen::MatrixXd> build_W_re( const fData& myFr1 );
+
+    /*
+    Construct a real F matrix (partition 2 data vector). A number of points need to be considered 
+    when utilizing this function:
+    - The given frequency data is going to be inflated with the complete complex 
+        conjugate set (except for the DC point, if present).
+    - If the DC point is present, it must be the first entry of either f2Data.
+    - The real matrix is constructed directly rather than through transform 
+        matrix multiplication.
+    */
+    shared_ptr<Eigen::MatrixXd> build_F_re( const fData& myFr2 );
 
     /*
     Generate the Loenwer Matrix pencil.
