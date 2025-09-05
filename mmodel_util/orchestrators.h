@@ -43,6 +43,25 @@ namespace FCT_SCR{
         vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
         vector<unsigned int> f2_idx_vec );
 
+    /*
+    Function performs a SFLM run skipping computation of complex LMs based on the given 
+    data. This means the final LM_eng holds no complex Loewner Matrices.
+    Inputs:
+    - src_data: the frequency data object with which the system is going to be 
+        constructed and tested.
+    - f_r_idx_vec: the index vector with which a subset fData of "src_data" is created.
+        This subset fData is the one actually used to construct the LM system.
+        The remaining data in "src_data" are used for validation.
+    - f1_idx_vec: the index vector creating partition #1 from the subset fData.
+    - f2_idx_vec: the index vector creating partition #2 from the subset fData.
+    - systOrd: the final transfer function order. Note that this specified number should
+        be less than the size of the Loewner Matrix, as your system cannot be bigger
+        than what the Loewner Matrix can provide.
+    */
+    shared_ptr<LM_eng> SFLM_direc_re_run( const fData& src_data, 
+        vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
+        vector<unsigned int> f2_idx_vec );
+
 };
 
 
