@@ -136,6 +136,8 @@ public:
     inaccessible.
     */
     void step3skip2_LM_re_construct();
+
+    void step3skip2_LM_re_construct_alt();
     
     /*
     SFLM step where the LM pencil is created and then undergoes singular value 

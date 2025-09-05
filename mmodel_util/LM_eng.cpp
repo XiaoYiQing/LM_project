@@ -81,8 +81,9 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
     shared_ptr<LM_eng> myEng = make_shared<LM_eng>( myFData );
     try{
         myEng->step1_fData_partition();
-        myEng->step2_LM_construct();
-        myEng->step3_LM_re_trans();
+        // myEng->step2_LM_construct();
+        // myEng->step3_LM_re_trans();
+        myEng->step3skip2_LM_re_construct();
         myEng->step4_LM_pencil_SVD();
     }catch( const std::runtime_error& e ){
         std::cerr << "print_singVals aborted: " << e.what() << '\n';
@@ -379,6 +380,7 @@ void LM_eng::step3skip2_LM_re_construct(){
     this->flag3_re_trans = true;
 
 }
+
 
 void LM_eng::step3skip2_LM_re_construct_alt(){
     
