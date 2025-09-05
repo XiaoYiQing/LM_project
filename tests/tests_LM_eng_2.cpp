@@ -634,11 +634,13 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
         shared_ptr<Eigen::MatrixXd> my_LM_b = 
             LM_UTIL::build_LM_re( *my_LM_eng_a.get_Fr1(), *my_LM_eng_a.get_Fr2() );
+        shared_ptr<Eigen::MatrixXd> my_SLM_b = 
+            LM_UTIL::build_SLM_re( *my_LM_eng_a.get_Fr1(), *my_LM_eng_a.get_Fr2() );
 
         // Calculate the highest discrepancy in magnitude.
         bool test_bool = true;
         test_bool = test_bool && ( ( my_LM_a - *my_LM_b ).cwiseAbs().maxCoeff() < 1e-12 );
-        // test_bool = test_bool && ( ( my_SLM_a - my_SLM_b ).cwiseAbs().maxCoeff() < 1e-12 );
+        test_bool = test_bool && ( ( my_SLM_a - *my_SLM_b ).cwiseAbs().maxCoeff() < 1e-12 );
         // test_bool = test_bool && ( ( my_F_a - my_F_b ).cwiseAbs().maxCoeff() < 1e-12 );
         // test_bool = test_bool && ( ( my_W_a - my_W_b ).cwiseAbs().maxCoeff() < 1e-12 );
 

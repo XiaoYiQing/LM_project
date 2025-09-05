@@ -331,6 +331,7 @@ namespace LM_UTIL{
     */
     shared_ptr<Eigen::MatrixXd> build_SLM_re( const fData& f1Data, const fData& f2Data );
 
+    shared_ptr<Eigen::MatrixXd> build_W_re( const fData& f1Data );
 
     /*
     Generate the Loenwer Matrix pencil.
