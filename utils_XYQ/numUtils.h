@@ -50,7 +50,7 @@ namespace utils{
 //      Random Number Generator
 // ====================================================================== >>>>>
 
-shared_ptr<vector<int>> rIntGen( int L_bnd, int U_bnd, unsigned int cnt );
+shared_ptr< vector<int> > rIntGen( int L_bnd, int U_bnd, unsigned int cnt );
 
 shared_ptr<vector<double>> rDoubleGen( double L_bnd, double U_bnd, unsigned int cnt );
 

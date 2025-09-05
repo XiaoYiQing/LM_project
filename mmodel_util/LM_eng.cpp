@@ -93,7 +93,9 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
 
     string dataFileStem = fileStem + "_sv";
 
-    utils::vec_to_file( destDir, dataFileStem, myEng->get_singVals(), 0 );
+    // utils::vec_to_file( destDir, dataFileStem, myEng->get_singVals(), 0 );
+
+    LM_eng::print_singVals( *myEng, dataFileStem, destDir );
 
     return myEng;
 

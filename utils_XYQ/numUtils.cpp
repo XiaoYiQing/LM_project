@@ -149,7 +149,7 @@ bool isEqEnough( double a, double b, double thresh ){
 //      Random Number Generator
 // ====================================================================== >>>>>
 
-shared_ptr<vector<int>> utils::rIntGen( int L_bnd, int U_bnd, unsigned int cnt ){
+shared_ptr< vector<int> > utils::rIntGen( int L_bnd, int U_bnd, unsigned int cnt ){
 
     if( L_bnd > U_bnd ){
         throw std::invalid_argument( "rIntGen lower bound must not be larger than the upper bound." );
