@@ -371,6 +371,31 @@ void LM_eng::step3skip2_LM_re_construct(){
     shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
     shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
+    this->LM_re = *LM_UTIL::build_LM_re( *myFr1, *myFr2 );
+    this->SLM_re = *LM_UTIL::build_SLM_re( *myFr1, *myFr2 );
+    this->W_re = *LM_UTIL::build_W_re( *myFr1 );
+    this->F_re = *LM_UTIL::build_F_re( *myFr2 );
+
+    this->flag3_re_trans = true;
+
+}
+
+void LM_eng::step3skip2_LM_re_construct_alt(){
+    
+    if( !flag1_data_prep ){
+        throw::runtime_error( "Step 3 skipping step 2 cannot be executed: step 1 not set (data prep)." );
+    }
+
+    // General partition data characteristics.
+    unsigned int out_cnt = this->myFData.get_out_cnt();
+    unsigned int in_cnt = this->myFData.get_in_cnt();
+    unsigned int fr1_len = this->partit1IdxArr.size();
+    unsigned int fr2_len = this->partit2IdxArr.size();
+
+    // Create a fData partitions.
+    shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+    shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
+
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
     shared_ptr<fData> myFrc1 = myFr1->gen_cplx_conj_comb();
@@ -564,7 +589,6 @@ void LM_eng::step3skip2_LM_re_construct(){
     this->flag3_re_trans = true;
 
 }
-
 
 void LM_eng::step4_LM_pencil_SVD(){
 
