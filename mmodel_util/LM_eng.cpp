@@ -261,6 +261,10 @@ void LM_eng::step1_fData_partition( const vector<unsigned int>& f1IdxVec,
 
     // Set the tracking flag for step 1.
     this->flag1_data_prep = true;
+    // Reset the higher index flags.
+    this->flag2_LM_const = false;
+    this->flag3_re_trans = false;
+    this->flag4_pen_SVD = false;
 
 }
 
@@ -295,8 +299,11 @@ void LM_eng::step2_LM_construct(){
         throw;
     }
 
-    // Set the tracking flag for step 1.
+    // Set the tracking flag for step 2.
     this->flag2_LM_const = true;
+    // Reset the higher index flags.
+    this->flag3_re_trans = false;
+    this->flag4_pen_SVD = false;
 
 }
 
@@ -340,20 +347,11 @@ void LM_eng::step3_LM_re_trans(){
     this->SLM_re = mySLM_re_tmp.real();
     this->W_re = myW_re_tmp.real();
     this->F_re = myF_re_tmp.real();
-
-    // Generate a random test point and evaluate the full LM transfer function.
-    // if( !f2_has_DC_pt && !f1_has_DC_pt ){
-    //     unsigned int test_f_idx = utils::rIntGen( 0, this->myFData.get_f_cnt() - 1, 1 )->at(0);
-    //     complex<double> test_f = this->myFData.get_cplx_f_at( test_f_idx );
-    //     Eigen::MatrixXcd tmpAns = 
-    //         this->W_re*( ( - test_f*this->LM_re + this->SLM_re ).inverse() )*this->F_re;
-    //     Eigen::MatrixXcd ansDiff = this->myFData.get_cplxData_at_f( test_f_idx ) - tmpAns;
-    //     match_bool = true;
-    //     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
-    //     cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
-    // }
     
+    // Set the tracking flag for step 3.
     this->flag3_re_trans = true;
+    // Reset the higher index flags.
+    this->flag4_pen_SVD = false;
 
 }
 
@@ -374,12 +372,16 @@ void LM_eng::step3skip2_LM_re_construct(){
     shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
     shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
+    // Construct the Loewner Matrices.
     this->LM_re = *LM_UTIL::build_LM_re( *myFr1, *myFr2 );
     this->SLM_re = *LM_UTIL::build_SLM_re( *myFr1, *myFr2 );
     this->W_re = *LM_UTIL::build_W_re( *myFr1 );
     this->F_re = *LM_UTIL::build_F_re( *myFr2 );
 
+    // Set the tracking flag for step 3.
     this->flag3_re_trans = true;
+    // Reset the higher index flags.
+    this->flag4_pen_SVD = false;
 
 }
 
@@ -590,7 +592,10 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
 
     }
 
+    // Set the tracking flag for step 3.
     this->flag3_re_trans = true;
+    // Reset the higher index flags.
+    this->flag4_pen_SVD = false;
 
 }
 
@@ -640,6 +645,7 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref ){
     // Get the right singular vectors (V)
     this->V = svdResObj.matrixV();
 
+    // Set the tracking flag for step 4.
     flag4_pen_SVD = true;
 
 }
