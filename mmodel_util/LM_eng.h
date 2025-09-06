@@ -136,7 +136,13 @@ public:
     inaccessible.
     */
     void step3skip2_LM_re_construct();
-
+    /*
+    Special SFLM step where the real Loewner Matrices are constructed directly.
+    However, the complex Loewner Matrices are skipped entirely, and are thus 
+    inaccessible.
+    Alt note: this function contains all codes in a single function rather than calling
+    sub-task functions.
+    */
     void step3skip2_LM_re_construct_alt();
     
     /*

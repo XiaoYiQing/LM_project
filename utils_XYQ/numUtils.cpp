@@ -348,3 +348,29 @@ vector< unsigned int > utils::gen_rem_idx_arr( unsigned int lower, unsigned uppe
 
 
 // ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
+//      Numerical Vector Utilities
+// ====================================================================== >>>>>
+
+template <typename T>
+vector<T> utils::gen_match_vector( vector<T> vec_A, vector<T> vec_B ){
+    
+    static_assert(std::is_arithmetic<T>::value, "Template parameter must be a numerical type");
+
+    vector<T> matchedEntries;
+
+    // Perform set intersection
+    std::set_intersection(
+        vec_A.begin(), vec_A.end(),
+        vec_B.begin(), vec_B.end(),
+        std::back_inserter( matchedEntries )
+    );
+
+    return matchedEntries;
+    
+}
+
+// ====================================================================== <<<<<
+

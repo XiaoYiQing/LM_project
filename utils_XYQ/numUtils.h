@@ -97,5 +97,19 @@ vector< unsigned int > gen_rem_idx_arr( unsigned int lower, unsigned upper,
 // ====================================================================== <<<<<
 
 
+// ====================================================================== >>>>>
+//      Numerical Vector Utilities
+// ====================================================================== >>>>>
+
+template <typename T>
+/*
+Function generates a vector containing all matching numerical contents between
+the two input numerical vectors.
+*/
+vector<T> gen_match_vector( vector<T> vec_A, vector<T> vec_B );
+
+// ====================================================================== <<<<<
+
+
 }
 
