@@ -107,14 +107,16 @@ the two input numerical vectors.
 template <typename Z>
 vector<Z> gen_match_vector( vector<Z> vec_A, vector<Z> vec_B ){
     
-    vector<unsigned int> vec_A_cp = vec_A;
-    vector<unsigned int> vec_B_cp = vec_B;
+    static_assert( std::is_arithmetic<Z>::value, "Vector contains non-numeric type" );
+
+    vector<Z> vec_A_cp = vec_A;
+    vector<Z> vec_B_cp = vec_B;
 
     // Sort the vectors
     sort(vec_A_cp.begin(), vec_A_cp.end());
     sort(vec_B_cp.begin(), vec_B_cp.end());
 
-    vector<unsigned int> matchedEntries;
+    vector<Z> matchedEntries;
 
     // Perform set intersection
     set_intersection(

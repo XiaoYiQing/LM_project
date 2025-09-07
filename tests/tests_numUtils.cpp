@@ -149,15 +149,23 @@ void tests::numUtils_test_1( unsigned int case_idx ){
 
 void tests::gen_match_vector_test(){
 
-    vector<unsigned int> vec_A = { 0, 1, 2, 6, 7, 7, 3 };
-    vector<unsigned int> vec_B = { 1, 2, 7, 11, 5 };
+    vector<unsigned int> vec_1A = { 0, 1, 2, 6, 7, 7, 3 };
+    vector<unsigned int> vec_1B = { 1, 2, 7, 11, 5, 7 };
+    vector<unsigned int> vec_1C = utils::gen_match_vector( vec_1A, vec_1B );
 
-    vector<unsigned int> vec_C = utils::gen_match_vector( vec_A, vec_B );
-    for( unsigned int z = 0; z < vec_C.size(); z++ ){
-        cout << vec_C.at(z) << " ";
+    vector<unsigned int> vec_1C_ans = { 1, 2, 7, 7 };
+    bool test_bool = true;
+    test_bool = test_bool && ( vec_1C_ans.size() == vec_1C.size() );
+    if( test_bool ){
+        for( unsigned int z = 0; z < vec_1C_ans.size(); z++ ){
+            test_bool = test_bool && ( vec_1C_ans[z] == vec_1C[z] );
+        }
     }
-    cout << endl;
-
+    if( test_bool ){
+        cout << "gen_match_vector_test test: passed!" << endl;
+    }else{
+        cout << "gen_match_vector_test test: failed!" << endl;
+    }
 
 }
 
