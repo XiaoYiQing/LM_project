@@ -105,8 +105,9 @@ Function generates a vector containing all matching numerical contents between
 the two input numerical vectors.
 */
 template <typename Z>
-vector<Z> gen_match_vector( vector<Z> vec_A, vector<Z> vec_B ){
+vector<Z> gen_match_vector( const vector<Z>& vec_A, const vector<Z>& vec_B ){
     
+    // Make sure this function is only used with numerical vector.
     static_assert( std::is_arithmetic<Z>::value, "Vector contains non-numeric type" );
 
     vector<Z> vec_A_cp = vec_A;
@@ -129,6 +130,26 @@ vector<Z> gen_match_vector( vector<Z> vec_A, vector<Z> vec_B ){
 
 }
 
+
+/*
+Sort the given numerical vector.
+If "ascend" is true, sort in ascending order, else, in descending order.
+*/
+template <typename Z>
+void sort_num_vec_inplace( vector<Z>& vec_A, bool ascend ){
+
+    // Make sure this function is only used with numerical vector.
+    static_assert( std::is_arithmetic<Z>::value, "Vector contains non-numeric type" );
+
+    if( ascend ){
+        // Sort in ascending order.
+        std::sort( vec_A.begin(), vec_A.end() );
+    }else{
+        // Sort in descending order.
+        std::sort( vec_A.begin(), vec_A.end(), std::greater<>() );
+    }
+
+}
 
 // ====================================================================== <<<<<
 

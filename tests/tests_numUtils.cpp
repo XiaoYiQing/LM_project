@@ -149,6 +149,7 @@ void tests::numUtils_test_1( unsigned int case_idx ){
 
 void tests::gen_match_vector_test(){
 
+
     vector<unsigned int> vec_1A = { 0, 1, 2, 6, 7, 7, 3 };
     vector<unsigned int> vec_1B = { 1, 2, 7, 11, 5, 7 };
     vector<unsigned int> vec_1C = utils::gen_match_vector( vec_1A, vec_1B );
@@ -162,9 +163,59 @@ void tests::gen_match_vector_test(){
         }
     }
     if( test_bool ){
-        cout << "gen_match_vector_test test: passed!" << endl;
+        cout << "gen_match_vector_test test 1: passed!" << endl;
     }else{
-        cout << "gen_match_vector_test test: failed!" << endl;
+        cout << "gen_match_vector_test test 1: failed!" << endl;
+    }
+
+
+    vector<unsigned int> vec_2A = { 0, 1, 2, 4 };
+    vector<unsigned int> vec_2B = { 6, 7, 9 };
+    vector<unsigned int> vec_2C = utils::gen_match_vector( vec_2A, vec_2B );
+
+    test_bool = true;
+    test_bool = test_bool && ( vec_2C.size() == 0 );
+    if( test_bool ){
+        cout << "gen_match_vector_test test 2: passed!" << endl;
+    }else{
+        cout << "gen_match_vector_test test 2: failed!" << endl;
+    }
+
+
+
+}
+
+
+void tests::sort_num_vec_inplace_test(){
+
+    vector<unsigned int> vec_1A_ans = { 0, 1, 2, 3, 5, 8, 9 };
+    vector<unsigned int> vec_1A = { 0, 1, 8, 3, 2, 9, 5 };
+    utils::sort_num_vec_inplace( vec_1A, true );
+    bool test_bool = true;
+    if( test_bool ){
+        for( unsigned int z = 0; z < vec_1A.size(); z++ ){
+            test_bool = test_bool && ( vec_1A[z] == vec_1A_ans[z] );
+        }
+    }
+    if( test_bool ){
+        cout << "gen_match_vector_test test 1: passed!" << endl;
+    }else{
+        cout << "gen_match_vector_test test 1: failed!" << endl;
+    }
+
+    vector<double> vec_2A_ans = { 0.982, 0.98, 0.75, 0.71, 0.566, 0.43, 0.2 };
+    vector<double> vec_2A =     { 0.43, 0.2, 0.75, 0.982, 0.71, 0.566, 0.98 };
+    utils::sort_num_vec_inplace( vec_2A, false );
+    test_bool = true;
+    if( test_bool ){
+        for( unsigned int z = 0; z < vec_2A.size(); z++ ){
+            test_bool = test_bool && ( abs( vec_2A[z] - vec_2A_ans[z] ) < 1e-12 );
+        }
+    }
+    if( test_bool ){
+        cout << "gen_match_vector_test test 2: passed!" << endl;
+    }else{
+        cout << "gen_match_vector_test test 2: failed!" << endl;
     }
 
 }
