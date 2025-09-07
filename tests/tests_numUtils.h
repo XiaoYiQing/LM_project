@@ -17,6 +17,8 @@ namespace tests{
 
     void numUtils_test_1( unsigned int test_idx );
 
+    void gen_match_vector_test();
+
     // Test functions in the eigenUtils file.
     void eigenUtils_test_1( unsigned int test_idx );
 

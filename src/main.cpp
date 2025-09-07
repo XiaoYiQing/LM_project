@@ -59,6 +59,7 @@ int main() {
 
 
     // tests::numUtils_test_1(4);
+    tests::gen_match_vector_test();
     // tests::eigenUtils_test_1(0);
 
     // tests::Matrix3DXd_test_1(1);
@@ -88,7 +89,7 @@ int main() {
     // tests::LM_eng_full_SFML_dc_case_run();
     // tests::LM_eng_print_singVals(0);
     // tests::LM_eng_print_singVals(1);
-    tests::LM_eng_steps_test( 0 );
+    // tests::LM_eng_steps_test( 0 );
 
     // tests::SFLM_full_run_test(0);
     // tests::SFLM_full_run_test(1);
