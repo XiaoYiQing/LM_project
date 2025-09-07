@@ -61,8 +61,8 @@ int main() {
 
     // tests::numUtils_test_1(4);
     // tests::gen_match_vector_test();
-    tests::sort_num_vec_inplace_test();
-    // tests::eigenUtils_test_1(0);
+    // tests::sort_num_vec_inplace_test();
+    tests::eigenUtils_test_1(0);
 
     // tests::Matrix3DXd_test_1(1);
     // tests::Matrix3DXd_test_2_ops(3);

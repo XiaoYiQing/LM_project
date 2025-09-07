@@ -21,9 +21,6 @@ namespace tests{
 
     void sort_num_vec_inplace_test();
 
-    // Test functions in the eigenUtils file.
-    void eigenUtils_test_1( unsigned int test_idx );
-
 }
 
 
