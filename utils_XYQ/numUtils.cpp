@@ -354,27 +354,6 @@ vector< unsigned int > utils::gen_rem_idx_arr( unsigned int lower, unsigned uppe
 //      Numerical Vector Utilities
 // ====================================================================== >>>>>
 
-vector<unsigned int> utils::gen_match_vector( const vector<unsigned int>& vec_A, const vector<unsigned int>& vec_B ){
-    
-    vector<unsigned int> vec_A_cp = vec_A;
-    vector<unsigned int> vec_B_cp = vec_B;
-
-    // Sort the vectors
-    sort(vec_A_cp.begin(), vec_A_cp.end());
-    sort(vec_B_cp.begin(), vec_B_cp.end());
-
-    vector<unsigned int> matchedEntries;
-
-    // Perform set intersection
-    set_intersection(
-        vec_A_cp.begin(), vec_A_cp.end(),
-        vec_B_cp.begin(), vec_B_cp.end(),
-        std::back_inserter( matchedEntries )
-    );
-
-    return matchedEntries;
-
-}
 
 // ====================================================================== <<<<<
 

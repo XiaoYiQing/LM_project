@@ -7,7 +7,6 @@
 using namespace std;
 
 
-
 /* Generate a vector of random integers. */
 vector<int>* randIntGen( int L_bnd, int U_bnd, unsigned int cnt );
 
@@ -105,7 +104,28 @@ vector< unsigned int > gen_rem_idx_arr( unsigned int lower, unsigned upper,
 Function generates a vector containing all matching numerical contents between
 the two input numerical vectors.
 */
-vector<unsigned int> gen_match_vector( const vector<unsigned int>& vec_A, const vector<unsigned int>& vec_B );
+template <typename Z>
+vector<Z> gen_match_vector( vector<Z> vec_A, vector<Z> vec_B ){
+    
+    vector<unsigned int> vec_A_cp = vec_A;
+    vector<unsigned int> vec_B_cp = vec_B;
+
+    // Sort the vectors
+    sort(vec_A_cp.begin(), vec_A_cp.end());
+    sort(vec_B_cp.begin(), vec_B_cp.end());
+
+    vector<unsigned int> matchedEntries;
+
+    // Perform set intersection
+    set_intersection(
+        vec_A_cp.begin(), vec_A_cp.end(),
+        vec_B_cp.begin(), vec_B_cp.end(),
+        std::back_inserter( matchedEntries )
+    );
+
+    return matchedEntries;
+
+}
 
 
 // ====================================================================== <<<<<
