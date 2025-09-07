@@ -28,6 +28,7 @@
 #include "fData.h"
 #include "numUtils.h"
 #include "orchestrators.h"
+#include "tests_eigenUtils.h"
 #include "tests_Eigen.h"
 #include "tests_fData.h"
 #include "tests_LM_eng.h"

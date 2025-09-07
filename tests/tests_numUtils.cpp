@@ -172,7 +172,6 @@ void tests::gen_match_vector_test(){
     vector<unsigned int> vec_2A = { 0, 1, 2, 4 };
     vector<unsigned int> vec_2B = { 6, 7, 9 };
     vector<unsigned int> vec_2C = utils::gen_match_vector( vec_2A, vec_2B );
-
     test_bool = true;
     test_bool = test_bool && ( vec_2C.size() == 0 );
     if( test_bool ){
@@ -181,6 +180,17 @@ void tests::gen_match_vector_test(){
         cout << "gen_match_vector_test test 2: failed!" << endl;
     }
 
+
+    vector<unsigned int> vec_3A = { 0, 1, 2, 4 };
+    vector<unsigned int> vec_3B = {};
+    vector<unsigned int> vec_3C = utils::gen_match_vector( vec_3A, vec_3B );
+    test_bool = true;
+    test_bool = test_bool && ( vec_3C.size() == 0 );
+    if( test_bool ){
+        cout << "gen_match_vector_test test 3: passed!" << endl;
+    }else{
+        cout << "gen_match_vector_test test 3: failed!" << endl;
+    }
 
 
 }
@@ -192,10 +202,8 @@ void tests::sort_num_vec_inplace_test(){
     vector<unsigned int> vec_1A = { 0, 1, 8, 3, 2, 9, 5 };
     utils::sort_num_vec_inplace( vec_1A, true );
     bool test_bool = true;
-    if( test_bool ){
-        for( unsigned int z = 0; z < vec_1A.size(); z++ ){
-            test_bool = test_bool && ( vec_1A[z] == vec_1A_ans[z] );
-        }
+    for( unsigned int z = 0; z < vec_1A.size(); z++ ){
+        test_bool = test_bool && ( vec_1A[z] == vec_1A_ans[z] );
     }
     if( test_bool ){
         cout << "gen_match_vector_test test 1: passed!" << endl;
@@ -207,15 +215,23 @@ void tests::sort_num_vec_inplace_test(){
     vector<double> vec_2A =     { 0.43, 0.2, 0.75, 0.982, 0.71, 0.566, 0.98 };
     utils::sort_num_vec_inplace( vec_2A, false );
     test_bool = true;
-    if( test_bool ){
-        for( unsigned int z = 0; z < vec_2A.size(); z++ ){
-            test_bool = test_bool && ( abs( vec_2A[z] - vec_2A_ans[z] ) < 1e-12 );
-        }
+    for( unsigned int z = 0; z < vec_2A.size(); z++ ){
+        test_bool = test_bool && ( abs( vec_2A[z] - vec_2A_ans[z] ) < 1e-12 );
     }
     if( test_bool ){
         cout << "gen_match_vector_test test 2: passed!" << endl;
     }else{
         cout << "gen_match_vector_test test 2: failed!" << endl;
+    }
+
+    vector<double> vec_3A = {};
+    utils::sort_num_vec_inplace( vec_3A, true );
+    test_bool = true;
+    test_bool = test_bool && ( vec_3A.size() == 0 );
+    if( test_bool ){
+        cout << "gen_match_vector_test test 3: passed!" << endl;
+    }else{
+        cout << "gen_match_vector_test test 3: failed!" << endl;
     }
 
 }

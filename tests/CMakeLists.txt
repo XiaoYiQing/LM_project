@@ -2,6 +2,8 @@
 # Create a list of variables, where the entries are the c++ and header files within the
 # current directory.
 set( tests_SOURCES 
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_eigenUtils.h
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_eigenUtils.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_Eigen.h
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_Eigen.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_Matrix3DXd.h
@@ -10,13 +12,13 @@ set( tests_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_fData.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_numUtils.h
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_numUtils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_orches.h
+	${CMAKE_CURRENT_SOURCE_DIR}/tests_orches.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LM_eng.h
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LM_eng.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LM_eng_2.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LTI_descSyst.h
 	${CMAKE_CURRENT_SOURCE_DIR}/tests_LTI_descSyst.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/tests_orches.h
-	${CMAKE_CURRENT_SOURCE_DIR}/tests_orches.cpp
 )
 
 add_library(tests ${tests_SOURCES})
