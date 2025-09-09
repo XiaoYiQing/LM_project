@@ -420,6 +420,7 @@ void LM_eng::step3skip2_LM_re_construct(){
     unsigned int fr2_len = this->partit2IdxArr.size();
 
     try{
+
         // Create a fData partitions.
         shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
         shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
@@ -429,6 +430,7 @@ void LM_eng::step3skip2_LM_re_construct(){
         this->SLM_re = *LM_UTIL::build_SLM_re( *myFr1, *myFr2 );
         this->W_re = *LM_UTIL::build_W_re( *myFr1 );
         this->F_re = *LM_UTIL::build_F_re( *myFr2 );
+
     }catch(...){
         cerr << "step3skip2_LM_re_construct exception rethrow log." << endl;
         throw;
@@ -661,16 +663,12 @@ void LM_eng::step4_LM_pencil_SVD(){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
     }
 
-    double old_ref_f_mag = this->ref_f_mag;
     // Obtain a reference frequency value.
-    this->ref_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
-    
+    double test_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     try{
-        step4_LM_pencil_SVD( ref_f_mag );
+        step4_LM_pencil_SVD( test_f_mag );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
-        // Revert reference frequency.
-        this->ref_f_mag = old_ref_f_mag;
         throw;
     }
 
@@ -686,23 +684,31 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref ){
     shared_ptr<Eigen::MatrixXd> LM_pen;
     // Construct the LM pencil.
     try{
-        LM_pen = LM_UTIL::build_LM_pencil( this->ref_f_mag, this->LM_re, this->SLM_re );
+        LM_pen = LM_UTIL::build_LM_pencil( f_ref, this->LM_re, this->SLM_re );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
         throw;
     }
 
-    // Perform SVD.
-    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
-    // Get the singular values
-    this->singVals = svdResObj.singularValues();
-    // Get the left singular vectors (U)
-    this->U = svdResObj.matrixU();
-    // Get the right singular vectors (V)
-    this->V = svdResObj.matrixV();
+    try{
+        // Perform SVD.
+        Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+        // Get the singular values
+        this->singVals = svdResObj.singularValues();
+        // Get the left singular vectors (U)
+        this->U = svdResObj.matrixU();
+        // Get the right singular vectors (V)
+        this->V = svdResObj.matrixV();
+    }catch(...){
+        cerr << "step4_LM_pencil_SVD exception rethrow log at SVD operations." << endl;
+        throw;
+    }
 
+    // Update the reference frequency magnitude.
+    this->ref_f_mag = f_ref;
     // Set the tracking flag for step 4.
     flag4_pen_SVD = true;
+    
 
 }
 
