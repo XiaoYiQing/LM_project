@@ -150,7 +150,7 @@ LM_eng::LM_eng( const fData& inData ){
 void LM_eng::step0_fData_set( const fData& inData ){
 
     if( inData.get_f_cnt() < 2 ){
-        throw invalid_argument( "The frequency point amount cannot be less than 2 for the SFLM method." );
+        throw invalid_argument( "Step 0 cannot be executed: the frequency point amount cannot be less than 2 for the SFLM method." );
     }
 
     // Define the number of subset size.
@@ -178,10 +178,10 @@ void LM_eng::step0_fData_set( const fData& inData ){
 void LM_eng::step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in ){
 
     if( inData.get_f_cnt() < 2 ){
-        throw invalid_argument( "The initial data set frequency point amount cannot be less than 2 for the SFLM method." );
+        throw invalid_argument( "Step 0 cannot be executed: the initial data set frequency point amount cannot be less than 2 for the SFLM method." );
     }
     if( inData.get_f_cnt() < fr_idx_arr_in.size() ){
-        throw invalid_argument( "The subset size cannot exceed the initial data set size." );
+        throw invalid_argument( "Step 0 cannot be executed: the subset size cannot exceed the initial data set size." );
     }
 
     // Create local copy of subset index array to allow use in non-const functions.
@@ -192,12 +192,12 @@ void LM_eng::step0_fData_set( const fData& inData, const vector<unsigned int>& f
     // Check for repeated indices.
     for( unsigned int z = 0; z < fr_idx_arr_in_tmp.size() - 1; z++ ){
         if( fr_idx_arr_in_tmp.at(z) == fr_idx_arr_in_tmp.at(z+1) ){
-            throw std::invalid_argument( "Repeated entries in the reduced frequency set index vector." );
+            throw std::invalid_argument( "Step 0 cannot be executed: repeated entries in the subset frequency index vector." );
         }
     }
     // Check for out of bound indexing.
     if( fr_idx_arr_in_tmp.at( fr_idx_arr_in_tmp.size()-1 >= inData.get_f_cnt() ) ){
-        throw std::out_of_range( "Reduced frequency set index vector has indices exceeding number of available frequency entries." );
+        throw std::out_of_range( "Step 0 cannot be executed: subset frequency index vector has indices exceeding number of available frequency entries." );
     }
 
     // Set the engine's data with the given data.
@@ -221,14 +221,22 @@ void LM_eng::step1_fData_partition(){
         throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
     }
 
+    vector< vector< unsigned int > > index_arrs;
     // Generate the interleaving relative partition index arrays.
-    vector< vector< unsigned int > > index_arrs = 
-        LM_UTIL::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
+    try{
+        index_arrs = LM_UTIL::gen_2_partit_idx_arr( this->fr_idx_arr.size() );
+    }catch(...){
+        throw;
+    }
     vector< unsigned int > f1IdxVec = index_arrs.at(0);
     vector< unsigned int > f2IdxVec = index_arrs.at(1);
 
     // Continue the partitioning process through the standard function.
-    step1_fData_partition( f1IdxVec, f2IdxVec );
+    try{
+        step1_fData_partition( f1IdxVec, f2IdxVec );
+    }catch(...){
+        throw;
+    }
 
 }
 
@@ -237,7 +245,10 @@ void LM_eng::step1_fData_partition( const vector<unsigned int>& f1IdxVec,
     const vector<unsigned int>& f2IdxVec ){
     
     if( !flag0_data_set ){
-        throw::runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
+        throw runtime_error( "Step 1 cannot be executed: step 0 not set (starting data insertion)." );
+    }
+    if( f1IdxVec.size() == 0 || f2IdxVec.size() == 0 ){
+        throw invalid_argument( "Step 1 cannot be executed: one of the two partitions is empty." );
     }
 
     // Obtain the size of the reduced frequency set.
@@ -894,6 +905,10 @@ Eigen::MatrixXd LM_eng::get_V() const{
 
 vector< vector< unsigned int > > LM_UTIL::gen_2_partit_idx_arr( unsigned int origSize ){
     
+    if( origSize < 2 ){
+        throw invalid_argument( "The original set size cannot be less than 2 when generating 2 partitions." );
+    }
+
     // Generate the frequency partition index arrays (Interleaving).
     vector< unsigned int > tmp1 = utils::gen_even_idx_arr( 0, origSize - 1 );
     vector< unsigned int > tmp2 = utils::gen_odd_idx_arr( 0, origSize - 1 );
