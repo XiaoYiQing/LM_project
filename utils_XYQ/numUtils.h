@@ -77,7 +77,7 @@ Function generates a linearly distributed array of indices between the specified
 range and filled with the specified number of indices.
 Note:
     - The low and high bounds are included in the final index array.
-    - There can be no repeat of indices. If this cannot be avoid given the input
+    - There can be no repeat of indices. If this cannot be avoided given the input
         specifications, an exception is thrown.
 */
 vector< unsigned int > gen_lin_idx_arr( unsigned int lower, unsigned int upper, unsigned int cnt );

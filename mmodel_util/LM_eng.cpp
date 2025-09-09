@@ -149,20 +149,42 @@ LM_eng::LM_eng( const fData& inData ){
 
 void LM_eng::step0_fData_set( const fData& inData ){
 
+    if( inData.get_f_cnt() < 2 ){
+        throw invalid_argument( "The frequency point amount cannot be less than 2 for the SFLM method." );
+    }
+
+    // Define the number of subset size.
+    unsigned int fr_size = min( STD_RED_FSET_SIZE, inData.get_f_cnt() );
+
+    // Initialize subset linear index array.
+    vector<unsigned int> fr_idx_arr_in( fr_size );
     // Create a subset linear index array.
-    vector<unsigned int> fr_idx_arr_in = 
-        utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, min( STD_RED_FSET_SIZE, inData.get_f_cnt() ) );
+    try{
+        vector<unsigned int> fr_idx_arr_in = 
+            utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, fr_size );
+    }catch( ... ){
+        throw;
+    }
     
     // Follow the standard step 0 procedure.
-    step0_fData_set( inData, fr_idx_arr_in );
+    try{
+        step0_fData_set( inData, fr_idx_arr_in );
+    }catch( ... ){
+        throw;
+    }
 
 }
 
 void LM_eng::step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in ){
 
-    // Set the engine's data with the given data.
-    this->myFData = inData;
+    if( inData.get_f_cnt() < 2 ){
+        throw invalid_argument( "The initial data set frequency point amount cannot be less than 2 for the SFLM method." );
+    }
+    if( inData.get_f_cnt() < fr_idx_arr_in.size() ){
+        throw invalid_argument( "The subset size cannot exceed the initial data set size." );
+    }
 
+    // Create local copy of subset index array to allow use in non-const functions.
     vector<unsigned int> fr_idx_arr_in_tmp = fr_idx_arr_in;
     // Sort the input index vector in ascending order.
     std::sort( fr_idx_arr_in_tmp.begin(), fr_idx_arr_in_tmp.end() );
@@ -174,9 +196,12 @@ void LM_eng::step0_fData_set( const fData& inData, const vector<unsigned int>& f
         }
     }
     // Check for out of bound indexing.
-    if( fr_idx_arr_in_tmp.at( fr_idx_arr_in_tmp.size()-1 >= myFData.get_f_cnt() ) ){
+    if( fr_idx_arr_in_tmp.at( fr_idx_arr_in_tmp.size()-1 >= inData.get_f_cnt() ) ){
         throw std::out_of_range( "Reduced frequency set index vector has indices exceeding number of available frequency entries." );
     }
+
+    // Set the engine's data with the given data.
+    this->myFData = inData;
 
     // Assign the local reduced set index vector.
     this->fr_idx_arr = fr_idx_arr_in_tmp;
