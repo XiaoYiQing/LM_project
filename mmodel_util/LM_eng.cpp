@@ -367,8 +367,8 @@ void LM_eng::step3_LM_re_trans(){
     Eigen::MatrixXcd myTMat_R;
     try{
         // Build the left and right transformation matrices.
-        Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
-        Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
+        myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
+        myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
     }catch(...){
         cerr << "step3_LM_re_trans exception rethrow log." << endl;
         throw;
@@ -419,15 +419,20 @@ void LM_eng::step3skip2_LM_re_construct(){
     unsigned int fr1_len = this->partit1IdxArr.size();
     unsigned int fr2_len = this->partit2IdxArr.size();
 
-    // Create a fData partitions.
-    shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
-    shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
+    try{
+        // Create a fData partitions.
+        shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+        shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
-    // Construct the Loewner Matrices.
-    this->LM_re = *LM_UTIL::build_LM_re( *myFr1, *myFr2 );
-    this->SLM_re = *LM_UTIL::build_SLM_re( *myFr1, *myFr2 );
-    this->W_re = *LM_UTIL::build_W_re( *myFr1 );
-    this->F_re = *LM_UTIL::build_F_re( *myFr2 );
+        // Construct the Loewner Matrices.
+        this->LM_re = *LM_UTIL::build_LM_re( *myFr1, *myFr2 );
+        this->SLM_re = *LM_UTIL::build_SLM_re( *myFr1, *myFr2 );
+        this->W_re = *LM_UTIL::build_W_re( *myFr1 );
+        this->F_re = *LM_UTIL::build_F_re( *myFr2 );
+    }catch(...){
+        cerr << "step3skip2_LM_re_construct exception rethrow log." << endl;
+        throw;
+    }
 
     // Set the tracking flag for step 3.
     this->flag3_re_trans = true;

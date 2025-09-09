@@ -94,7 +94,7 @@ int main() {
     // tests::LM_eng_steps_test( 0 );
 
     // tests::SFLM_full_run_test(0);
-    tests::SFLM_full_run_test(0);
+    tests::SFLM_full_run_test(1);
     // FCT_SCR::singVal_extract_run();
 
     return 0; 
