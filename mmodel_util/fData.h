@@ -234,7 +234,7 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     /*
     Create a reduced set of frequency data using a subset index array.
     */
-    shared_ptr<fData> red_partit( vector< unsigned int > fr_idx_vec ) const;
+    shared_ptr<fData> red_partit( const vector< unsigned int >& fr_idx_vec ) const;
 
     /*
     Create two partitions from the original frequency data set.

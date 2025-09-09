@@ -453,7 +453,7 @@ shared_ptr<fData> fData::red_partit_lin( unsigned int rSize ){
 
 }
 
-shared_ptr<fData> fData::red_partit( vector< unsigned int > fr_idx_vec ) const{
+shared_ptr<fData> fData::red_partit( const vector< unsigned int >& fr_idx_vec ) const{
 
     // Obtain the size of the frequency data set.
     unsigned int rSize = fr_idx_vec.size();
