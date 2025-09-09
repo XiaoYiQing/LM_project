@@ -32,7 +32,7 @@ public:
     is the one used to construct the SFLM system, because the full set fData is usually
     too large and overkill.
     */
-    static const unsigned int STD_RED_FSET_SIZE;
+    static const unsigned int STD_RED_FSET_SIZE = 100;
 
 // ====================================================================== >>>>>
 //      Data Printing Functions

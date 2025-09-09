@@ -1,10 +1,12 @@
 #include "LM_eng.h"
 
 
-
+/*
+Numerical threshold utilized by instances of this class for determining nullity.
+If a number's magnitude is smaller than this threshold, it is considered a zero.
+*/
 const double LM_eng::NUM_THRESH = 1.0e-12;
 
-const unsigned int LM_eng::STD_RED_FSET_SIZE = 100;
 
 // ====================================================================== >>>>>
 //      Data Printing Functions

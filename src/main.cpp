@@ -62,7 +62,7 @@ int main() {
     // tests::numUtils_test_1(4);
     // tests::gen_match_vector_test();
     // tests::sort_num_vec_inplace_test();
-    tests::eigenUtils_test_1(0);
+    // tests::eigenUtils_test_1(0);
 
     // tests::Matrix3DXd_test_1(1);
     // tests::Matrix3DXd_test_2_ops(3);
@@ -94,7 +94,7 @@ int main() {
     // tests::LM_eng_steps_test( 0 );
 
     // tests::SFLM_full_run_test(0);
-    // tests::SFLM_full_run_test(1);
+    tests::SFLM_full_run_test(1);
     // FCT_SCR::singVal_extract_run();
 
     return 0; 
