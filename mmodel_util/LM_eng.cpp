@@ -313,7 +313,6 @@ void LM_eng::step2_LM_construct(){
         throw::runtime_error( "Step 2 cannot be executed: step 1 not set (data prep)." );
     }
 
-    
     try{
 
         // Create a fData partitions.
@@ -339,7 +338,7 @@ void LM_eng::step2_LM_construct(){
         cerr << "step2_LM_construct exception rethrow log." << endl;
         // Rethrow exception.
         throw;
-        
+
     }
 
     // Set the tracking flag for step 2.
@@ -363,9 +362,18 @@ void LM_eng::step3_LM_re_trans(){
     unsigned int fr1_len = this->partit1IdxArr.size();
     unsigned int fr2_len = this->partit2IdxArr.size();
 
-    // Build the left and right transformation matrices.
-    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
-    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
+    // Declare the left and right transformation matrices.
+    Eigen::MatrixXcd myTMat_L;
+    Eigen::MatrixXcd myTMat_R;
+    try{
+        // Build the left and right transformation matrices.
+        Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
+        Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
+    }catch(...){
+        cerr << "step3_LM_re_trans exception rethrow log." << endl;
+        throw;
+    }
+
     // Obtain the hermitian of the right transform matrix.
     Eigen::MatrixXcd myTMat_L_herm = myTMat_L.conjugate().transpose();
 
