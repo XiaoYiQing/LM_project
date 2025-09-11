@@ -15,12 +15,24 @@ void tests::eigen_test1( int testCase ){
 // ---------------------------------------------------------------------- >>>>>
 //      Simple 2x2 Matrix Definition
 // ---------------------------------------------------------------------- >>>>>
-    if( case_cnt == testCase ){       
+    
+    // Test index 0.
+    if( case_cnt == testCase ){
+
         Eigen::Matrix2d matA;
         matA << 1, 2, 3, 4;
         Eigen::Matrix2d matA_inv = matA.inverse();
-        cout << "Matrix A:\n" << matA << endl;
-        cout << "Matrix A inverse:\n" << matA_inv << endl;
+
+        Eigen::Matrix2d matA_inv_ans;
+        matA_inv_ans << -2, 1, 1.5, -0.5;
+
+        bool test_bool = matA_inv == matA_inv_ans;
+        if( test_bool ){
+            cout << "Eigen::Matrix2d inverse test passed!" << endl;
+        }else{
+            cout << "Eigen::Matrix2d inverse test failed!" << endl;
+        }
+
     }
 
     case_cnt++;
@@ -30,8 +42,10 @@ void tests::eigen_test1( int testCase ){
 // ---------------------------------------------------------------------- >>>>>
 //      How to Increase Vector Size
 // ---------------------------------------------------------------------- >>>>>
-
+    
+    // Test index 1.
     if( case_cnt == testCase ){
+
         // How to add entries to a vector.
         Eigen::VectorXd vecA(2);
         vecA << 1, 2;
@@ -40,6 +54,7 @@ void tests::eigen_test1( int testCase ){
         vecA.conservativeResize(5);
         vecA(2) = 3;    vecA(3) = 4;    vecA(4) = 55;
         cout << "Vector A after size increase:\n" << vecA << endl;
+
     }
 
     case_cnt++;
@@ -49,8 +64,10 @@ void tests::eigen_test1( int testCase ){
 // ---------------------------------------------------------------------- >>>>>
 //      How to Increase 2D Matrix Size
 // ---------------------------------------------------------------------- >>>>>
-
+    
+    // Test index 2.
     if( case_cnt == testCase ){
+
         // A 2D matrix of variable size.
         int row_cnt = 4; // Rows
         int col_cnt = 5; // Columns
@@ -79,6 +96,7 @@ void tests::eigen_test1( int testCase ){
             }
         }
         cout << "Matrix X:\n" << matX << endl;
+
     }
 
     case_cnt++;
@@ -89,6 +107,7 @@ void tests::eigen_test1( int testCase ){
 //      How to Create a 3D Matrix
 // ---------------------------------------------------------------------- >>>>>
     
+    // Test index 3.
     if( case_cnt == testCase ){
         // Define the number of 2D matrix in our 3D matrix.
         int mat_cnt = 3;
@@ -115,7 +134,6 @@ void tests::eigen_test1( int testCase ){
             cout << "Slice " << k << ":\n" << threeDMatrix[k] << "\n";
         }
 
-        int lol = 0;
     }
 
     case_cnt++;

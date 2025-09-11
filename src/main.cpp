@@ -55,8 +55,8 @@ int main() {
     // Test aspectes of the Eigen library.
     // int testCase = 3;
 
-    // tests::eigen_test1( testCase );
-    // tests::eigen_test2( 1 );
+    // tests::eigen_test1( 3 );
+    tests::eigen_test2( 1 );
 
 
     // tests::numUtils_test_1(4);
@@ -94,7 +94,7 @@ int main() {
     // tests::LM_eng_steps_test( 0 );
 
     // tests::SFLM_full_run_test(0);
-    tests::SFLM_full_run_test(1);
+    // tests::SFLM_full_run_test(1);
     // FCT_SCR::singVal_extract_run();
 
     return 0; 
