@@ -29,3 +29,49 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
 
 }
 
+
+void tests::file_to_vec_test(){
+
+    string targetDir = RES_PATH_XYQ_str + "/test_res_dir";
+    string targetStemName = "test_vec_data";
+    string targetExt = ".txt";
+
+    string fullFileName = targetDir + "/" + targetStemName + targetExt;
+
+    vector<double> my_vec = utils::file_to_vec( fullFileName );
+    vector<double> my_vec_ans = {
+        -1.4273852567e-01, -2.1484261800e+00, +9.6893777105e+00, -7.8754513961e-01,
+        -8.3398261166e+00, +1.2544720764e+00, -3.8343728561e+00, -9.3529739505e-01,
+        -9.7646242005e+00, -2.9892813255e+00
+    };
+
+    bool test_vect = my_vec.size() == my_vec_ans.size();
+    for( unsigned int z = 0; z < my_vec.size(); z++ ){
+        test_vect = test_vect && ( my_vec[z] == my_vec_ans[z] );
+    }
+    if( test_vect ){
+        cout << "file_to_vec correct read test: passed!" << endl;
+    }else{
+        cout << "file_to_vec correct read test: failed!" << endl;
+    }
+
+
+    targetDir = RES_PATH_XYQ_str + "/test_res_dir";
+    targetStemName = "test_bad_vec_data";
+    targetExt = ".txt";
+
+    fullFileName = targetDir + "/" + targetStemName + targetExt;
+    try{
+        vector<double> my_vec2 = utils::file_to_vec( fullFileName );
+        test_vect = false;
+    }catch(...){
+        test_vect = true;
+    }
+    if( test_vect ){
+        cout << "file_to_vec bad file read test: passed!" << endl;
+    }else{
+        cout << "file_to_vec bad file read test: failed!" << endl;
+    }
+
+
+}

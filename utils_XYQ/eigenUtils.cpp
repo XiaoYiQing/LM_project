@@ -73,4 +73,113 @@ void utils::vec_to_file( const string& fileDir, const string& fileStem,
 
 }
 
+
+
+vector<double> utils::file_to_vec( const string& fullFileName ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full Name Parsing
+// ---------------------------------------------------------------------- >>>>>
+
+    std::filesystem::path fullFilePath( fullFileName );
+    std::string fileDir = fullFilePath.parent_path().string();
+    std::string fileStem = fullFilePath.stem().string();
+    std::string fileExt = fullFilePath.extension().string();
+    
+    if( fileExt != ".txt" && fileExt != ".csv" ){
+        throw std::invalid_argument( "Target data file must have extension '.txt' or '.csv'." );
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      File Parameters Read
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the input file stream.
+    std::ifstream inputFile( fullFilePath );
+    if( !inputFile ){
+        throw std::invalid_argument( "Failed to open stream on target data file." );
+    }else{
+        cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
+    }
+
+    /*
+    Regex for determining the positive integer value X in the pattern ".sXp".
+    */
+    regex pattern(R"(\.s(\d+)p)");
+
+    // The variables holding the line and word currently read, respectively.
+    string line, word;
+    // Initialize index variable for the row index.
+    unsigned int row_idx = 0;
+    // Boolean flag for indicating whether the line stream has reached the data lines.
+    bool end_reached = false;
+    // Initialize temporary double variables for storing values.
+    double tmp_val = 0;
+
+    // Initialize memory allocation control variables.
+    unsigned int res_blk_size = 200;
+    unsigned int curr_vec_size = 0;
+    unsigned int curr_alloc_size = res_blk_size;
+    // Initialize vector.
+    vector<double> vec = vector<double>();
+    vec.reserve( res_blk_size );
+
+    // Parse through the file lines.
+    while( getline( inputFile, line ) ){
+
+        // Update the current vector size.
+        curr_vec_size++;
+
+        // Set the stream for the current line.
+        istringstream iss(line);
+        // Read the first word.
+        if( iss >> word ){
+
+            // Translate the word into a double value freq.
+            try{
+                tmp_val = std::stod( word );
+            }catch( ... ){
+                inputFile.close();
+                throw;
+            }
+            // Push the current value at the back of the vector.
+            vec.push_back( tmp_val );
+
+        }else{
+            throw std::runtime_error( "Real vector data file must not have any empty line." );
+        }
+
+        // Second word read on the line, which is expected to fail.
+        if( iss >> word ){
+            throw std::runtime_error( "Real vector data file must not have more than 1 word per line." );
+        }
+
+        // Allocate more memory if need be.
+        if( curr_vec_size >= curr_alloc_size ){
+
+            vec.reserve( curr_vec_size + res_blk_size );
+            curr_alloc_size += res_blk_size;
+
+        }
+
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+    inputFile.close();
+
+    vec.shrink_to_fit();
+
+    cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
+    cout << "Vector size: " << curr_vec_size << endl;
+    cout << endl;
+
+    return vec;
+
+}
+
 // ====================================================================== <<<<<

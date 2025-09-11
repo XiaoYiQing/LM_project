@@ -11,12 +11,20 @@
 using namespace std;
 
 
+extern string RES_PATH_XYQ_str;
+extern string SRC_PATH_XYQ_str;
+
 namespace tests{
 
 
     // Test functions in the eigenUtils file.
     void eigenUtils_test_1( unsigned int test_idx );
 
+    /*
+    Test the function file_to_vec()
+    */
+    void file_to_vec_test();
+    
 }
 
 

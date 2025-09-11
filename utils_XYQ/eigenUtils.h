@@ -25,7 +25,11 @@ namespace utils{
     void vec_to_file( const string& fileDir, const string& fileStem, 
         const Eigen::VectorXd& tarVec, int options );
 
-    // TODO: file to vector.
+    /*
+    Read an eigen vector saved in a .txt or .csv file and translate it into a 
+    eigen vector variable.
+    */
+    vector<double> file_to_vec( const string& fullFileName );
 
     // TODO: real mat to file.
 
