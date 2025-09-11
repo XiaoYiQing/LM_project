@@ -24,7 +24,11 @@ void tests::numUtils_test_1( unsigned int case_idx ){
             match_flag = false;
         }
 
-        cout << "Check 1 (Full index case): " << match_flag << endl;
+        if( match_flag ){
+            cout << "gen_lin_idx_arr full index set test passed!" << endl;
+        }else{
+            cout << "gen_lin_idx_arr full index set test failed!" << endl;
+        }
 
     }
 
@@ -47,7 +51,12 @@ void tests::numUtils_test_1( unsigned int case_idx ){
         }else{
             match_flag = false;
         }
-        cout << "Check 1: " << match_flag << endl;
+
+        if( match_flag ){
+            cout << "gen_rem_idx_arr test passed!" << endl;
+        }else{
+            cout << "gen_rem_idx_arr test failed!" << endl;
+        }
 
     }
 
@@ -69,7 +78,12 @@ void tests::numUtils_test_1( unsigned int case_idx ){
         }else{
             match_flag = false;
         }
-        cout << "Check even array: " << match_flag << endl;
+        if( match_flag ){
+            cout << "gen_even_idx_arr test passed!" << endl;
+        }else{
+            cout << "gen_even_idx_arr test failed!" << endl;
+        }
+
 
         match_flag = true;
         if( p2vec.size() == p2vec_ans.size() ){
@@ -79,7 +93,11 @@ void tests::numUtils_test_1( unsigned int case_idx ){
         }else{
             match_flag = false;
         }
-        cout << "Check odd array: " << match_flag << endl;
+        if( match_flag ){
+            cout << "gen_odd_idx_arr test passed!" << endl;
+        }else{
+            cout << "gen_odd_idx_arr test failed!" << endl;
+        }
 
     }
 
@@ -109,7 +127,11 @@ void tests::numUtils_test_1( unsigned int case_idx ){
             }
         }
 
-        cout << "Random integer generator test match: " << match_flag << endl;
+        if( match_flag ){
+            cout << "rIntGen test passed!" << endl;
+        }else{
+            cout << "rIntGen test failed!" << endl;
+        }
 
     }
 
@@ -139,7 +161,11 @@ void tests::numUtils_test_1( unsigned int case_idx ){
             }
         }
 
-        cout << "Random double generator test match: " << match_flag << endl;
+        if( match_flag ){
+            cout << "rDoubleGen test passed!" << endl;
+        }else{
+            cout << "rDoubleGen test failed!" << endl;
+        }
 
     }
 
@@ -206,9 +232,9 @@ void tests::sort_num_vec_inplace_test(){
         test_bool = test_bool && ( vec_1A[z] == vec_1A_ans[z] );
     }
     if( test_bool ){
-        cout << "gen_match_vector_test test 1: passed!" << endl;
+        cout << "sort_num_vec_inplace test 1: passed!" << endl;
     }else{
-        cout << "gen_match_vector_test test 1: failed!" << endl;
+        cout << "sort_num_vec_inplace test 1: failed!" << endl;
     }
 
     vector<double> vec_2A_ans = { 0.982, 0.98, 0.75, 0.71, 0.566, 0.43, 0.2 };
@@ -219,9 +245,9 @@ void tests::sort_num_vec_inplace_test(){
         test_bool = test_bool && ( abs( vec_2A[z] - vec_2A_ans[z] ) < 1e-12 );
     }
     if( test_bool ){
-        cout << "gen_match_vector_test test 2: passed!" << endl;
+        cout << "sort_num_vec_inplace test 2: passed!" << endl;
     }else{
-        cout << "gen_match_vector_test test 2: failed!" << endl;
+        cout << "sort_num_vec_inplace test 2: failed!" << endl;
     }
 
     vector<double> vec_3A = {};
@@ -229,9 +255,9 @@ void tests::sort_num_vec_inplace_test(){
     test_bool = true;
     test_bool = test_bool && ( vec_3A.size() == 0 );
     if( test_bool ){
-        cout << "gen_match_vector_test test 3: passed!" << endl;
+        cout << "sort_num_vec_inplace test 3: passed!" << endl;
     }else{
-        cout << "gen_match_vector_test test 3: failed!" << endl;
+        cout << "sort_num_vec_inplace test 3: failed!" << endl;
     }
 
 }
