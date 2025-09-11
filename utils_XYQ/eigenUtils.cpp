@@ -169,14 +169,15 @@ vector<double> utils::file_to_vec( const string& fullFileName ){
 
 // ---------------------------------------------------------------------- <<<<<
 
-
+    // End file stream
     inputFile.close();
-
+    // Downsize the vector.
     vec.shrink_to_fit();
 
+    // End of function messages.
     cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
     cout << "Vector size: " << curr_vec_size << endl;
-    cout << endl;
+    // cout << endl;
 
     return vec;
 

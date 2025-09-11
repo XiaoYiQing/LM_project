@@ -54,6 +54,25 @@ void tests::file_to_vec_test(){
     }else{
         cout << "file_to_vec correct read test: failed!" << endl;
     }
+    cout << endl;
+
+    targetExt = ".csv";
+    fullFileName = targetDir + "/" + targetStemName + targetExt;
+
+    vector<double> my_vec2 = utils::file_to_vec( fullFileName );
+
+    test_vect = my_vec2.size() == my_vec_ans.size();
+    for( unsigned int z = 0; z < my_vec2.size(); z++ ){
+        test_vect = test_vect && ( abs( my_vec2[z] - my_vec_ans[z] ) < 1e-12 );
+    }
+    if( test_vect ){
+        cout << "file_to_vec correct csv file read test: passed!" << endl;
+    }else{
+        cout << "file_to_vec correct csv file read test: failed!" << endl;
+    }
+    cout << endl;
+
+
 
 
     targetDir = RES_PATH_XYQ_str + "/test_res_dir";
@@ -62,7 +81,7 @@ void tests::file_to_vec_test(){
 
     fullFileName = targetDir + "/" + targetStemName + targetExt;
     try{
-        vector<double> my_vec2 = utils::file_to_vec( fullFileName );
+        vector<double> my_vec3 = utils::file_to_vec( fullFileName );
         test_vect = false;
     }catch(...){
         test_vect = true;
@@ -72,6 +91,6 @@ void tests::file_to_vec_test(){
     }else{
         cout << "file_to_vec bad file read test: failed!" << endl;
     }
-
+    cout << endl;
 
 }
