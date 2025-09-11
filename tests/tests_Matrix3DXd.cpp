@@ -28,7 +28,7 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         test_1_check = test_1_check && my_3D_mat2.rows() == 0;
         test_1_check = test_1_check && my_3D_mat2.cols() == 0;
         test_1_check = test_1_check && my_3D_mat2.levels() == 0;
-        cout << "Emtpy initialization test 1: ";
+        cout << "Emtpy initialization test: ";
         if( test_1_check ){
             cout << "Passed!" << endl;
         }else{
@@ -54,7 +54,7 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
         Matrix3DXd my3DMat2 = my3DMat*multiplier;
 
-        cout << "Emtpy initialization test 1: ";
+        cout << "Matrix3DXd scalar multiplcation operator test: ";
         if(  multiplier*tmp_mat_vec.at( test_idx ) == my3DMat2.at( test_idx ) ){
             cout << "Passed!" << endl;
         }else{
@@ -72,14 +72,31 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         vector< Eigen::MatrixXd > tmp_mat_vec;
         for( unsigned int z = 0; z < level_cnt; z++ ){
             Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
-            tmpMat << z,z,z,z;
+            tmpMat << z+0.1,z+0.2,z+0.3,z+0.4;
             tmp_mat_vec.push_back( tmpMat );
         }
 
         Matrix3DXd my3DMat = Matrix3DXd( tmp_mat_vec );
-        cout << my3DMat.at(2) << endl;
-        my3DMat *= 3;
-        cout << my3DMat.at(2) << endl;
+
+        bool test_bool = true;
+        double factor = 3;
+        my3DMat *= factor;
+        for( unsigned int z = 0; z < tmp_mat_vec.size(); z++ ){
+
+            Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+            tmpMat << z+0.1,z+0.2,z+0.3,z+0.4;
+            tmpMat *= factor;
+
+            test_bool = test_bool && ( my3DMat.at(z) == tmpMat );
+
+        }
+
+        if( test_bool ){
+            cout << "Matrix3DXd inplace scalar multiplcation operator test: passed!" << endl;
+        }else{
+            cout << "Matrix3DXd inplace scalar multiplcation operator test: failed!" << endl;
+        }
+        
                 
     }
 
@@ -101,11 +118,17 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         tmpMat << 9,9,9,9,9,9;
         tmp_mat_vec.push_back( tmpMat );
 
+        bool test_bool = true;
         try{
             Matrix3DXd my_3D_mat = Matrix3DXd( tmp_mat_vec );
+            test_bool = false;
         }catch (const std::invalid_argument& e){
             cerr << e.what() << endl;
-            return;
+        }
+        if( test_bool ){
+            cout << "Matrix3DXd push_back wrong sized entry test: passed!" << endl;
+        }else{
+            cout << "Matrix3DXd push_back wrong sized entry test: failed!" << endl;
         }
 
     }
@@ -132,6 +155,9 @@ void tests::Matrix3DXd_test_1( int case_idx ){
             cerr << e.what() << endl;
             return;
         }
+        
+
+        bool test_bool = true;
 
         // Add another matrix to the vector at its end.
         Eigen::MatrixXd addMat = Eigen::MatrixXd( 2, 2 );
@@ -140,9 +166,15 @@ void tests::Matrix3DXd_test_1( int case_idx ){
             my_3D_mat.push_back( addMat );
         } catch (const std::invalid_argument& e){
             cerr << e.what() << endl;
-            return;
+            test_bool = false;
         }
-        cout << my_3D_mat.at( my_3D_mat.levels() - 1 ) << endl;
+        test_bool = test_bool && ( addMat == my_3D_mat.at( my_3D_mat.levels() - 1 ) );
+
+        if( test_bool ){
+            cout << "Matrix3DXd push_back correct sized entry test: passed!" << endl;
+        }else{
+            cout << "Matrix3DXd push_back correct sized entry test: failed!" << endl;
+        }
 
     }
 
@@ -183,8 +215,13 @@ void tests::Matrix3DXd_test_1( int case_idx ){
             cerr << e.what() << endl;
             return;
         }
-        cout << my_3D_mat.at( tarIdx ) << endl;
-        cout << my_3D_mat.at( tarIdx - 1 ) << endl;
+        bool test_bool = true;
+        test_bool = test_bool && ( my_3D_mat.at( tarIdx ) == addMat );
+        if( test_bool ){
+            cout << "Matrix3DXd insert correct sized entry test: passed!" << endl;
+        }else{
+            cout << "Matrix3DXd insert correct sized entry test: failed!" << endl;
+        }
 
 
         // Insert another matrix to the vector at the target invalid index.
@@ -193,15 +230,22 @@ void tests::Matrix3DXd_test_1( int case_idx ){
         tarIdx = 100;
         try{
             my_3D_mat.insert( tarIdx, addMat2 );
+            test_bool = false;
         } catch (const std::invalid_argument& e){
             cerr << e.what() << endl;
-            return;
+            test_bool = true;
         } catch( const std::out_of_range& e ){
             cerr << e.what() << endl;
-            return;
+            test_bool = true;
+        } catch( ... ){
+            test_bool = false;
         }
-        cout << my_3D_mat.at( tarIdx ) << endl;
-        cout << my_3D_mat.at( tarIdx - 1 ) << endl;
+
+        if( test_bool ){
+            cout << "Matrix3DXd insert incorrect index test: passed!" << endl;
+        }else{
+            cout << "Matrix3DXd insert incorrect index test: failed!" << endl;
+        }
 
     }
 
