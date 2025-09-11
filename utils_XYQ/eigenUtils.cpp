@@ -75,7 +75,7 @@ void utils::vec_to_file( const string& fileDir, const string& fileStem,
 
 
 
-vector<double> utils::file_to_vec( const string& fullFileName ){
+vector<double> utils::file_to_Vd( const string& fullFileName ){
 
 // ---------------------------------------------------------------------- >>>>>
 //      Full Name Parsing

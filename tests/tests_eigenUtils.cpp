@@ -38,7 +38,7 @@ void tests::file_to_vec_test(){
 
     string fullFileName = targetDir + "/" + targetStemName + targetExt;
 
-    vector<double> my_vec = utils::file_to_vec( fullFileName );
+    vector<double> my_vec = utils::file_to_Vd( fullFileName );
     vector<double> my_vec_ans = {
         -1.4273852567e-01, -2.1484261800e+00, +9.6893777105e+00, -7.8754513961e-01,
         -8.3398261166e+00, +1.2544720764e+00, -3.8343728561e+00, -9.3529739505e-01,
@@ -50,25 +50,25 @@ void tests::file_to_vec_test(){
         test_vect = test_vect && ( my_vec[z] == my_vec_ans[z] );
     }
     if( test_vect ){
-        cout << "file_to_vec correct read test: passed!" << endl;
+        cout << "file_to_Vd correct read test: passed!" << endl;
     }else{
-        cout << "file_to_vec correct read test: failed!" << endl;
+        cout << "file_to_Vd correct read test: failed!" << endl;
     }
     cout << endl;
 
     targetExt = ".csv";
     fullFileName = targetDir + "/" + targetStemName + targetExt;
 
-    vector<double> my_vec2 = utils::file_to_vec( fullFileName );
+    vector<double> my_vec2 = utils::file_to_Vd( fullFileName );
 
     test_vect = my_vec2.size() == my_vec_ans.size();
     for( unsigned int z = 0; z < my_vec2.size(); z++ ){
         test_vect = test_vect && ( abs( my_vec2[z] - my_vec_ans[z] ) < 1e-12 );
     }
     if( test_vect ){
-        cout << "file_to_vec correct csv file read test: passed!" << endl;
+        cout << "file_to_Vd correct csv file read test: passed!" << endl;
     }else{
-        cout << "file_to_vec correct csv file read test: failed!" << endl;
+        cout << "file_to_Vd correct csv file read test: failed!" << endl;
     }
     cout << endl;
 
@@ -81,15 +81,15 @@ void tests::file_to_vec_test(){
 
     fullFileName = targetDir + "/" + targetStemName + targetExt;
     try{
-        vector<double> my_vec3 = utils::file_to_vec( fullFileName );
+        vector<double> my_vec3 = utils::file_to_Vd( fullFileName );
         test_vect = false;
     }catch(...){
         test_vect = true;
     }
     if( test_vect ){
-        cout << "file_to_vec bad file read test: passed!" << endl;
+        cout << "file_to_Vd bad file read test: passed!" << endl;
     }else{
-        cout << "file_to_vec bad file read test: failed!" << endl;
+        cout << "file_to_Vd bad file read test: failed!" << endl;
     }
     cout << endl;
 
