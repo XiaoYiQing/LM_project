@@ -39,16 +39,25 @@ namespace utils{
         vector<double> tarVec, int options );
 
     /*
-    Read an eigen vector saved in a .txt or .csv file and translate it into a 
+    Read an vector<double> saved in a .txt or .csv file and translate it into a 
     eigen vector variable.
+    NOTE: expect simplest data format in the file, which is simply entry of each
+    row placed on their own line consecutively.
     */
     vector<double> file_to_Vd( const string& fullFileName );
 
-    // TODO: real mat to file.
+    /*
+    Write a Eigen::MatrixXd variable's content into a text file.
+    Entries of the matrix are written into the file preserving a semblant matrix 
+    format. Columns are separated by single spaces and rows are separated by lines.
+    */
     void MatrixXd_to_file( const string& fileDir, const string& fileStem, 
         const Eigen::MatrixXd& tarVec, int options );
 
-    // TODO: file to real mat.
+    /*
+    Read an Eigen::MatrixXd saved in a .txt or .csv file and translate it into a 
+    eigen vector variable.
+    */
     Eigen::MatrixXd file_to_MatrixXd( const string& fullFileName );
 
 // ====================================================================== <<<<<

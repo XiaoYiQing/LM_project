@@ -164,13 +164,18 @@ void tests::file_to_MatrixXd(){
     string targetDir = RES_PATH_XYQ_str + "/test_res_dir";
     string targetStemName = "test_MatrixXd_data";
     string targetExt = ".txt";
-    string fullFileName = targetDir + "/" + targetStemName + targetExt;
+    
 
 // ---------------------------------------------------------------------- <<<<<
 
-
+    string fullFileName = targetDir + "/" + targetStemName + targetExt;
     Eigen::MatrixXd parsedMat = utils::file_to_MatrixXd( fullFileName );
 
-    cout << parsedMat << endl;
+
+    targetExt = ".csv";
+    fullFileName = targetDir + "/" + targetStemName + targetExt;
+    Eigen::MatrixXd parsedMat2 = utils::file_to_MatrixXd( fullFileName );
+
+    cout << parsedMat - parsedMat2 << endl;
 
 }

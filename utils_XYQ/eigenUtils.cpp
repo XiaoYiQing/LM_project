@@ -393,11 +393,24 @@ Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
 
     // Obtain the first line.
     getline( inputFile, line ); row_cnt++;
-    // Set the stream for the current line.
-    istringstream iss(line);
-    while( iss >> word ){
-        col_cnt++;
+
+    // Define regex with space or comma as delimiter
+    std::regex delimiter("[ ,]+");
+    // Split the first line with space and/or commas.
+    std::sregex_token_iterator iter(line.begin(), line.end(), delimiter, -1);
+    std::sregex_token_iterator end;
+
+    vector<string> lineSplit;
+    while (iter != end) {
+        lineSplit.push_back(*iter++);
     }
+    col_cnt = lineSplit.size();
+
+    // // Set the stream for the current line.
+    // istringstream iss(line);
+    // while( iss >> word ){
+    //     col_cnt++;
+    // }
 
     // First pass: count lines
     while ( getline( inputFile, line ) ) {
@@ -416,7 +429,7 @@ Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
 // ---------------------------------------------------------------------- >>>>>
 
     // Initialize the data matrix.
-    Eigen::MatrixXd readMat( row_cnt, col_cnt );
+    Eigen::MatrixXd datMat( row_cnt, col_cnt );
 
     // Parse through the file lines.
     for( unsigned int i = 0; i < row_cnt; i++ ){
@@ -424,32 +437,55 @@ Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
         // Obtain the current line.
         getline( inputFile, line );
 
-        // Set the stream for the current line.
-        istringstream iss(line);
-        
-        for( unsigned int j = 0; j < col_cnt; j++ ){
+        // Split the first line with space and/or commas.
+        std::sregex_token_iterator iter(line.begin(), line.end(), delimiter, -1);
+        std::sregex_token_iterator end;
 
+        unsigned int j = 0;
+        while (iter != end) {
+
+            if( j >= col_cnt ){
+                throw runtime_error( "file_to_MatrixXd: inconsistent number of columns across the rows in the data file." );
+            }
+            // Try parsing the next word into double and store into data matrix.
             try{
-                
-                // Read the next word.
-                iss >> word;
-                // Translate the word into a double value freq.
-                readMat(i,j) = std::stod( word );
-
-            }catch( ... ){
-                
+                datMat(i,j) = std::stod(*iter++);
+            }catch(...){
                 inputFile.close();
                 throw;
-
             }
 
+            j++;
+
         }
+        
+
+        // // Set the stream for the current line.
+        // istringstream iss(line);
+
+        // for( unsigned int j = 0; j < col_cnt; j++ ){
+
+        //     try{
+                
+        //         // Read the next word.
+        //         iss >> word;
+        //         // Translate the word into a double value freq.
+        //         readMat(i,j) = std::stod( word );
+
+        //     }catch( ... ){
+                
+        //         inputFile.close();
+        //         throw;
+
+        //     }
+
+        // }
         
     }
 
 // ---------------------------------------------------------------------- <<<<<
 
-    return readMat;
+    return datMat;
 
 }
 
