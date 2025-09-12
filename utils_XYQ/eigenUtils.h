@@ -24,7 +24,7 @@ namespace utils{
 
     /*
     Write a VectorXd variable's content into a text file.
-    The double value are simply placed one after each other on consecutive rows.
+    The double values are simply placed one after each other on consecutive rows.
     Each row has only one value printed.
     */
     void VectorXd_to_file( const string& fileDir, const string& fileStem, 
@@ -32,7 +32,7 @@ namespace utils{
     
     /*
     Write a vector<double> variable's content into a text file.
-    The double value are simply placed one after each other on consecutive rows.
+    The double values are simply placed one after each other on consecutive rows.
     Each row has only one value printed.
     */ 
     void Vd_to_file( const string& fileDir, const string& fileStem, 
@@ -45,6 +45,8 @@ namespace utils{
     vector<double> file_to_Vd( const string& fullFileName );
 
     // TODO: real mat to file.
+    void MatrixXd_to_file( const string& fileDir, const string& fileStem, 
+        const Eigen::MatrixXd& tarVec, int options );
 
     // TODO: file to real mat.
 

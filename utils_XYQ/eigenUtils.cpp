@@ -256,4 +256,73 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
 
 }
 
+
+void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem, 
+    const Eigen::MatrixXd& tarMat, int options )
+{
+
+    // ---------------------------------------------------------------------- >>>>>
+//      File Name Editing
+// ---------------------------------------------------------------------- >>>>>
+
+    string fileExt = ".txt";
+    string fileName = fileStem + fileExt;
+    string fullFileName = fileDir + "/" + fileName;
+
+// ---------------------------------------------------------------------- <<<<<
+
+// ---------------------------------------------------------------------- >>>>>
+//      Stream Prep
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the file stream.
+    std::ofstream file(fullFileName);
+    if (!file.is_open()) {
+        throw::invalid_argument( "Cannot open stream for specified file. ABORT." );
+    }
+
+    // Obtain the data count of the current frequency data.
+    unsigned int row_cnt = tarMat.rows();
+    unsigned int col_cnt = tarMat.cols();
+
+    // Initialize temporary complex variable.
+    double tmp_cplx = 0;
+
+    // Set the precision of the number being printed.
+    unsigned int precision = 10;
+    
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Write Data Lines
+// ---------------------------------------------------------------------- >>>>>
+
+    for( unsigned int i = 0; i < row_cnt; i++ ){
+        for( unsigned int j = 0; j < col_cnt; j++ ){
+
+            if( tarMat( i, j ) >= 0 ){
+                file << "+";
+            }
+            file << std::scientific << std::setprecision(precision) << tarMat( i, j );
+
+            if( j < col_cnt - 1 ){
+                file << ", ";
+            }
+
+        }
+
+        if( i < row_cnt - 1 ){
+            file << "\n";
+        }
+
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+    // Close the file once all is done.
+    file.close();
+
+}
+
 // ====================================================================== <<<<<
