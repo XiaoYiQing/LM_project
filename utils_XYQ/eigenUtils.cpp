@@ -75,6 +75,70 @@ void utils::VectorXd_to_file( const string& fileDir, const string& fileStem,
 
 
 
+void utils::Vd_to_file( const string& fileDir, const string& fileStem, 
+        vector<double> tarVec, int options )
+{
+
+// ---------------------------------------------------------------------- >>>>>
+//      File Name Editing
+// ---------------------------------------------------------------------- >>>>>
+
+    string fileExt = ".txt";
+    string fileName = fileStem + fileExt;
+    string fullFileName = fileDir + "/" + fileName;
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Stream Prep
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the file stream.
+    std::ofstream file(fullFileName);
+    if (!file.is_open()) {
+        throw::invalid_argument( "Cannot open stream for specified file. ABORT." );
+    }
+
+    // Obtain the data count of the current frequency data.
+    unsigned int data_cnt = tarVec.size();
+
+    // Initialize temporary complex variable.
+    double tmp_cplx = 0;
+
+    // Set the precision of the number being printed.
+    unsigned int precision = 10;
+    
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Write Data Lines
+// ---------------------------------------------------------------------- >>>>>
+
+    for( unsigned int z = 0; z < data_cnt; z++ ){
+
+        if( tarVec.at(z) >= 0 ){
+            file << "+";
+        }
+        file << std::scientific << std::setprecision(precision) << tarVec.at(z);
+
+        if( z < data_cnt - 1 ){
+            file << "\n";
+        }
+
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+    // Close the file once all is done.
+    file.close();
+
+}
+
+
+
+
 vector<double> utils::file_to_Vd( const string& fullFileName ){
 
 // ---------------------------------------------------------------------- >>>>>
@@ -94,7 +158,7 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      File Parameters Read
+//      Data Read Prep
 // ---------------------------------------------------------------------- >>>>>
 
     // Open the input file stream.
@@ -104,11 +168,6 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
     }else{
         cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
     }
-
-    /*
-    Regex for determining the positive integer value X in the pattern ".sXp".
-    */
-    regex pattern(R"(\.s(\d+)p)");
 
     // The variables holding the line and word currently read, respectively.
     string line, word;
@@ -126,6 +185,13 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
     // Initialize vector.
     vector<double> vec = vector<double>();
     vec.reserve( res_blk_size );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Data Read
+// ---------------------------------------------------------------------- >>>>>
 
     // Parse through the file lines.
     while( getline( inputFile, line ) ){
@@ -169,6 +235,11 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
 
 // ---------------------------------------------------------------------- <<<<<
 
+
+// ---------------------------------------------------------------------- >>>>>
+//      Function End Cleanup
+// ---------------------------------------------------------------------- >>>>>
+
     // End file stream
     inputFile.close();
     // Downsize the vector.
@@ -178,6 +249,8 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
     cout << "File \"" + fileStem + fileExt + "\": successfully read." << endl;
     cout << "Vector size: " << curr_vec_size << endl;
     // cout << endl;
+
+// ---------------------------------------------------------------------- <<<<<
 
     return vec;
 
