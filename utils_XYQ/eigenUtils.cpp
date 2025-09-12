@@ -310,7 +310,7 @@ void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem,
             file << std::scientific << std::setprecision(precision) << tarMat( i, j );
 
             if( j < col_cnt - 1 ){
-                file << ", ";
+                file << " ";
             }
 
         }
@@ -418,12 +418,13 @@ Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
 
     while( iss >> word ){
 
-
+        cout << word << endl;
 
     }
 
 // ---------------------------------------------------------------------- <<<<<
 
+    return Eigen::MatrixXd();
 
 }
 
