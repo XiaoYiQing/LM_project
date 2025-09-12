@@ -29,6 +29,8 @@ namespace tests{
     void file_to_vec_test();
 
     void MatrixXd_to_file_test();
+
+    void file_to_MatrixXd();
     
 }
 

@@ -49,6 +49,7 @@ namespace utils{
         const Eigen::MatrixXd& tarVec, int options );
 
     // TODO: file to real mat.
+    Eigen::MatrixXd file_to_MatrixXd( const string& fullFileName );
 
 // ====================================================================== <<<<<
 

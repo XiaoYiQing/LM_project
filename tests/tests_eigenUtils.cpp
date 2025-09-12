@@ -53,6 +53,7 @@ void tests::file_to_vec_test(){
     string targetDir = RES_PATH_XYQ_str + "/test_res_dir";
     string targetStemName = "test_vec_data";
     string targetExt = ".txt";
+    string fullFileName = targetDir + "/" + targetStemName + targetExt;
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -61,7 +62,7 @@ void tests::file_to_vec_test(){
 //      Simple Correct Text File Read
 // ---------------------------------------------------------------------- >>>>>
 
-    string fullFileName = targetDir + "/" + targetStemName + targetExt;
+    
 
     vector<double> my_vec = utils::file_to_Vd( fullFileName );
     vector<double> my_vec_ans = {
@@ -149,5 +150,24 @@ void tests::MatrixXd_to_file_test(){
     string targetStemName = "MatrixXd_to_file_res";
 
     utils::MatrixXd_to_file( targetDir, targetStemName, testMat, 0 );
+
+}
+
+
+
+void tests::file_to_MatrixXd(){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization
+// ---------------------------------------------------------------------- >>>>>
+
+    string targetDir = RES_PATH_XYQ_str + "/test_res_dir";
+    string targetStemName = "test_MatrixXd_data";
+    string targetExt = ".txt";
+    string fullFileName = targetDir + "/" + targetStemName + targetExt;
+
+// ---------------------------------------------------------------------- <<<<<
+
+    utils::file_to_MatrixXd( fullFileName );
 
 }

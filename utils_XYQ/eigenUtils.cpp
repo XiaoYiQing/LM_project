@@ -257,11 +257,13 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
 }
 
 
+
+
 void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem, 
     const Eigen::MatrixXd& tarMat, int options )
 {
 
-    // ---------------------------------------------------------------------- >>>>>
+// ---------------------------------------------------------------------- >>>>>
 //      File Name Editing
 // ---------------------------------------------------------------------- >>>>>
 
@@ -270,6 +272,7 @@ void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem,
     string fullFileName = fileDir + "/" + fileName;
 
 // ---------------------------------------------------------------------- <<<<<
+
 
 // ---------------------------------------------------------------------- >>>>>
 //      Stream Prep
@@ -322,6 +325,105 @@ void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem,
 
     // Close the file once all is done.
     file.close();
+
+}
+
+
+
+
+Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full Name Parsing
+// ---------------------------------------------------------------------- >>>>>
+
+    std::filesystem::path fullFilePath( fullFileName );
+    std::string fileDir = fullFilePath.parent_path().string();
+    std::string fileStem = fullFilePath.stem().string();
+    std::string fileExt = fullFilePath.extension().string();
+    
+    if( fileExt != ".txt" && fileExt != ".csv" ){
+        throw std::invalid_argument( "Target data file must have extension '.txt' or '.csv'." );
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Data Read Prep
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the input file stream.
+    std::ifstream inputFile( fullFilePath );
+    if( !inputFile ){
+        throw std::invalid_argument( "Failed to open stream on target data file." );
+    }else{
+        cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
+    }
+
+    
+    
+    // The variables holding the line and word currently read, respectively.
+    string line, word;
+    // Initialize index variable for the row index.
+    unsigned int row_idx = 0;
+    unsigned int col_idx = 0;
+    // Boolean flag for indicating whether the line stream has reached the data lines.
+    bool end_reached = false;
+    // Initialize temporary double variables for storing values.
+    double tmp_val = 0;
+
+    // Initialize memory allocation control variables.
+    unsigned int res_blk_size = 200;
+    unsigned int curr_vec_size = 0;
+    unsigned int curr_alloc_size = res_blk_size;
+
+    // Initialize vector.
+    vector< vector<double> > vec = vector< vector<double> >();
+    vec.reserve( res_blk_size );
+
+    Eigen::MatrixXd tmp( 10, 10 );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Number of Lines Count
+// ---------------------------------------------------------------------- >>>>>
+
+    // First pass: count lines
+    unsigned int lineCount = 0;
+    while ( getline( inputFile, line ) ) {
+        lineCount++;
+    }
+
+    // Move back to beginning
+    inputFile.clear();                  // clear EOF flag
+    inputFile.seekg(0, std::ios::beg);  // go back to start
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      First Line Read
+// ---------------------------------------------------------------------- >>>>>
+
+
+    unsigned int col_cnt = 0;
+
+    // Obtain the first line.
+    getline( inputFile, line );
+    // Set the stream for the current line.
+    istringstream iss(line);
+
+    while( iss >> word ){
+
+
+
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
 
 }
 
