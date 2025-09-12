@@ -30,7 +30,11 @@ namespace utils{
     void VectorXd_to_file( const string& fileDir, const string& fileStem, 
         const Eigen::VectorXd& tarVec, int options );
     
-        
+    /*
+    Write a vector<double> variable's content into a text file.
+    The double value are simply placed one after each other on consecutive rows.
+    Each row has only one value printed.
+    */ 
     void Vd_to_file( const string& fileDir, const string& fileStem, 
         vector<double> tarVec, int options );
 

@@ -20,13 +20,27 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
         // If you need an independent copy
         Eigen::VectorXd tarVec = eigenVec;
 
-        string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
+        string targetDir = SRC_PATH_XYQ_str + "/data_output";
         string targetStemName = "tmp_data_file";
 
         utils::VectorXd_to_file( targetDir, targetStemName, tarVec, 0 );
 
     }
 
+}
+
+
+void tests::Vd_to_file_test(){
+
+    unsigned int num_cnt = 10;
+
+    vector<double> tmp_vec = *utils::rDoubleGen( -10.0, 10.0, num_cnt );
+
+    string targetDir = SRC_PATH_XYQ_str + "/data_output";
+    string targetStemName = "Vd_to_file_res";
+
+    utils::Vd_to_file( targetDir, targetStemName, tmp_vec, 0 );
+    
 }
 
 
