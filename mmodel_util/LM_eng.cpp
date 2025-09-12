@@ -95,7 +95,7 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
 
     string dataFileStem = fileStem + "_sv";
 
-    // utils::vec_to_file( destDir, dataFileStem, myEng->get_singVals(), 0 );
+    // utils::VectorXd_to_file( destDir, dataFileStem, myEng->get_singVals(), 0 );
 
     LM_eng::print_singVals( *myEng, dataFileStem, destDir );
 
@@ -109,7 +109,7 @@ void LM_eng::print_singVals( const LM_eng& tar_LM_eng, const string& fileStem,
 {
 
     try{
-        utils::vec_to_file( destDir, fileStem, tar_LM_eng.get_singVals(), 0 );
+        utils::VectorXd_to_file( destDir, fileStem, tar_LM_eng.get_singVals(), 0 );
     }catch( const runtime_error& e ){
         cerr << "print_singVals aborted: " << e.what() << endl;
     }catch( const exception& e ){

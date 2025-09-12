@@ -7,7 +7,7 @@
 //      Write to File
 // ====================================================================== >>>>>
 
-void utils::vec_to_file( const string& fileDir, const string& fileStem, 
+void utils::VectorXd_to_file( const string& fileDir, const string& fileStem, 
     const Eigen::VectorXd& tarVec, int options ){
 
 // ---------------------------------------------------------------------- >>>>>

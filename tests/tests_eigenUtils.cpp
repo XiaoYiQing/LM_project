@@ -23,7 +23,7 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
         string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
         string targetStemName = "tmp_data_file";
 
-        utils::vec_to_file( targetDir, targetStemName, tarVec, 0 );
+        utils::VectorXd_to_file( targetDir, targetStemName, tarVec, 0 );
 
     }
 
@@ -32,9 +32,20 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
 
 void tests::file_to_vec_test(){
 
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization
+// ---------------------------------------------------------------------- >>>>>
+
     string targetDir = RES_PATH_XYQ_str + "/test_res_dir";
     string targetStemName = "test_vec_data";
     string targetExt = ".txt";
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Simple Correct Text File Read
+// ---------------------------------------------------------------------- >>>>>
 
     string fullFileName = targetDir + "/" + targetStemName + targetExt;
 
@@ -56,6 +67,13 @@ void tests::file_to_vec_test(){
     }
     cout << endl;
 
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Simple Correct CSV File Read
+// ---------------------------------------------------------------------- >>>>>
+
     targetExt = ".csv";
     fullFileName = targetDir + "/" + targetStemName + targetExt;
 
@@ -72,8 +90,12 @@ void tests::file_to_vec_test(){
     }
     cout << endl;
 
+// ---------------------------------------------------------------------- <<<<<
 
 
+// ---------------------------------------------------------------------- >>>>>
+//      Erroneous Text File Read
+// ---------------------------------------------------------------------- >>>>>
 
     targetDir = RES_PATH_XYQ_str + "/test_res_dir";
     targetStemName = "test_bad_vec_data";
@@ -92,5 +114,9 @@ void tests::file_to_vec_test(){
         cout << "file_to_Vd bad file read test: failed!" << endl;
     }
     cout << endl;
+
+// ---------------------------------------------------------------------- <<<<<
+
+
 
 }
