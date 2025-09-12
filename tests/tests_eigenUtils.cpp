@@ -169,7 +169,8 @@ void tests::file_to_MatrixXd(){
 // ---------------------------------------------------------------------- <<<<<
 
 
-    utils::file_to_MatrixXd( fullFileName );
-    
+    Eigen::MatrixXd parsedMat = utils::file_to_MatrixXd( fullFileName );
+
+    cout << parsedMat << endl;
 
 }

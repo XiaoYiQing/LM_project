@@ -378,23 +378,30 @@ Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
     unsigned int curr_vec_size = 0;
     unsigned int curr_alloc_size = res_blk_size;
 
-    // Initialize vector.
-    vector< vector<double> > vec = vector< vector<double> >();
-    vec.reserve( res_blk_size );
-
-    Eigen::MatrixXd tmp( 10, 10 );
+    
 
 // ---------------------------------------------------------------------- <<<<<
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      Number of Lines Count
+//      Number of Lines and Columns Count
 // ---------------------------------------------------------------------- >>>>>
 
+    // Initialize row and col counts.
+    unsigned int row_cnt = 0;
+    unsigned int col_cnt = 0;
+
+    // Obtain the first line.
+    getline( inputFile, line ); row_cnt++;
+    // Set the stream for the current line.
+    istringstream iss(line);
+    while( iss >> word ){
+        col_cnt++;
+    }
+
     // First pass: count lines
-    unsigned int lineCount = 0;
     while ( getline( inputFile, line ) ) {
-        lineCount++;
+        row_cnt++;
     }
 
     // Move back to beginning
@@ -405,26 +412,44 @@ Eigen::MatrixXd utils::file_to_MatrixXd( const string& fullFileName ){
 
 
 // ---------------------------------------------------------------------- >>>>>
-//      First Line Read
+//      Data Read
 // ---------------------------------------------------------------------- >>>>>
 
+    // Initialize the data matrix.
+    Eigen::MatrixXd readMat( row_cnt, col_cnt );
 
-    unsigned int col_cnt = 0;
+    // Parse through the file lines.
+    for( unsigned int i = 0; i < row_cnt; i++ ){
 
-    // Obtain the first line.
-    getline( inputFile, line );
-    // Set the stream for the current line.
-    istringstream iss(line);
+        // Obtain the current line.
+        getline( inputFile, line );
 
-    while( iss >> word ){
+        // Set the stream for the current line.
+        istringstream iss(line);
+        
+        for( unsigned int j = 0; j < col_cnt; j++ ){
 
-        cout << word << endl;
+            try{
+                
+                // Read the next word.
+                iss >> word;
+                // Translate the word into a double value freq.
+                readMat(i,j) = std::stod( word );
 
+            }catch( ... ){
+                
+                inputFile.close();
+                throw;
+
+            }
+
+        }
+        
     }
 
 // ---------------------------------------------------------------------- <<<<<
 
-    return Eigen::MatrixXd();
+    return readMat;
 
 }
 
