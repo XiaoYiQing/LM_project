@@ -20,13 +20,15 @@ namespace tests{
     // Test functions in the eigenUtils file.
     void eigenUtils_test_1( unsigned int test_idx );
 
-    
+
     void Vd_to_file_test();
 
     /*
     Test the function file_to_vec()
     */
     void file_to_vec_test();
+
+    void MatrixXd_to_file_test();
     
 }
 

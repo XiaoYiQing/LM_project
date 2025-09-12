@@ -134,3 +134,20 @@ void tests::file_to_vec_test(){
 
 
 }
+
+
+
+
+void tests::MatrixXd_to_file_test(){
+
+    unsigned int row_cnt = 10;
+    unsigned int col_cnt = 10;
+
+    Eigen::MatrixXd testMat = Eigen::MatrixXd::Random( row_cnt, col_cnt );
+
+    string targetDir = SRC_PATH_XYQ_str + "/data_output";
+    string targetStemName = "MatrixXd_to_file_res";
+
+    utils::MatrixXd_to_file( targetDir, targetStemName, testMat, 0 );
+
+}
