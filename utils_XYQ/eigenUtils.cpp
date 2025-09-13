@@ -8,7 +8,7 @@
 // ====================================================================== >>>>>
 
 void utils::VectorXd_to_file( const string& fileDir, const string& fileStem, 
-    const Eigen::VectorXd& tarVec, int options ){
+    const Eigen::VectorXd& tarVec, unsigned int decimCnt ){
 
 // ---------------------------------------------------------------------- >>>>>
 //      File Name Editing
@@ -37,7 +37,7 @@ void utils::VectorXd_to_file( const string& fileDir, const string& fileStem,
     double tmp_cplx = 0;
 
     // Set the precision of the number being printed.
-    unsigned int precision = 10;
+    unsigned int precision = decimCnt;
     
 // ---------------------------------------------------------------------- <<<<<
 

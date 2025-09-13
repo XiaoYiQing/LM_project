@@ -402,7 +402,7 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     // Write the singular values to external file.
     string targetDir = "C:/Users/Yi Qing Xiao/Documents/Cpp_projects/LM_project/data_output";
     string targetStemName = "tmp_data_file";
-    utils::VectorXd_to_file( targetDir, targetStemName, my_singVals, 0 );
+    utils::VectorXd_to_file( targetDir, targetStemName, my_singVals, 10 );
 
 // ---------------------------------------------------------------------- <<<<<
 

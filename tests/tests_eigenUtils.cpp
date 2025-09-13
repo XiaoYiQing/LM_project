@@ -23,7 +23,7 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
         string targetDir = SRC_PATH_XYQ_str + "/data_output";
         string targetStemName = "tmp_data_file";
 
-        utils::VectorXd_to_file( targetDir, targetStemName, tarVec, 0 );
+        utils::VectorXd_to_file( targetDir, targetStemName, tarVec, 10 );
 
     }
 

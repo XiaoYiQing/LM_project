@@ -28,7 +28,7 @@ namespace utils{
     Each row has only one value printed.
     */
     void VectorXd_to_file( const string& fileDir, const string& fileStem, 
-        const Eigen::VectorXd& tarVec, int options );
+        const Eigen::VectorXd& tarVec, unsigned int decimCnt );
     
     /*
     Write a vector<double> variable's content into a text file.
