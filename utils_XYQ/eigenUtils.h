@@ -36,7 +36,7 @@ namespace utils{
     Each row has only one value printed.
     */ 
     void Vd_to_file( const string& fileDir, const string& fileStem, 
-        vector<double> tarVec, int options );
+        vector<double> tarVec, unsigned int decimCnt );
 
     /*
     Read an vector<double> saved in a .txt or .csv file and translate it into a 

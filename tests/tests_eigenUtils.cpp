@@ -39,7 +39,7 @@ void tests::Vd_to_file_test(){
     string targetDir = SRC_PATH_XYQ_str + "/data_output";
     string targetStemName = "Vd_to_file_res";
 
-    utils::Vd_to_file( targetDir, targetStemName, tmp_vec, 0 );
+    utils::Vd_to_file( targetDir, targetStemName, tmp_vec, 10 );
     
 }
 

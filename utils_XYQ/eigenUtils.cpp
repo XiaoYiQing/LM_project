@@ -76,7 +76,7 @@ void utils::VectorXd_to_file( const string& fileDir, const string& fileStem,
 
 
 void utils::Vd_to_file( const string& fileDir, const string& fileStem, 
-        vector<double> tarVec, int options )
+        vector<double> tarVec, unsigned int decimCnt )
 {
 
 // ---------------------------------------------------------------------- >>>>>
@@ -107,7 +107,7 @@ void utils::Vd_to_file( const string& fileDir, const string& fileStem,
     double tmp_cplx = 0;
 
     // Set the precision of the number being printed.
-    unsigned int precision = 10;
+    unsigned int precision = decimCnt;
     
 // ---------------------------------------------------------------------- <<<<<
 
