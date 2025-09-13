@@ -58,10 +58,11 @@ int main() {
     // tests::eigen_test1( 3 );
     // tests::eigen_test2( 1 );
     
+    tests::gen_rand_MatrixXd_test();
     // tests::Vd_to_file_test();
     // tests::file_to_vec_test();
     // tests::MatrixXd_to_file_test();
-    tests::file_to_MatrixXd();
+    // tests::file_to_MatrixXd();
 
     // tests::numUtils_test_1(4);
     // tests::gen_match_vector_test();

@@ -20,6 +20,7 @@ namespace tests{
     // Test functions in the eigenUtils file.
     void eigenUtils_test_1( unsigned int test_idx );
 
+    void gen_rand_MatrixXd_test();
 
     void Vd_to_file_test();
 

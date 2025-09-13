@@ -9,7 +9,7 @@
 #include <regex>
 #include <string>
 
-
+#include "numUtils.h"
 
 
 using namespace std;
@@ -18,9 +18,14 @@ using namespace std;
 
 namespace utils{
 
+    // TODO
+    Eigen::MatrixXd gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
+
 // ====================================================================== >>>>>
 //      Write to File
 // ====================================================================== >>>>>
+
+    
 
     /*
     Write a VectorXd variable's content into a text file.
@@ -52,13 +57,21 @@ namespace utils{
     format. Columns are separated by single spaces and rows are separated by lines.
     */
     void MatrixXd_to_file( const string& fileDir, const string& fileStem, 
-        const Eigen::MatrixXd& tarVec, unsigned int decimCnt );
+        const Eigen::MatrixXd& tarMat, unsigned int decimCnt );
 
     /*
     Read an Eigen::MatrixXd saved in a .txt or .csv file and translate it into a 
     eigen vector variable.
     */
     Eigen::MatrixXd file_to_MatrixXd( const string& fullFileName );
+    
+    // TODO
+    void MatrixXcd_to_file( const string& fileDir, const string& fileStem, 
+        const Eigen::MatrixXcd& tarVec, unsigned int decimCnt );
+
+    // TODO
+    Eigen::MatrixXcd file_to_MatrixXcd( const string& fullFileName );
+
 
 // ====================================================================== <<<<<
 
