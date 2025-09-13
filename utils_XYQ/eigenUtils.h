@@ -52,7 +52,7 @@ namespace utils{
     format. Columns are separated by single spaces and rows are separated by lines.
     */
     void MatrixXd_to_file( const string& fileDir, const string& fileStem, 
-        const Eigen::MatrixXd& tarVec, int options );
+        const Eigen::MatrixXd& tarVec, unsigned int decimCnt );
 
     /*
     Read an Eigen::MatrixXd saved in a .txt or .csv file and translate it into a 

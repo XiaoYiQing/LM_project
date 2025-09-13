@@ -260,7 +260,7 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
 
 
 void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem, 
-    const Eigen::MatrixXd& tarMat, int options )
+    const Eigen::MatrixXd& tarMat, unsigned int decimCnt )
 {
 
 // ---------------------------------------------------------------------- >>>>>
@@ -292,7 +292,7 @@ void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem,
     double tmp_cplx = 0;
 
     // Set the precision of the number being printed.
-    unsigned int precision = 10;
+    unsigned int precision = decimCnt;
     
 // ---------------------------------------------------------------------- <<<<<
 

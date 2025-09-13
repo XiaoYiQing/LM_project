@@ -149,7 +149,7 @@ void tests::MatrixXd_to_file_test(){
     string targetDir = SRC_PATH_XYQ_str + "/data_output";
     string targetStemName = "MatrixXd_to_file_res";
 
-    utils::MatrixXd_to_file( targetDir, targetStemName, testMat, 0 );
+    utils::MatrixXd_to_file( targetDir, targetStemName, testMat, 10 );
 
 }
 
