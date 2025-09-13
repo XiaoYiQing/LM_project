@@ -561,7 +561,7 @@ void utils::MatrixXcd_to_file( const string& fileDir, const string& fileStem,
             file << std::scientific << std::setprecision(precision) << tarMat( i, j ).real();
             
             file << " ";
-            
+
             if( tarMat( i, j ).imag() >= 0 ){
                 file << "+";
             }
@@ -583,6 +583,135 @@ void utils::MatrixXcd_to_file( const string& fileDir, const string& fileStem,
 
     // Close the file once all is done.
     file.close();
+
+}
+
+
+Eigen::MatrixXcd utils::file_to_MatrixXcd( const string& fullFileName ){
+
+// ---------------------------------------------------------------------- >>>>>
+//      Full Name Parsing
+// ---------------------------------------------------------------------- >>>>>
+
+    std::filesystem::path fullFilePath( fullFileName );
+    std::string fileDir = fullFilePath.parent_path().string();
+    std::string fileStem = fullFilePath.stem().string();
+    std::string fileExt = fullFilePath.extension().string();
+    
+    if( fileExt != ".txt" && fileExt != ".csv" ){
+        throw std::invalid_argument( "Target data file must have extension '.txt' or '.csv'." );
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+// ---------------------------------------------------------------------- >>>>>
+//      Data Read Prep
+// ---------------------------------------------------------------------- >>>>>
+
+    // Open the input file stream.
+    std::ifstream inputFile( fullFilePath );
+    if( !inputFile ){
+        throw std::invalid_argument( "Failed to open stream on target data file." );
+    }else{
+        cout << "File \"" + fileStem + fileExt + "\": stream opened successful." << endl;
+    }
+
+    
+    
+    // The variables holding the line and word currently read, respectively.
+    string line, word;
+
+    // Initialize temporary double variables for storing values.
+    double real_ij = 0;
+    double imag_ij = 0;
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Number of Lines and Columns Count
+// ---------------------------------------------------------------------- >>>>>
+
+    // Initialize row and col counts for the data file.
+    unsigned int row_cnt = 0;
+    unsigned int col_cnt = 0;
+    
+    // Obtain the first line.
+    getline( inputFile, line ); row_cnt++;
+
+    // Define regex with space or comma as delimiter
+    std::regex delimiter("[ ,]+");
+    // Split the first line with space and/or commas.
+    std::sregex_token_iterator iter(line.begin(), line.end(), delimiter, -1);
+    std::sregex_token_iterator end;
+
+    vector<string> lineSplit;
+    while (iter != end) {
+        lineSplit.push_back(*iter++);
+    }
+    col_cnt = lineSplit.size();
+    if( col_cnt % 2 != 0 ){
+        throw runtime_error( "file_to_MatrixXcd: Number of data columns is not even." );
+    }
+
+    // First pass: count lines
+    while ( getline( inputFile, line ) ) {
+        row_cnt++;
+    }
+
+    // Move back to beginning
+    inputFile.clear();                  // clear EOF flag
+    inputFile.seekg(0, std::ios::beg);  // go back to start
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Data Read
+// ---------------------------------------------------------------------- >>>>>
+    
+    // Define number of data matrix rows and columns.
+    unsigned int data_row_cnt = row_cnt;
+    unsigned int data_col_cnt = col_cnt/2;
+
+    // Initialize the data matrix.
+    Eigen::MatrixXcd datMat( data_row_cnt, data_col_cnt );
+
+    // Parse through the file lines.
+    for( unsigned int i = 0; i < data_row_cnt; i++ ){
+
+        // Obtain the current line.
+        getline( inputFile, line );
+
+        // Split the first line with space and/or commas.
+        std::sregex_token_iterator iter(line.begin(), line.end(), delimiter, -1);
+        std::sregex_token_iterator end;
+
+        unsigned int j = 0;
+        while (iter != end) {
+
+            if( j >= data_col_cnt ){
+                throw runtime_error( "file_to_MatrixXd: inconsistent number of columns across the rows in the data file." );
+            }
+            // Try parsing the next word into double and store into data matrix.
+            try{
+                real_ij = std::stod(*iter++);
+                imag_ij = std::stod(*iter++);
+                datMat(i,j) = complex<double>( real_ij, imag_ij );
+            }catch(...){
+                inputFile.close();
+                throw;
+            }
+
+            j++;
+
+        }
+        
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+    return datMat;
 
 }
 
