@@ -18,14 +18,15 @@ using namespace std;
 
 namespace utils{
 
-    // TODO
+    /*
+    Generate random "row_cnt" by "col_cnt" MatrixXd with entries within the range of [-1,+1].
+    */
     Eigen::MatrixXd gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
 
 // ====================================================================== >>>>>
 //      Write to File
 // ====================================================================== >>>>>
 
-    
 
     /*
     Write a VectorXd variable's content into a text file.
@@ -67,7 +68,7 @@ namespace utils{
     
     // TODO
     void MatrixXcd_to_file( const string& fileDir, const string& fileStem, 
-        const Eigen::MatrixXcd& tarVec, unsigned int decimCnt );
+        const Eigen::MatrixXcd& tarMat, unsigned int decimCnt );
 
     // TODO
     Eigen::MatrixXcd file_to_MatrixXcd( const string& fullFileName );

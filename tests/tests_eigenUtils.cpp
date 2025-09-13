@@ -163,7 +163,7 @@ void tests::MatrixXd_to_file_test(){
 
 
 
-void tests::file_to_MatrixXd(){
+void tests::file_to_MatrixXd_test(){
 
 // ---------------------------------------------------------------------- >>>>>
 //      Initialization
@@ -202,5 +202,27 @@ void tests::file_to_MatrixXd(){
     }else{
         cout << "file_to_MatrixXd test: failed!" << endl;
     }
+
+}
+
+
+
+void tests::MatrixXcd_to_file_test(){
+
+    unsigned int row_cnt = 10;
+    unsigned int col_cnt = 10;
+
+    Eigen::MatrixXd realPart = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
+    Eigen::MatrixXd imagPart = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
+
+    Eigen::MatrixXcd testMat( row_cnt, col_cnt );
+    testMat.real() = realPart;
+    testMat.imag() = imagPart;
+
+    string targetDir = SRC_PATH_XYQ_str + "/data_output";
+    string targetStemName = "MatrixXcd_to_file_res";
+
+
+    utils::MatrixXcd_to_file( targetDir, targetStemName, testMat, 10 );
 
 }

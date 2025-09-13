@@ -31,7 +31,9 @@ namespace tests{
 
     void MatrixXd_to_file_test();
 
-    void file_to_MatrixXd();
+    void file_to_MatrixXd_test();
+
+    void MatrixXcd_to_file_test();
     
 }
 
