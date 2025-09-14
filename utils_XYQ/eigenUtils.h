@@ -66,11 +66,21 @@ namespace utils{
     */
     Eigen::MatrixXd file_to_MatrixXd( const string& fullFileName );
     
-    // TODO
+    /*
+    Write a Eigen::MatrixXd variable's content into a text file.
+    Entries of the matrix are written into the file preserving a semblant matrix 
+    format. Columns are separated by single spaces and rows are separated by lines.
+    Each data has its real part placed on a former column and its imaginary part placed
+    on the immediate following column, which means a data matrix of X columns generates
+    a text data file of 2*X columns.
+    */
     void MatrixXcd_to_file( const string& fileDir, const string& fileStem, 
         const Eigen::MatrixXcd& tarMat, unsigned int decimCnt );
 
-    // TODO
+    /*
+    Read an Eigen::MatrixXcd saved in a .txt or .csv file and translate it into a 
+    eigen vector variable.
+    */
     Eigen::MatrixXcd file_to_MatrixXcd( const string& fullFileName );
 
 
