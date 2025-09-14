@@ -3,6 +3,7 @@
 
 
 #include <Eigen/Dense>
+#include <fstream>
 #include <iostream>
 #include <magic_enum.hpp>
 #include <string>   
@@ -280,7 +281,9 @@ public:
 
 
 
+    void serialize( const std::string& filename ) const;
 
+    void serialize( std::ofstream outfile ) const;
 
 
 protected:

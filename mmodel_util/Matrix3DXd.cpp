@@ -669,3 +669,34 @@ void Matrix3DXd::insert( unsigned int idx, const Eigen::MatrixXd& in2DMat ){
 }
 
 // ====================================================================== <<<<<
+
+
+
+void Matrix3DXd::serialize( const std::string& filename ) const{
+
+    std::ofstream outfile( filename, std::ios::binary);
+
+    if(!outfile){
+        throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
+    }
+
+    // Write the numerical threshold.
+    outfile.write(reinterpret_cast<const char*>(&num_thresh), sizeof(num_thresh));
+
+    // Obtain the sizes (depth, row count, column count).
+    size_t depth = Mat3D.size();
+    int rows = Mat3D.at(0).rows();
+    int cols = Mat3D.at(0).cols();
+
+    // Write the number of matrices.
+    outfile.write(reinterpret_cast<const char*>( &depth ), sizeof( depth ));
+    // Write the number of rows and columns of the matrices.
+    outfile.write(reinterpret_cast<const char*>( &rows ), sizeof( rows ));
+    outfile.write(reinterpret_cast<const char*>( &cols ), sizeof( cols ));
+    // Write each matrix in the vector into the binary file one after another.
+    for( Eigen::MatrixXd mat: Mat3D ){
+        outfile.write(reinterpret_cast<const char*>( Mat3D.data() ), 
+            rows * cols * sizeof( double ) );
+    }
+
+}

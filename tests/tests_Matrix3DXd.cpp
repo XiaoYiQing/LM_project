@@ -591,3 +591,23 @@ void tests::Matrix3DXd_test_4_supp( int case_idx ){
     }
 
 }
+
+
+void tests::Matrix3DXd_serialize(){
+
+    // Create a vector of 2D matrices.
+    unsigned int level_cnt = 10;
+    vector< Eigen::MatrixXd > tmp_mat_vec;
+    for( unsigned int z = 0; z < level_cnt; z++ ){
+        Eigen::MatrixXd tmpMat = Eigen::MatrixXd( 2, 2 );
+        tmpMat << 0+z*10, 1+z*10, 2+z*10, 3+z*10;
+        tmp_mat_vec.push_back( tmpMat );
+    }
+    // Initialize a 3D matrix using the vector.
+    Matrix3DXd myMat3D = Matrix3DXd( tmp_mat_vec );
+
+    string outFileFullFileName = SRC_PATH_XYQ_str + "/data_output/Matrix3DXd.bin";
+
+    myMat3D.serialize( outFileFullFileName );
+
+}

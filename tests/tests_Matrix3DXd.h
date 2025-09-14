@@ -8,7 +8,8 @@
 
 #include "Matrix3DXd.h"
 
-
+extern string RES_PATH_XYQ_str;
+extern string SRC_PATH_XYQ_str;
 
 using namespace std;
 
@@ -35,6 +36,8 @@ namespace tests{
     */
     void Matrix3DXd_test_4_supp( int case_idx );
 
+
+    void Matrix3DXd_serialize();
 
 }
 
