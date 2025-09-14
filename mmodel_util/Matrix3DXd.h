@@ -285,6 +285,8 @@ public:
 
     void serialize( std::ofstream outfile ) const;
 
+    void deserialize( const std::string& filename );
+
 
 protected:
 

@@ -677,7 +677,7 @@ void Matrix3DXd::serialize( const std::string& filename ) const{
     std::ofstream outfile( filename, std::ios::binary);
 
     if(!outfile){
-        throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
+        throw invalid_argument( "serialize: Target binary file not found or cannot be opened." );
     }
 
     // Write the numerical threshold.
@@ -695,8 +695,41 @@ void Matrix3DXd::serialize( const std::string& filename ) const{
     outfile.write(reinterpret_cast<const char*>( &cols ), sizeof( cols ));
     // Write each matrix in the vector into the binary file one after another.
     for( Eigen::MatrixXd mat: Mat3D ){
-        outfile.write(reinterpret_cast<const char*>( Mat3D.data() ), 
+        outfile.write( reinterpret_cast<const char*>( mat.data() ), 
             rows * cols * sizeof( double ) );
     }
 
+}
+
+
+void Matrix3DXd::deserialize( const std::string& filename ){
+
+    std::ifstream ifs( filename, std::ios::binary );
+    if (!ifs) {
+        throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
+    }
+
+    // Write the numerical threshold.
+    ifs.read(reinterpret_cast<char*>(&num_thresh), sizeof(num_thresh));
+
+    // Obtain the sizes (depth, row count, column count).
+    size_t depth = 0;
+    int rows = -1;
+    int cols = -1;
+    // Write the number of matrices.
+    ifs.read(reinterpret_cast<char*>( &depth ), sizeof( depth ));
+    // Write the number of rows and columns of the matrices.
+    ifs.read(reinterpret_cast<char*>( &rows ), sizeof( rows ));
+    ifs.read(reinterpret_cast<char*>( &cols ), sizeof( cols ));
+
+    // Reinitialize the vector of matrices.
+    this->reInit( rows, cols, depth );
+
+    // Write each matrix in the vector into the binary file one after another.
+    for( unsigned int z = 0; z < depth; z++ ){
+        Eigen::MatrixXd mat;
+        ifs.read(reinterpret_cast<char*>( Mat3D.at(z).data() ), 
+            rows * cols * sizeof( double ) );
+    }
+    
 }

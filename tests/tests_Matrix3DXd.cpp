@@ -593,7 +593,7 @@ void tests::Matrix3DXd_test_4_supp( int case_idx ){
 }
 
 
-void tests::Matrix3DXd_serialize(){
+void tests::Matrix3DXd_test_serialize(){
 
     // Create a vector of 2D matrices.
     unsigned int level_cnt = 10;
@@ -609,5 +609,20 @@ void tests::Matrix3DXd_serialize(){
     string outFileFullFileName = SRC_PATH_XYQ_str + "/data_output/Matrix3DXd.bin";
 
     myMat3D.serialize( outFileFullFileName );
+
+    Matrix3DXd myMat3D_2;
+
+    myMat3D_2.deserialize( outFileFullFileName );
+
+    bool test_bool = true;
+    for( unsigned int z = 0; z < level_cnt; z++ ){
+        test_bool = test_bool && ( myMat3D.at(z) == myMat3D_2.at(z) );
+    }
+
+    if( test_bool ){
+        cout << "Matrix3DXd serialize/deserialize test: Passed!" << endl;
+    }else{
+        cout << "Matrix3DXd serialize/deserialize test: failed!" << endl;
+    }
 
 }

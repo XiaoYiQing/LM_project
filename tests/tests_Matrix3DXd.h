@@ -36,8 +36,10 @@ namespace tests{
     */
     void Matrix3DXd_test_4_supp( int case_idx );
 
-
-    void Matrix3DXd_serialize();
+    /*
+    Test the serialization and deserialization functions.
+    */
+    void Matrix3DXd_test_serialize();
 
 }
 
