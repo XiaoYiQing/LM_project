@@ -366,6 +366,12 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
 
 // ====================================================================== <<<<<
 
+
+    /*
+    Serialize method to save current object state to a file.
+    */ 
+    void serialize(const std::string& filename) const;
+
 protected:
 
 

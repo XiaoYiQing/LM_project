@@ -949,6 +949,41 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
 // ====================================================================== <<<<<
 
 
+void fData::serialize(const std::string& filename) const{
+
+    std::ofstream outfile(filename, std::ios::binary);
+
+    if (outfile) {
+
+        this->IOcnt;
+
+        size_t size_tmp = sizeof( IOcnt );
+        // Write size
+        outfile.write(reinterpret_cast<const char*>( size_tmp), sizeof( size_tmp ));
+        // Write array data
+        outfile.write(reinterpret_cast<const char*>(IOcnt), size_tmp * sizeof(int));
+
+        // Enum write.
+        int f_pref_val = static_cast<int>(f_pref);
+        outfile.write(reinterpret_cast<const char*>(&f_pref_val), sizeof(f_pref_val));
+        int fD_pref_val = static_cast<int>(fD_type);
+        outfile.write(reinterpret_cast<const char*>(&fD_pref_val), sizeof(fD_pref_val));
+        int fD_format_val = static_cast<int>(fD_format);
+        outfile.write(reinterpret_cast<const char*>(&fD_format_val), sizeof(fD_format_val));
+
+        // System impedance write
+        outfile.write(reinterpret_cast<const char*>(&systImp), sizeof(systImp));
+
+        // f vector write
+        size_t f_size = f_vec.size();
+        outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
+        // Write data (Eigen stores data contiguously)
+        outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
+
+    }
+
+}
+
 
 // ====================================================================== >>>>>
 //      Data From File Utility

@@ -152,7 +152,8 @@ void LM_eng::serialize(const std::string& filename) const{
     if (outfile) {
 
         outfile.write( reinterpret_cast<const char*>(&flag0_data_set), sizeof(flag0_data_set) );
-
+        outfile.write( reinterpret_cast<const char*>(&flag1_data_prep), sizeof(flag1_data_prep) );
+        
     }
 
 }
