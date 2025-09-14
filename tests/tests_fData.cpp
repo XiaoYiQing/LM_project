@@ -797,6 +797,8 @@ void tests::fData_serialize_test(){
     string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
     fData::read_sXp_file( myF, fullFileName );
     myF.f_rescale();
+    // Force system impedance to an unusual value.
+    myF.set_systImp(75);
 
     string outFileFullFileName = SRC_PATH_XYQ_str + "/data_output/Slink_a_fData.bin";
 
@@ -812,6 +814,9 @@ void tests::fData_serialize_test(){
     cout << myF2.get_f_data_type_str() << endl;
     cout << myF2.get_f_data_format_str() << endl;
     cout << myF2.get_systImp() << endl;
+    
+    cout << myF.get_fval_at(10) << endl;
+    cout << myF2.get_fval_at(10) << endl;
 
 }
 

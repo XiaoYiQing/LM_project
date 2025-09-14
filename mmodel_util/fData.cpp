@@ -984,14 +984,13 @@ void fData::serialize(const std::string& filename) const{
         int fD_format_val = static_cast<int>(fD_format);
         outfile.write(reinterpret_cast<const char*>(&fD_format_val), sizeof(fD_format_val));
 
-        // System impedance write
+        // System impedance write.
         outfile.write(reinterpret_cast<const char*>(&systImp), sizeof(systImp));
 
-        // // f vector write
-        // size_t f_size = f_vec.size();
-        // outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
-        // // Write data (Eigen stores data contiguously)
-        // outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
+        // f vector write.
+        size_t f_size = f_vec.size();
+        outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
+        outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
 
     }
 
@@ -1023,6 +1022,11 @@ void fData::deserialize(const std::string& filename){
 
     // System impedance read.
     ifs.read(reinterpret_cast<char*>(&systImp), sizeof(systImp));
+
+    ifs.read(reinterpret_cast<char*>(&size_tmp), sizeof(size_tmp));
+    Eigen::VectorXd vec(size_tmp);
+    ifs.read(reinterpret_cast<char*>(vec.data()), size_tmp * sizeof(double));
+    this->f_vec = vec;
 
 }
 
