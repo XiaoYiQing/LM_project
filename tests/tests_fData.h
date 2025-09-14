@@ -60,6 +60,11 @@ namespace tests{
     */
     void fData_prefix_manip_test( unsigned int test_idx );
 
+    /*
+    Test serialization of fData objects.
+    */
+    void fData_serialize_test();
+
 }
 
 

@@ -708,6 +708,21 @@ double fData::get_f_scale_num() const{
     return get_METRIC_PREFIX_val( this->f_pref );
 }
 
+string fData::get_f_data_type_str() const{
+    return get_FDATA_TYPE_Str( this->fD_type );
+}
+
+string fData::get_f_data_format_str() const{
+    return get_FDATA_FORMAT_Str( this->fD_format );
+}
+
+double fData::get_systImp() const{
+    return this->systImp;
+}
+void fData::set_systImp( const double in_imp ){
+    this->systImp = in_imp;
+}
+
 void fData::set_fval_at( unsigned int f_idx, double f_val ){
     if( f_idx >= this->get_f_cnt() ){
         throw std::out_of_range( "Target frequency index out of range." );
@@ -955,13 +970,11 @@ void fData::serialize(const std::string& filename) const{
 
     if (outfile) {
 
-        this->IOcnt;
-
-        size_t size_tmp = sizeof( IOcnt );
+        size_t size_tmp = 2;
         // Write size
-        outfile.write(reinterpret_cast<const char*>( size_tmp), sizeof( size_tmp ));
+        outfile.write(reinterpret_cast<const char*>(&size_tmp), sizeof( size_tmp ));
         // Write array data
-        outfile.write(reinterpret_cast<const char*>(IOcnt), size_tmp * sizeof(int));
+        outfile.write(reinterpret_cast<const char*>( this->IOcnt ), size_tmp * sizeof( int ));
 
         // Enum write.
         int f_pref_val = static_cast<int>(f_pref);
@@ -974,13 +987,42 @@ void fData::serialize(const std::string& filename) const{
         // System impedance write
         outfile.write(reinterpret_cast<const char*>(&systImp), sizeof(systImp));
 
-        // f vector write
-        size_t f_size = f_vec.size();
-        outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
-        // Write data (Eigen stores data contiguously)
-        outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
+        // // f vector write
+        // size_t f_size = f_vec.size();
+        // outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
+        // // Write data (Eigen stores data contiguously)
+        // outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
 
     }
+
+}
+
+void fData::deserialize(const std::string& filename){
+
+    std::ifstream ifs( filename, std::ios::binary );
+    if (!ifs) {
+        throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
+    }
+
+    size_t size_tmp = 2;
+    // Read size
+    ifs.read(reinterpret_cast<char*>( &size_tmp ), sizeof( size_tmp ));
+    // Read array data
+    ifs.read(reinterpret_cast<char*>( this->IOcnt ), size_tmp * sizeof( int ));
+
+    // Enum read.
+    int f_pref_val = -1;
+    ifs.read(reinterpret_cast<char*>(&f_pref_val), sizeof(f_pref_val));
+    this->f_pref = static_cast<fData::METRIC_PREFIX>( f_pref_val );
+    int fd_pref_val = -1;
+    ifs.read(reinterpret_cast<char*>(&fd_pref_val), sizeof(fd_pref_val));
+    this->fD_type = static_cast<fData::FDATA_TYPE>( fd_pref_val );
+    int fD_format_val = -1;
+    ifs.read(reinterpret_cast<char*>(&fD_format_val), sizeof(fD_format_val));
+    this->fD_format = static_cast<fData::FDATA_FORMAT>( fD_format_val );
+
+    // System impedance read.
+    ifs.read(reinterpret_cast<char*>(&systImp), sizeof(systImp));
 
 }
 

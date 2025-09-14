@@ -785,9 +785,33 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
 
     }
 
-    
+}
 
 
-    
+void tests::fData_serialize_test(){
+
+    // Define our frequency data object.
+    fData myF;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myF, fullFileName );
+    myF.f_rescale();
+
+    string outFileFullFileName = SRC_PATH_XYQ_str + "/data_output/Slink_a_fData.bin";
+
+    myF.serialize( outFileFullFileName );
+
+    fData myF2;
+
+    myF2.deserialize( outFileFullFileName );
+
+    cout << myF2.get_out_cnt() << endl;
+    cout << myF2.get_in_cnt() << endl;
+    cout << myF2.get_f_scale_str() << endl;
+    cout << myF2.get_f_data_type_str() << endl;
+    cout << myF2.get_f_data_format_str() << endl;
+    cout << myF2.get_systImp() << endl;
 
 }
+

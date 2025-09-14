@@ -306,6 +306,15 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     string get_f_scale_str() const;
     // Obtain the numerical value of the frequency scale or metric prefix.
     double get_f_scale_num() const;
+    // Obtain the data type as a string.
+    string get_f_data_type_str() const;
+    // Obtain the data format as a string.
+    string get_f_data_format_str() const;
+
+    // Obtain the system impedance.
+    double get_systImp() const;
+    // Set the system impedance.
+    void set_systImp( const double in_imp );
 
     // Set the frequency value at the target frequency index.
     void set_fval_at( unsigned int f_idx, double f_val );
@@ -371,6 +380,8 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     Serialize method to save current object state to a file.
     */ 
     void serialize(const std::string& filename) const;
+
+    void deserialize(const std::string& filename);
 
 protected:
 
