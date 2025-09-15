@@ -287,6 +287,8 @@ public:
 
     void deserialize( const std::string& filename );
 
+    void deserialize( std::ifstream& infile );
+
 
 protected:
 
