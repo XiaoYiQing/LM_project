@@ -818,5 +818,10 @@ void tests::fData_serialize_test(){
     cout << myF.get_fval_at(10) << endl;
     cout << myF2.get_fval_at(10) << endl;
 
+    cout << myF.get_reData_at_f(6) << endl;
+    cout << myF2.get_reData_at_f(6) << endl;
+    cout << myF.get_imData_at_f(6) << endl;
+    cout << myF2.get_imData_at_f(6) << endl;
+    
 }
 

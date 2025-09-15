@@ -74,7 +74,7 @@ int main() {
     // tests::Matrix3DXd_test_2_ops(3);
     // tests::Matrix3DXd_test_3_spec_ops(0);
     // tests::Matrix3DXd_test_4_supp(0);
-    tests::Matrix3DXd_test_serialize();
+    // tests::Matrix3DXd_test_serialize();
 
     // tests::fData_test_1( 0 );
     // tests::fData_test_2( 3 );
@@ -84,7 +84,7 @@ int main() {
     // tests::fData_LTspice_data_read_test();
     // tests::fData_print_test(0);
     // tests::fData_prefix_manip_test(1);
-    // tests::fData_serialize_test();
+    tests::fData_serialize_test();
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );

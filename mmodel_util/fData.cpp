@@ -992,6 +992,9 @@ void fData::serialize(const std::string& filename) const{
         outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
         outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
 
+        this->Xr_vec.serialize( outfile );
+        this->Xi_vec.serialize( outfile );
+
     }
 
 }
@@ -1027,6 +1030,9 @@ void fData::deserialize(const std::string& filename){
     Eigen::VectorXd vec(size_tmp);
     ifs.read(reinterpret_cast<char*>(vec.data()), size_tmp * sizeof(double));
     this->f_vec = vec;
+
+    this->Xr_vec.deserialize( ifs );
+    this->Xi_vec.deserialize( ifs );
 
 }
 
