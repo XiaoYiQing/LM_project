@@ -381,7 +381,22 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     */ 
     void serialize(const std::string& filename) const;
 
-    void deserialize(const std::string& filename);
+    /*
+    Serialize method using existing binary file stream.
+    */
+    void serialize( std::ofstream& outfile ) const;
+
+    /*
+    Deserialize method to imprint current object state with existing state written
+    in a binary file.
+    */
+    void deserialize(const std::string& filename );
+
+    /*
+    Deserialize method to imprint current object state with state from existing 
+    binary file stream.
+    */
+    void deserialize( std::ifstream& ifs );
 
 protected:
 

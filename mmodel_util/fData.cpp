@@ -968,36 +968,70 @@ void fData::serialize(const std::string& filename) const{
 
     std::ofstream outfile(filename, std::ios::binary);
 
-    if (outfile) {
-
-        size_t size_tmp = 2;
-        // Write size
-        outfile.write(reinterpret_cast<const char*>(&size_tmp), sizeof( size_tmp ));
-        // Write array data
-        outfile.write(reinterpret_cast<const char*>( this->IOcnt ), size_tmp * sizeof( int ));
-
-        // Enum write.
-        int f_pref_val = static_cast<int>(f_pref);
-        outfile.write(reinterpret_cast<const char*>(&f_pref_val), sizeof(f_pref_val));
-        int fD_pref_val = static_cast<int>(fD_type);
-        outfile.write(reinterpret_cast<const char*>(&fD_pref_val), sizeof(fD_pref_val));
-        int fD_format_val = static_cast<int>(fD_format);
-        outfile.write(reinterpret_cast<const char*>(&fD_format_val), sizeof(fD_format_val));
-
-        // System impedance write.
-        outfile.write(reinterpret_cast<const char*>(&systImp), sizeof(systImp));
-
-        // f vector write.
-        size_t f_size = f_vec.size();
-        outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
-        outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
-
-        this->Xr_vec.serialize( outfile );
-        this->Xi_vec.serialize( outfile );
-
+    if(!outfile){
+        throw invalid_argument( "serialize: Target binary file not found or cannot be opened." );
     }
 
+    this->serialize( outfile );
+
+    // size_t size_tmp = 2;
+    // // Write size
+    // outfile.write(reinterpret_cast<const char*>(&size_tmp), sizeof( size_tmp ));
+    // // Write array data
+    // outfile.write(reinterpret_cast<const char*>( this->IOcnt ), size_tmp * sizeof( int ));
+
+    // // Enum write.
+    // int f_pref_val = static_cast<int>(f_pref);
+    // outfile.write(reinterpret_cast<const char*>(&f_pref_val), sizeof(f_pref_val));
+    // int fD_pref_val = static_cast<int>(fD_type);
+    // outfile.write(reinterpret_cast<const char*>(&fD_pref_val), sizeof(fD_pref_val));
+    // int fD_format_val = static_cast<int>(fD_format);
+    // outfile.write(reinterpret_cast<const char*>(&fD_format_val), sizeof(fD_format_val));
+
+    // // System impedance write.
+    // outfile.write(reinterpret_cast<const char*>(&systImp), sizeof(systImp));
+
+    // // f vector write.
+    // size_t f_size = f_vec.size();
+    // outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
+    // outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
+
+    // this->Xr_vec.serialize( outfile );
+    // this->Xi_vec.serialize( outfile );
+
+
 }
+
+
+void fData::serialize( std::ofstream& outfile ) const{
+
+    size_t size_tmp = 2;
+    // Write size
+    outfile.write(reinterpret_cast<const char*>(&size_tmp), sizeof( size_tmp ));
+    // Write array data
+    outfile.write(reinterpret_cast<const char*>( this->IOcnt ), size_tmp * sizeof( int ));
+
+    // Enum write.
+    int f_pref_val = static_cast<int>(f_pref);
+    outfile.write(reinterpret_cast<const char*>(&f_pref_val), sizeof(f_pref_val));
+    int fD_pref_val = static_cast<int>(fD_type);
+    outfile.write(reinterpret_cast<const char*>(&fD_pref_val), sizeof(fD_pref_val));
+    int fD_format_val = static_cast<int>(fD_format);
+    outfile.write(reinterpret_cast<const char*>(&fD_format_val), sizeof(fD_format_val));
+
+    // System impedance write.
+    outfile.write(reinterpret_cast<const char*>(&systImp), sizeof(systImp));
+
+    // f vector write.
+    size_t f_size = f_vec.size();
+    outfile.write(reinterpret_cast<const char*>(&f_size), sizeof(f_size));
+    outfile.write(reinterpret_cast<const char*>(f_vec.data()), f_size * sizeof(double));
+
+    this->Xr_vec.serialize( outfile );
+    this->Xi_vec.serialize( outfile );
+
+}
+
 
 void fData::deserialize(const std::string& filename){
 
@@ -1005,6 +1039,41 @@ void fData::deserialize(const std::string& filename){
     if (!ifs) {
         throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
     }
+
+    this->deserialize( ifs );
+
+    // size_t size_tmp = 2;
+    // // Read size
+    // ifs.read(reinterpret_cast<char*>( &size_tmp ), sizeof( size_tmp ));
+    // // Read array data
+    // ifs.read(reinterpret_cast<char*>( this->IOcnt ), size_tmp * sizeof( int ));
+
+    // // Enum read.
+    // int f_pref_val = -1;
+    // ifs.read(reinterpret_cast<char*>(&f_pref_val), sizeof(f_pref_val));
+    // this->f_pref = static_cast<fData::METRIC_PREFIX>( f_pref_val );
+    // int fd_pref_val = -1;
+    // ifs.read(reinterpret_cast<char*>(&fd_pref_val), sizeof(fd_pref_val));
+    // this->fD_type = static_cast<fData::FDATA_TYPE>( fd_pref_val );
+    // int fD_format_val = -1;
+    // ifs.read(reinterpret_cast<char*>(&fD_format_val), sizeof(fD_format_val));
+    // this->fD_format = static_cast<fData::FDATA_FORMAT>( fD_format_val );
+
+    // // System impedance read.
+    // ifs.read(reinterpret_cast<char*>(&systImp), sizeof(systImp));
+
+    // ifs.read(reinterpret_cast<char*>(&size_tmp), sizeof(size_tmp));
+    // Eigen::VectorXd vec(size_tmp);
+    // ifs.read(reinterpret_cast<char*>(vec.data()), size_tmp * sizeof(double));
+    // this->f_vec = vec;
+
+    // this->Xr_vec.deserialize( ifs );
+    // this->Xi_vec.deserialize( ifs );
+
+}
+
+
+void fData::deserialize( std::ifstream& ifs ){
 
     size_t size_tmp = 2;
     // Read size
