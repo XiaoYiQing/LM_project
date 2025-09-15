@@ -680,6 +680,13 @@ void Matrix3DXd::serialize( const std::string& filename ) const{
         throw invalid_argument( "serialize: Target binary file not found or cannot be opened." );
     }
 
+    this->serialize( outfile );
+
+}
+
+
+void Matrix3DXd::serialize( std::ofstream& outfile ) const{
+
     // Write the numerical threshold.
     outfile.write(reinterpret_cast<const char*>(&num_thresh), sizeof(num_thresh));
 
@@ -731,5 +738,5 @@ void Matrix3DXd::deserialize( const std::string& filename ){
         ifs.read(reinterpret_cast<char*>( Mat3D.at(z).data() ), 
             rows * cols * sizeof( double ) );
     }
-    
+
 }

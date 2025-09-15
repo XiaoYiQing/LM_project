@@ -283,7 +283,7 @@ public:
 
     void serialize( const std::string& filename ) const;
 
-    void serialize( std::ofstream outfile ) const;
+    void serialize( std::ofstream& outfile ) const;
 
     void deserialize( const std::string& filename );
 
