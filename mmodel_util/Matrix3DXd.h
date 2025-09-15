@@ -280,14 +280,26 @@ public:
 // ====================================================================== <<<<<
 
 
-
+    /*
+    Serialize method to save current object state to a binary file.
+    */ 
     void serialize( const std::string& filename ) const;
+    /*
+    Serialize method to save current object state to a binary file whose stream
+    is directly given.
+    */ 
+    void serialize( std::ofstream& ofs ) const;
 
-    void serialize( std::ofstream& outfile ) const;
-
+    /*
+    Deserialize method to imprint current object state with existing state written
+    in a binary file.
+    */
     void deserialize( const std::string& filename );
-
-    void deserialize( std::ifstream& infile );
+    /*
+    Deserialize method to imprint current object state with existing state written
+    in a binary file whose stream is directly given.
+    */
+    void deserialize( std::ifstream& ifs );
 
 
 protected:

@@ -147,13 +147,122 @@ LM_eng::LM_eng( const fData& inData ){
 
 void LM_eng::serialize(const std::string& filename) const{
 
-    std::ofstream outfile(filename, std::ios::binary);
+    std::ofstream ofs(filename, std::ios::binary);
 
-    if (outfile) {
+    if( !ofs ){
+        throw invalid_argument( "serialize: Target binary file not found or cannot be opened." );
+    }
 
-        outfile.write( reinterpret_cast<const char*>(&flag0_data_set), sizeof(flag0_data_set) );
-        outfile.write( reinterpret_cast<const char*>(&flag1_data_prep), sizeof(flag1_data_prep) );
+    ofs.write( reinterpret_cast<const char*>( &flag0_data_set ), sizeof( flag0_data_set ) );
+    ofs.write( reinterpret_cast<const char*>( &flag1_data_prep ), sizeof( flag1_data_prep ) );
+    ofs.write( reinterpret_cast<const char*>( &flag2_LM_const ), sizeof( flag2_LM_const ) );
+    ofs.write( reinterpret_cast<const char*>( &flag3_re_trans ), sizeof( flag3_re_trans ) );
+    ofs.write( reinterpret_cast<const char*>( &flag4_pen_SVD ), sizeof( flag4_pen_SVD ) );
+    
+    if( flag0_data_set ){
+
+        myFData.serialize( ofs );
+
+    }
+
+    if( flag1_data_prep ){
+
+        ofs.write(reinterpret_cast<const char*>( &f1_has_DC_pt ), sizeof( f1_has_DC_pt ));
+        ofs.write(reinterpret_cast<const char*>( &f2_has_DC_pt ), sizeof( f2_has_DC_pt ));
         
+        size_t fr_size = this->fr_idx_arr.size();
+        ofs.write( reinterpret_cast<const char*>( &fr_size ), sizeof( fr_size ) );
+        ofs.write( reinterpret_cast<const char*>( fr_idx_arr.data() ), fr_size * sizeof( unsigned int ) );
+
+        size_t fr1_size = this->partit1IdxArr.size();
+        ofs.write( reinterpret_cast<const char*>( &fr1_size ), sizeof( fr1_size ) );
+        ofs.write( reinterpret_cast<const char*>( partit1IdxArr.data() ), fr1_size * sizeof( unsigned int ) );
+
+        size_t fr2_size = this->partit2IdxArr.size();
+        ofs.write( reinterpret_cast<const char*>( &fr2_size ), sizeof( fr2_size ) );
+        ofs.write( reinterpret_cast<const char*>( partit2IdxArr.data() ), fr2_size * sizeof( unsigned int ) );
+
+    }
+
+    if( flag2_LM_const ){
+
+        int rows = LM.rows();
+        int cols = LM.cols();
+        int out_cnt = this->get_out_cnt();
+        int in_cnt = this->get_in_cnt();
+        Eigen::MatrixXd rePart;
+        Eigen::MatrixXd imPart;
+
+        // Write the number of rows, columns, outputs and inputs of the matrices.
+        ofs.write(reinterpret_cast<const char*>( &rows ), sizeof( rows ));
+        ofs.write(reinterpret_cast<const char*>( &cols ), sizeof( cols ));
+        ofs.write(reinterpret_cast<const char*>( &out_cnt ), sizeof( out_cnt ));
+        ofs.write(reinterpret_cast<const char*>( &in_cnt ), sizeof( in_cnt ));
+
+        // Write the LM.
+        rePart = LM.real();    imPart = LM.imag();
+        ofs.write( reinterpret_cast<const char*>( rePart.data() ), rows * cols * sizeof( double ) );
+        ofs.write( reinterpret_cast<const char*>( imPart.data() ), rows * cols * sizeof( double ) );
+        // Write the SLM.
+        rePart = SLM.real();    imPart = SLM.imag();
+        ofs.write( reinterpret_cast<const char*>( rePart.data() ), rows * cols * sizeof( double ) );
+        ofs.write( reinterpret_cast<const char*>( imPart.data() ), rows * cols * sizeof( double ) );
+        // Write the W.
+        rePart = W.real();    imPart = W.imag();
+        ofs.write( reinterpret_cast<const char*>( rePart.data() ), out_cnt * cols * sizeof( double ) );
+        ofs.write( reinterpret_cast<const char*>( imPart.data() ), out_cnt * cols * sizeof( double ) );
+        // Write the F.
+        rePart = F.real();    imPart = F.imag();
+        ofs.write( reinterpret_cast<const char*>( rePart.data() ), rows * in_cnt * sizeof( double ) );
+        ofs.write( reinterpret_cast<const char*>( imPart.data() ), rows * in_cnt * sizeof( double ) );
+    
+    }
+
+    if( flag3_re_trans ){
+
+        int rows = LM_re.rows();
+        int cols = LM_re.cols();
+        int out_cnt = this->get_out_cnt();
+        int in_cnt = this->get_in_cnt();
+
+        // Write the number of rows, columns, outputs and inputs of the matrices.
+        ofs.write(reinterpret_cast<const char*>( &rows ), sizeof( rows ));
+        ofs.write(reinterpret_cast<const char*>( &cols ), sizeof( cols ));
+        ofs.write(reinterpret_cast<const char*>( &out_cnt ), sizeof( out_cnt ));
+        ofs.write(reinterpret_cast<const char*>( &in_cnt ), sizeof( in_cnt ));
+
+        // Write the LM.
+        ofs.write( reinterpret_cast<const char*>( LM_re.data() ), rows * cols * sizeof( double ) );
+        // Write the SLM.
+        ofs.write( reinterpret_cast<const char*>( SLM_re.data() ), rows * cols * sizeof( double ) );
+        // Write the W.
+        ofs.write( reinterpret_cast<const char*>( W_re.data() ), out_cnt * cols * sizeof( double ) );
+        // Write the F.
+        ofs.write( reinterpret_cast<const char*>( F_re.data() ), rows * in_cnt * sizeof( double ) );
+    
+    }
+
+    if( flag4_pen_SVD ){
+
+        // Write the reference frequency magnitude.
+        ofs.write(reinterpret_cast<const char*>( &ref_f_mag ), sizeof( ref_f_mag ));
+
+        
+        int rows = LM_re.rows();
+        int cols = LM_re.cols();
+        int SVD_cnt = min( LM_re.rows(), LM_re.cols() );
+
+        // Write the number of singular values.
+        ofs.write(reinterpret_cast<const char*>( &SVD_cnt ), sizeof( SVD_cnt ));
+        // Write the singular values vector.
+        ofs.write(reinterpret_cast<const char*>( singVals.data() ), SVD_cnt * sizeof( double ));
+        // Write the left singular vector matrix.
+        ofs.write(reinterpret_cast<const char*>( U.data() ), rows * rows * sizeof( double ));
+        // Write the right singular vector matrix.
+        ofs.write(reinterpret_cast<const char*>( V.data() ), cols * cols * sizeof( double ));
+        
+
+
     }
 
 }
