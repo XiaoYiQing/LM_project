@@ -799,29 +799,45 @@ void tests::fData_serialize_test(){
     myF.f_rescale();
     // Force system impedance to an unusual value.
     myF.set_systImp(75);
+    // Force system to switch to non default format.
+    myF.data_format_Switch( fData::FDATA_FORMAT::RI );
 
+    // Define the binary file full file name.
     string outFileFullFileName = SRC_PATH_XYQ_str + "/data_output/Slink_a_fData.bin";
-
+    // Serialize the current object in the target binary file.
     myF.serialize( outFileFullFileName );
 
+    // Create a second fData object and make it copy the serialized state of "myF".
     fData myF2;
-
     myF2.deserialize( outFileFullFileName );
 
-    cout << myF2.get_out_cnt() << endl;
-    cout << myF2.get_in_cnt() << endl;
-    cout << myF2.get_f_scale_str() << endl;
-    cout << myF2.get_f_data_type_str() << endl;
-    cout << myF2.get_f_data_format_str() << endl;
-    cout << myF2.get_systImp() << endl;
+    // Test the serialize + deserialize functionalities through data matching.
+    bool test_bool = true;
+    test_bool = test_bool && ( myF2.get_out_cnt() == myF.get_out_cnt() );
+    test_bool = test_bool && ( myF2.get_in_cnt() == myF.get_in_cnt() );
+    test_bool = test_bool && ( myF2.get_f_scale_str() == myF.get_f_scale_str() );
+    test_bool = test_bool && ( myF2.get_f_data_type_str() == myF.get_f_data_type_str() );
+    test_bool = test_bool && ( myF2.get_f_data_format_str() == myF.get_f_data_format_str() );
+    test_bool = test_bool && ( myF2.get_systImp() == myF.get_systImp() );
     
-    cout << myF.get_fval_at(10) << endl;
-    cout << myF2.get_fval_at(10) << endl;
+    Eigen::MatrixXd tmp;
+    double num_thresh = 1e-12;
+    for( unsigned int z = 0; z < myF.get_f_cnt(); z++ ){
 
-    cout << myF.get_reData_at_f(6) << endl;
-    cout << myF2.get_reData_at_f(6) << endl;
-    cout << myF.get_imData_at_f(6) << endl;
-    cout << myF2.get_imData_at_f(6) << endl;
-    
+        test_bool = test_bool && ( abs( myF2.get_fval_at(z) - myF.get_fval_at(z) ) < num_thresh );
+
+        tmp = ( myF.get_reData_at_f(z) - myF2.get_reData_at_f(z) );
+        test_bool = test_bool && ( tmp.cwiseAbs().maxCoeff() < num_thresh );
+        tmp = ( myF.get_imData_at_f(z) - myF2.get_imData_at_f(z) );
+        test_bool = test_bool && ( tmp.cwiseAbs().maxCoeff() < num_thresh );
+        
+    }
+
+    if( test_bool ){
+        cout << "fData serialize + deserialize test: passed!" << endl;
+    }else{
+        cout << "fData serialize + deserialize test: failed!" << endl;
+    }
+
 }
 
