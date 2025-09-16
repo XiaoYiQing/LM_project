@@ -92,6 +92,12 @@ public:
     */ 
     void serialize(const std::string& filename) const;
 
+    /*
+    Deserialize method to imprint current object with the state of a class instance 
+    saved in a binary file.
+    */
+    void deserialize(const std::string& filename);
+
 // ====================================================================== <<<<<
 
 // ====================================================================== >>>>>

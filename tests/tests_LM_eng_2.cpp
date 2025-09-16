@@ -657,3 +657,38 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
     }
 
 }
+
+
+
+void tests::LM_eng_serialize_test(){
+
+    // Define our frequency data object.
+    fData myFData1;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData1, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData1.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData1.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+    // LM engine initialization
+    LM_eng my_LM_eng_a( myFData1 );
+
+    my_LM_eng_a.step1_fData_partition();
+    // my_LM_eng_a.step2_LM_construct();
+    // my_LM_eng_a.step3_LM_re_trans();
+    // my_LM_eng_a.step4_LM_pencil_SVD();
+
+
+    string outFileName = SRC_PATH_XYQ_str + "/data_output/LM_eng_test.bin";
+    my_LM_eng_a.serialize( outFileName );
+
+    LM_eng my_LM_eng_b;
+    my_LM_eng_b.deserialize( outFileName );
+
+    unsigned int lol = 0;
+
+}

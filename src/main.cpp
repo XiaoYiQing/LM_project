@@ -84,12 +84,13 @@ int main() {
     // tests::fData_LTspice_data_read_test();
     // tests::fData_print_test(0);
     // tests::fData_prefix_manip_test(1);
-    tests::fData_serialize_test();
+    // tests::fData_serialize_test();
 
     // tests::LM_eng_test_1( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
     // tests::LM_eng_class_test();
+    tests::LM_eng_serialize_test();
     
     // tests::LTI_descSyst_test_1( 3 );
     // tests::LTI_descSyst_test_2( 2 );

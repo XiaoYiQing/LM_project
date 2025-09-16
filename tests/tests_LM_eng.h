@@ -71,6 +71,11 @@ namespace tests{
     */
     void LM_eng_steps_test( unsigned int test_idx );
 
+    /*
+    Test the serialization + deserialization functions.
+    */
+    void LM_eng_serialize_test();
+
 }
 
 #endif  // TESTS_LM_ENG_H

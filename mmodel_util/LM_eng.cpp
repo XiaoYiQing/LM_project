@@ -260,10 +260,24 @@ void LM_eng::serialize(const std::string& filename) const{
         ofs.write(reinterpret_cast<const char*>( U.data() ), rows * rows * sizeof( double ));
         // Write the right singular vector matrix.
         ofs.write(reinterpret_cast<const char*>( V.data() ), cols * cols * sizeof( double ));
-        
-
 
     }
+
+}
+
+void LM_eng::deserialize(const std::string& filename){
+
+    std::ifstream ifs( filename, std::ios::binary );
+
+    if( !ifs ){
+        throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
+    }
+
+    ifs.read( reinterpret_cast<char*>( &flag0_data_set ), sizeof( flag0_data_set ) );
+    ifs.read( reinterpret_cast<char*>( &flag1_data_prep ), sizeof( flag1_data_prep ) );
+    ifs.read( reinterpret_cast<char*>( &flag2_LM_const ), sizeof( flag2_LM_const ) );
+    ifs.read( reinterpret_cast<char*>( &flag3_re_trans ), sizeof( flag3_re_trans ) );
+    ifs.read( reinterpret_cast<char*>( &flag4_pen_SVD ), sizeof( flag4_pen_SVD ) );
 
 }
 
@@ -287,7 +301,7 @@ void LM_eng::step0_fData_set( const fData& inData ){
     vector<unsigned int> fr_idx_arr_in( fr_size );
     // Create a subset linear index array.
     try{
-        vector<unsigned int> fr_idx_arr_in = 
+        fr_idx_arr_in = 
             utils::gen_lin_idx_arr( 0, inData.get_f_cnt() - 1, fr_size );
     }catch( ... ){
         throw;
