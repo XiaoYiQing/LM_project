@@ -247,6 +247,18 @@ Eigen::MatrixXd get_U() const;
 // Obtain the left singular vectors generated from the current LM pencil.
 Eigen::MatrixXd get_V() const;
 
+// Obtain the bool indicating whether partition 1 contains the DC point.
+bool get_f1_has_DC_pt() const;
+// Obtain the bool indicating whether partition 2 contains the DC point.
+bool get_f2_has_DC_pt() const;
+
+// Obtain the reduced frequency data set index array.
+vector< unsigned int > get_fr_idx_arr() const;
+// Obtain the partition #1 index array.
+vector< unsigned int > get_partit1IdxArr() const;
+// Obtain the partition #2 index array.
+vector< unsigned int > get_partit2IdxArr() const;
+
 // ====================================================================== <<<<<
 
 

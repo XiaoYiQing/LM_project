@@ -163,6 +163,10 @@ void LM_eng::serialize(const std::string& filename) const{
 
         myFData.serialize( ofs );
 
+        size_t fr_size = this->fr_idx_arr.size();
+        ofs.write( reinterpret_cast<const char*>( &fr_size ), sizeof( fr_size ) );
+        ofs.write( reinterpret_cast<const char*>( fr_idx_arr.data() ), fr_size * sizeof( unsigned int ) );
+
     }
 
     if( flag1_data_prep ){
@@ -170,10 +174,6 @@ void LM_eng::serialize(const std::string& filename) const{
         ofs.write(reinterpret_cast<const char*>( &f1_has_DC_pt ), sizeof( f1_has_DC_pt ));
         ofs.write(reinterpret_cast<const char*>( &f2_has_DC_pt ), sizeof( f2_has_DC_pt ));
         
-        size_t fr_size = this->fr_idx_arr.size();
-        ofs.write( reinterpret_cast<const char*>( &fr_size ), sizeof( fr_size ) );
-        ofs.write( reinterpret_cast<const char*>( fr_idx_arr.data() ), fr_size * sizeof( unsigned int ) );
-
         size_t fr1_size = this->partit1IdxArr.size();
         ofs.write( reinterpret_cast<const char*>( &fr1_size ), sizeof( fr1_size ) );
         ofs.write( reinterpret_cast<const char*>( partit1IdxArr.data() ), fr1_size * sizeof( unsigned int ) );
@@ -1062,6 +1062,39 @@ Eigen::MatrixXd LM_eng::get_V() const{
         throw std::runtime_error( "Cannot return right singular vectors: step4 (LM pencil SVD) has not been set." );
     }
     return this->V;
+}
+
+bool LM_eng::get_f1_has_DC_pt() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return f1_has_DC_pt: step1 (data preparation) has not been set." );
+    }
+    return this->f1_has_DC_pt;
+}
+bool LM_eng::get_f2_has_DC_pt() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return f2_has_DC_pt: step1 (data preparation) has not been set." );
+    }
+    return this->f2_has_DC_pt;
+}
+
+vector< unsigned int > LM_eng::get_fr_idx_arr() const{
+    if( !this->flag0_data_set ){
+        throw std::runtime_error( "Cannot return fr_idx_arr: step0 (data loading) has not been set." );
+    }
+    return this->fr_idx_arr;
+}
+
+vector< unsigned int > LM_eng::get_partit1IdxArr() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return partit1IdxArr: step1 (data preparation) has not been set." );
+    }
+    return this->partit1IdxArr;
+}
+vector< unsigned int > LM_eng::get_partit2IdxArr() const{
+    if( !this->flag1_data_prep ){
+        throw std::runtime_error( "Cannot return partit2IdxArr: step1 (data preparation) has not been set." );
+    }
+    return this->partit2IdxArr;
 }
 
 // ====================================================================== <<<<<

@@ -689,6 +689,16 @@ void tests::LM_eng_serialize_test(){
     LM_eng my_LM_eng_b;
     my_LM_eng_b.deserialize( outFileName );
 
+    cout << my_LM_eng_b.get_flag(0) << endl;
+    cout << my_LM_eng_b.get_flag(1) << endl;
+    cout << my_LM_eng_b.get_flag(2) << endl;
+    cout << my_LM_eng_b.get_flag(3) << endl;
+    cout << my_LM_eng_b.get_flag(4) << endl;
+
+    cout << my_LM_eng_b.get_fr_idx_arr().size() << endl;
+    cout << my_LM_eng_b.get_partit1IdxArr().size() << endl;
+    cout << my_LM_eng_b.get_partit2IdxArr().size() << endl;
+
     unsigned int lol = 0;
 
 }
