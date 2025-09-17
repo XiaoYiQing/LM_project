@@ -662,6 +662,9 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
 void tests::LM_eng_serialize_test(){
 
+    // Define the numerical threshold of this test.
+    double num_thresh = 1e-12;
+
     // Define our frequency data object.
     fData myFData1;
 
@@ -689,15 +692,58 @@ void tests::LM_eng_serialize_test(){
     LM_eng my_LM_eng_b;
     my_LM_eng_b.deserialize( outFileName );
 
-    cout << my_LM_eng_b.get_flag(0) << endl;
-    cout << my_LM_eng_b.get_flag(1) << endl;
-    cout << my_LM_eng_b.get_flag(2) << endl;
-    cout << my_LM_eng_b.get_flag(3) << endl;
-    cout << my_LM_eng_b.get_flag(4) << endl;
+    // Initialize test boolean.
+    bool test_bool = true;
 
-    cout << my_LM_eng_b.get_fr_idx_arr().size() << endl;
-    cout << my_LM_eng_b.get_partit1IdxArr().size() << endl;
-    cout << my_LM_eng_b.get_partit2IdxArr().size() << endl;
+    // Flags matching.
+    for( unsigned int z = 0; z < 5; z++ ){
+        test_bool = test_bool && ( my_LM_eng_a.get_flag(z) == my_LM_eng_a.get_flag(z) );
+    }
+    // fr_idx_arr matching.
+    vector<unsigned int> fr_idx_arr_A = my_LM_eng_a.get_fr_idx_arr();
+    vector<unsigned int> fr_idx_arr_B = my_LM_eng_b.get_fr_idx_arr();
+    test_bool = test_bool && ( fr_idx_arr_A.size() == fr_idx_arr_B.size() );
+    if( test_bool ){
+        for( unsigned int z = 0; z < fr_idx_arr_A.size(); z++ ){
+            test_bool = test_bool && ( fr_idx_arr_A[z] == fr_idx_arr_B[z] );
+        }
+    }
+    // Step 0 result.
+    if( test_bool ){
+        cout << "LM_eng serialize + deserialize step 0 test: passed!" << endl;
+    }else{
+        cout << "LM_eng serialize + deserialize step 0 test: failed!" << endl;
+    }
+    
+    
+    test_bool = true;
+    // DC point flags check.
+    test_bool = test_bool && ( my_LM_eng_a.get_f1_has_DC_pt() == my_LM_eng_b.get_f1_has_DC_pt() );
+    test_bool = test_bool && ( my_LM_eng_a.get_f2_has_DC_pt() == my_LM_eng_b.get_f2_has_DC_pt() );
+    // Partition index arrays check.
+    vector<unsigned int> f1_idx_arr_A = my_LM_eng_a.get_partit1IdxArr();
+    vector<unsigned int> f2_idx_arr_A = my_LM_eng_a.get_partit2IdxArr();
+    vector<unsigned int> f1_idx_arr_B = my_LM_eng_b.get_partit1IdxArr();
+    vector<unsigned int> f2_idx_arr_B = my_LM_eng_b.get_partit2IdxArr();
+    test_bool = test_bool && ( f1_idx_arr_A.size() == f1_idx_arr_B.size() );
+    if( test_bool ){
+        for( unsigned int z = 0; z < f1_idx_arr_A.size(); z++ ){
+            test_bool = test_bool && ( f1_idx_arr_A[z] == f1_idx_arr_B[z] );
+        }
+    }
+    test_bool = test_bool && ( f2_idx_arr_A.size() == f2_idx_arr_B.size() );
+    if( test_bool ){
+        for( unsigned int z = 0; z < f2_idx_arr_A.size(); z++ ){
+            test_bool = test_bool && ( f2_idx_arr_A[z] == f2_idx_arr_B[z] );
+        }
+    }
+    // Step 1 result.
+    if( test_bool ){
+        cout << "LM_eng serialize + deserialize step 1 test: passed!" << endl;
+    }else{
+        cout << "LM_eng serialize + deserialize step 1 test: failed!" << endl;
+    }
+
 
     unsigned int lol = 0;
 

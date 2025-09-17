@@ -279,6 +279,34 @@ void LM_eng::deserialize(const std::string& filename){
     ifs.read( reinterpret_cast<char*>( &flag3_re_trans ), sizeof( flag3_re_trans ) );
     ifs.read( reinterpret_cast<char*>( &flag4_pen_SVD ), sizeof( flag4_pen_SVD ) );
 
+    if( flag0_data_set ){
+
+        this->myFData.deserialize( ifs );
+
+        size_t fr_size = 0;
+        ifs.read( reinterpret_cast<char*>( &fr_size ), sizeof( fr_size ) );
+        fr_idx_arr = vector<unsigned int>( fr_size );
+        ifs.read( reinterpret_cast<char*>( fr_idx_arr.data() ), fr_size * sizeof( unsigned int ) );
+
+    }
+
+    if( flag1_data_prep ){
+
+        ifs.read(reinterpret_cast<char*>( &f1_has_DC_pt ), sizeof( f1_has_DC_pt ));
+        ifs.read(reinterpret_cast<char*>( &f2_has_DC_pt ), sizeof( f2_has_DC_pt ));
+        
+        size_t fr1_size = 0;
+        ifs.read( reinterpret_cast<char*>( &fr1_size ), sizeof( fr1_size ) );
+        partit1IdxArr = vector< unsigned int >( fr1_size );
+        ifs.read( reinterpret_cast<char*>( partit1IdxArr.data() ), fr1_size * sizeof( unsigned int ) );
+
+        size_t fr2_size = 0;
+        ifs.read( reinterpret_cast<char*>( &fr2_size ), sizeof( fr2_size ) );
+        partit2IdxArr = vector< unsigned int >( fr2_size );
+        ifs.read( reinterpret_cast<char*>( partit2IdxArr.data() ), fr2_size * sizeof( unsigned int ) );
+
+    }
+
 }
 
 // ====================================================================== <<<<<
