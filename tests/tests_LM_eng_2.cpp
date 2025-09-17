@@ -681,7 +681,7 @@ void tests::LM_eng_serialize_test(){
     LM_eng my_LM_eng_a( myFData1 );
 
     my_LM_eng_a.step1_fData_partition();
-    // my_LM_eng_a.step2_LM_construct();
+    my_LM_eng_a.step2_LM_construct();
     // my_LM_eng_a.step3_LM_re_trans();
     // my_LM_eng_a.step4_LM_pencil_SVD();
 
@@ -743,6 +743,20 @@ void tests::LM_eng_serialize_test(){
     }else{
         cout << "LM_eng serialize + deserialize step 1 test: failed!" << endl;
     }
+
+    // Complex LM checks.
+    test_bool = true;
+    test_bool = test_bool && ( ( my_LM_eng_a.get_LM() - my_LM_eng_b.get_LM() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_SLM() - my_LM_eng_b.get_SLM() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_W() - my_LM_eng_b.get_W() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_F() - my_LM_eng_b.get_F() ).cwiseAbs().maxCoeff() < num_thresh );
+    // Step 2 result.
+    if( test_bool ){
+        cout << "LM_eng serialize + deserialize step 2 test: passed!" << endl;
+    }else{
+        cout << "LM_eng serialize + deserialize step 2 test: failed!" << endl;
+    }
+
 
 
     unsigned int lol = 0;

@@ -273,6 +273,7 @@ void LM_eng::deserialize(const std::string& filename){
         throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
     }
 
+    // Read the flags.
     ifs.read( reinterpret_cast<char*>( &flag0_data_set ), sizeof( flag0_data_set ) );
     ifs.read( reinterpret_cast<char*>( &flag1_data_prep ), sizeof( flag1_data_prep ) );
     ifs.read( reinterpret_cast<char*>( &flag2_LM_const ), sizeof( flag2_LM_const ) );
@@ -305,6 +306,46 @@ void LM_eng::deserialize(const std::string& filename){
         partit2IdxArr = vector< unsigned int >( fr2_size );
         ifs.read( reinterpret_cast<char*>( partit2IdxArr.data() ), fr2_size * sizeof( unsigned int ) );
 
+    }
+
+    if( flag2_LM_const ){
+
+        // Read the number of rows, columns, outputs and inputs of the matrices.
+        int rows = 0;   int cols = 0;   int out_cnt = 0;    int in_cnt = 0;
+        ifs.read(reinterpret_cast<char*>( &rows ), sizeof( rows ));
+        ifs.read(reinterpret_cast<char*>( &cols ), sizeof( cols ));
+        ifs.read(reinterpret_cast<char*>( &out_cnt ), sizeof( out_cnt ));
+        ifs.read(reinterpret_cast<char*>( &in_cnt ), sizeof( in_cnt ));
+
+        // Read the LM.
+        this->LM = Eigen::MatrixXcd( rows, cols );
+        Eigen::MatrixXd rePart_LM( rows, cols );
+        Eigen::MatrixXd imPart_LM( rows, cols );
+        ifs.read( reinterpret_cast<char*>( rePart_LM.data() ), rows * cols * sizeof( double ) );
+        ifs.read( reinterpret_cast<char*>( imPart_LM.data() ), rows * cols * sizeof( double ) );
+        LM.real() = rePart_LM;     LM.imag() = imPart_LM;
+        // Read the SLM.
+        Eigen::MatrixXd rePart_SLM( rows, cols );
+        Eigen::MatrixXd imPart_SLM( rows, cols );
+        this->SLM = Eigen::MatrixXcd( rows, cols );
+        ifs.read( reinterpret_cast<char*>( rePart_SLM.data() ), rows * cols * sizeof( double ) );
+        ifs.read( reinterpret_cast<char*>( imPart_SLM.data() ), rows * cols * sizeof( double ) );
+        SLM.real() = rePart_SLM;    SLM.imag() = imPart_SLM;
+        // Read the W.
+        this->W = Eigen::MatrixXcd( out_cnt, cols );
+        Eigen::MatrixXd rePart_W( out_cnt, cols );
+        Eigen::MatrixXd imPart_W( out_cnt, cols );
+        ifs.read( reinterpret_cast<char*>( rePart_W.data() ), out_cnt * cols * sizeof( double ) );
+        ifs.read( reinterpret_cast<char*>( imPart_W.data() ), out_cnt * cols * sizeof( double ) );
+        W.real() = rePart_W;    W.imag() = imPart_W;
+        // Read the F.
+        this->F = Eigen::MatrixXcd( rows, in_cnt );
+        Eigen::MatrixXd rePart_F( rows, in_cnt );
+        Eigen::MatrixXd imPart_F( rows, in_cnt );
+        ifs.read( reinterpret_cast<char*>( rePart_F.data() ), rows * in_cnt * sizeof( double ) );
+        ifs.read( reinterpret_cast<char*>( imPart_F.data() ), rows * in_cnt * sizeof( double ) );
+        F.real() = rePart_F;    F.imag() = imPart_F;
+    
     }
 
 }
