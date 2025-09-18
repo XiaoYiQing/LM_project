@@ -733,8 +733,8 @@ Eigen::MatrixXd utils::gen_randn_MatrixXd( unsigned int row_cnt, unsigned int co
 
     Eigen::MatrixXd newMat( row_cnt, col_cnt );
 
-    for ( int i = 0; i < row_cnt; ++i ){
-        for ( int j = 0; j < col_cnt; ++j ){
+    for ( unsigned int i = 0; i < row_cnt; ++i ){
+        for ( unsigned int j = 0; j < col_cnt; ++j ){
             newMat(i, j) = dist(gen);
         }
     }

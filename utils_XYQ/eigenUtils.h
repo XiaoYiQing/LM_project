@@ -95,7 +95,7 @@ namespace utils{
     Eigen::MatrixXd gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
     
     /*
-    Generate normal distributed random MatrixXd of dimensions "row_cnt" by "col_cnt".
+    Generate normally distributed random MatrixXd of dimensions "row_cnt" by "col_cnt".
     This implies all values in the matrix are in the range [0,1].
     */
     Eigen::MatrixXd gen_randn_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );

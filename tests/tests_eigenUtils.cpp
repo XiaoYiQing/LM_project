@@ -291,6 +291,33 @@ void tests::gen_rand_MatrixXd_test(){
 }
 
 
+void tests::gen_randn_MatrixXd_test(){
+
+    bool test_bool = true;
+
+    unsigned int row_cnt = 1000;
+    unsigned int col_cnt = 100;
+    Eigen::MatrixXd tmp = utils::gen_randn_MatrixXd( row_cnt, col_cnt );
+
+    // Transfer all values of the matrix into a vector.
+    Eigen::VectorXd entriesVec( row_cnt * col_cnt );
+    for( unsigned int z = 0; z < row_cnt*col_cnt; z++ ){
+        entriesVec(z) = tmp.data()[z];
+    }
+
+    // Compute mean.
+    double mean = entriesVec.mean();
+    // Calculate variance.
+    double variance = (entriesVec.array() - mean).square().mean();
+    // Compute standard deviation.
+    double std_dev = std::sqrt(variance);
+
+    cout << "Mean (Expect 0): " << mean << endl;
+    cout << "Standard deviation (Expect 1): " << std_dev << endl;
+
+}
+
+
 void tests::gen_orth_basis_test(){
 
     // Define the numerical threshold.

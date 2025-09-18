@@ -37,6 +37,8 @@ namespace tests{
 
     void gen_rand_MatrixXd_test();
     
+    void gen_randn_MatrixXd_test();
+
     void gen_orth_basis_test();
 
 }
