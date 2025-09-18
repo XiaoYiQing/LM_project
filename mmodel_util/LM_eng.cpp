@@ -348,6 +348,31 @@ void LM_eng::deserialize(const std::string& filename){
     
     }
 
+
+    if( flag3_re_trans ){
+
+        // Read the number of rows, columns, outputs and inputs of the matrices.
+        int rows = 0;   int cols = 0;   int out_cnt = 0;    int in_cnt = 0;
+        ifs.read(reinterpret_cast<char*>( &rows ), sizeof( rows ));
+        ifs.read(reinterpret_cast<char*>( &cols ), sizeof( cols ));
+        ifs.read(reinterpret_cast<char*>( &out_cnt ), sizeof( out_cnt ));
+        ifs.read(reinterpret_cast<char*>( &in_cnt ), sizeof( in_cnt ));
+
+        // Write the LM.
+        LM_re = Eigen::MatrixXd( rows, cols );
+        ifs.read( reinterpret_cast<char*>( LM_re.data() ), rows * cols * sizeof( double ) );
+        // Write the SLM.
+        SLM_re = Eigen::MatrixXd( rows, cols );
+        ifs.read( reinterpret_cast<char*>( SLM_re.data() ), rows * cols * sizeof( double ) );
+        // Write the W.
+        W_re = Eigen::MatrixXd( out_cnt, cols );
+        ifs.read( reinterpret_cast<char*>( W_re.data() ), out_cnt * cols * sizeof( double ) );
+        // Write the F.
+        F_re = Eigen::MatrixXd( rows, in_cnt );
+        ifs.read( reinterpret_cast<char*>( F_re.data() ), rows * in_cnt * sizeof( double ) );
+
+    }
+
 }
 
 // ====================================================================== <<<<<

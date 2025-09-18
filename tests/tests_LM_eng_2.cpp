@@ -662,6 +662,13 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
 void tests::LM_eng_serialize_test(){
 
+// ---------------------------------------------------------------------- >>>>>
+//      Test Setup
+// ---------------------------------------------------------------------- >>>>>
+    
+    // Initialize test boolean.
+    bool test_bool = true;
+
     // Define the numerical threshold of this test.
     double num_thresh = 1e-12;
 
@@ -677,14 +684,21 @@ void tests::LM_eng_serialize_test(){
     // Normalize the frequency vector (As much as you can according to metric prefixes).
     myFData1.data_prefix_switch( fData::METRIC_PREFIX::G );
 
+
     // LM engine initialization
     LM_eng my_LM_eng_a( myFData1 );
 
     my_LM_eng_a.step1_fData_partition();
     my_LM_eng_a.step2_LM_construct();
-    // my_LM_eng_a.step3_LM_re_trans();
+    my_LM_eng_a.step3_LM_re_trans();
     // my_LM_eng_a.step4_LM_pencil_SVD();
 
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Target Tested Functionality Run
+// ---------------------------------------------------------------------- >>>>>
 
     string outFileName = SRC_PATH_XYQ_str + "/data_output/LM_eng_test.bin";
     my_LM_eng_a.serialize( outFileName );
@@ -692,9 +706,13 @@ void tests::LM_eng_serialize_test(){
     LM_eng my_LM_eng_b;
     my_LM_eng_b.deserialize( outFileName );
 
-    // Initialize test boolean.
-    bool test_bool = true;
+// ---------------------------------------------------------------------- <<<<<
 
+
+// ---------------------------------------------------------------------- >>>>>
+//      Step 0 Test
+// ---------------------------------------------------------------------- >>>>>
+    
     // Flags matching.
     for( unsigned int z = 0; z < 5; z++ ){
         test_bool = test_bool && ( my_LM_eng_a.get_flag(z) == my_LM_eng_a.get_flag(z) );
@@ -714,8 +732,14 @@ void tests::LM_eng_serialize_test(){
     }else{
         cout << "LM_eng serialize + deserialize step 0 test: failed!" << endl;
     }
-    
-    
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Step 1 Test
+// ---------------------------------------------------------------------- >>>>>
+
     test_bool = true;
     // DC point flags check.
     test_bool = test_bool && ( my_LM_eng_a.get_f1_has_DC_pt() == my_LM_eng_b.get_f1_has_DC_pt() );
@@ -744,6 +768,13 @@ void tests::LM_eng_serialize_test(){
         cout << "LM_eng serialize + deserialize step 1 test: failed!" << endl;
     }
 
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Step 2 Test
+// ---------------------------------------------------------------------- >>>>>
+
     // Complex LM checks.
     test_bool = true;
     test_bool = test_bool && ( ( my_LM_eng_a.get_LM() - my_LM_eng_b.get_LM() ).cwiseAbs().maxCoeff() < num_thresh );
@@ -757,7 +788,27 @@ void tests::LM_eng_serialize_test(){
         cout << "LM_eng serialize + deserialize step 2 test: failed!" << endl;
     }
 
+// ---------------------------------------------------------------------- <<<<<
 
+
+// ---------------------------------------------------------------------- >>>>>
+//      Step 3 Test
+// ---------------------------------------------------------------------- >>>>>
+
+    // Real LM checks.
+    test_bool = true;
+    test_bool = test_bool && ( ( my_LM_eng_a.get_LM_re() - my_LM_eng_b.get_LM_re() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_SLM_re() - my_LM_eng_b.get_SLM_re() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_W_re() - my_LM_eng_b.get_W_re() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_F_re() - my_LM_eng_b.get_F_re() ).cwiseAbs().maxCoeff() < num_thresh );
+    // Step 3 result.
+    if( test_bool ){
+        cout << "LM_eng serialize + deserialize step 3 test: passed!" << endl;
+    }else{
+        cout << "LM_eng serialize + deserialize step 3 test: failed!" << endl;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
 
     unsigned int lol = 0;
 
