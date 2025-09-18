@@ -4,23 +4,6 @@
 
 
 
-Eigen::MatrixXd utils::gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt ){
-
-    // Initialize random matrix.
-    Eigen::MatrixXd randMat( row_cnt, col_cnt );
-
-    for( unsigned int i = 0; i < row_cnt; i++ ){
-        // Generate the current row.
-        vector<double> curr_row = *utils::rDoubleGen( -1, 1, col_cnt );
-        // Insert the current row.
-        for( unsigned int j = 0; j < col_cnt; j++ ){
-            randMat(i,j) = curr_row[j];
-        }
-    }
-
-    return randMat;
-
-}
 
 // ====================================================================== >>>>>
 //      Write to File
@@ -712,6 +695,43 @@ Eigen::MatrixXcd utils::file_to_MatrixXcd( const string& fullFileName ){
 // ---------------------------------------------------------------------- <<<<<
 
     return datMat;
+
+}
+
+// ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
+//      Support Functions
+// ====================================================================== >>>>>
+
+
+Eigen::MatrixXd utils::gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt ){
+
+    // Initialize random matrix.
+    Eigen::MatrixXd randMat( row_cnt, col_cnt );
+
+    for( unsigned int i = 0; i < row_cnt; i++ ){
+        // Generate the current row.
+        vector<double> curr_row = *utils::rDoubleGen( -1, 1, col_cnt );
+        // Insert the current row.
+        for( unsigned int j = 0; j < col_cnt; j++ ){
+            randMat(i,j) = curr_row[j];
+        }
+    }
+
+    return randMat;
+
+}
+
+
+Eigen::MatrixXd utils::gen_orth_basis( Eigen::MatrixXd tarMat ){
+
+    // Generate QR-decomposition out of the target matrix.
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(tarMat);
+    
+    // The columns of Q constitute an orthonormal basis.
+    Eigen::MatrixXd Q = qr.householderQ();
 
 }
 

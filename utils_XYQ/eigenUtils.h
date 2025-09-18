@@ -18,10 +18,7 @@ using namespace std;
 
 namespace utils{
 
-    /*
-    Generate random "row_cnt" by "col_cnt" MatrixXd with entries within the range of [-1,+1].
-    */
-    Eigen::MatrixXd gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
+    
 
 // ====================================================================== >>>>>
 //      Write to File
@@ -83,6 +80,23 @@ namespace utils{
     */
     Eigen::MatrixXcd file_to_MatrixXcd( const string& fullFileName );
 
+
+// ====================================================================== <<<<<
+
+
+// ====================================================================== >>>>>
+//      Support Functions
+// ====================================================================== >>>>>
+
+    /*
+    Generate random "row_cnt" by "col_cnt" MatrixXd with entries within the range of [-1,+1].
+    */
+    Eigen::MatrixXd gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
+
+    /*
+    Function generates an orthonormal basis for the target matrix.
+    */
+    Eigen::MatrixXd gen_orth_basis( Eigen::MatrixXd tarMat );
 
 // ====================================================================== <<<<<
 

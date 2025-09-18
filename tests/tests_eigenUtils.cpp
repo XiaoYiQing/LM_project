@@ -30,12 +30,7 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
 }
 
 
-void tests::gen_rand_MatrixXd_test(){
 
-    Eigen::MatrixXd tmp = utils::gen_rand_MatrixXd( 4, 4 );
-    cout << tmp << endl;
-
-}
 
 
 void tests::Vd_to_file_test(){
@@ -285,3 +280,13 @@ void tests::file_to_MatrixXcd_test(){
     }
 
 }
+
+
+
+void tests::gen_rand_MatrixXd_test(){
+
+    Eigen::MatrixXd tmp = utils::gen_rand_MatrixXd( 4, 4 );
+    cout << tmp << endl;
+
+}
+
