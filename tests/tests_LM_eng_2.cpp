@@ -691,7 +691,7 @@ void tests::LM_eng_serialize_test(){
     my_LM_eng_a.step1_fData_partition();
     my_LM_eng_a.step2_LM_construct();
     my_LM_eng_a.step3_LM_re_trans();
-    // my_LM_eng_a.step4_LM_pencil_SVD();
+    my_LM_eng_a.step4_LM_pencil_SVD();
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -806,6 +806,26 @@ void tests::LM_eng_serialize_test(){
         cout << "LM_eng serialize + deserialize step 3 test: passed!" << endl;
     }else{
         cout << "LM_eng serialize + deserialize step 3 test: failed!" << endl;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Step 4 Test
+// ---------------------------------------------------------------------- >>>>>
+
+    // Real SVD checks.
+    test_bool = true;
+
+    test_bool = test_bool && ( ( my_LM_eng_a.get_U() - my_LM_eng_b.get_U() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_V() - my_LM_eng_b.get_V() ).cwiseAbs().maxCoeff() < num_thresh );
+    test_bool = test_bool && ( ( my_LM_eng_a.get_singVals() - my_LM_eng_b.get_singVals() ).cwiseAbs().maxCoeff() < num_thresh );
+    // Step 4 result.
+    if( test_bool ){
+        cout << "LM_eng serialize + deserialize step 4 test: passed!" << endl;
+    }else{
+        cout << "LM_eng serialize + deserialize step 4 test: failed!" << endl;
     }
 
 // ---------------------------------------------------------------------- <<<<<
