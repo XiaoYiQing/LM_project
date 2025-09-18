@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <random>
 #include <regex>
 #include <string>
 
@@ -92,6 +93,12 @@ namespace utils{
     Generate random "row_cnt" by "col_cnt" MatrixXd with entries within the range of [-1,+1].
     */
     Eigen::MatrixXd gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
+    
+    /*
+    Generate normal distributed random MatrixXd of dimensions "row_cnt" by "col_cnt".
+    This implies all values in the matrix are in the range [0,1].
+    */
+    Eigen::MatrixXd gen_randn_MatrixXd( unsigned int row_cnt, unsigned int col_cnt );
 
     /*
     Function generates an orthonormal basis for the target matrix.

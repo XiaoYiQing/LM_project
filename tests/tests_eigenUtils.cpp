@@ -296,6 +296,7 @@ void tests::gen_orth_basis_test(){
     // Define the numerical threshold.
     double num_thresh = 1e-12;
 
+    // Define the dimnesions of the test matrix.
     unsigned int row_cnt = 10;
     unsigned int col_cnt = 10;
 

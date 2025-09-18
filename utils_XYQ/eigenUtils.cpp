@@ -725,6 +725,25 @@ Eigen::MatrixXd utils::gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col
 }
 
 
+Eigen::MatrixXd utils::gen_randn_MatrixXd( unsigned int row_cnt, unsigned int col_cnt ){
+
+    std::random_device rd;  // Seed for the random number engine
+    std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+    std::normal_distribution<> dist(0, 1);
+
+    Eigen::MatrixXd newMat( row_cnt, col_cnt );
+
+    for ( int i = 0; i < row_cnt; ++i ){
+        for ( int j = 0; j < col_cnt; ++j ){
+            newMat(i, j) = dist(gen);
+        }
+    }
+
+    return newMat;
+
+}
+
+
 Eigen::MatrixXd utils::gen_orth_basis( Eigen::MatrixXd tarMat ){
 
     // Generate QR-decomposition out of the target matrix.
