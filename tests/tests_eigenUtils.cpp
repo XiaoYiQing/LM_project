@@ -290,3 +290,45 @@ void tests::gen_rand_MatrixXd_test(){
 
 }
 
+
+void tests::gen_orth_basis_test(){
+
+    // Define the numerical threshold.
+    double num_thresh = 1e-12;
+
+    unsigned int row_cnt = 10;
+    unsigned int col_cnt = 10;
+
+    // Define a random test matrix.
+    Eigen::MatrixXd testMat = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
+    // Generate an orthonormal basis.
+    Eigen::MatrixXd Q_mat = utils::gen_orth_basis( testMat );
+
+    // Initialize test boolean.
+    bool test_bool = true;
+    // Initialize two vectors.
+    Eigen::VectorXd v1;
+    Eigen::VectorXd v2;
+
+    for( unsigned int i = 0; i < row_cnt; i++ ){
+        v1 = Q_mat.col(i);
+        for( unsigned int j = 0; j < col_cnt; j++ ){
+            v2 = Q_mat.col(j);
+
+            // Dot product verification for orthonormality.
+            if( i == j ){
+                test_bool = test_bool && ( abs( v1.dot(v2) - 1 ) < num_thresh );
+            }else{
+                test_bool = test_bool && ( abs( v1.dot(v2) ) < num_thresh );
+            }
+
+        }
+    }
+
+    if( test_bool ){
+        cout << "gen_orth_basis test: passed!" << endl;
+    }else{
+        cout << "gen_orth_basis test: failed!" << endl;
+    }
+
+}

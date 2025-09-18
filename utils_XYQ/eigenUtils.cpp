@@ -729,9 +729,11 @@ Eigen::MatrixXd utils::gen_orth_basis( Eigen::MatrixXd tarMat ){
 
     // Generate QR-decomposition out of the target matrix.
     Eigen::HouseholderQR<Eigen::MatrixXd> qr(tarMat);
-    
+
     // The columns of Q constitute an orthonormal basis.
     Eigen::MatrixXd Q = qr.householderQ();
+
+    return Q;
 
 }
 
