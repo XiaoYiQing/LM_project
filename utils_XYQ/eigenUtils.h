@@ -118,7 +118,7 @@ namespace utils{
 
             }
 
-            SVD_econ( Eigen::MatrixXd tarMat ){
+            SVD_econ( Eigen::MatrixXd& tarMat ){
                 
                 unsigned int k = min( tarMat.rows(), tarMat.cols() );
 

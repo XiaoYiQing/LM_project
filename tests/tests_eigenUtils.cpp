@@ -360,3 +360,54 @@ void tests::gen_orth_basis_test(){
     }
 
 }
+
+
+void tests::SVD_econ_test(){
+
+    // Define the numerical threshold.
+    double num_thresh = 1e-12;
+
+    // Define the dimensions of the test matrix.
+    unsigned int row_cnt = 10;
+    unsigned int col_cnt = 5;
+
+    // Define a random test matrix.
+    Eigen::MatrixXd testMat = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
+
+    // Initialize test boolean.
+    bool test_bool = true;
+
+    // Perform the 'econ' SVD.
+    utils::SVD_econ SVD_res( testMat );
+
+    Eigen::MatrixXd U = SVD_res.U;
+    Eigen::MatrixXd V = SVD_res.V;
+    Eigen::VectorXd S = SVD_res.S;
+
+    Eigen::MatrixXd Ut_x_U_res = U.transpose()*U;
+    Eigen::MatrixXd Vt_x_V_res = V.transpose()*V;
+
+    // Singular vectors multiplication results check.
+    test_bool = test_bool && ( U.rows() == row_cnt && U.cols() == col_cnt );
+    test_bool = test_bool && ( V.rows() == col_cnt && V.cols() == col_cnt );
+    test_bool = test_bool && ( S.size() == col_cnt );
+    for( unsigned int i = 0; i < col_cnt; i++ ){
+    for( unsigned int j = 0; j < col_cnt; j++ ){
+        if( i == j ){
+            test_bool = test_bool && ( abs( Ut_x_U_res(i,j) - 1 ) < num_thresh );
+            test_bool = test_bool && ( abs( Vt_x_V_res(i,j) - 1 ) < num_thresh );
+        }else{
+            test_bool = test_bool && ( abs( Ut_x_U_res(i,j) ) < num_thresh );
+            test_bool = test_bool && ( abs( Vt_x_V_res(i,j) ) < num_thresh );
+        }
+    }
+    }
+
+    if( test_bool ){
+        cout << "SVD_econ test: passed!" << endl;
+    }else{
+        cout << "SVD_econ test: failed!" << endl;
+    }
+
+
+}

@@ -41,6 +41,8 @@ namespace tests{
 
     void gen_orth_basis_test();
 
+    void SVD_econ_test();
+
 }
 
 

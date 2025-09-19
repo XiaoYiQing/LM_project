@@ -59,8 +59,9 @@ int main() {
     // tests::eigen_test2( 1 );
     
     // tests::gen_rand_MatrixXd_test();
-    tests::gen_randn_MatrixXd_test();
+    // tests::gen_randn_MatrixXd_test();
     // tests::gen_orth_basis_test();
+    tests::SVD_econ_test();
     // tests::Vd_to_file_test();
     // tests::file_to_vec_test();
     // tests::MatrixXd_to_file_test();
