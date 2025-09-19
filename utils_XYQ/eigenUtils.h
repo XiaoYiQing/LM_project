@@ -108,29 +108,10 @@ namespace utils{
 
     class SVD_econ{
 
-        public:
+    public:
 
-            SVD_econ(){
-
-                this->U = Eigen::MatrixXd();
-                this->S = Eigen::MatrixXd();
-                this->V = Eigen::MatrixXd();
-
-            }
-
-            SVD_econ( Eigen::MatrixXd& tarMat ){
-                
-                unsigned int k = min( tarMat.rows(), tarMat.cols() );
-
-                Eigen::JacobiSVD<Eigen::MatrixXd> svd( tarMat, Eigen::ComputeThinU | Eigen::ComputeThinV );
-
-                // Extract truncated components
-                this->U = svd.matrixU().leftCols(k);
-                this->S = svd.singularValues().head(k);
-                this->V = svd.matrixV().leftCols(k);
-
-            }
-
+        SVD_econ();
+        SVD_econ( Eigen::MatrixXd& tarMat );
         Eigen::MatrixXd U;
         Eigen::VectorXd S;
         Eigen::MatrixXd V;
