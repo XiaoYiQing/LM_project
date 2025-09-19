@@ -368,22 +368,28 @@ void tests::SVD_econ_test(){
     double num_thresh = 1e-12;
 
     // Define the dimensions of the test matrix.
-    unsigned int row_cnt = 10;
-    unsigned int col_cnt = 5;
+    unsigned int row_cnt = 300;
+    unsigned int col_cnt = 30;
+
 
     // Define a random test matrix.
+    auto start = std::chrono::high_resolution_clock::now();
     Eigen::MatrixXd testMat = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Econ SVD runtime: " << duration.count() << " ms" << std::endl;
+    
 
     // Initialize test boolean.
     bool test_bool = true;
 
     // Perform the 'econ' SVD.
     utils::SVD_econ SVD_res( testMat );
-
+    // Obtain the results of the SVD.
     Eigen::MatrixXd U = SVD_res.U;
     Eigen::MatrixXd V = SVD_res.V;
     Eigen::VectorXd S = SVD_res.S;
-
+    // Check key property of the singular vectors.
     Eigen::MatrixXd Ut_x_U_res = U.transpose()*U;
     Eigen::MatrixXd Vt_x_V_res = V.transpose()*V;
 
@@ -409,5 +415,10 @@ void tests::SVD_econ_test(){
         cout << "SVD_econ test: failed!" << endl;
     }
 
+    auto start2 = std::chrono::high_resolution_clock::now();
+    Eigen::JacobiSVD<Eigen::MatrixXd> full_SVD( testMat, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    auto end2 = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration2 = end2 - start2;
+    std::cout << "Full SVD runtime: " << duration2.count() << " ms" << std::endl;
 
 }
