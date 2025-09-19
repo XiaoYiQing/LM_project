@@ -368,23 +368,24 @@ void tests::SVD_econ_test(){
     double num_thresh = 1e-12;
 
     // Define the dimensions of the test matrix.
-    unsigned int row_cnt = 300;
+    unsigned int row_cnt = 500;
     unsigned int col_cnt = 30;
 
-
-    // Define a random test matrix.
-    auto start = std::chrono::high_resolution_clock::now();
     Eigen::MatrixXd testMat = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> duration = end - start;
-    std::cout << "Econ SVD runtime: " << duration.count() << " ms" << std::endl;
-    
 
     // Initialize test boolean.
     bool test_bool = true;
 
+
+    // Define a random test matrix.
+    auto start = std::chrono::high_resolution_clock::now();
     // Perform the 'econ' SVD.
     utils::SVD_econ SVD_res( testMat );
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    std::cout << "Econ SVD runtime: " << duration.count() << " ms" << std::endl;
+    
+    
     // Obtain the results of the SVD.
     Eigen::MatrixXd U = SVD_res.U;
     Eigen::MatrixXd V = SVD_res.V;
@@ -422,3 +423,32 @@ void tests::SVD_econ_test(){
     std::cout << "Full SVD runtime: " << duration2.count() << " ms" << std::endl;
 
 }
+
+
+
+void tests::rSVD_test(){
+
+    // Define the numerical threshold.
+    double num_thresh = 1e-12;
+
+    // Define the dimensions of the test matrix.
+    unsigned int row_cnt = 200;
+    unsigned int col_cnt = 200;
+    unsigned int svd_cnt = 25;
+
+    Eigen::MatrixXd testMat = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
+
+    // Initialize test boolean.
+    bool test_bool = true;
+
+
+    utils::rSVD rSVD_res( testMat, svd_cnt );
+
+    utils::SVD_econ SVD_res( testMat );
+
+    cout << rSVD_res.Sk.segment( 0, 10 ) - SVD_res.S.segment( 0, 10 ) << endl;
+
+
+}
+
+

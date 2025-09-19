@@ -778,4 +778,53 @@ utils::SVD_econ::SVD_econ( Eigen::MatrixXd& tarMat ){
 
 }
 
+utils::rSVD::rSVD(){
+    Uk = Eigen::MatrixXd();
+    Sk = Eigen::VectorXd();
+    Vk = Eigen::MatrixXd();
+}
+
+utils::rSVD::rSVD( Eigen::MatrixXd& A, unsigned int k ){
+
+    // Obtain the number of rows and columns of the target matrix.
+    unsigned int A_rows = A.rows();
+    unsigned int A_cols = A.cols();
+
+    /*
+    Select the size of the solution space. 
+    Typically, it is chosen as twice as the required number k of singular values
+    in order to make sure the k first singular values are properly approximated.
+    Of course, this size cannot be more than the total available number of singular values.
+    */
+    unsigned int P = min( 2*k, A_cols );
+
+    /*
+    Generate a normally distributed random matrix,
+    imprint it on the target matrix,
+    generate orthonormal basis from this solution space.
+    */
+    Eigen::MatrixXd X = utils::gen_randn_MatrixXd( A_cols, P );
+    Eigen::MatrixXd Y = A*X;
+    Eigen::MatrixXd W1 = utils::gen_orth_basis( Y );
+    
+    Eigen::MatrixXd B = W1.adjoint() * A;
+
+    // Generate the approximate SVD solution.
+    utils::SVD_econ svd_econ_res ( B );
+    Eigen::MatrixXd W2 = svd_econ_res.U;
+    Eigen::MatrixXd U = W1 * W2;
+
+    // Update k to a number within limit, if need be.
+    unsigned int tmp = U.cols();
+    k = min( k, tmp );
+
+    unsigned int U_row_cnt = U.rows();
+    unsigned int V_row_cnt = svd_econ_res.V.rows();
+
+    Uk = U.block( 0, 0, U_row_cnt, k );
+    Sk = svd_econ_res.S.segment( 0, k );
+    Vk = svd_econ_res.V.block( 0, 0, V_row_cnt, k );
+
+}
+
 // ====================================================================== <<<<<

@@ -45,6 +45,8 @@ namespace tests{
 
     void SVD_econ_test();
 
+    void rSVD_test();
+
 }
 
 

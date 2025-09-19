@@ -119,6 +119,19 @@ namespace utils{
     };
 
 
+
+    class rSVD{
+
+    public:
+        
+        rSVD();
+        rSVD( Eigen::MatrixXd& tarMat, unsigned int k );
+        Eigen::MatrixXd Uk;
+        Eigen::VectorXd Sk;
+        Eigen::MatrixXd Vk;
+
+    };
+
 // ====================================================================== <<<<<
 
 }
