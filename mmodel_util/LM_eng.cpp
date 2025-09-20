@@ -246,8 +246,8 @@ void LM_eng::serialize(const std::string& filename) const{
 
         // Write the reference frequency magnitude.
         ofs.write(reinterpret_cast<const char*>( &ref_f_mag ), sizeof( ref_f_mag ));
+        ofs.write(reinterpret_cast<const char*>( &svd_cnt_max ), sizeof( svd_cnt_max ));
 
-        
         int rows = LM_re.rows();
         int cols = LM_re.cols();
         int SVD_cnt = min( LM_re.rows(), LM_re.cols() );
@@ -380,6 +380,7 @@ void LM_eng::deserialize(const std::string& filename){
 
         // Write the reference frequency magnitude.
 	    ifs.read(reinterpret_cast<char*>( &ref_f_mag ), sizeof( ref_f_mag ));
+        ifs.read(reinterpret_cast<char*>( &svd_cnt_max ), sizeof( svd_cnt_max ));
 
         int rows = 0;   int cols = 0;
         int SVD_cnt = 0;
@@ -999,7 +1000,7 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
     bool partial_SVD = svd_cnt < svd_cnt_max;
 
     try{
-        
+
         if( partial_SVD ){
 
             // Use random SVD to compute the required number of largest singular values
@@ -1125,10 +1126,17 @@ fData LM_eng::get_fData() const{
 double LM_eng::get_ref_f_mag() const{
 
     if( !this->flag4_pen_SVD ){
-        throw std::runtime_error( "Cannot return LM: step4 (LM pencil SVD) has not been set." );
+        throw std::runtime_error( "Cannot return LM ref f: step4 (LM pencil SVD) has not been set." );
     }
     return this->ref_f_mag;
 
+}
+
+unsigned int LM_eng::get_svd_cnt_max() const{
+    if( !this->flag4_pen_SVD ){
+        throw std::runtime_error( "Cannot return svd_cnt_max: step4 (LM pencil SVD) has not been set." );
+    }
+    return this->svd_cnt_max;
 }
 
 

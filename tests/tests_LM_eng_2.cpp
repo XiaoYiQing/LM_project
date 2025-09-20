@@ -818,6 +818,7 @@ void tests::LM_eng_serialize_test(){
     // Real SVD checks.
     test_bool = true;
 
+    test_bool = test_bool && ( my_LM_eng_a.get_svd_cnt_max() == my_LM_eng_b.get_svd_cnt_max() );
     test_bool = test_bool && ( ( my_LM_eng_a.get_U() - my_LM_eng_b.get_U() ).cwiseAbs().maxCoeff() < num_thresh );
     test_bool = test_bool && ( ( my_LM_eng_a.get_V() - my_LM_eng_b.get_V() ).cwiseAbs().maxCoeff() < num_thresh );
     test_bool = test_bool && ( ( my_LM_eng_a.get_singVals() - my_LM_eng_b.get_singVals() ).cwiseAbs().maxCoeff() < num_thresh );

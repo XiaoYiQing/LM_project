@@ -95,7 +95,7 @@ int main() {
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
     // tests::LM_eng_class_test();
-    // tests::LM_eng_serialize_test();
+    tests::LM_eng_serialize_test();
     
     // tests::LTI_descSyst_test_1( 3 );
     // tests::LTI_descSyst_test_2( 2 );
@@ -107,7 +107,7 @@ int main() {
     // tests::LM_eng_print_singVals(1);
     // tests::LM_eng_steps_test( 0 );
 
-    tests::SFLM_full_run_test(0);
+    // tests::SFLM_full_run_test(0);
     // tests::SFLM_full_run_test(1);
     // FCT_SCR::singVal_extract_run();
 

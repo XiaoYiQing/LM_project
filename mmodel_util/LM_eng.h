@@ -231,6 +231,10 @@ fData get_fData() const;
 Obtain the reference frequency magnitude used to construct the LM pencil.
 */
 double get_ref_f_mag() const;
+/*
+Obtain the maximum number of singular values available from the LM pencil.
+*/
+unsigned int get_svd_cnt_max() const;
 
 // Obtain the number of outputs.
 unsigned int get_out_cnt() const;
