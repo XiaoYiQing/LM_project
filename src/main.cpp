@@ -62,7 +62,8 @@ int main() {
     // tests::gen_randn_MatrixXd_test();
     // tests::gen_orth_basis_test();
     // tests::SVD_econ_test();
-    tests::rSVD_test();
+    // tests::rSVD_test();
+
     // tests::Vd_to_file_test();
     // tests::file_to_vec_test();
     // tests::MatrixXd_to_file_test();
@@ -106,7 +107,7 @@ int main() {
     // tests::LM_eng_print_singVals(1);
     // tests::LM_eng_steps_test( 0 );
 
-    // tests::SFLM_full_run_test(0);
+    tests::SFLM_full_run_test(0);
     // tests::SFLM_full_run_test(1);
     // FCT_SCR::singVal_extract_run();
 

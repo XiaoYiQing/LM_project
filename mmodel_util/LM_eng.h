@@ -281,6 +281,9 @@ protected:
     Eigen::MatrixXd SLM_re;
     Eigen::MatrixXd W_re;
     Eigen::MatrixXd F_re;
+
+    // Define the maximum available singular value index.
+    unsigned int svd_idx_max = 0;
     // The reference frequency magnitude.
     double ref_f_mag = 0;
     // The singular values of the LM pencil.

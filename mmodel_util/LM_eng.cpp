@@ -968,6 +968,8 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref ){
         throw;
     }
 
+    // Update the maximum number of singular values available.
+    svd_idx_max = singVals.size();
     // Update the reference frequency magnitude.
     this->ref_f_mag = f_ref;
     // Set the tracking flag for step 4.
@@ -983,7 +985,7 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
         throw::runtime_error( "Step 5 cannot be executed: step 4 not set (LM pencil SVD)." );
     }
 
-    if( svd_ret_cnt > (unsigned int) singVals.size() ){
+    if( svd_ret_cnt > min( (unsigned int) singVals.size(), this->svd_idx_max ) ){
         throw::out_of_range( "Specified singular value index is out of range of available singular values." );
     }
 

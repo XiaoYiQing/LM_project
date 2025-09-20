@@ -441,18 +441,20 @@ void tests::rSVD_test(){
     // Initialize test boolean.
     bool test_bool = true;
 
-
+    // Perform the random SVD and obtain the results.
     utils::rSVD rSVD_res( testMat, svd_cnt );
     Eigen::MatrixXd Uk = rSVD_res.Uk;
     Eigen::VectorXd Sk = rSVD_res.Sk;
     Eigen::MatrixXd Vk = rSVD_res.Vk;
 
+    // Perform the full SVD to obtain comparison for the results.
     utils::SVD_econ SVD_res( testMat );
 
-
+    // Singular values comparison.
     Eigen::VectorXd S_diff = Sk.segment( 0, svd_cnt ) - SVD_res.S.segment( 0, svd_cnt );
     test_bool = test_bool && ( S_diff.cwiseAbs().maxCoeff() < num_thresh );
     
+    // Singular vectors property check.
     Eigen::MatrixXd Ut_x_U_res = Uk.adjoint() * Uk;
     Eigen::MatrixXd Vt_x_V_res = Vk.adjoint() * Vk;
     for( unsigned int i = 0; i < svd_cnt; i++ ){
@@ -467,7 +469,7 @@ void tests::rSVD_test(){
     }
     }
 
-
+    // Singular values and vectors parining property check ( X * v = s * u ).
     Eigen::VectorXd U_z;
     Eigen::VectorXd V_z;
     double singVal_z = 0; 
@@ -483,16 +485,12 @@ void tests::rSVD_test(){
 
     }
 
+    // Post final result.
     if( test_bool ){
         cout << "rSVD test: passed!" << endl;
     }else{
         cout << "rSVD test: failed!" << endl;
     }
-
-
-
-    
-
 
 }
 
