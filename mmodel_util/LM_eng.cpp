@@ -930,11 +930,11 @@ void LM_eng::step4_LM_pencil_SVD(){
     }
 
     // Set the max singular value count as the true maximum.
-    svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
+    unsigned int svd_cnt_max_tmp = min( this->LM_re.rows(), this->LM_re.cols() );
     // Obtain a reference frequency value.
     double test_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     try{
-        step4_LM_pencil_SVD( test_f_mag, svd_cnt_max );
+        step4_LM_pencil_SVD( test_f_mag, svd_cnt_max_tmp );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
         throw;
@@ -967,9 +967,9 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref ){
     }
 
     // Set the max singular value count as the true maximum.
-    svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
+    unsigned int svd_cnt_max_tmp = min( this->LM_re.rows(), this->LM_re.cols() );
     try{
-        step4_LM_pencil_SVD( f_ref, svd_cnt_max );
+        step4_LM_pencil_SVD( f_ref, svd_cnt_max_tmp );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
         throw;
@@ -983,8 +983,8 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
     }
 
-    unsigned int svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
-    if( svd_cnt > svd_cnt_max ){
+    unsigned int true_svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
+    if( svd_cnt > true_svd_cnt_max ){
         throw::invalid_argument( "Selected number of singular value to compute exceeds maximum number available." );
     }
 
@@ -997,7 +997,7 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
         throw;
     }
 
-    bool partial_SVD = svd_cnt < svd_cnt_max;
+    bool partial_SVD = svd_cnt < true_svd_cnt_max;
 
     try{
 
@@ -1032,7 +1032,7 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
     }
 
     // Update the maximum number of singular values available.
-    svd_cnt_max = singVals.size();
+    this->svd_cnt_max = singVals.size();
     // Update the reference frequency magnitude.
     this->ref_f_mag = f_ref;
     // Set the tracking flag for step 4.
