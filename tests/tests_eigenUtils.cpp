@@ -429,12 +429,12 @@ void tests::SVD_econ_test(){
 void tests::rSVD_test(){
 
     // Define the numerical threshold.
-    double num_thresh = 1e-12;
+    double num_thresh = 1e-9;
 
     // Define the dimensions of the test matrix.
     unsigned int row_cnt = 200;
     unsigned int col_cnt = 200;
-    unsigned int svd_cnt = 25;
+    unsigned int svd_cnt = 20;
 
     Eigen::MatrixXd testMat = utils::gen_rand_MatrixXd( row_cnt, col_cnt );
 
@@ -443,10 +443,55 @@ void tests::rSVD_test(){
 
 
     utils::rSVD rSVD_res( testMat, svd_cnt );
+    Eigen::MatrixXd Uk = rSVD_res.Uk;
+    Eigen::VectorXd Sk = rSVD_res.Sk;
+    Eigen::MatrixXd Vk = rSVD_res.Vk;
 
     utils::SVD_econ SVD_res( testMat );
 
-    cout << rSVD_res.Sk.segment( 0, 10 ) - SVD_res.S.segment( 0, 10 ) << endl;
+
+    Eigen::VectorXd S_diff = Sk.segment( 0, svd_cnt ) - SVD_res.S.segment( 0, svd_cnt );
+    test_bool = test_bool && ( S_diff.cwiseAbs().maxCoeff() < num_thresh );
+    
+    Eigen::MatrixXd Ut_x_U_res = Uk.adjoint() * Uk;
+    Eigen::MatrixXd Vt_x_V_res = Vk.adjoint() * Vk;
+    for( unsigned int i = 0; i < svd_cnt; i++ ){
+    for( unsigned int j = 0; j < svd_cnt; j++ ){
+        if( i == j ){
+            test_bool = test_bool && ( abs( Ut_x_U_res(i,j) - 1 ) < num_thresh );
+            test_bool = test_bool && ( abs( Vt_x_V_res(i,j) - 1 ) < num_thresh );
+        }else{
+            test_bool = test_bool && ( abs( Ut_x_U_res(i,j) ) < num_thresh );
+            test_bool = test_bool && ( abs( Vt_x_V_res(i,j) ) < num_thresh );
+        }
+    }
+    }
+
+
+    Eigen::VectorXd U_z;
+    Eigen::VectorXd V_z;
+    double singVal_z = 0; 
+    Eigen::VectorXd diff_z;
+    for( unsigned int z = 0; z < svd_cnt; z++ ){
+
+        U_z = Uk.col(z);
+        V_z = Vk.col(z);
+        singVal_z = Sk(z);
+
+        diff_z = testMat * V_z - singVal_z * U_z;
+        test_bool = test_bool && ( diff_z.cwiseAbs().maxCoeff() < num_thresh );
+
+    }
+
+    if( test_bool ){
+        cout << "rSVD test: passed!" << endl;
+    }else{
+        cout << "rSVD test: failed!" << endl;
+    }
+
+
+
+    
 
 
 }
