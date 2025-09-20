@@ -982,8 +982,9 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
     }
 
-    if( svd_cnt > (unsigned int) min( this->LM_re.rows(), this->LM_re.cols() ) ){
-        throw::invalid_argument( "Selected number of singular value to compute exceed maximum number available." );
+    unsigned int svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
+    if( svd_cnt > svd_cnt_max ){
+        throw::invalid_argument( "Selected number of singular value to compute exceeds maximum number available." );
     }
 
     shared_ptr<Eigen::MatrixXd> LM_pen;
@@ -995,15 +996,35 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
         throw;
     }
 
+    bool partial_SVD = svd_cnt < svd_cnt_max;
+
     try{
-        // Perform SVD.
-        Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
-        // Get the singular values
-        this->singVals = svdResObj.singularValues();
-        // Get the left singular vectors (U)
-        this->U = svdResObj.matrixU();
-        // Get the right singular vectors (V)
-        this->V = svdResObj.matrixV();
+        
+        if( partial_SVD ){
+
+            // Use random SVD to compute the required number of largest singular values
+            // and their singular vectors.
+            utils::rSVD svd_obj = utils::rSVD( *LM_pen, svd_cnt );
+            // Get the singular values
+            this->singVals = svd_obj.Sk;
+            // Get the left singular vectors (U)
+            this->U = svd_obj.Uk;
+            // Get the right singular vectors (V)
+            this->V = svd_obj.Vk;
+
+        }else{
+
+            // Perform SVD.
+            Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+            // Get the singular values
+            this->singVals = svdResObj.singularValues();
+            // Get the left singular vectors (U)
+            this->U = svdResObj.matrixU();
+            // Get the right singular vectors (V)
+            this->V = svdResObj.matrixV();
+
+        }
+
     }catch(...){
         cerr << "step4_LM_pencil_SVD exception rethrow log at SVD operations." << endl;
         throw;
