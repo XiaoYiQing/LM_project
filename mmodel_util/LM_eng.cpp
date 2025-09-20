@@ -927,10 +927,12 @@ void LM_eng::step4_LM_pencil_SVD(){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
     }
 
+    // Set the max singular value count as the true maximum.
+    svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
     // Obtain a reference frequency value.
     double test_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     try{
-        step4_LM_pencil_SVD( test_f_mag );
+        step4_LM_pencil_SVD( test_f_mag, svd_cnt_max );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
         throw;
@@ -938,8 +940,24 @@ void LM_eng::step4_LM_pencil_SVD(){
 
 }
 
-
 void LM_eng::step4_LM_pencil_SVD( double f_ref ){
+
+    if( !flag3_re_trans ){
+        throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
+    }
+
+    // Set the max singular value count as the true maximum.
+    svd_cnt_max = min( this->LM_re.rows(), this->LM_re.cols() );
+    try{
+        step4_LM_pencil_SVD( f_ref, svd_cnt_max );
+    }catch( ... ){
+        cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
+        throw;
+    }
+
+}
+
+void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
 
     if( !flag3_re_trans ){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
@@ -969,7 +987,7 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref ){
     }
 
     // Update the maximum number of singular values available.
-    svd_idx_max = singVals.size();
+    svd_cnt_max = singVals.size();
     // Update the reference frequency magnitude.
     this->ref_f_mag = f_ref;
     // Set the tracking flag for step 4.
@@ -985,7 +1003,7 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
         throw::runtime_error( "Step 5 cannot be executed: step 4 not set (LM pencil SVD)." );
     }
 
-    if( svd_ret_cnt > min( (unsigned int) singVals.size(), this->svd_idx_max ) ){
+    if( svd_ret_cnt > min( (unsigned int) singVals.size(), this->svd_cnt_max ) ){
         throw::out_of_range( "Specified singular value index is out of range of available singular values." );
     }
 

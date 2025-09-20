@@ -168,6 +168,8 @@ public:
     decomposition.
     */
     void step4_LM_pencil_SVD();
+
+    void step4_LM_pencil_SVD( double f_ref );
     /*
     SFLM step where the LM pencil is created and then undergoes singular value 
     decomposition.
@@ -175,7 +177,7 @@ public:
     NOTE: the value would normally be chosen from the frequency array with which
     the LMs were constructed with.
     */
-    void step4_LM_pencil_SVD( double f_ref );
+    void step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt );
 
     /*
     Given the number of singular values to be kept, create the transfer function
@@ -283,7 +285,7 @@ protected:
     Eigen::MatrixXd F_re;
 
     // Define the maximum available singular value index.
-    unsigned int svd_idx_max = 0;
+    unsigned int svd_cnt_max = 0;
     // The reference frequency magnitude.
     double ref_f_mag = 0;
     // The singular values of the LM pencil.
