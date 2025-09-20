@@ -921,6 +921,7 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
 
 }
 
+
 void LM_eng::step4_LM_pencil_SVD(){
 
     if( !flag3_re_trans ){
@@ -933,6 +934,24 @@ void LM_eng::step4_LM_pencil_SVD(){
     double test_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
     try{
         step4_LM_pencil_SVD( test_f_mag, svd_cnt_max );
+    }catch( ... ){
+        cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
+        throw;
+    }
+
+}
+
+
+void LM_eng::step4_LM_pencil_SVD( unsigned int svd_cnt ){
+
+    if( !flag3_re_trans ){
+        throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
+    }
+
+    // Obtain a reference frequency value.
+    double test_f_mag = this->myFData.get_fval_at( this->fr_idx_arr[this->fr_idx_arr.size() - 1] );
+    try{
+        step4_LM_pencil_SVD( test_f_mag, svd_cnt );
     }catch( ... ){
         cerr << "step4_LM_pencil_SVD exception rethrow log." << endl;
         throw;
@@ -961,6 +980,10 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
 
     if( !flag3_re_trans ){
         throw::runtime_error( "Step 4 cannot be executed: step 3 not set (LM real transform)." );
+    }
+
+    if( svd_cnt > (unsigned int) min( this->LM_re.rows(), this->LM_re.cols() ) ){
+        throw::invalid_argument( "Selected number of singular value to compute exceed maximum number available." );
     }
 
     shared_ptr<Eigen::MatrixXd> LM_pen;

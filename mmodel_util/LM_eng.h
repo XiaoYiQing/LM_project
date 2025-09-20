@@ -168,14 +168,36 @@ public:
     decomposition.
     */
     void step4_LM_pencil_SVD();
-
-    void step4_LM_pencil_SVD( double f_ref );
     /*
     SFLM step where the LM pencil is created and then undergoes singular value 
     decomposition.
     This function version let's the user select the reference frequency.
-    NOTE: the value would normally be chosen from the frequency array with which
+    NOTE: "f_ref" value would normally be chosen from the frequency array with which
     the LMs were constructed with.
+    */
+    void step4_LM_pencil_SVD( double f_ref );
+    /*
+    SFLM step where the LM pencil is created and then undergoes singular value 
+    decomposition.
+    This function version let's the user select the number of singular values to 
+    compute.
+    NOTE: Opting to limit the number of singular value computed using "svd_cnt" is 
+    meant for a svd_cnt << svd_cnt_max. The closer "svd_cnt" is to svd_cnt_max, the 
+    less effective the computation becomes to a point the full SVD decomposition 
+    becomes less expensive than the partial one.
+    */
+    void step4_LM_pencil_SVD( unsigned int svd_cnt );
+    /*
+    SFLM step where the LM pencil is created and then undergoes singular value 
+    decomposition.
+    This function version let's the user select the reference frequency as well as
+    the number of singular values to compute.
+    NOTE: "f_ref" value would normally be chosen from the frequency array with which
+    the LMs were constructed with.
+    NOTE: Opting to limit the number of singular value computed using "svd_cnt" is 
+    meant for a svd_cnt << svd_cnt_max. The closer "svd_cnt" is to svd_cnt_max, the 
+    less effective the computation becomes to a point the full SVD decomposition 
+    becomes less expensive than the partial one.
     */
     void step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt );
 
