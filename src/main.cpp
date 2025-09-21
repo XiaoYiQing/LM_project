@@ -104,6 +104,7 @@ int main() {
     // tests::LM_eng_full_SFML_testrun_gen();
     // tests::LM_eng_full_SFML_dc_case_run();
     tests::LM_eng_rSVD_case_run();
+    // tests::LM_eng_rSVD_case_run_vb();
     // tests::LM_eng_print_singVals(0);
     // tests::LM_eng_print_singVals(1);
     // tests::LM_eng_steps_test( 0 );

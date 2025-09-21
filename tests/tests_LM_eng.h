@@ -65,6 +65,7 @@ namespace tests{
     Special SFLM process which uses random SVD to avoid performing full SVD.
     */
     void LM_eng_rSVD_case_run();
+    
     /*
     Testing the SFLM partial SVD process from an existing serialized file.
     */

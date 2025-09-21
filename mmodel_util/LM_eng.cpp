@@ -250,7 +250,8 @@ void LM_eng::serialize(const std::string& filename) const{
 
         int rows = LM_re.rows();
         int cols = LM_re.cols();
-        int SVD_cnt = min( LM_re.rows(), LM_re.cols() );
+        // int SVD_cnt = min( LM_re.rows(), LM_re.cols() );
+        int SVD_cnt = this->singVals.size();
 
         // Write the number of rows and columns the matrices.
         ofs.write(reinterpret_cast<const char*>( &rows ), sizeof( rows ));
@@ -260,9 +261,9 @@ void LM_eng::serialize(const std::string& filename) const{
         // Write the singular values vector.
         ofs.write(reinterpret_cast<const char*>( singVals.data() ), SVD_cnt * sizeof( double ));
         // Write the left singular vector matrix.
-        ofs.write(reinterpret_cast<const char*>( U.data() ), rows * rows * sizeof( double ));
+        ofs.write(reinterpret_cast<const char*>( U.data() ), rows * SVD_cnt * sizeof( double ));
         // Write the right singular vector matrix.
-        ofs.write(reinterpret_cast<const char*>( V.data() ), cols * cols * sizeof( double ));
+        ofs.write(reinterpret_cast<const char*>( V.data() ), SVD_cnt * cols * sizeof( double ));
 
     }
 
@@ -396,10 +397,10 @@ void LM_eng::deserialize(const std::string& filename){
         ifs.read(reinterpret_cast<char*>( singVals.data() ), SVD_cnt * sizeof( double ));
         // Write the left singular vector matrix.
         U = Eigen::MatrixXd( rows, rows );
-        ifs.read(reinterpret_cast<char*>( U.data() ), rows * rows * sizeof( double ));
+        ifs.read(reinterpret_cast<char*>( U.data() ), rows * SVD_cnt * sizeof( double ));
         // Write the right singular vector matrix.
         V = Eigen::MatrixXd( cols, cols );
-        ifs.read(reinterpret_cast<char*>( V.data() ), cols * cols * sizeof( double ));
+        ifs.read(reinterpret_cast<char*>( V.data() ), SVD_cnt * cols * sizeof( double ));
 
     }
 
