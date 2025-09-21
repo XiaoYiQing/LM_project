@@ -446,6 +446,96 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 }
 
 
+void tests::LM_eng_rSVD_case_run(){
+
+    // Size of reduced frequency data array.
+    unsigned int fr_len = 100;
+
+// ---------------------------------------------------------------------- >>>>>
+//      Initialization (Data)
+// ---------------------------------------------------------------------- >>>>>
+    
+    // Define our frequency data object.
+    fData myFData;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM Engine Setup
+// ---------------------------------------------------------------------- >>>>>
+
+    // LM engine initialization.
+    LM_eng myEng( myFData );
+    // First 3 steps.
+    myEng.step1_fData_partition();
+    myEng.step2_LM_construct();
+    myEng.step3_LM_re_trans();
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Random SVD Step
+// ---------------------------------------------------------------------- >>>>>
+
+    unsigned int svd_cnt_max = 100;
+
+    myEng.step4_LM_pencil_SVD( svd_cnt_max );
+
+// ---------------------------------------------------------------------- <<<<<
+
+
+// ---------------------------------------------------------------------- >>>>>
+//      Model Evaluation
+// ---------------------------------------------------------------------- >>>>>
+
+    // Specify the test system's order.
+    unsigned int tarOrder = 48;
+    // Obtain transfer function at specified system order.
+    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+
+    // Compute the sparse system.
+    myTF->gen_sparse_syst();
+
+    // Generate a frequency evaluation array.
+    Eigen::VectorXd tmp_fvec = myFData.getF_vec();
+    vector< complex<double> > testFVec = vector< complex<double> >( tmp_fvec.size() );
+    for( int z = 0; z < tmp_fvec.size(); z++ ){
+        testFVec[z] = complex<double>( 0.0, tmp_fvec(z) );
+    }
+
+    // Evaluate the transfer function over the specified frequency array values.
+    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    // Obtain the original data as a array of complex matrices.
+    Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
+    // Compute the difference between the original and approximated frequency data.
+    Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
+
+    // Compute the RMS error.
+    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error: " << total_RMS_err << endl;
+
+    // Get stability confirmation.
+    bool isStab = myTF->is_stable();
+    cout << "System stability: " << isStab << endl;
+
+// ---------------------------------------------------------------------- <<<<<
+
+    string outFileName = SRC_PATH_XYQ_str + "/data_output/LM_eng_Slink_ex.bin";
+    myEng.serialize( outFileName );    
+
+}
+
 
 void tests::LM_eng_print_singVals( unsigned int test_idx ){
 

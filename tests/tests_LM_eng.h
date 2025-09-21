@@ -62,6 +62,15 @@ namespace tests{
     void LM_eng_full_SFML_dc_case_run();
 
     /*
+    Special SFLM process which uses random SVD to avoid performing full SVD.
+    */
+    void LM_eng_rSVD_case_run();
+    /*
+    Testing the SFLM partial SVD process from an existing serialized file.
+    */
+    void LM_eng_rSVD_case_run_vb();
+
+    /*
     Test the automatic singular value to file printing function.
     */
     void LM_eng_print_singVals( unsigned int test_case );
