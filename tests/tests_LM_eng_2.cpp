@@ -478,8 +478,7 @@ void tests::LM_eng_rSVD_case_run(){
     LM_eng myEng( myFData );
     // First 3 steps.
     myEng.step1_fData_partition();
-    myEng.step2_LM_construct();
-    myEng.step3_LM_re_trans();
+    myEng.step3skip2_LM_re_construct();
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -488,8 +487,9 @@ void tests::LM_eng_rSVD_case_run(){
 //      Random SVD Step
 // ---------------------------------------------------------------------- >>>>>
 
+    // Define the number of singular values to compute.
     unsigned int svd_cnt_max = 100;
-
+    // Perform the rSVD.
     myEng.step4_LM_pencil_SVD( svd_cnt_max );
 
 // ---------------------------------------------------------------------- <<<<<
@@ -521,18 +521,27 @@ void tests::LM_eng_rSVD_case_run(){
     // Compute the difference between the original and approximated frequency data.
     Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
 
+    bool test_bool = true;
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
+    test_bool = test_bool && ( total_RMS_err < 0.00055 );
 
     // Get stability confirmation.
     bool isStab = myTF->is_stable();
     cout << "System stability: " << isStab << endl;
+    test_bool = test_bool && isStab;
+
+    if( test_bool ){
+        cout << "LM_eng rSVD run test: passed!" << endl;
+    }else{
+        cout << "LM_eng rSVD run test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
-    string outFileName = SRC_PATH_XYQ_str + "/data_output/LM_eng_Slink_ex.bin";
-    myEng.serialize( outFileName );    
+    // string outFileName = SRC_PATH_XYQ_str + "/data_output/LM_eng_Slink_ex.bin";
+    // myEng.serialize( outFileName );    
 
 }
 
@@ -550,7 +559,7 @@ void tests::LM_eng_rSVD_case_run_vb(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Specify the test system's order.
-    unsigned int tarOrder = 48;
+    unsigned int tarOrder = 49;
     // Obtain transfer function at specified system order.
     shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
 
@@ -571,13 +580,22 @@ void tests::LM_eng_rSVD_case_run_vb(){
     // Compute the difference between the original and approximated frequency data.
     Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
 
+    bool test_bool = true;
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
+    test_bool = test_bool && ( total_RMS_err < 0.00051 );
 
     // Get stability confirmation.
     bool isStab = myTF->is_stable();
     cout << "System stability: " << isStab << endl;
+    test_bool = test_bool && isStab;
+
+    if( test_bool ){
+        cout << "LM_eng rSVD run test: passed!" << endl;
+    }else{
+        cout << "LM_eng rSVD run test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
