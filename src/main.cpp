@@ -91,8 +91,8 @@ int main() {
     // tests::fData_prefix_manip_test(1);
     // tests::fData_serialize_test();
 
-    tests::LM_eng_cplx_LM_test( 0 );
-    // tests::LM_eng_test_2( 0 );
+    // tests::LM_eng_cplx_LM_test();
+    tests::LM_pencil_test();
     // tests::LM_eng_test_3( 1 );
     // tests::LM_eng_class_test();
     // tests::LM_eng_serialize_test();

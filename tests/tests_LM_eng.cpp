@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void tests::LM_eng_cplx_LM_test( unsigned int test_idx ){
+void tests::LM_eng_cplx_LM_test(){
 
     unsigned int rand_test_pt_cnt = 10;
 
@@ -15,7 +15,7 @@ void tests::LM_eng_cplx_LM_test( unsigned int test_idx ){
     fData myFData;
 
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
     fData::read_sXp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
@@ -194,9 +194,8 @@ void tests::LM_eng_cplx_LM_test( unsigned int test_idx ){
 }
 
 
-void tests::LM_eng_test_2( unsigned int test_idx ){
+void tests::LM_pencil_test(){
 
-    int case_cnt = 0;
 
 // ---------------------------------------------------------------------- >>>>>
 //      All Tests Common Initialization 
@@ -206,7 +205,7 @@ void tests::LM_eng_test_2( unsigned int test_idx ){
     fData myFData;
 
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
     fData::read_sXp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
@@ -231,38 +230,29 @@ void tests::LM_eng_test_2( unsigned int test_idx ){
 
 // ---------------------------------------------------------------------- <<<<<
 
-    // 0- Base LM pencil verification.
-    if( test_idx == case_cnt ){
 
-        complex<double> cplx_f_ref = partit1->get_cplx_f_at( partit1->get_f_cnt()/2 );
-        shared_ptr<Eigen::MatrixXcd> myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, *myLM, *mySLM );
+    complex<double> cplx_f_ref = partit1->get_cplx_f_at( partit1->get_f_cnt()/2 );
+    shared_ptr<Eigen::MatrixXcd> myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, *myLM, *mySLM );
 
-        // Perform SVD.
-        Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *myLM_pen );
-        // Get the singular values
-        Eigen::VectorXd singularValues = mySVD.singularValues();
-        
-        // std::cout << std::fixed << std::setprecision(12);
-        // cout << singularValues << endl;
+    // Perform SVD.
+    Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *myLM_pen );
+    // Get the singular values
+    Eigen::VectorXd singularValues = mySVD.singularValues();
 
-        Eigen::VectorXd top10singVals(10);
-        top10singVals << 1482.643133463571, 1468.219478553086, 1418.868597959851,
-        1385.038432483787, 1311.652883867499, 1294.188802726333, 1230.153395906074,
-        1216.890355807787, 1187.052516244472, 1170.663508169054;
+    Eigen::VectorXd top10singVals(10);
+    top10singVals << 130.189099037665, 127.942223086826, 119.955181346024, 
+        116.514675046031, 103.523657449322, 101.946599589989, 97.004230030472, 
+        91.215901590439, 77.124667453320, 75.738441401917;
 
-        bool match_bool = true;
-        for( unsigned int z = 0; z < 10; z++ ){
-            match_bool = match_bool && ( top10singVals(z) - singularValues(z) < 1e-9 );
-        }
-        cout << "Top singular values match: " << match_bool << endl;
-
+    bool match_bool = true;
+    for( unsigned int z = 0; z < 10; z++ ){
+        match_bool = match_bool && ( top10singVals(z) - singularValues(z) < 1e-9 );
+        // cout << std::fixed << std::setprecision(12) << singularValues(z) << endl;
     }
-
-
-    // 1- 
-    if( test_idx == case_cnt ){
-
-
+    if( match_bool ){
+        cout << "LM_eng build_LM_pencil test: passed!" << endl;
+    }else{
+        cout << "LM_eng build_LM_pencil test: failed!" << endl;
     }
 
 }
