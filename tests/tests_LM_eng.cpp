@@ -4,9 +4,9 @@
 
 using namespace std;
 
-void tests::LM_eng_test_1( unsigned int test_idx ){
+void tests::LM_eng_cplx_LM_test( unsigned int test_idx ){
 
-    int case_cnt = 0;
+    unsigned int rand_test_pt_cnt = 10;
 
 // ---------------------------------------------------------------------- >>>>>
 //      All Tests Common Initialization 
@@ -32,19 +32,28 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
     vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
     shared_ptr<fData> partit1 = myFrs.at(0);
     shared_ptr<fData> partit2 = myFrs.at(1);
+
+    // Obtain the number of outputs and inputs.
+    unsigned int out_cnt = myFr->get_out_cnt();
+    unsigned int in_cnt = myFr->get_in_cnt();
+
+    // Initialize test boolean.
+    bool match_bool = true;
+
 // ---------------------------------------------------------------------- <<<<<
 
-    // 0- LM construct test.
-    if( test_idx == case_cnt ){
 
-        // Construct the Loewner Matrix using the two partitions.
-        shared_ptr<Eigen::MatrixXcd> myLM = LM_UTIL::build_LM( *partit1, *partit2 );
+// ---------------------------------------------------------------------- >>>>>
+//      LM Construct Test
+// ---------------------------------------------------------------------- >>>>>
 
-        // Obtain the number of outputs and inputs.
-        unsigned int out_cnt = myFr->get_out_cnt();
-        unsigned int in_cnt = myFr->get_in_cnt();
+    // Construct the Loewner Matrix using the two partitions.
+    shared_ptr<Eigen::MatrixXcd> myLM = LM_UTIL::build_LM( *partit1, *partit2 );
 
-        bool match_bool = true;
+    
+
+    for( unsigned int z = 0; z < rand_test_pt_cnt; z++ ){
+
         // Random test point selection.
         unsigned int test_j = randIntGen( 0, partit1->get_f_cnt() - 1, 1 )->at(0);
         unsigned int test_i = randIntGen( 0, partit2->get_f_cnt() - 1, 1 )->at(0); 
@@ -63,24 +72,28 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
         match_bool = match_bool && ( LM_ij_diff.cwiseAbs().maxCoeff() < 1e-9 );
 
-        cout << "Random LM sub-block (" << test_i << ", " << test_j << ") match: " 
-            << match_bool << endl;
-
     }
 
+    if( match_bool ){
+        cout << "LM_eng LM construct test: passed!" << endl;
+    }else{
+        cout << "LM_eng LM construct test: failed!" << endl;
+    }
 
-    case_cnt++;
-    // 1- sLM construct test.
-    if( test_idx == case_cnt ){
+// ---------------------------------------------------------------------- <<<<<
 
-        // Construct the shifted Loewner Matrix using the two partitions.
-        shared_ptr<Eigen::MatrixXcd> mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
 
-        // Obtain the number of outputs and inputs.
-        unsigned int out_cnt = myFr->get_out_cnt();
-        unsigned int in_cnt = myFr->get_in_cnt();
+// ---------------------------------------------------------------------- >>>>>
+//      SLM Construct Test
+// ---------------------------------------------------------------------- >>>>>
 
-        bool match_bool = true;
+    // Construct the shifted Loewner Matrix using the two partitions.
+    shared_ptr<Eigen::MatrixXcd> mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
+
+    match_bool = true;
+
+    for( unsigned int z = 0; z < rand_test_pt_cnt; z++ ){
+
         // Random test point selection.
         unsigned int test_j = randIntGen( 0, partit1->get_f_cnt() - 1, 1 )->at(0);
         unsigned int test_i = randIntGen( 0, partit2->get_f_cnt() - 1, 1 )->at(0); 
@@ -99,24 +112,28 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
         match_bool = match_bool && ( SLM_ij_diff.cwiseAbs().maxCoeff() < 1e-9 );
 
-        cout << "Random SLM sub-block (" << test_i << ", " << test_j << ") match: " 
-            << match_bool << endl;
-
     }
 
+    if( match_bool ){
+        cout << "LM_eng SLM construct test: passed!" << endl;
+    }else{
+        cout << "LM_eng SLM construct test: failed!" << endl;
+    }
 
-    case_cnt++;
-    // 2- W construct test.
-    if( test_idx == case_cnt ){
+// ---------------------------------------------------------------------- <<<<<
 
-        // Construct the W matrix vector using partition 1.
-        shared_ptr<Eigen::MatrixXcd> myW = LM_UTIL::build_W( *partit1 );
 
-        // Obtain the number of outputs and inputs.
-        unsigned int out_cnt = myFr->get_out_cnt();
-        unsigned int in_cnt = myFr->get_in_cnt();
+// ---------------------------------------------------------------------- >>>>>
+//      W Construct Test
+// ---------------------------------------------------------------------- >>>>>
 
-        bool match_bool = true;
+    // Construct the W matrix vector using partition 1.
+    shared_ptr<Eigen::MatrixXcd> myW = LM_UTIL::build_W( *partit1 );
+
+    match_bool = true;
+
+    for( unsigned int z = 0; z < rand_test_pt_cnt; z++ ){
+
         // Random test point selection.
         unsigned int test_j = randIntGen( 0, partit1->get_f_cnt() - 1, 1 )->at(0);
         Eigen::MatrixXcd test_S_j = partit1->get_cplxData_at_f( test_j );
@@ -129,24 +146,28 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
         match_bool = match_bool && ( W_ij_diff.cwiseAbs().maxCoeff() < 1e-9 );
 
-        cout << "Random W sub-block (" << test_j << ") match: " 
-            << match_bool << endl;
-
     }
 
+    if( match_bool ){
+        cout << "LM_eng W construct test: passed!" << endl;
+    }else{
+        cout << "LM_eng W construct test: failed!" << endl;
+    }
 
-    case_cnt++;
-    // 3- F construct test.
-    if( test_idx == case_cnt ){
+// ---------------------------------------------------------------------- <<<<<
 
-        // Construct the F matrix vector using partition 2.
-        shared_ptr<Eigen::MatrixXcd> myF = LM_UTIL::build_F( *partit2 );
 
-        // Obtain the number of outputs and inputs.
-        unsigned int out_cnt = myFr->get_out_cnt();
-        unsigned int in_cnt = myFr->get_in_cnt();
+// ---------------------------------------------------------------------- >>>>>
+//      F Construct Test
+// ---------------------------------------------------------------------- >>>>>
 
-        bool match_bool = true;
+    // Construct the F matrix vector using partition 2.
+    shared_ptr<Eigen::MatrixXcd> myF = LM_UTIL::build_F( *partit2 );
+
+    match_bool = true;
+
+    for( unsigned int z = 0; z < rand_test_pt_cnt; z++ ){
+
         // Random test point selection.
         unsigned int test_i = randIntGen( 0, partit2->get_f_cnt() - 1, 1 )->at(0);
         Eigen::MatrixXcd test_S_i = partit2->get_cplxData_at_f( test_i );
@@ -159,10 +180,16 @@ void tests::LM_eng_test_1( unsigned int test_idx ){
 
         match_bool = match_bool && ( F_ij_diff.cwiseAbs().maxCoeff() < 1e-9 );
 
-        cout << "Random F sub-block (" << test_i << ") match: " 
-            << match_bool << endl;
-
     }
+
+    if( match_bool ){
+        cout << "LM_eng F construct test: passed!" << endl;
+    }else{
+        cout << "LM_eng F construct test: failed!" << endl;
+    }
+
+// ---------------------------------------------------------------------- <<<<<
+
 
 }
 

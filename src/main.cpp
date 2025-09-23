@@ -91,7 +91,7 @@ int main() {
     // tests::fData_prefix_manip_test(1);
     // tests::fData_serialize_test();
 
-    // tests::LM_eng_test_1( 0 );
+    tests::LM_eng_cplx_LM_test( 0 );
     // tests::LM_eng_test_2( 0 );
     // tests::LM_eng_test_3( 1 );
     // tests::LM_eng_class_test();
@@ -104,7 +104,7 @@ int main() {
     // tests::LM_eng_full_SFML_testrun_gen();
     // tests::LM_eng_full_SFML_dc_case_run();
     // tests::LM_eng_rSVD_case_run();
-    tests::LM_eng_rSVD_case_run_vb();
+    // tests::LM_eng_rSVD_case_run_vb();
     // tests::LM_eng_print_singVals(0);
     // tests::LM_eng_print_singVals(1);
     // tests::LM_eng_steps_test( 0 );
