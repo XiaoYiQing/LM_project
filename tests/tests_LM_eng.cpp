@@ -246,7 +246,7 @@ void tests::LM_pencil_test(){
 
     bool match_bool = true;
     for( unsigned int z = 0; z < 10; z++ ){
-        match_bool = match_bool && ( top10singVals(z) - singularValues(z) < 1e-9 );
+        match_bool = match_bool && ( abs( top10singVals(z) - singularValues(z) ) < 1e-9 );
         // cout << std::fixed << std::setprecision(12) << singularValues(z) << endl;
     }
     if( match_bool ){
@@ -261,6 +261,8 @@ void tests::LM_pencil_test(){
 
 void tests::LM_eng_reT_test(){
 
+    // Numerical threshold for determining numerical equivalence.
+    double num_thresh = 1e-12;
 
 // ---------------------------------------------------------------------- >>>>>
 //      Vector Real Transform Test 
@@ -308,8 +310,8 @@ void tests::LM_eng_reT_test(){
     Eigen::MatrixXcd myReMatVet_B = ( myTMat->conjugate().transpose() )*myMatVet_B;
 
     bool match_bool = true;
-    match_bool = match_bool && ( myReMatVet_A.imag().cwiseAbs().maxCoeff() < 1e-12 );
-    match_bool = match_bool && ( myReMatVet_B.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myReMatVet_A.imag().cwiseAbs().maxCoeff() < num_thresh );
+    match_bool = match_bool && ( myReMatVet_B.imag().cwiseAbs().maxCoeff() < num_thresh );
 
     if( match_bool ){
         cout << "LM_eng matrix vector real transform test: passed!" << endl;
@@ -372,7 +374,7 @@ void tests::LM_eng_reT_test(){
     Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
 
 
-    match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < num_thresh );
     if( match_bool ){
         cout << "LM_eng LM matrices real transform test: passed!" << endl;
     }else{
@@ -380,7 +382,6 @@ void tests::LM_eng_reT_test(){
     }
 
 // ---------------------------------------------------------------------- <<<<<
-
 
 }
 
@@ -398,9 +399,7 @@ void tests::LM_eng_full_SFML_testrun(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
-    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
 
     // Obtain the data from the target data file and insert into the fData object.
     fData::read_sXp_file( myFData, fullFileName );
@@ -409,7 +408,6 @@ void tests::LM_eng_full_SFML_testrun(){
     myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
     // Normalize the frequency vector (As much as you can according to metric prefixes).
     myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
-
     
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = 
@@ -491,7 +489,6 @@ void tests::LM_eng_full_SFML_testrun(){
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system evaluation test (Not mandatory to pass): " << match_bool << endl;
 
-
 // ---------------------------------------------------------------------- <<<<<
 
 
@@ -542,7 +539,7 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 12;
+    unsigned int svd_ret_cnt = 48;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
@@ -612,6 +609,14 @@ void tests::LM_eng_full_SFML_testrun(){
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXd::RMS_total_comp( H_diff_re, H_diff_im );
     cout << "The total RMS error: " << total_RMS_err << endl;
+
+    bool test_bool = true;
+    test_bool = test_bool && ( total_RMS_err < 0.0005421 );
+    if( test_bool ){
+        cout << "Order reduced LM system accuracy test: passed!" << endl;
+    }else{
+        cout << "Order reduced LM system accuracy test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
