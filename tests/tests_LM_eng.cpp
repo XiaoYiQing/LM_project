@@ -259,120 +259,128 @@ void tests::LM_pencil_test(){
 
 
 
-void tests::LM_eng_test_3( unsigned int test_idx ){
+void tests::LM_eng_reT_test(){
 
-    int case_cnt = 0;
 
-    // 0- Real transformation matrix vector mult check.
-    if( test_idx == case_cnt ){
+// ---------------------------------------------------------------------- >>>>>
+//      Vector Real Transform Test 
+// ---------------------------------------------------------------------- >>>>>
 
-        bool has_DC_pt = false;
-        unsigned int sub_mat_size = 3;
-        unsigned int sub_blk_cnt = 2;
+    bool has_DC_pt = false;
+    unsigned int sub_mat_size = 3;
+    unsigned int sub_blk_cnt = 2;
 
-        shared_ptr<Eigen::MatrixXcd> myTMat = LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt );
+    shared_ptr<Eigen::MatrixXcd> myTMat = LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt );
 
-        // Initialize our test vector matrix.
-        Eigen::MatrixXcd myMatVet_A( sub_mat_size, 2*sub_blk_cnt*sub_mat_size );
-        Eigen::MatrixXcd myMatVet_B( 2*sub_blk_cnt*sub_mat_size, sub_mat_size );
+    // Initialize our test vector matrix.
+    Eigen::MatrixXcd myMatVet_A( sub_mat_size, 2*sub_blk_cnt*sub_mat_size );
+    Eigen::MatrixXcd myMatVet_B( 2*sub_blk_cnt*sub_mat_size, sub_mat_size );
 
-        // Fill the matrix vector with random entries, but following the real transform structure.
-        for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
+    // Fill the matrix vector with random entries, but following the real transform structure.
+    for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
 
-            // Generate random values for the real and imaginary parts.
-            shared_ptr<vector<double>> reVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-            shared_ptr<vector<double>> imVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-            shared_ptr<vector<double>> reVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-            shared_ptr<vector<double>> imVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        // Generate random values for the real and imaginary parts.
+        shared_ptr<vector<double>> reVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        shared_ptr<vector<double>> imVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        shared_ptr<vector<double>> reVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        shared_ptr<vector<double>> imVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
 
-            // Create the current sub-matrix.
-            Eigen::MatrixXcd mat_A_z( sub_mat_size, sub_mat_size );
-            Eigen::MatrixXcd mat_B_z( sub_mat_size, sub_mat_size );
-            for( unsigned int y = 0; y < reVec_A->size(); y++ ){
-                mat_A_z(y) = complex<double>( reVec_A->at(y), imVec_A->at(y) );
-                mat_B_z(y) = complex<double>( reVec_B->at(y), imVec_B->at(y) );
-            }
-
-            unsigned int lead_orig = z*2*sub_mat_size;
-            unsigned int lead_conj = z*2*sub_mat_size + sub_mat_size;
-
-            myMatVet_A.block( 0, lead_orig, sub_mat_size, sub_mat_size ) = mat_A_z;
-            myMatVet_A.block( 0, lead_conj, sub_mat_size, sub_mat_size ) = mat_A_z.conjugate();
-            myMatVet_B.block( lead_orig, 0, sub_mat_size, sub_mat_size ) = mat_B_z;
-            myMatVet_B.block( lead_conj, 0, sub_mat_size, sub_mat_size ) = mat_B_z.conjugate();
-
+        // Create the current sub-matrix.
+        Eigen::MatrixXcd mat_A_z( sub_mat_size, sub_mat_size );
+        Eigen::MatrixXcd mat_B_z( sub_mat_size, sub_mat_size );
+        for( unsigned int y = 0; y < reVec_A->size(); y++ ){
+            mat_A_z(y) = complex<double>( reVec_A->at(y), imVec_A->at(y) );
+            mat_B_z(y) = complex<double>( reVec_B->at(y), imVec_B->at(y) );
         }
 
-        // Multiply the target matrix with the real transform matrix from the RHS.
-        Eigen::MatrixXcd myReMatVet_A = myMatVet_A*( *myTMat );
-        Eigen::MatrixXcd myReMatVet_B = ( myTMat->conjugate().transpose() )*myMatVet_B;
+        unsigned int lead_orig = z*2*sub_mat_size;
+        unsigned int lead_conj = z*2*sub_mat_size + sub_mat_size;
 
-        bool match_bool = true;
-        match_bool = match_bool && ( myReMatVet_A.imag().cwiseAbs().maxCoeff() < 1e-12 );
-        cout << "Real transform matrix check (RHS): " << match_bool << endl;
-        match_bool = match_bool && ( myReMatVet_B.imag().cwiseAbs().maxCoeff() < 1e-12 );
-        cout << "Real transform matrix check (LHS): " << match_bool << endl;
+        myMatVet_A.block( 0, lead_orig, sub_mat_size, sub_mat_size ) = mat_A_z;
+        myMatVet_A.block( 0, lead_conj, sub_mat_size, sub_mat_size ) = mat_A_z.conjugate();
+        myMatVet_B.block( lead_orig, 0, sub_mat_size, sub_mat_size ) = mat_B_z;
+        myMatVet_B.block( lead_conj, 0, sub_mat_size, sub_mat_size ) = mat_B_z.conjugate();
+
+    }
+
+    // Multiply the target matrix with the real transform matrix from the RHS.
+    Eigen::MatrixXcd myReMatVet_A = myMatVet_A*( *myTMat );
+    Eigen::MatrixXcd myReMatVet_B = ( myTMat->conjugate().transpose() )*myMatVet_B;
+
+    bool match_bool = true;
+    match_bool = match_bool && ( myReMatVet_A.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    match_bool = match_bool && ( myReMatVet_B.imag().cwiseAbs().maxCoeff() < 1e-12 );
+
+    if( match_bool ){
+        cout << "LM_eng matrix vector real transform test: passed!" << endl;
+    }else{
+        cout << "LM_eng matrix vector real transform test: failed!" << endl;
+    }
         
+// ---------------------------------------------------------------------- <<<<<
 
+
+// ---------------------------------------------------------------------- >>>>>
+//      LM Matrix Transform Test 
+// ---------------------------------------------------------------------- >>>>>
+
+    // Define our frequency data object.
+    fData myFData;
+
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData, fullFileName );
+
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
+
+    sub_blk_cnt = 8;
+    // Create a subset linear index array.
+    vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, sub_blk_cnt );
+    // Create a fData subset.
+    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+
+    // Generate two partitions from this data subset.
+    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    // Generate the two partitions with their complex conjugates inserted 
+    // in interleaving fashion.
+    shared_ptr<fData> myFr1 = myFrs.at(0)->gen_cplx_conj_comb();
+    shared_ptr<fData> myFr2 = myFrs.at(1)->gen_cplx_conj_comb();
+
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFr1, *myFr2 );
+    // Construct the Loewner Matrix using the two cconj injected partitions.
+    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFr1, *myFr2 );
+
+    // Obtain base parameters of the two partitions.
+    bool f1_has_DC_pt = myFr1->hasDC();
+    bool f2_has_DC_pt = myFr2->hasDC();
+    sub_mat_size = myFr1->get_out_cnt();
+    // Partition sizes before cconj injection.
+    unsigned int sub_blk_cnt_1 = myFrs.at(0)->get_f_cnt();  
+    unsigned int sub_blk_cnt_2 = myFrs.at(1)->get_f_cnt();
+
+    // Build the left and right transformation matrices.
+    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
+    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
+    // Obtain the hermitian of the right transform matrix.
+    Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
+
+    // Perform the transformation.
+    Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
+
+
+    match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
+    if( match_bool ){
+        cout << "LM_eng LM matrices real transform test: passed!" << endl;
+    }else{
+        cout << "LM_eng LM matrices real transform test: failed!" << endl;
     }
 
-    case_cnt++;
-    // 1- Real transformation matrix LM mult check.
-    if( test_idx == case_cnt ){
+// ---------------------------------------------------------------------- <<<<<
 
-        // Define our frequency data object.
-        fData myFData;
-
-        // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-        fData::read_sXp_file( myFData, fullFileName );
-
-        // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-        // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::G );
-
-        unsigned int sub_blk_cnt = 8;
-        // Create a subset linear index array.
-        vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, sub_blk_cnt );
-        // Create a fData subset.
-        shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
-
-        // Generate two partitions from this data subset.
-        vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
-        // Generate the two partitions with their complex conjugates inserted 
-        // in interleaving fashion.
-        shared_ptr<fData> myFr1 = myFrs.at(0)->gen_cplx_conj_comb();
-        shared_ptr<fData> myFr2 = myFrs.at(1)->gen_cplx_conj_comb();
-
-        // Construct the Loewner Matrix using the two cconj injected partitions.
-        Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFr1, *myFr2 );
-        // Construct the Loewner Matrix using the two cconj injected partitions.
-        Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFr1, *myFr2 );
-
-        // Obtain base parameters of the two partitions.
-        bool f1_has_DC_pt = myFr1->hasDC();
-        bool f2_has_DC_pt = myFr2->hasDC();
-        unsigned int sub_mat_size = myFr1->get_out_cnt();
-        // Partition sizes before cconj injection.
-        unsigned int sub_blk_cnt_1 = myFrs.at(0)->get_f_cnt();  
-        unsigned int sub_blk_cnt_2 = myFrs.at(1)->get_f_cnt();
-
-        // Build the left and right transformation matrices.
-        Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
-        Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
-        // Obtain the hermitian of the right transform matrix.
-        Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
-
-        // Perform the transformation.
-        Eigen::MatrixXcd myLM_re = ( myTMat_R_herm*myLM )*myTMat_L;
-
-
-        bool match_bool = true;
-        match_bool = match_bool && ( myLM_re.imag().cwiseAbs().maxCoeff() < 1e-12 );
-        cout << "Real transform matrix full matrix mult check: " << match_bool << endl;
-
-    }
 
 }
 

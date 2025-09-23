@@ -31,7 +31,7 @@ namespace tests{
     /*
     Test real transform matrices.
     */
-    void LM_eng_test_3( unsigned int test_idx );
+    void LM_eng_reT_test();
 
     /*
     Special test which performs the entire SFLM (System Format Loewner Matrix) process

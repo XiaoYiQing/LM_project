@@ -92,8 +92,8 @@ int main() {
     // tests::fData_serialize_test();
 
     // tests::LM_eng_cplx_LM_test();
-    tests::LM_pencil_test();
-    // tests::LM_eng_test_3( 1 );
+    // tests::LM_pencil_test();
+    tests::LM_eng_reT_test();
     // tests::LM_eng_class_test();
     // tests::LM_eng_serialize_test();
     
