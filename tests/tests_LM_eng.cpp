@@ -399,7 +399,7 @@ void tests::LM_eng_full_SFML_testrun(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
 
     // Obtain the data from the target data file and insert into the fData object.
     fData::read_sXp_file( myFData, fullFileName );
@@ -573,6 +573,13 @@ void tests::LM_eng_full_SFML_testrun(){
     // Determine if the system is stable (Maximum poles real part is negative).
     bool is_stab = 0 > eigeVals_1.real().maxCoeff();
     cout << "Is stable: " << is_stab << endl;
+    bool test_bool = true;
+    test_bool = test_bool && ( is_stab );
+    if( test_bool ){
+        cout << "Order reduced LM system stability test: passed!" << endl;
+    }else{
+        cout << "Order reduced LM system stability test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -610,7 +617,7 @@ void tests::LM_eng_full_SFML_testrun(){
     double total_RMS_err = Matrix3DXd::RMS_total_comp( H_diff_re, H_diff_im );
     cout << "The total RMS error: " << total_RMS_err << endl;
 
-    bool test_bool = true;
+    
     test_bool = test_bool && ( total_RMS_err < 0.0005421 );
     if( test_bool ){
         cout << "Order reduced LM system accuracy test: passed!" << endl;
@@ -637,9 +644,7 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=400um.s2p";
-    // string fullFileName = RES_PATH_XYQ_str + "/Slink_a=100um_b=600um.s2p";
-    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
 
     // Obtain the data from the target data file and insert into the fData object.
     fData::read_sXp_file( myFData, fullFileName );
@@ -780,7 +785,7 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Define the number of singular values to retain.
-    unsigned int svd_ret_cnt = 12;
+    unsigned int svd_ret_cnt = 48;
 
     Eigen::VectorXd singVals_r = singVals.segment( 0, svd_ret_cnt );
 
@@ -807,7 +812,15 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     // Determine if the system is stable (Maximum poles real part is negative).
     Eigen::VectorXcd poles = mySyst.get_poles();
     bool is_stab = 0 > poles.real().maxCoeff();
+
+    bool test_bool = true;
     cout << "Is stable: " << is_stab << endl;
+    test_bool = test_bool && is_stab;
+    if( test_bool ){
+        cout << "Final Transfer function stability test: passed!" << endl;
+    }else{
+        cout << "Final Transfer function stability test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -836,6 +849,15 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     // Compute the RMS error.
     double total_RMS_err2 = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error 2: " << total_RMS_err2 << endl;
+
+
+    
+    test_bool = test_bool && ( total_RMS_err2 < 0.0005421 );
+    if( test_bool ){
+        cout << "Final Transfer function accuracy test: passed!" << endl;
+    }else{
+        cout << "Final Transfer function accuracy test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- <<<<<
 
