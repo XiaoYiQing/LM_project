@@ -275,13 +275,23 @@ void tests::LM_eng_class_test(){
     // Compute the difference between the original and approximated frequency data.
     Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
 
+    bool test_bool = true;
+
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
+    test_bool = test_bool && ( total_RMS_err < 3.637e-5 );
 
     // Determine system stability.
     bool is_stab = myTF->is_stable();
     cout << "Is stable: " << is_stab << endl;
+    test_bool = test_bool && is_stab;
+
+    if( test_bool ){
+        cout << "LM_eng class standard test: passed!" << endl;
+    }else{
+        cout << "LM_eng class standard test: closed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- >>>>>
 
