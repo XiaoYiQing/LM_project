@@ -14,10 +14,11 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/inductor_1_width_4_dielectric_35.s2p";
 
     // Obtain the data from the target data file and insert into the fData object.
-    fData::read_LTspice_Sp_file( myFData, fullFileName );
+    // fData::read_LTspice_Sp_file( myFData, fullFileName );
+    fData::read_sXp_file( myFData, fullFileName );
 
     // Switch the data format into real + imaginary format.
     myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
@@ -210,8 +211,8 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
 
     // Compute the RMS error.
-    double total_RMS_err2 = Matrix3DXcd::RMS_total_comp( H_diff );
-    cout << "The total RMS error 2: " << total_RMS_err2 << endl;
+    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error: " << total_RMS_err << endl;
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -290,7 +291,7 @@ void tests::LM_eng_class_test(){
     if( test_bool ){
         cout << "LM_eng class standard test: passed!" << endl;
     }else{
-        cout << "LM_eng class standard test: closed!" << endl;
+        cout << "LM_eng class standard test: failed!" << endl;
     }
 
 // ---------------------------------------------------------------------- >>>>>
@@ -454,6 +455,15 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     // Get stability confirmation.
     bool isStab = myTF->is_stable();
     cout << "System stability: " << isStab << endl;
+
+    bool test_bool = true;
+    test_bool = test_bool && ( abs( total_RMS_err - 0.00725466 ) < 1e-6 );
+    test_bool = test_bool && isStab;
+    if( t4bool ){
+        cout << "DC case final model test: passed!" << endl;
+    }else{
+        cout << "DC case final model test: failed!" << endl;
+    }
 
 // ---------------------------------------------------------------------- >>>>>
 
