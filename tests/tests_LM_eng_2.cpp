@@ -8,13 +8,13 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     unsigned int fr_len = 100;
 
 // ---------------------------------------------------------------------- >>>>>
-//      Initialization (Data)
+//      Initialization (Data)w
 // ---------------------------------------------------------------------- >>>>>
 
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/audioamp/audioamp.txt";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
 
     // Obtain the data from the target data file and insert into the fData object.
     fData::read_LTspice_Sp_file( myFData, fullFileName );
@@ -225,7 +225,7 @@ void tests::LM_eng_class_test(){
     // Define our frequency data object.
     fData myFData;
     // Define the full file name.
-    string fullFileName = RES_PATH_XYQ_str + "/inductor_2007Nov25/inductor_1_width_3_dielectric_35.s2p";
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/inductor_1_width_4_dielectric_35.s2p";
 
     // Obtain the data from the target data file and insert into the fData object.
     fData::read_sXp_file( myFData, fullFileName );
@@ -270,7 +270,7 @@ void tests::LM_eng_class_test(){
 
     // Evaluate the transfer function over the specified frequency array values.
     Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
-    // Obtain the original data as a array of complex matrices.
+    // Obtain the original data as an array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
     Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
@@ -278,6 +278,10 @@ void tests::LM_eng_class_test(){
     // Compute the RMS error.
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
+
+    // Determine system stability.
+    bool is_stab = myTF->is_stable();
+    cout << "Is stable: " << is_stab << endl;
 
 // ---------------------------------------------------------------------- >>>>>
 

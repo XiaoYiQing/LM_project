@@ -94,15 +94,15 @@ int main() {
     // tests::LM_eng_cplx_LM_test();
     // tests::LM_pencil_test();
     // tests::LM_eng_reT_test();
-    // tests::LM_eng_class_test();
     // tests::LM_eng_serialize_test();
     
     // tests::LTI_descSyst_test_1( 3 );
     // tests::LTI_descSyst_test_2( 2 );
 
     // tests::LM_eng_full_SFML_testrun();
-    tests::LM_eng_full_SFML_testrun_v2();
+    // tests::LM_eng_full_SFML_testrun_v2();
     // tests::LM_eng_full_SFML_testrun_gen();
+    tests::LM_eng_class_test();
     // tests::LM_eng_full_SFML_dc_case_run();
     // tests::LM_eng_rSVD_case_run();
     // tests::LM_eng_rSVD_case_run_vb();

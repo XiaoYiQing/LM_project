@@ -847,12 +847,12 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     Matrix3DXcd H_diff = H_orig_mat_arr - H_app_mat_arr;
 
     // Compute the RMS error.
-    double total_RMS_err2 = Matrix3DXcd::RMS_total_comp( H_diff );
-    cout << "The total RMS error 2: " << total_RMS_err2 << endl;
+    double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
+    cout << "The total RMS error: " << total_RMS_err << endl;
 
 
     
-    test_bool = test_bool && ( total_RMS_err2 < 0.0005421 );
+    test_bool = test_bool && ( total_RMS_err < 0.0005421 );
     if( test_bool ){
         cout << "Final Transfer function accuracy test: passed!" << endl;
     }else{
