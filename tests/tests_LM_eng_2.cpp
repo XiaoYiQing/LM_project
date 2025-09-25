@@ -626,54 +626,82 @@ void tests::LM_eng_rSVD_case_run_vb(){
 }
 
 
-void tests::LM_eng_print_singVals( unsigned int test_idx ){
+void tests::LM_eng_print_singVals(){
 
     unsigned int case_cnt = 0;
 
     // 0- Full process singular values print function.
-    if( test_idx == case_cnt ){
 
-        string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
-        string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
-        
-        shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+    string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
+    string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
+    
+    shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
 
+    string sv_data_fullFileName = dest_dirPath + "/audioamp_sv.txt";
+    vector<double> read_vec_tmp = utils::file_to_Vd( sv_data_fullFileName );
+    Eigen::VectorXd read_vec = Eigen::VectorXd( read_vec_tmp.size() );
+    for( unsigned int z = 0; z < read_vec_tmp.size(); z++ ){
+        read_vec(z) = read_vec_tmp[z];
+    }
+    Eigen::VectorXd comp_vec = my_LM_eng->get_singVals();
+
+    bool test_bool = ( read_vec - comp_vec ).cwiseAbs().maxCoeff() < 1e-7;
+    if( test_bool ){
+        cout << "LM_eng_print_singVals case 1 test: passed!" << endl;
+    }else{
+        cout << "LM_eng_print_singVals case 1 test: failed!" << endl;
     }
 
 
+
+
     // 1- Existing LM engine singular values print function.
-    case_cnt++;
-    if( test_idx == case_cnt ){
 
 // ---------------------------------------------------------------------- >>>>>
 //      Initialization (Data)
 // ---------------------------------------------------------------------- >>>>>
     
-        // Define our frequency data object.
-        fData myFData;
+    // Define our frequency data object.
+    fData myFData;
 
-        // Define the full file name.
-        string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
-        fData::read_sXp_file( myFData, fullFileName );
+    // Define the full file name.
+    string fullFileName = RES_PATH_XYQ_str + "/test_res_dir/Slink_a=100um_b=400um.s2p";
+    fData::read_sXp_file( myFData, fullFileName );
 
-        // Switch the data format into real + imaginary format.
-        myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
-        // Normalize the frequency vector (As much as you can according to metric prefixes).
-        myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
+    // Switch the data format into real + imaginary format.
+    myFData.data_format_Switch( fData::FDATA_FORMAT::RI );
+    // Normalize the frequency vector (As much as you can according to metric prefixes).
+    myFData.data_prefix_switch( fData::METRIC_PREFIX::M );
 
 // ---------------------------------------------------------------------- <<<<<
 
-        // Perform the full LM engine process.
-        LM_eng my_LM_eng( myFData );
-        my_LM_eng.step1_fData_partition();
-        my_LM_eng.step2_LM_construct();
-        my_LM_eng.step3_LM_re_trans();
-        my_LM_eng.step4_LM_pencil_SVD();
+    // Perform the full LM engine process.
+    LM_eng my_LM_eng2( myFData );
+    my_LM_eng2.step1_fData_partition();
+    // my_LM_eng2.step2_LM_construct();
+    // my_LM_eng2.step3_LM_re_trans();
+    my_LM_eng2.step3skip2_LM_re_construct();
+    my_LM_eng2.step4_LM_pencil_SVD();
 
-        string destDir = SRC_PATH_XYQ_str + "/data_output";
-        LM_eng::print_singVals( my_LM_eng, "Slink_a=100um_b=400um_LOL", destDir );
-            
+    string destDir = SRC_PATH_XYQ_str + "/data_output";
+    LM_eng::print_singVals( my_LM_eng2, "Slink_a=100um_b=400um_LOL", destDir );
+    
+    comp_vec = my_LM_eng2.get_singVals();
+    sv_data_fullFileName = destDir + "/Slink_a=100um_b=400um_LOL.txt";
+    read_vec_tmp = utils::file_to_Vd( sv_data_fullFileName );
+    read_vec = Eigen::VectorXd( read_vec_tmp.size() );
+    for( unsigned int z = 0; z < read_vec_tmp.size(); z++ ){
+        read_vec(z) = read_vec_tmp[z];
     }
+
+    // cout << std::fixed << std::setprecision(20) << ( read_vec - comp_vec ).cwiseAbs().maxCoeff() << endl;
+    test_bool = ( read_vec - comp_vec ).cwiseAbs().maxCoeff() < 1e-7;
+    if( test_bool ){
+        cout << "LM_eng_print_singVals case 2 test: passed!" << endl;
+    }else{
+        cout << "LM_eng_print_singVals case 2 test: failed!" << endl;
+    }
+
 
 }
 

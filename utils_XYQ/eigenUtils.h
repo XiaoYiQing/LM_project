@@ -48,6 +48,9 @@ namespace utils{
     NOTE: expect simplest data format in the file, which is simply entry of each
     row placed on their own line consecutively.
     */
+    // TODO: the Vd_to_file and file_to_Vd is currently not a perfect loop as
+    // decimals may be introduced when performing std::stod on scientific notations.
+    // You may wanna fix this in the future.
     vector<double> file_to_Vd( const string& fullFileName );
 
     /*

@@ -109,7 +109,7 @@ void LM_eng::print_singVals( const LM_eng& tar_LM_eng, const string& fileStem,
 {
 
     try{
-        utils::VectorXd_to_file( destDir, fileStem, tar_LM_eng.get_singVals(), 10 );
+        utils::VectorXd_to_file( destDir, fileStem, tar_LM_eng.get_singVals(), 12 );
     }catch( const runtime_error& e ){
         cerr << "print_singVals aborted: " << e.what() << endl;
     }catch( const exception& e ){
