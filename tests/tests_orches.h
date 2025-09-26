@@ -14,7 +14,9 @@ using namespace std;
 
 namespace tests{
 
-    void SFLM_full_run_test( unsigned int test_idx );
+    void orch_SFLM_full_run_test();
+
+    void orch_SFLM_direc_re_run_test();
 
 }
 

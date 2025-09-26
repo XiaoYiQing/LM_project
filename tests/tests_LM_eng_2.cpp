@@ -715,7 +715,7 @@ void tests::LM_eng_print_singVals(){
 
 
 
-void tests::LM_eng_steps_test( unsigned int test_idx ){
+void tests::LM_eng_re_LM_comp_test( unsigned int test_idx ){
 
     unsigned int case_cnt = 0;
 
