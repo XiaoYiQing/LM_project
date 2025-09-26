@@ -319,8 +319,6 @@ vector<double> utils::file_to_Vd( const string& fullFileName ){
 }
 
 
-
-
 void utils::MatrixXd_to_file( const string& fileDir, const string& fileStem, 
     const Eigen::MatrixXd& tarMat, unsigned int decimCnt )
 {
