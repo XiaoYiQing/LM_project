@@ -79,7 +79,7 @@ namespace tests{
     /*
     Test the step functions.
     */
-    void LM_eng_steps_test( unsigned int test_idx );
+    void LM_eng_re_LM_comp_test( unsigned int test_idx );
 
     /*
     Test the serialization + deserialization functions.

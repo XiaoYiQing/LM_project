@@ -719,7 +719,7 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
     unsigned int case_cnt = 0;
 
-    // 0- Full process singular values print function.
+    // 0- Real LMs direct computation vs Complex LMs transform to real LMs.
     if( test_idx == case_cnt ){
 
 // ---------------------------------------------------------------------- >>>>>
@@ -806,7 +806,7 @@ void tests::LM_eng_steps_test( unsigned int test_idx ){
 
 
     case_cnt++;
-    // 1- Individual LM comp functions.
+    // 1- Individual real LMs comp functions check.
     if( test_idx == case_cnt ){
 
 // ---------------------------------------------------------------------- >>>>>
