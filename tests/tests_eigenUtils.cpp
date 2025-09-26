@@ -65,8 +65,6 @@ void tests::file_to_vec_test(){
 //      Simple Correct Text File Read
 // ---------------------------------------------------------------------- >>>>>
 
-    
-
     vector<double> my_vec = utils::file_to_Vd( fullFileName );
     vector<double> my_vec_ans = {
         -1.4273852567e-01, -2.1484261800e+00, +9.6893777105e+00, -7.8754513961e-01,

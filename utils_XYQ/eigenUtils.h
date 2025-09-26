@@ -41,6 +41,14 @@ namespace utils{
     */ 
     void Vd_to_file( const string& fileDir, const string& fileStem, 
         vector<double> tarVec, unsigned int decimCnt );
+    
+    /*
+    Write a vector<double> variable's content into a text file using scientific format.
+    The double values are simply placed one after each other on consecutive rows.
+    Each row has only one value printed.
+    */  
+    void Vd_to_file_sci( const string& fileDir, const string& fileStem, 
+        vector<double> tarVec, unsigned int decimCnt );
 
     /*
     Read an vector<double> saved in a .txt or .csv file and translate it into a 

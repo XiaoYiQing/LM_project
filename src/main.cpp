@@ -107,7 +107,6 @@ int main() {
     // tests::LM_eng_rSVD_case_run();
     // tests::LM_eng_rSVD_case_run_vb();
     tests::LM_eng_print_singVals();
-    // tests::LM_eng_print_singVals(1);
     // tests::LM_eng_steps_test( 0 );
 
     // tests::SFLM_full_run_test(0);
