@@ -628,15 +628,17 @@ void tests::LM_eng_rSVD_case_run_vb(){
 
 void tests::LM_eng_print_singVals(){
 
-    unsigned int case_cnt = 0;
+// ---------------------------------------------------------------------- >>>>>
+//      0: Full process singular values print function.
+// ---------------------------------------------------------------------- >>>>>
 
-    // 0- Full process singular values print function.
-
+    // Define the data source file and the print destination directory.
     string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
     string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
-    
+    // Perform the full process function.
     shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
 
+    // Obtain the singular values from the printed data file.
     string sv_data_fullFileName = dest_dirPath + "/audioamp_sv.txt";
     vector<double> read_vec_tmp = utils::file_to_Vd( sv_data_fullFileName );
     Eigen::VectorXd read_vec = Eigen::VectorXd( read_vec_tmp.size() );
@@ -645,20 +647,21 @@ void tests::LM_eng_print_singVals(){
     }
     Eigen::VectorXd comp_vec = my_LM_eng->get_singVals();
 
-    bool test_bool = ( read_vec - comp_vec ).cwiseAbs().maxCoeff() < 1e-7;
+    // Compute the difference between the vector from the file and directly from the source.
+    Eigen::VectorXd vec_diff = comp_vec - read_vec;
+
+    bool test_bool = vec_diff.cwiseAbs().maxCoeff() < 1e-7;
     if( test_bool ){
         cout << "LM_eng_print_singVals case 1 test: passed!" << endl;
     }else{
         cout << "LM_eng_print_singVals case 1 test: failed!" << endl;
     }
 
+// ---------------------------------------------------------------------- <<<<<
 
-
-
-    // 1- Existing LM engine singular values print function.
 
 // ---------------------------------------------------------------------- >>>>>
-//      Initialization (Data)
+//      Case 1: Existing LM engine singular values print function
 // ---------------------------------------------------------------------- >>>>>
     
     // Define our frequency data object.
@@ -678,30 +681,35 @@ void tests::LM_eng_print_singVals(){
     // Perform the full LM engine process.
     LM_eng my_LM_eng2( myFData );
     my_LM_eng2.step1_fData_partition();
-    // my_LM_eng2.step2_LM_construct();
-    // my_LM_eng2.step3_LM_re_trans();
     my_LM_eng2.step3skip2_LM_re_construct();
     my_LM_eng2.step4_LM_pencil_SVD();
+    // Obtain the singular values directly from the LM engine.
+    comp_vec = my_LM_eng2.get_singVals();
 
+    // Print the singular values at the target location.
     string destDir = SRC_PATH_XYQ_str + "/data_output";
     LM_eng::print_singVals( my_LM_eng2, "Slink_a=100um_b=400um_LOL", destDir );
-    
-    comp_vec = my_LM_eng2.get_singVals();
+    // Define the full filename of the printed singular values file.
     sv_data_fullFileName = destDir + "/Slink_a=100um_b=400um_LOL.txt";
+    // Load the singular value data from the print file.
     read_vec_tmp = utils::file_to_Vd( sv_data_fullFileName );
+    // Translate the data vector in a vector under the Eigen library format.
     read_vec = Eigen::VectorXd( read_vec_tmp.size() );
     for( unsigned int z = 0; z < read_vec_tmp.size(); z++ ){
         read_vec(z) = read_vec_tmp[z];
     }
 
-    // cout << std::fixed << std::setprecision(20) << ( read_vec - comp_vec ).cwiseAbs().maxCoeff() << endl;
-    test_bool = ( read_vec - comp_vec ).cwiseAbs().maxCoeff() < 1e-7;
+    // Compute the difference between the vector from the file and directly from the source.
+    vec_diff = comp_vec - read_vec;
+    
+    test_bool = vec_diff.cwiseAbs().maxCoeff() < 1e-7;
     if( test_bool ){
         cout << "LM_eng_print_singVals case 2 test: passed!" << endl;
     }else{
         cout << "LM_eng_print_singVals case 2 test: failed!" << endl;
     }
 
+// ---------------------------------------------------------------------- <<<<<
 
 }
 
