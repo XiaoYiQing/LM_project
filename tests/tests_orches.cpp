@@ -163,8 +163,14 @@ void tests::orch_SFLM_direc_re_run_test(){
         cout << "SFLM_full_run test: failed!" << endl;
     }
 
-
 // ---------------------------------------------------------------------- <<<<<
 
 }
 
+
+
+void tests::orch_singVal_extract_run_test(){
+
+
+
+}

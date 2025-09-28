@@ -18,6 +18,8 @@ namespace tests{
 
     void orch_SFLM_direc_re_run_test();
 
+    void orch_singVal_extract_run_test();
+
 }
 
 

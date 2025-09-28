@@ -110,8 +110,8 @@ int main() {
     // tests::LM_eng_re_LM_comp_test( 1 );
 
     // tests::orch_SFLM_full_run_test();
-    tests::orch_SFLM_direc_re_run_test();
-    // FCT_SCR::singVal_extract_run();
+    // tests::orch_SFLM_direc_re_run_test();
+    FCT_SCR::singVal_extract_run();
 
     return 0; 
 

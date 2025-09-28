@@ -229,7 +229,7 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     Create a reduced set of frequency data using a smaller linearly distributed
     index set.
     */
-    shared_ptr<fData> red_partit_lin( unsigned int rSize );
+    fData red_partit_lin( unsigned int rSize );
     
     /*
     Create a reduced set of frequency data using a subset index array.

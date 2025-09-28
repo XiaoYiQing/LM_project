@@ -443,13 +443,13 @@ bool fData::hasDC() const{
     return this->f_vec(0) == 0;
 }
 
-shared_ptr<fData> fData::red_partit_lin( unsigned int rSize ){
+fData fData::red_partit_lin( unsigned int rSize ){
     
     // Generate a linear index vector.
     vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, this->f_vec.size(), rSize );
 
     // Use the main function with the created sub-indexing vector.
-    return this->red_partit( fr_idx_vec );
+    return *this->red_partit( fr_idx_vec );
 
 }
 
