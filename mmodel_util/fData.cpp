@@ -593,7 +593,7 @@ fData fData::gen_cplx_conj_set() const{
 
 }
 
-shared_ptr<fData> fData::gen_cplx_conj_comb() const{
+fData fData::gen_cplx_conj_comb() const{
 
     bool DC_present = this->hasDC();
     unsigned int f_cnt = this->get_f_cnt();
@@ -642,10 +642,10 @@ shared_ptr<fData> fData::gen_cplx_conj_comb() const{
     }
 
     // Create the return fData object and copy all settings.
-    shared_ptr<fData> retFData = make_shared<fData>( f_vec_new, Xr_vec_new, Xi_vec_new );
-    fData::copy_settings( *retFData, *this );
-    retFData->IOcnt[0] = this->IOcnt[0];
-    retFData->IOcnt[1] = this->IOcnt[1];
+    fData retFData = fData( f_vec_new, Xr_vec_new, Xi_vec_new );
+    fData::copy_settings( retFData, *this );
+    retFData.IOcnt[0] = this->IOcnt[0];
+    retFData.IOcnt[1] = this->IOcnt[1];
 
     return retFData;
 

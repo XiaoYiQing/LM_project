@@ -323,7 +323,7 @@ void tests::fData_test_2( unsigned int test_idx ){
         fData myFr = myF.red_partit( fr_idx_vec );
 
         // Generate the complex conjugate set and insert into the reduced array.
-        shared_ptr<fData> myFr_cconj = myFr.gen_cplx_conj_comb();
+        fData myFr_cconj = myFr.gen_cplx_conj_comb();
 
         // Define the test boolean result.
         bool match_bool = true;
@@ -345,17 +345,15 @@ void tests::fData_test_2( unsigned int test_idx ){
             unsigned int z2 = 2*z - idx_offset;
 
             match_bool = match_bool && ( myFr.get_fval_at(z) ==
-                myFr_cconj->get_fval_at( z2 ) );
+                myFr_cconj.get_fval_at( z2 ) );
             match_bool = match_bool && ( myFr.get_fval_at(z) ==
-                -1*myFr_cconj->get_fval_at( z2 + 1 ) );
+                -1*myFr_cconj.get_fval_at( z2 + 1 ) );
             match_bool = match_bool && ( myFr.get_cplxData_at_f(z) ==  
-                myFr_cconj->get_cplxData_at_f( z2 ) );
+                myFr_cconj.get_cplxData_at_f( z2 ) );
             match_bool = match_bool && ( myFr.get_cplxData_at_f(z) ==  
-                ( myFr_cconj->get_cplxData_at_f( z2 + 1 ) ).conjugate() );
+                ( myFr_cconj.get_cplxData_at_f( z2 + 1 ) ).conjugate() );
 
         }
-
-
 
         cout << "Self complex conjugate injected fData test: " << match_bool << endl;
 

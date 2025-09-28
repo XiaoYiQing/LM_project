@@ -36,13 +36,13 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     vector< shared_ptr<fData> > myFrs = myFr.gen_2_partit();
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
-    shared_ptr<fData> myFrc1 = myFrs.at(0)->gen_cplx_conj_comb();
-    shared_ptr<fData> myFrc2 = myFrs.at(1)->gen_cplx_conj_comb();
+    fData myFrc1 = myFrs.at(0)->gen_cplx_conj_comb();
+    fData myFrc2 = myFrs.at(1)->gen_cplx_conj_comb();
 
     // Obtain base parameters of the two partitions.
-    bool f1_has_DC_pt = myFrc1->hasDC();
-    bool f2_has_DC_pt = myFrc2->hasDC();
-    unsigned int out_cnt = myFrc1->get_out_cnt();
+    bool f1_has_DC_pt = myFrc1.hasDC();
+    bool f2_has_DC_pt = myFrc2.hasDC();
+    unsigned int out_cnt = myFrc1.get_out_cnt();
     // Partition sizes before cconj injection.
     unsigned int fr1_len = myFrs.at(0)->get_f_cnt();  
     unsigned int fr2_len = myFrs.at(1)->get_f_cnt();
@@ -55,13 +55,13 @@ void tests::LM_eng_full_SFML_testrun_gen(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
+    Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( myFrc1, myFrc2 );
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
+    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
     // Construct the W matrix vector using partition 1.
-    Eigen::MatrixXcd myW = *LM_UTIL::build_W( *myFrc1 );
+    Eigen::MatrixXcd myW = *LM_UTIL::build_W( myFrc1 );
     // Construct the F matrix vector using partition 2.
-    Eigen::MatrixXcd myF = *LM_UTIL::build_F( *myFrc2 );
+    Eigen::MatrixXcd myF = *LM_UTIL::build_F( myFrc2 );
 
 // ---------------------------------------------------------------------- <<<<<
 

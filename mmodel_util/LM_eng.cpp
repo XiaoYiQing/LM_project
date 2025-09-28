@@ -587,17 +587,17 @@ void LM_eng::step2_LM_construct(){
 
         // Generate the two partitions with their complex conjugates inserted 
         // in interleaving fashion.
-        shared_ptr<fData> myFrc1 = myFr1.gen_cplx_conj_comb();
-        shared_ptr<fData> myFrc2 = myFr2.gen_cplx_conj_comb();
+        fData myFrc1 = myFr1.gen_cplx_conj_comb();
+        fData myFrc2 = myFr2.gen_cplx_conj_comb();
 
         // Construct the Loewner Matrix using the two cconj injected partitions.
-        this->LM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
+        this->LM = *LM_UTIL::build_LM( myFrc1, myFrc2 );
         // Construct the Loewner Matrix using the two cconj injected partitions.
-        this->SLM = *LM_UTIL::build_SLM( *myFrc1, *myFrc2 );
+        this->SLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
         // Construct the W matrix vector using partition 1.
-        this->W = *LM_UTIL::build_W( *myFrc1 );
+        this->W = *LM_UTIL::build_W( myFrc1 );
         // Construct the F matrix vector using partition 2.
-        this->F = *LM_UTIL::build_F( *myFrc2 );
+        this->F = *LM_UTIL::build_F( myFrc2 );
 
     }catch(...){
 
@@ -728,12 +728,12 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
 
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
-    shared_ptr<fData> myFrc1 = myFr1.gen_cplx_conj_comb();
-    shared_ptr<fData> myFrc2 = myFr2.gen_cplx_conj_comb();
+    fData myFrc1 = myFr1.gen_cplx_conj_comb();
+    fData myFrc2 = myFr2.gen_cplx_conj_comb();
 
     // Obtain the number of complex conjugated f data points.
-    unsigned int frc1_len = myFrc1->get_f_cnt();
-    unsigned int frc2_len = myFrc2->get_f_cnt();
+    unsigned int frc1_len = myFrc1.get_f_cnt();
+    unsigned int frc2_len = myFrc2.get_f_cnt();
 
     // Obtain the expected height and width of the final real LMs.
     unsigned int LM_h = frc2_len*out_cnt;
@@ -1173,13 +1173,13 @@ shared_ptr<fData> LM_eng::get_Frc1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return this->myFData.red_partit( this->partit1IdxArr ).gen_cplx_conj_comb();
+    return make_shared<fData>( this->myFData.red_partit( this->partit1IdxArr ).gen_cplx_conj_comb() );
 }
 shared_ptr<fData> LM_eng::get_Frc2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return this->myFData.red_partit( this->partit2IdxArr ).gen_cplx_conj_comb();
+    return make_shared<fData>( this->myFData.red_partit( this->partit2IdxArr ).gen_cplx_conj_comb() );
 }
 
 
