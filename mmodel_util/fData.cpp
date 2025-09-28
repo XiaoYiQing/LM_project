@@ -449,11 +449,11 @@ fData fData::red_partit_lin( unsigned int rSize ){
     vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, this->f_vec.size(), rSize );
 
     // Use the main function with the created sub-indexing vector.
-    return *this->red_partit( fr_idx_vec );
+    return this->red_partit( fr_idx_vec );
 
 }
 
-shared_ptr<fData> fData::red_partit( const vector< unsigned int >& fr_idx_vec ) const{
+fData fData::red_partit( const vector< unsigned int >& fr_idx_vec ) const{
 
     // Obtain the size of the frequency data set.
     unsigned int rSize = fr_idx_vec.size();
@@ -470,13 +470,13 @@ shared_ptr<fData> fData::red_partit( const vector< unsigned int >& fr_idx_vec ) 
     }
 
     // Create the return variable.
-    shared_ptr<fData> retVec = std::make_shared<fData>( f1_vec, f_Xr_vec, f_Xi_vec ) ;
-    retVec->IOcnt[0] = this->IOcnt[0];
-    retVec->IOcnt[1] = this->IOcnt[1];
-    retVec->f_pref = this->f_pref;
-    retVec->fD_type = this->fD_type;
-    retVec->fD_format = this->fD_format;
-    retVec->systImp = this->systImp;
+    fData retVec = fData( f1_vec, f_Xr_vec, f_Xi_vec ) ;
+    retVec.IOcnt[0] = this->IOcnt[0];
+    retVec.IOcnt[1] = this->IOcnt[1];
+    retVec.f_pref = this->f_pref;
+    retVec.fD_type = this->fD_type;
+    retVec.fD_format = this->fD_format;
+    retVec.systImp = this->systImp;
 
     return retVec;
 

@@ -26,16 +26,16 @@ void tests::LM_eng_cplx_LM_test(){
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
     // Create a fData subset.
-    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+    fData myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    vector< shared_ptr<fData> > myFrs = myFr.gen_2_partit();
     shared_ptr<fData> partit1 = myFrs.at(0);
     shared_ptr<fData> partit2 = myFrs.at(1);
 
     // Obtain the number of outputs and inputs.
-    unsigned int out_cnt = myFr->get_out_cnt();
-    unsigned int in_cnt = myFr->get_in_cnt();
+    unsigned int out_cnt = myFr.get_out_cnt();
+    unsigned int in_cnt = myFr.get_in_cnt();
 
     // Initialize test boolean.
     bool match_bool = true;
@@ -216,10 +216,10 @@ void tests::LM_pencil_test(){
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, 100 );
     // Create a fData subset.
-    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+    fData myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    vector< shared_ptr<fData> > myFrs = myFr.gen_2_partit();
     shared_ptr<fData> partit1 = myFrs.at(0);
     shared_ptr<fData> partit2 = myFrs.at(1);
 
@@ -342,10 +342,10 @@ void tests::LM_eng_reT_test(){
     // Create a subset linear index array.
     vector< unsigned int > fr_idx_arr = utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, sub_blk_cnt );
     // Create a fData subset.
-    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+    fData myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    vector< shared_ptr<fData> > myFrs = myFr.gen_2_partit();
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
     shared_ptr<fData> myFr1 = myFrs.at(0)->gen_cplx_conj_comb();
@@ -413,10 +413,10 @@ void tests::LM_eng_full_SFML_testrun(){
     vector< unsigned int > fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, fr_len );
     // Create a fData subset.
-    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+    fData myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    vector< shared_ptr<fData> > myFrs = myFr.gen_2_partit();
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
     shared_ptr<fData> myFrc1 = myFrs.at(0)->gen_cplx_conj_comb();
@@ -480,10 +480,10 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
 
     // Generate a random test point.
-    unsigned int test_f_idx = utils::rIntGen( 0, myFr->get_f_cnt() - 1, 1 )->at(0);
-    complex<double> test_f = myFr->get_cplx_f_at( test_f_idx );
+    unsigned int test_f_idx = utils::rIntGen( 0, myFr.get_f_cnt() - 1, 1 )->at(0);
+    complex<double> test_f = myFr.get_cplx_f_at( test_f_idx );
     Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
-    Eigen::MatrixXcd ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - tmpAns;
+    Eigen::MatrixXcd ansDiff = myFr.get_cplxData_at_f( test_f_idx ) - tmpAns;
 
     match_bool = true;
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
@@ -497,8 +497,8 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Obtain a reference frequency value.
-    // double ref_f = myFr->get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
-    double ref_f = myFr->get_fval_at( myFr->get_f_cnt() - 1 );
+    // double ref_f = myFr.get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
+    double ref_f = myFr.get_fval_at( myFr.get_f_cnt() - 1 );
     
     // Construct the LM pencil.
     shared_ptr<Eigen::MatrixXd> LM_pen = 
@@ -527,7 +527,7 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXcd H_z = C_full * tmp_z.inverse() * B_full;
 
     match_bool = true;
-    ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - H_z;
+    ansDiff = myFr.get_cplxData_at_f( test_f_idx ) - H_z;
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system post-SVD evaluation test: " << match_bool << endl;
 
@@ -659,10 +659,10 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     vector< unsigned int > fr_idx_arr = 
         utils::gen_lin_idx_arr( 0, myFData.get_f_cnt() - 1, fr_len );
     // Create a fData subset.
-    shared_ptr<fData> myFr = myFData.red_partit( fr_idx_arr );
+    fData myFr = myFData.red_partit( fr_idx_arr );
 
     // Generate two partitions from this data subset.
-    vector< shared_ptr<fData> > myFrs = myFr->gen_2_partit();
+    vector< shared_ptr<fData> > myFrs = myFr.gen_2_partit();
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
     shared_ptr<fData> myFrc1 = myFrs.at(0)->gen_cplx_conj_comb();
@@ -726,10 +726,10 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
 
     // Generate a random test point.
-    unsigned int test_f_idx = utils::rIntGen( 0, myFr->get_f_cnt() - 1, 1 )->at(0);
-    complex<double> test_f = myFr->get_cplx_f_at( test_f_idx );
+    unsigned int test_f_idx = utils::rIntGen( 0, myFr.get_f_cnt() - 1, 1 )->at(0);
+    complex<double> test_f = myFr.get_cplx_f_at( test_f_idx );
     Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
-    Eigen::MatrixXcd ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - tmpAns;
+    Eigen::MatrixXcd ansDiff = myFr.get_cplxData_at_f( test_f_idx ) - tmpAns;
 
     match_bool = true;
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
@@ -743,8 +743,8 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Obtain a reference frequency value.
-    // double ref_f = myFr->get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
-    double ref_f = myFr->get_fval_at( myFr->get_f_cnt() - 1 );
+    // double ref_f = myFr.get_fval_at( (unsigned int) ceil( (double) fr_len/2 ) );
+    double ref_f = myFr.get_fval_at( myFr.get_f_cnt() - 1 );
     
     // Construct the LM pencil.
     shared_ptr<Eigen::MatrixXd> LM_pen = 
@@ -773,7 +773,7 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     Eigen::MatrixXcd H_z = C_full * tmp_z.inverse() * B_full;
 
     match_bool = true;
-    ansDiff = myFr->get_cplxData_at_f( test_f_idx ) - H_z;
+    ansDiff = myFr.get_cplxData_at_f( test_f_idx ) - H_z;
     match_bool = match_bool && ( ansDiff.cwiseAbs2().maxCoeff() < 1e-12 );
     cout << "Full sized LM system post-SVD evaluation test: " << match_bool << endl;
 

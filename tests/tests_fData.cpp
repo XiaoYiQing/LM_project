@@ -289,13 +289,13 @@ void tests::fData_test_2( unsigned int test_idx ){
         vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, myF.get_f_cnt() - 1, rSize );
 
         // Generate a reduced fData.
-        shared_ptr<fData> myFr = myF.red_partit( fr_idx_vec );
+        fData myFr = myF.red_partit( fr_idx_vec );
 
         bool match_bool = true;
         for( unsigned int z = 0; z < fr_idx_vec.size(); z++ ){
-            match_bool = match_bool && ( myFr->get_fval_at(z) == myF.get_fval_at( fr_idx_vec.at(z) ) );
-            match_bool = match_bool && ( myFr->get_reData_at_f(z) == myF.get_reData_at_f( fr_idx_vec.at(z) ) );
-            match_bool = match_bool && ( myFr->get_imData_at_f(z) == myF.get_imData_at_f( fr_idx_vec.at(z) ) );
+            match_bool = match_bool && ( myFr.get_fval_at(z) == myF.get_fval_at( fr_idx_vec.at(z) ) );
+            match_bool = match_bool && ( myFr.get_reData_at_f(z) == myF.get_reData_at_f( fr_idx_vec.at(z) ) );
+            match_bool = match_bool && ( myFr.get_imData_at_f(z) == myF.get_imData_at_f( fr_idx_vec.at(z) ) );
         }
         cout << "Reduced frequency data object match: " << match_bool << endl;
 
@@ -320,19 +320,19 @@ void tests::fData_test_2( unsigned int test_idx ){
         vector< unsigned int > fr_idx_vec = utils::gen_lin_idx_arr( 0, myF.get_f_cnt() - 1, rSize );
 
         // Generate a reduced fData.
-        shared_ptr<fData> myFr = myF.red_partit( fr_idx_vec );
+        fData myFr = myF.red_partit( fr_idx_vec );
 
         // Generate the complex conjugate set and insert into the reduced array.
-        shared_ptr<fData> myFr_cconj = myFr->gen_cplx_conj_comb();
+        shared_ptr<fData> myFr_cconj = myFr.gen_cplx_conj_comb();
 
         // Define the test boolean result.
         bool match_bool = true;
         
         // Obtain the original reduced fData size.
-        unsigned int orig_fr_cnt = myFr->get_f_cnt();
+        unsigned int orig_fr_cnt = myFr.get_f_cnt();
 
         unsigned int idx_offset = 0;
-        if( myFr->hasDC() ){
+        if( myFr.hasDC() ){
             idx_offset = 1;
         }
         // Verify the placement of the data and their respective complex conjugates.
@@ -344,13 +344,13 @@ void tests::fData_test_2( unsigned int test_idx ){
 
             unsigned int z2 = 2*z - idx_offset;
 
-            match_bool = match_bool && ( myFr->get_fval_at(z) ==
+            match_bool = match_bool && ( myFr.get_fval_at(z) ==
                 myFr_cconj->get_fval_at( z2 ) );
-            match_bool = match_bool && ( myFr->get_fval_at(z) ==
+            match_bool = match_bool && ( myFr.get_fval_at(z) ==
                 -1*myFr_cconj->get_fval_at( z2 + 1 ) );
-            match_bool = match_bool && ( myFr->get_cplxData_at_f(z) ==  
+            match_bool = match_bool && ( myFr.get_cplxData_at_f(z) ==  
                 myFr_cconj->get_cplxData_at_f( z2 ) );
-            match_bool = match_bool && ( myFr->get_cplxData_at_f(z) ==  
+            match_bool = match_bool && ( myFr.get_cplxData_at_f(z) ==  
                 ( myFr_cconj->get_cplxData_at_f( z2 + 1 ) ).conjugate() );
 
         }

@@ -582,13 +582,13 @@ void LM_eng::step2_LM_construct(){
     try{
 
         // Create a fData partitions.
-        shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
-        shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
+        fData myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+        fData myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
         // Generate the two partitions with their complex conjugates inserted 
         // in interleaving fashion.
-        shared_ptr<fData> myFrc1 = myFr1->gen_cplx_conj_comb();
-        shared_ptr<fData> myFrc2 = myFr2->gen_cplx_conj_comb();
+        shared_ptr<fData> myFrc1 = myFr1.gen_cplx_conj_comb();
+        shared_ptr<fData> myFrc2 = myFr2.gen_cplx_conj_comb();
 
         // Construct the Loewner Matrix using the two cconj injected partitions.
         this->LM = *LM_UTIL::build_LM( *myFrc1, *myFrc2 );
@@ -688,14 +688,14 @@ void LM_eng::step3skip2_LM_re_construct(){
     try{
 
         // Create a fData partitions.
-        shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
-        shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
+        fData myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+        fData myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
         // Construct the Loewner Matrices.
-        this->LM_re = *LM_UTIL::build_LM_re( *myFr1, *myFr2 );
-        this->SLM_re = *LM_UTIL::build_SLM_re( *myFr1, *myFr2 );
-        this->W_re = *LM_UTIL::build_W_re( *myFr1 );
-        this->F_re = *LM_UTIL::build_F_re( *myFr2 );
+        this->LM_re = *LM_UTIL::build_LM_re( myFr1, myFr2 );
+        this->SLM_re = *LM_UTIL::build_SLM_re( myFr1, myFr2 );
+        this->W_re = *LM_UTIL::build_W_re( myFr1 );
+        this->F_re = *LM_UTIL::build_F_re( myFr2 );
 
     }catch(...){
         cerr << "step3skip2_LM_re_construct exception rethrow log." << endl;
@@ -723,13 +723,13 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
     unsigned int fr2_len = this->partit2IdxArr.size();
 
     // Create a fData partitions.
-    shared_ptr<fData> myFr1 = this->myFData.red_partit( this->partit1IdxArr );
-    shared_ptr<fData> myFr2 = this->myFData.red_partit( this->partit2IdxArr );
+    fData myFr1 = this->myFData.red_partit( this->partit1IdxArr );
+    fData myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
     // Generate the two partitions with their complex conjugates inserted 
     // in interleaving fashion.
-    shared_ptr<fData> myFrc1 = myFr1->gen_cplx_conj_comb();
-    shared_ptr<fData> myFrc2 = myFr2->gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc1 = myFr1.gen_cplx_conj_comb();
+    shared_ptr<fData> myFrc2 = myFr2.gen_cplx_conj_comb();
 
     // Obtain the number of complex conjugated f data points.
     unsigned int frc1_len = myFrc1->get_f_cnt();
@@ -764,7 +764,7 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
     if( this->f1_has_DC_pt ){
 
         // Get the DC point data.
-        Eigen::MatrixXcd f1_dc_data = myFr1->get_cplxData_at_f(0);
+        Eigen::MatrixXcd f1_dc_data = myFr1.get_cplxData_at_f(0);
         
         // Set block column index to first column block.
         lead_y = 0;
@@ -774,8 +774,8 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
         for( unsigned int i = 0; i < fr2_len; i++ ){
 
             // Current partition #2 frequency and data.
-            f2_i = myFr2->get_cplx_f_at(i);
-            S2_i = myFr2->get_cplxData_at_f(i);
+            f2_i = myFr2.get_cplx_f_at(i);
+            S2_i = myFr2.get_cplxData_at_f(i);
 
             LMt_ij = S2_i - f1_dc_data;
             LMt_ij = sqrt_of_2 * LMt_ij/( f2_i );
@@ -795,7 +795,7 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
     }else if( this->f2_has_DC_pt ){
 
         // Get the DC point data.
-        Eigen::MatrixXcd f2_dc_data = myFr2->get_cplxData_at_f(0);
+        Eigen::MatrixXcd f2_dc_data = myFr2.get_cplxData_at_f(0);
         // Set block row index to first row block.
         lead_x = 0;
 
@@ -804,8 +804,8 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
         for( unsigned int j = 0; j < fr1_len; j++ ){
 
             // Current partition #1 frequency and data.
-            f1_j = myFr1->get_cplx_f_at(j);
-            S1_j = myFr1->get_cplxData_at_f(j);
+            f1_j = myFr1.get_cplx_f_at(j);
+            S1_j = myFr1.get_cplxData_at_f(j);
 
             LMt_ij = f2_dc_data - S1_j;
             LMt_ij = -1 * sqrt_of_2 * LMt_ij/( f1_j );
@@ -851,11 +851,11 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
             lead_y = 2*( ( j - j_offset )*in_cnt ) + y_lead_offset;
 
             // Current partition #2 frequency and data.
-            f2_i = myFr2->get_cplx_f_at( i );
-            S2_i = myFr2->get_cplxData_at_f( i );
+            f2_i = myFr2.get_cplx_f_at( i );
+            S2_i = myFr2.get_cplxData_at_f( i );
             // Current partition #1 frequency and data.
-            f1_j = myFr1->get_cplx_f_at( j );
-            S1_j = myFr1->get_cplxData_at_f( j );
+            f1_j = myFr1.get_cplx_f_at( j );
+            S1_j = myFr1.get_cplxData_at_f( j );
 
             // Current block LM pieces computation.
             LM_a_ij = ( S2_i - S1_j )/( f2_i - f1_j );
@@ -895,7 +895,7 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
 
         lead_x = 2*( ( i - i_offset )*out_cnt ) + x_lead_offset;
 
-        tmp = myFr2->get_cplxData_at_f(i);
+        tmp = myFr2.get_cplxData_at_f(i);
 
         this->F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*tmp.real();
         this->F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -sqrt_of_2*tmp.imag();
@@ -909,7 +909,7 @@ void LM_eng::step3skip2_LM_re_construct_alt(){
 
         lead_y = 2*( ( j - j_offset )*in_cnt ) + y_lead_offset;
 
-        S1_j = myFr1->get_cplxData_at_f(j);
+        S1_j = myFr1.get_cplxData_at_f(j);
 
         this->W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S1_j.real();
         this->W_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = sqrt_of_2*S1_j.imag();
@@ -1160,26 +1160,26 @@ shared_ptr<fData> LM_eng::get_Fr1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return this->myFData.red_partit( this->partit1IdxArr );
+    return make_shared<fData>( this->myFData.red_partit( this->partit1IdxArr ) );
 }
 shared_ptr<fData> LM_eng::get_Fr2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return this->myFData.red_partit( this->partit2IdxArr );
+    return make_shared<fData>( this->myFData.red_partit( this->partit2IdxArr ) );
 }
 
 shared_ptr<fData> LM_eng::get_Frc1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return this->myFData.red_partit( this->partit1IdxArr )->gen_cplx_conj_comb();
+    return this->myFData.red_partit( this->partit1IdxArr ).gen_cplx_conj_comb();
 }
 shared_ptr<fData> LM_eng::get_Frc2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return this->myFData.red_partit( this->partit2IdxArr )->gen_cplx_conj_comb();
+    return this->myFData.red_partit( this->partit2IdxArr ).gen_cplx_conj_comb();
 }
 
 
