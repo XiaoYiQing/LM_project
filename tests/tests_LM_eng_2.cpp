@@ -257,10 +257,10 @@ void tests::LM_eng_class_test(){
     // Specify the test system's order.
     unsigned int tarOrder = 10;
     // Obtain transfer function at specified system order.
-    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+    LTI_descSyst myTF = myEng.step5_LM_to_tf( tarOrder );
 
     // Compute the sparse system.
-    myTF->gen_sparse_syst();
+    myTF.gen_sparse_syst();
 
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
@@ -270,7 +270,7 @@ void tests::LM_eng_class_test(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    Matrix3DXcd H_app_mat_arr = myTF.tf_sparse_eval( testFVec );
     // Obtain the original data as an array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
@@ -284,7 +284,7 @@ void tests::LM_eng_class_test(){
     test_bool = test_bool && ( total_RMS_err < 3.637e-5 );
 
     // Determine system stability.
-    bool is_stab = myTF->is_stable();
+    bool is_stab = myTF.is_stable();
     cout << "Is stable: " << is_stab << endl;
     test_bool = test_bool && is_stab;
 
@@ -429,10 +429,10 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     // Specify the test system's order.
     unsigned int tarOrder = 70;
     // Obtain transfer function at specified system order.
-    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+    LTI_descSyst myTF = myEng.step5_LM_to_tf( tarOrder );
 
     // Compute the sparse system.
-    myTF->gen_sparse_syst();
+    myTF.gen_sparse_syst();
 
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
@@ -442,7 +442,7 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    Matrix3DXcd H_app_mat_arr = myTF.tf_sparse_eval( testFVec );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
@@ -453,7 +453,7 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     cout << "The total RMS error: " << total_RMS_err << endl;
 
     // Get stability confirmation.
-    bool isStab = myTF->is_stable();
+    bool isStab = myTF.is_stable();
     cout << "System stability: " << isStab << endl;
 
     bool test_bool = true;
@@ -526,10 +526,10 @@ void tests::LM_eng_rSVD_case_run(){
     // Specify the test system's order.
     unsigned int tarOrder = 48;
     // Obtain transfer function at specified system order.
-    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+    LTI_descSyst myTF = myEng.step5_LM_to_tf( tarOrder );
 
     // Compute the sparse system.
-    myTF->gen_sparse_syst();
+    myTF.gen_sparse_syst();
 
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
@@ -539,7 +539,7 @@ void tests::LM_eng_rSVD_case_run(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    Matrix3DXcd H_app_mat_arr = myTF.tf_sparse_eval( testFVec );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
@@ -552,7 +552,7 @@ void tests::LM_eng_rSVD_case_run(){
     test_bool = test_bool && ( total_RMS_err < 0.00055 );
 
     // Get stability confirmation.
-    bool isStab = myTF->is_stable();
+    bool isStab = myTF.is_stable();
     cout << "System stability: " << isStab << endl;
     test_bool = test_bool && isStab;
 
@@ -585,10 +585,10 @@ void tests::LM_eng_rSVD_case_run_vb(){
     // Specify the test system's order.
     unsigned int tarOrder = 49;
     // Obtain transfer function at specified system order.
-    shared_ptr<LTI_descSyst> myTF = myEng.step5_LM_to_tf( tarOrder );
+    LTI_descSyst myTF = myEng.step5_LM_to_tf( tarOrder );
 
     // Compute the sparse system.
-    myTF->gen_sparse_syst();
+    myTF.gen_sparse_syst();
 
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
@@ -598,7 +598,7 @@ void tests::LM_eng_rSVD_case_run_vb(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    Matrix3DXcd H_app_mat_arr = myTF.tf_sparse_eval( testFVec );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
@@ -611,7 +611,7 @@ void tests::LM_eng_rSVD_case_run_vb(){
     test_bool = test_bool && ( total_RMS_err < 0.00051 );
 
     // Get stability confirmation.
-    bool isStab = myTF->is_stable();
+    bool isStab = myTF.is_stable();
     cout << "System stability: " << isStab << endl;
     test_bool = test_bool && isStab;
 

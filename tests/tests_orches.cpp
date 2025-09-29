@@ -40,7 +40,7 @@ void tests::orch_SFLM_full_run_test(){
 
 
     // Generate a LIT system.
-    shared_ptr<LTI_descSyst> myTF = my_LM_eng->step5_LM_to_tf( 49 );
+    LTI_descSyst myTF = my_LM_eng->step5_LM_to_tf( 49 );
 
 
 // ---------------------------------------------------------------------- >>>>>
@@ -48,7 +48,7 @@ void tests::orch_SFLM_full_run_test(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Generate the sparse system equivalent.
-    myTF->gen_sparse_syst();
+    myTF.gen_sparse_syst();
 
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
@@ -58,7 +58,7 @@ void tests::orch_SFLM_full_run_test(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    Matrix3DXcd H_app_mat_arr = myTF.tf_sparse_eval( testFVec );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
@@ -68,7 +68,7 @@ void tests::orch_SFLM_full_run_test(){
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
     // Test for stability.
-    bool is_stab = myTF->is_stable();
+    bool is_stab = myTF.is_stable();
     cout << "System stability: " << is_stab << endl;
 
     bool test_bool = true;
@@ -122,7 +122,7 @@ void tests::orch_SFLM_direc_re_run_test(){
         FCT_SCR::SFLM_direc_re_run( myFData, f_r_idx_vec, f1_idx_vec, f2_idx_vec );
 
     // Generate a LIT system.
-    shared_ptr<LTI_descSyst> myTF = my_LM_eng->step5_LM_to_tf( 49 );
+    LTI_descSyst myTF = my_LM_eng->step5_LM_to_tf( 49 );
 
 
 // ---------------------------------------------------------------------- >>>>>
@@ -130,7 +130,7 @@ void tests::orch_SFLM_direc_re_run_test(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Generate the sparse system equivalent.
-    myTF->gen_sparse_syst();
+    myTF.gen_sparse_syst();
 
     // Generate a frequency evaluation array.
     Eigen::VectorXd tmp_fvec = myFData.getF_vec();
@@ -140,7 +140,7 @@ void tests::orch_SFLM_direc_re_run_test(){
     }
 
     // Evaluate the transfer function over the specified frequency array values.
-    Matrix3DXcd H_app_mat_arr = myTF->tf_sparse_eval( testFVec );
+    Matrix3DXcd H_app_mat_arr = myTF.tf_sparse_eval( testFVec );
     // Obtain the original data as a array of complex matrices.
     Matrix3DXcd H_orig_mat_arr = Matrix3DXcd( myFData.getXr_vec(), myFData.getXi_vec() );
     // Compute the difference between the original and approximated frequency data.
@@ -150,7 +150,7 @@ void tests::orch_SFLM_direc_re_run_test(){
     double total_RMS_err = Matrix3DXcd::RMS_total_comp( H_diff );
     cout << "The total RMS error: " << total_RMS_err << endl;
     // Test for stability.
-    bool is_stab = myTF->is_stable();
+    bool is_stab = myTF.is_stable();
     cout << "System stability: " << is_stab << endl;
 
     bool test_bool = true;

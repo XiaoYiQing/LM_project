@@ -1041,7 +1041,7 @@ void LM_eng::step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt ){
 }
 
 
-shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
+LTI_descSyst LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
 
     if( !flag4_pen_SVD ){
         throw::runtime_error( "Step 5 cannot be executed: step 4 not set (LM pencil SVD)." );
@@ -1067,8 +1067,7 @@ shared_ptr<LTI_descSyst> LM_eng::step5_LM_to_tf( unsigned int svd_ret_cnt ){
     Eigen::MatrixXd D_n = Eigen::MatrixXd::Zero( out_cnt, out_cnt );
 
     // Model generation.
-    shared_ptr<LTI_descSyst> mySyst = 
-        make_shared<LTI_descSyst>( E_n, A_n, B_n, C_n, D_n );
+    LTI_descSyst mySyst = LTI_descSyst( E_n, A_n, B_n, C_n, D_n );
 
     return mySyst;
 

@@ -207,7 +207,7 @@ public:
     NOTE: the input must be the number of singular values, NOT the singular value index
     where the cut-off occurs.
     */
-    shared_ptr<LTI_descSyst> step5_LM_to_tf( unsigned int svd_ret_cnt );
+    LTI_descSyst step5_LM_to_tf( unsigned int svd_ret_cnt );
 
 // ====================================================================== <<<<<
 
