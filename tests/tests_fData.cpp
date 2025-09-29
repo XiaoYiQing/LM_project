@@ -753,23 +753,23 @@ void tests::fData_prefix_manip_test( unsigned int test_idx ){
         double num_thresh = 1e-9;
 
         // Select a random sample point.
-        shared_ptr<vector<int>> samp_idx_vec = utils::rIntGen( 1, myF.get_f_cnt() - 1, samp_cnt );
+        vector<int> samp_idx_vec = utils::rIntGen( 1, myF.get_f_cnt() - 1, samp_cnt );
 
         // Obtain f samples before rescaling.
         vector<double> f_samp_vec_bef( samp_cnt );
-        for( unsigned int z = 0; z < samp_idx_vec->size(); z++ ){
-            f_samp_vec_bef.at(z) = myF.get_fval_at( samp_idx_vec->at(z) );
+        for( unsigned int z = 0; z < samp_idx_vec.size(); z++ ){
+            f_samp_vec_bef.at(z) = myF.get_fval_at( samp_idx_vec.at(z) );
         }
         // Perform normalization of the freq vector.
         myF.f_rescale();
         // Obtain f samples after rescaling.
         vector<double> f_samp_vec_aft( samp_cnt );
-        for( unsigned int z = 0; z < samp_idx_vec->size(); z++ ){
-            f_samp_vec_aft.at(z) = myF.get_fval_at( samp_idx_vec->at(z) );
+        for( unsigned int z = 0; z < samp_idx_vec.size(); z++ ){
+            f_samp_vec_aft.at(z) = myF.get_fval_at( samp_idx_vec.at(z) );
         }
 
         // Verify if the scaling is correctly applied to all samples.
-        for( unsigned int z = 0; z < samp_idx_vec->size(); z++ ){
+        for( unsigned int z = 0; z < samp_idx_vec.size(); z++ ){
             test_bool = test_bool && 
                 ( f_samp_vec_aft.at(z)/f_samp_vec_bef.at(z) - rescale_fact < num_thresh );    
         }

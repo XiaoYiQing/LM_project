@@ -71,7 +71,7 @@ int main() {
     // tests::MatrixXcd_to_file_test();
     // tests::file_to_MatrixXcd_test();
 
-    // tests::numUtils_test_1(4);
+    tests::numUtils_test_1(3);
     // tests::gen_match_vector_test();
     // tests::sort_num_vec_inplace_test();
 
@@ -109,7 +109,7 @@ int main() {
     // tests::LM_eng_print_singVals();
     // tests::LM_eng_re_LM_comp_test( 1 );
 
-    tests::orch_SFLM_full_run_test();
+    // tests::orch_SFLM_full_run_test();
     // tests::orch_SFLM_direc_re_run_test();
     // FCT_SCR::singVal_extract_run();
 

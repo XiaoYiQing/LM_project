@@ -480,7 +480,7 @@ void tests::LM_eng_full_SFML_testrun(){
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
 
     // Generate a random test point.
-    unsigned int test_f_idx = utils::rIntGen( 0, myFr.get_f_cnt() - 1, 1 )->at(0);
+    unsigned int test_f_idx = utils::rIntGen( 0, myFr.get_f_cnt() - 1, 1 ).at(0);
     complex<double> test_f = myFr.get_cplx_f_at( test_f_idx );
     Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
     Eigen::MatrixXcd ansDiff = myFr.get_cplxData_at_f( test_f_idx ) - tmpAns;
@@ -725,7 +725,7 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     Eigen::MatrixXd myF_re = myF_re_tmp.real();
 
     // Generate a random test point.
-    unsigned int test_f_idx = utils::rIntGen( 0, myFr.get_f_cnt() - 1, 1 )->at(0);
+    unsigned int test_f_idx = utils::rIntGen( 0, myFr.get_f_cnt() - 1, 1 ).at(0);
     complex<double> test_f = myFr.get_cplx_f_at( test_f_idx );
     Eigen::MatrixXcd tmpAns = myW_re*( ( - test_f*myLM_re + mySLM_re ).inverse() )*myF_re;
     Eigen::MatrixXcd ansDiff = myFr.get_cplxData_at_f( test_f_idx ) - tmpAns;
