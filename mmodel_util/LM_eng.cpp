@@ -591,11 +591,11 @@ void LM_eng::step2_LM_construct(){
         // Construct the Loewner Matrix using the two cconj injected partitions.
         this->LM = LM_UTIL::build_LM( myFrc1, myFrc2 );
         // Construct the Loewner Matrix using the two cconj injected partitions.
-        this->SLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
+        this->SLM = LM_UTIL::build_SLM( myFrc1, myFrc2 );
         // Construct the W matrix vector using partition 1.
-        this->W = *LM_UTIL::build_W( myFrc1 );
+        this->W = LM_UTIL::build_W( myFrc1 );
         // Construct the F matrix vector using partition 2.
-        this->F = *LM_UTIL::build_F( myFrc2 );
+        this->F = LM_UTIL::build_F( myFrc2 );
 
     }catch(...){
 
@@ -1382,7 +1382,7 @@ Eigen::MatrixXcd LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){
 
 
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fData& f2Data ){
+Eigen::MatrixXcd LM_UTIL::build_SLM( const fData& f1Data, const fData& f2Data ){
 
     // Obtain the size of the two partitions.
     unsigned int f1Size = f1Data.get_f_cnt();
@@ -1400,7 +1400,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fDat
     unsigned int col_cnt = f1Size*in_cnt;
 
     // Initialize the shifted Loewner Matrix.
-    shared_ptr<Eigen::MatrixXcd> sLM = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
+    Eigen::MatrixXcd sLM = Eigen::MatrixXcd( row_cnt, col_cnt );
 
     // Initialize temporary matrix representing the current sub-block being computed.
     Eigen::MatrixXcd sLM_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
@@ -1437,7 +1437,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fDat
             sLM_ij = ( f2_i*f2_D_i - f1_j*f1_D_j )/( f2_i - f1_j );
 
             // Insert the current calculated block into its part in the full matrix.
-            sLM->block( lead_x, lead_y, out_cnt, in_cnt) = sLM_ij;
+            sLM.block( lead_x, lead_y, out_cnt, in_cnt) = sLM_ij;
 
         }
 
@@ -1447,7 +1447,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_SLM( const fData& f1Data, const fDat
 
 }
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_W( const fData& f1Data ){
+Eigen::MatrixXcd LM_UTIL::build_W( const fData& f1Data ){
 
     // Obtain the size of the two partitions.
     unsigned int f1Size = f1Data.get_f_cnt();
@@ -1463,7 +1463,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_W( const fData& f1Data ){
     unsigned int col_cnt = f1Size*in_cnt;
 
     // Initialize the W matrix vector.
-    shared_ptr<Eigen::MatrixXcd> W = std::make_shared<Eigen::MatrixXcd>( out_cnt, col_cnt );
+    Eigen::MatrixXcd W = Eigen::MatrixXcd( out_cnt, col_cnt );
 
     // Initialize current freq. data from each partition.
     Eigen::MatrixXcd f1_D_j = Eigen::MatrixXcd( out_cnt, in_cnt );
@@ -1482,7 +1482,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_W( const fData& f1Data ){
         lead_y = j*in_cnt;
 
         // Insert the current calculated block into its part in the full matrix.
-        W->block( lead_x, lead_y, out_cnt, in_cnt) = f1_D_j;
+        W.block( lead_x, lead_y, out_cnt, in_cnt) = f1_D_j;
 
     }
 
@@ -1491,7 +1491,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_W( const fData& f1Data ){
 }
 
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_F( const fData& f2Data ){
+Eigen::MatrixXcd LM_UTIL::build_F( const fData& f2Data ){
 
     // Obtain the size of the two partitions.
     unsigned int f2Size = f2Data.get_f_cnt();
@@ -1507,7 +1507,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_F( const fData& f2Data ){
     unsigned int row_cnt = f2Size*out_cnt;
 
     // Initialize the W matrix vector.
-    shared_ptr<Eigen::MatrixXcd> F = std::make_shared<Eigen::MatrixXcd>( row_cnt, in_cnt );
+    Eigen::MatrixXcd F = Eigen::MatrixXcd( row_cnt, in_cnt );
 
     // Initialize current freq. data from each partition.
     Eigen::MatrixXcd f2_D_i = Eigen::MatrixXcd( out_cnt, in_cnt );
@@ -1526,7 +1526,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_F( const fData& f2Data ){
         lead_x = i*out_cnt;
 
         // Insert the current calculated block into its part in the full matrix.
-        F->block( lead_x, lead_y, out_cnt, in_cnt) = f2_D_i;
+        F.block( lead_x, lead_y, out_cnt, in_cnt) = f2_D_i;
 
     }
 

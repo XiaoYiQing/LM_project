@@ -361,20 +361,20 @@ namespace LM_UTIL{
     /*
     Construct a shifted-Loewner Matrix.
     */
-    shared_ptr<Eigen::MatrixXcd> build_SLM( const fData& f1Data, const fData& f2Data );
+    Eigen::MatrixXcd build_SLM( const fData& f1Data, const fData& f2Data );
 
 
     /*
     Construct the row matrix vector containing the partition 1 data matrices in 
     the same order they are used to construct the LM and SLM.
     */
-    shared_ptr<Eigen::MatrixXcd> build_W( const fData& f1Data );
+    Eigen::MatrixXcd build_W( const fData& f1Data );
 
     /*
     Construct the col matrix vector containing the partition 2 data matrices in 
     the same order they are used to construct the LM and SLM.
     */
-    shared_ptr<Eigen::MatrixXcd> build_F( const fData& f2Data );
+    Eigen::MatrixXcd build_F( const fData& f2Data );
 
     /*
     Construct a real Loewner Matrix. A number of points need to be considered when

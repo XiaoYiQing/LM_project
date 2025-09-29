@@ -88,7 +88,7 @@ void tests::LM_eng_cplx_LM_test(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Construct the shifted Loewner Matrix using the two partitions.
-    shared_ptr<Eigen::MatrixXcd> mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
+    Eigen::MatrixXcd mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
 
     match_bool = true;
 
@@ -106,7 +106,7 @@ void tests::LM_eng_cplx_LM_test(){
         Eigen::MatrixXcd test_SLM_ij = ( test_f_i*test_S_i - test_f_j*test_S_j )/( test_f_i - test_f_j );
         // Obtain the generated LM sub-block.
         Eigen::MatrixXcd SLM_ij = 
-            mySLM->block( ( test_i )*out_cnt, ( test_j )*in_cnt, out_cnt, in_cnt );
+            mySLM.block( ( test_i )*out_cnt, ( test_j )*in_cnt, out_cnt, in_cnt );
         // Compute difference between the two LM sub-blocks.
         Eigen::MatrixXcd SLM_ij_diff = test_SLM_ij - SLM_ij;
 
@@ -128,7 +128,7 @@ void tests::LM_eng_cplx_LM_test(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Construct the W matrix vector using partition 1.
-    shared_ptr<Eigen::MatrixXcd> myW = LM_UTIL::build_W( *partit1 );
+    Eigen::MatrixXcd myW = LM_UTIL::build_W( *partit1 );
 
     match_bool = true;
 
@@ -140,7 +140,7 @@ void tests::LM_eng_cplx_LM_test(){
 
         // Obtain the generated LM sub-block.
         Eigen::MatrixXcd W_ij = 
-            myW->block( 0, ( test_j )*in_cnt, out_cnt, in_cnt );
+            myW.block( 0, ( test_j )*in_cnt, out_cnt, in_cnt );
         // Compute difference between the two LM sub-blocks.
         Eigen::MatrixXcd W_ij_diff = test_S_j - W_ij;
 
@@ -162,7 +162,7 @@ void tests::LM_eng_cplx_LM_test(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Construct the F matrix vector using partition 2.
-    shared_ptr<Eigen::MatrixXcd> myF = LM_UTIL::build_F( *partit2 );
+    Eigen::MatrixXcd myF = LM_UTIL::build_F( *partit2 );
 
     match_bool = true;
 
@@ -174,7 +174,7 @@ void tests::LM_eng_cplx_LM_test(){
 
         // Obtain the generated LM sub-block.
         Eigen::MatrixXcd F_ij = 
-            myF->block( ( test_i )*out_cnt, 0, out_cnt, in_cnt );
+            myF.block( ( test_i )*out_cnt, 0, out_cnt, in_cnt );
         // Compute difference between the two LM sub-blocks.
         Eigen::MatrixXcd F_ij_diff = test_S_i - F_ij;
 
@@ -226,13 +226,13 @@ void tests::LM_pencil_test(){
     // Construct the Loewner Matrix using the two partitions.
     Eigen::MatrixXcd myLM = LM_UTIL::build_LM( *partit1, *partit2 );
     // Construct the Loewner Matrix using the two partitions.
-    shared_ptr<Eigen::MatrixXcd> mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
+    Eigen::MatrixXcd mySLM = LM_UTIL::build_SLM( *partit1, *partit2 );
 
 // ---------------------------------------------------------------------- <<<<<
 
 
     complex<double> cplx_f_ref = partit1->get_cplx_f_at( partit1->get_f_cnt()/2 );
-    shared_ptr<Eigen::MatrixXcd> myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, myLM, *mySLM );
+    shared_ptr<Eigen::MatrixXcd> myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, myLM, mySLM );
 
     // Perform SVD.
     Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *myLM_pen );
@@ -354,7 +354,7 @@ void tests::LM_eng_reT_test(){
     // Construct the Loewner Matrix using the two cconj injected partitions.
     Eigen::MatrixXcd myLM = LM_UTIL::build_LM( myFr1, myFr2 );
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( myFr1, myFr2 );
+    Eigen::MatrixXcd mySLM = LM_UTIL::build_SLM( myFr1, myFr2 );
 
     // Obtain base parameters of the two partitions.
     bool f1_has_DC_pt = myFr1.hasDC();
@@ -440,11 +440,11 @@ void tests::LM_eng_full_SFML_testrun(){
     // Construct the Loewner Matrix using the two cconj injected partitions.
     Eigen::MatrixXcd myLM = LM_UTIL::build_LM( myFrc1, myFrc2 );
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
+    Eigen::MatrixXcd mySLM = LM_UTIL::build_SLM( myFrc1, myFrc2 );
     // Construct the W matrix vector using partition 1.
-    Eigen::MatrixXcd myW = *LM_UTIL::build_W( myFrc1 );
+    Eigen::MatrixXcd myW = LM_UTIL::build_W( myFrc1 );
     // Construct the F matrix vector using partition 2.
-    Eigen::MatrixXcd myF = *LM_UTIL::build_F( myFrc2 );
+    Eigen::MatrixXcd myF = LM_UTIL::build_F( myFrc2 );
 
 // ---------------------------------------------------------------------- <<<<<
 
@@ -686,11 +686,11 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     // Construct the Loewner Matrix using the two cconj injected partitions.
     Eigen::MatrixXcd myLM = LM_UTIL::build_LM( myFrc1, myFrc2 );
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
+    Eigen::MatrixXcd mySLM = LM_UTIL::build_SLM( myFrc1, myFrc2 );
     // Construct the W matrix vector using partition 1.
-    Eigen::MatrixXcd myW = *LM_UTIL::build_W( myFrc1 );
+    Eigen::MatrixXcd myW = LM_UTIL::build_W( myFrc1 );
     // Construct the F matrix vector using partition 2.
-    Eigen::MatrixXcd myF = *LM_UTIL::build_F( myFrc2 );
+    Eigen::MatrixXcd myF = LM_UTIL::build_F( myFrc2 );
 
 // ---------------------------------------------------------------------- <<<<<
 
