@@ -407,7 +407,7 @@ namespace LM_UTIL{
     - The real matrix is constructed directly rather than through transform 
         matrix multiplication.
     */
-    shared_ptr<Eigen::MatrixXd> build_W_re( const fData& myFr1 );
+    Eigen::MatrixXd build_W_re( const fData& myFr1 );
 
     /*
     Construct a real F matrix (partition 2 data vector). A number of points need to be considered 
@@ -418,7 +418,7 @@ namespace LM_UTIL{
     - The real matrix is constructed directly rather than through transform 
         matrix multiplication.
     */
-    shared_ptr<Eigen::MatrixXd> build_F_re( const fData& myFr2 );
+    Eigen::MatrixXd build_F_re( const fData& myFr2 );
 
     /*
     Generate the Loenwer Matrix pencil.

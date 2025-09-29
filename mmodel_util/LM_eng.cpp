@@ -692,8 +692,8 @@ void LM_eng::step3skip2_LM_re_construct(){
         // Construct the Loewner Matrices.
         this->LM_re = LM_UTIL::build_LM_re( myFr1, myFr2 );
         this->SLM_re = LM_UTIL::build_SLM_re( myFr1, myFr2 );
-        this->W_re = *LM_UTIL::build_W_re( myFr1 );
-        this->F_re = *LM_UTIL::build_F_re( myFr2 );
+        this->W_re = LM_UTIL::build_W_re( myFr1 );
+        this->F_re = LM_UTIL::build_F_re( myFr2 );
 
     }catch(...){
         cerr << "step3skip2_LM_re_construct exception rethrow log." << endl;
@@ -1823,7 +1823,7 @@ Eigen::MatrixXd LM_UTIL::build_SLM_re( const fData& myFr1, const fData& myFr2 ){
 }
 
 
-shared_ptr<Eigen::MatrixXd> LM_UTIL::build_W_re( const fData& myFr1 ){
+Eigen::MatrixXd LM_UTIL::build_W_re( const fData& myFr1 ){
 
     // General partition data characteristics.
     unsigned int out_cnt = myFr1.get_out_cnt();
@@ -1839,7 +1839,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_W_re( const fData& myFr1 ){
     // Obtain the expected height and width of the final real LMs.
     unsigned int LM_w = frc1_len*in_cnt;
 
-    shared_ptr<Eigen::MatrixXd> W_re = make_shared<Eigen::MatrixXd>( out_cnt, LM_w );
+    Eigen::MatrixXd W_re = Eigen::MatrixXd( out_cnt, LM_w );
     
     // Define square root of 2 that is going to be repeatedly reused.
     double sqrt_of_2 = std::sqrt(2);
@@ -1856,7 +1856,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_W_re( const fData& myFr1 ){
         // Get the DC point data.
         Eigen::MatrixXcd f1_dc_data = myFr1.get_cplxData_at_f(0);
 
-        W_re->block( lead_x, lead_y, out_cnt, in_cnt ) = f1_dc_data.real();
+        W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f1_dc_data.real();
 
     }
 
@@ -1879,8 +1879,8 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_W_re( const fData& myFr1 ){
 
         S1_j = myFr1.get_cplxData_at_f(j);
 
-        W_re->block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S1_j.real();
-        W_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = sqrt_of_2*S1_j.imag();
+        W_re.block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S1_j.real();
+        W_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = sqrt_of_2*S1_j.imag();
 
     }
 
@@ -1889,7 +1889,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_W_re( const fData& myFr1 ){
 }
 
 
-shared_ptr<Eigen::MatrixXd> LM_UTIL::build_F_re( const fData& myFr2 ){
+Eigen::MatrixXd LM_UTIL::build_F_re( const fData& myFr2 ){
 
     // General partition data characteristics.
     unsigned int out_cnt = myFr2.get_out_cnt();
@@ -1905,7 +1905,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_F_re( const fData& myFr2 ){
     // Obtain the expected height and width of the final real LMs.
     unsigned int LM_h = frc2_len*out_cnt;
 
-    shared_ptr<Eigen::MatrixXd> F_re = make_shared<Eigen::MatrixXd>( LM_h, in_cnt );
+    Eigen::MatrixXd F_re = Eigen::MatrixXd( LM_h, in_cnt );
     
     // Define square root of 2 that is going to be repeatedly reused.
     double sqrt_of_2 = std::sqrt(2);
@@ -1922,7 +1922,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_F_re( const fData& myFr2 ){
         // Get the DC point data.
         Eigen::MatrixXcd f2_dc_data = myFr2.get_cplxData_at_f(0);
 
-        F_re->block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
+        F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = f2_dc_data.real();
 
     }
 
@@ -1945,8 +1945,8 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_F_re( const fData& myFr2 ){
 
         S2_i = myFr2.get_cplxData_at_f(i);
 
-        F_re->block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S2_i.real();
-        F_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -sqrt_of_2*S2_i.imag();
+        F_re.block( lead_x, lead_y, out_cnt, in_cnt ) = sqrt_of_2*S2_i.real();
+        F_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -sqrt_of_2*S2_i.imag();
 
     }
 
