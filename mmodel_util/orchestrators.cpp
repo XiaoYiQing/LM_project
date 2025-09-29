@@ -119,23 +119,23 @@ LM_eng FCT_SCR::SFLM_full_run( const fData& src_data,
 
 
 
-shared_ptr<LM_eng> FCT_SCR::SFLM_direc_re_run( const fData& src_data, 
+LM_eng FCT_SCR::SFLM_direc_re_run( const fData& src_data, 
     vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
     vector<unsigned int> f2_idx_vec ){
     
     // Declare the LM engine.
-    shared_ptr<LM_eng> my_LM_eng;
+    LM_eng my_LM_eng;
     
     // Initialize the LM engine.
     try{
-        my_LM_eng = std::make_shared<LM_eng>( LM_eng() );
+        my_LM_eng = LM_eng();
     }catch( const std::exception& e ){
         cerr << "SFML process interrupted at engine creation: " << e.what() << endl;
     }
 
     // Step 0: data insertion.
     try{
-        my_LM_eng->step0_fData_set( src_data, f_r_idx_vec );
+        my_LM_eng.step0_fData_set( src_data, f_r_idx_vec );
     }catch( const std::invalid_argument& e ){
         cerr << "SFML process interrupted at step 0: " << e.what() << endl;
         return my_LM_eng;
@@ -146,7 +146,7 @@ shared_ptr<LM_eng> FCT_SCR::SFLM_direc_re_run( const fData& src_data,
 
     // Step 1: data partitioning.
     try{
-        my_LM_eng->step1_fData_partition( f1_idx_vec, f2_idx_vec );
+        my_LM_eng.step1_fData_partition( f1_idx_vec, f2_idx_vec );
     }catch( const std::runtime_error& e ){
         cerr << "SFML process interrupted at step 1: " << e.what() << endl;
         return my_LM_eng;
@@ -160,7 +160,7 @@ shared_ptr<LM_eng> FCT_SCR::SFLM_direc_re_run( const fData& src_data,
 
     // Step 3 skipping 2: direct real matrices computation.
     try{
-        my_LM_eng->step3skip2_LM_re_construct();
+        my_LM_eng.step3skip2_LM_re_construct();
     }catch( const std::runtime_error& e ){
         cerr << "SFML process interrupted at step 3 skipping step 2: " << e.what() << endl;
         return my_LM_eng;
@@ -168,7 +168,7 @@ shared_ptr<LM_eng> FCT_SCR::SFLM_direc_re_run( const fData& src_data,
 
     // Step 4: LM pencil SVD.
     try{
-        my_LM_eng->step4_LM_pencil_SVD();
+        my_LM_eng.step4_LM_pencil_SVD();
     }catch( const std::runtime_error& e ){
         cerr << "SFML process interrupted at step 4: " << e.what() << endl;
         return my_LM_eng;

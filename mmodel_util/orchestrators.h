@@ -58,7 +58,7 @@ namespace FCT_SCR{
         be less than the size of the Loewner Matrix, as your system cannot be bigger
         than what the Loewner Matrix can provide.
     */
-    shared_ptr<LM_eng> SFLM_direc_re_run( const fData& src_data, 
+    LM_eng SFLM_direc_re_run( const fData& src_data, 
         vector<unsigned int> f_r_idx_vec, vector<unsigned int> f1_idx_vec,
         vector<unsigned int> f2_idx_vec );
 
