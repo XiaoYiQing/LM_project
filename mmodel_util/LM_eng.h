@@ -385,7 +385,7 @@ namespace LM_UTIL{
     - The real Loenwer Matrix is constructed directly rather than through transform 
         matrix multiplication.
     */
-    shared_ptr<Eigen::MatrixXd> build_LM_re( const fData& myFr1, const fData& myFr2 );
+    Eigen::MatrixXd build_LM_re( const fData& myFr1, const fData& myFr2 );
 
     /*
     Construct a real shifted-Loewner Matrix. A number of points need to be considered 
@@ -396,7 +396,7 @@ namespace LM_UTIL{
     - The real Loenwer Matrix is constructed directly rather than through transform 
         matrix multiplication.
     */
-    shared_ptr<Eigen::MatrixXd> build_SLM_re( const fData& myFr1, const fData& myFr2 );
+    Eigen::MatrixXd build_SLM_re( const fData& myFr1, const fData& myFr2 );
 
     /*
     Construct a real W matrix (partition 1 data vector). A number of points need to be considered 

@@ -690,8 +690,8 @@ void LM_eng::step3skip2_LM_re_construct(){
         fData myFr2 = this->myFData.red_partit( this->partit2IdxArr );
 
         // Construct the Loewner Matrices.
-        this->LM_re = *LM_UTIL::build_LM_re( myFr1, myFr2 );
-        this->SLM_re = *LM_UTIL::build_SLM_re( myFr1, myFr2 );
+        this->LM_re = LM_UTIL::build_LM_re( myFr1, myFr2 );
+        this->SLM_re = LM_UTIL::build_SLM_re( myFr1, myFr2 );
         this->W_re = *LM_UTIL::build_W_re( myFr1 );
         this->F_re = *LM_UTIL::build_F_re( myFr2 );
 
@@ -1536,7 +1536,7 @@ Eigen::MatrixXcd LM_UTIL::build_F( const fData& f2Data ){
 
 
 
-shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fData& myFr2 ){
+Eigen::MatrixXd LM_UTIL::build_LM_re( const fData& myFr1, const fData& myFr2 ){
     
     // Obtain the size of the two partitions.
     unsigned int f1Size = myFr1.get_f_cnt();
@@ -1564,7 +1564,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fDat
     unsigned int LM_h = frc2_len*out_cnt;
     unsigned int LM_w = frc1_len*in_cnt;
 
-    shared_ptr<Eigen::MatrixXd> LM_re = make_shared<Eigen::MatrixXd>( LM_h, LM_w );
+    Eigen::MatrixXd LM_re = Eigen::MatrixXd( LM_h, LM_w );
     
     // Define square root of 2 that is going to be repeatedly reused.
     double sqrt_of_2 = std::sqrt(2);
@@ -1597,8 +1597,8 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fDat
             LMt_ij = sqrt_of_2 * LMt_ij/( f2_i );
 
             lead_x = 2*( i*out_cnt );
-            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
-            LM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*LMt_ij.imag();
+            LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
+            LM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*LMt_ij.imag();
 
         }
 
@@ -1620,8 +1620,8 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fDat
             LMt_ij = -1 * sqrt_of_2 * LMt_ij/( f1_j );
 
             lead_y = 2*( j*in_cnt );
-            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
-            LM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = LMt_ij.imag();
+            LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = LMt_ij.real();
+            LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = LMt_ij.imag();
 
         }
 
@@ -1663,13 +1663,13 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fDat
             LM_b_ij = ( S2_i - S1_j.conjugate() )/( f2_i - conj( f1_j ) );
 
             // LM current block computation.
-            LM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = 
+            LM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
                 LM_a_ij.real() + LM_b_ij.real();
-            LM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
+            LM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
                 LM_a_ij.imag() - LM_b_ij.imag();
-            LM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
+            LM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
                 - LM_a_ij.imag() - LM_b_ij.imag();
-            LM_re->block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
+            LM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
                 LM_a_ij.real() - LM_b_ij.real();
 
         }
@@ -1680,7 +1680,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_LM_re( const fData& myFr1, const fDat
 }
 
 
-shared_ptr<Eigen::MatrixXd> LM_UTIL::build_SLM_re( const fData& myFr1, const fData& myFr2 ){
+Eigen::MatrixXd LM_UTIL::build_SLM_re( const fData& myFr1, const fData& myFr2 ){
     
     // Obtain the size of the two partitions.
     unsigned int f1Size = myFr1.get_f_cnt();
@@ -1708,7 +1708,7 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_SLM_re( const fData& myFr1, const fDa
     unsigned int SLM_h = frc2_len*out_cnt;
     unsigned int SLM_w = frc1_len*in_cnt;
 
-    shared_ptr<Eigen::MatrixXd> SLM_re = make_shared<Eigen::MatrixXd>( SLM_h, SLM_w );
+    Eigen::MatrixXd SLM_re = Eigen::MatrixXd( SLM_h, SLM_w );
     
     // Define square root of 2 that is going to be repeatedly reused.
     double sqrt_of_2 = std::sqrt(2);
@@ -1740,8 +1740,8 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_SLM_re( const fData& myFr1, const fDa
             SLMt_ij = sqrt_of_2 * S2_i;
 
             lead_x = 2*( i*out_cnt );
-            SLM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = SLMt_ij.real();
-            SLM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*SLMt_ij.imag();
+            SLM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = SLMt_ij.real();
+            SLM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = -1*SLMt_ij.imag();
 
         }
 
@@ -1762,8 +1762,8 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_SLM_re( const fData& myFr1, const fDa
             SLMt_ij = sqrt_of_2 * S1_j;
 
             lead_y = 2*( j*in_cnt );
-            SLM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = SLMt_ij.real();
-            SLM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = SLMt_ij.imag();
+            SLM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = SLMt_ij.real();
+            SLM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = SLMt_ij.imag();
 
         }
 
@@ -1806,13 +1806,13 @@ shared_ptr<Eigen::MatrixXd> LM_UTIL::build_SLM_re( const fData& myFr1, const fDa
                 ( f2_i - conj( f1_j ) );
 
             // LM current block computation.
-            SLM_re->block( lead_x, lead_y, out_cnt, in_cnt ) = 
+            SLM_re.block( lead_x, lead_y, out_cnt, in_cnt ) = 
                 LM_a_ij.real() + LM_b_ij.real();
-            SLM_re->block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
+            SLM_re.block( lead_x, lead_y + in_cnt, out_cnt, in_cnt ) = 
                 LM_a_ij.imag() - LM_b_ij.imag();
-            SLM_re->block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
+            SLM_re.block( lead_x + out_cnt, lead_y, out_cnt, in_cnt ) = 
                 - LM_a_ij.imag() - LM_b_ij.imag();
-            SLM_re->block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
+            SLM_re.block( lead_x + out_cnt, lead_y + in_cnt, out_cnt, in_cnt ) = 
                 LM_a_ij.real() - LM_b_ij.real();
 
         }
