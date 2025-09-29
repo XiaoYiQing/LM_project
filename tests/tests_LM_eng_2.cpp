@@ -636,7 +636,7 @@ void tests::LM_eng_print_singVals(){
     string data_fullFileName = RES_PATH_XYQ_str + "/test_res_dir/audioamp.txt";
     string dest_dirPath = SRC_PATH_XYQ_str + "/data_output";
     // Perform the full process function.
-    shared_ptr<LM_eng> my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
+    LM_eng my_LM_eng = LM_eng::print_singVals( data_fullFileName, dest_dirPath );
 
     // Obtain the singular values from the printed data file.
     string sv_data_fullFileName = dest_dirPath + "/audioamp_sv.txt";
@@ -645,7 +645,7 @@ void tests::LM_eng_print_singVals(){
     for( unsigned int z = 0; z < read_vec_tmp.size(); z++ ){
         read_vec(z) = read_vec_tmp[z];
     }
-    Eigen::VectorXd comp_vec = my_LM_eng->get_singVals();
+    Eigen::VectorXd comp_vec = my_LM_eng.get_singVals();
 
     // Compute the difference between the vector from the file and directly from the source.
     Eigen::VectorXd vec_diff = comp_vec - read_vec;

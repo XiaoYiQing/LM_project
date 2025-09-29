@@ -12,7 +12,7 @@ const double LM_eng::NUM_THRESH = 1.0e-12;
 //      Data Printing Functions
 // ====================================================================== >>>>>
 
-shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName, 
+LM_eng LM_eng::print_singVals( const string& fullFileName, 
     const string& destDir ){
 
     // Obtain the specific parts of the full file name (dir, stem, ext).
@@ -42,11 +42,11 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
             fData::read_LTspice_Sp_file( myFData, fullFileName );
         }catch( const std::invalid_argument& e ){
             std::cerr << "print_singVals aborted: " << e.what() << '\n';
-            shared_ptr<LM_eng> tmp;
+            LM_eng tmp;
             return tmp; 
         }catch( const std::runtime_error& e ){
             std::cerr << "print_singVals aborted: " << e.what() << '\n';
-            shared_ptr<LM_eng> tmp;
+            LM_eng tmp;
             return tmp; 
         }
 
@@ -59,11 +59,11 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
             fData::read_sXp_file( myFData, fullFileName );
         }catch( const std::invalid_argument& e ){
             std::cerr << "print_singVals aborted: " << e.what() << '\n';
-            shared_ptr<LM_eng> tmp;
+            LM_eng tmp;
             return tmp; 
         }catch( const std::runtime_error& e ){
             std::cerr << "print_singVals aborted: " << e.what() << '\n';
-            shared_ptr<LM_eng> tmp;
+            LM_eng tmp;
             return tmp; 
         }
 
@@ -80,16 +80,14 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
 
     
     // LM engine initialization.
-    shared_ptr<LM_eng> myEng = make_shared<LM_eng>( myFData );
+    LM_eng myEng = LM_eng( myFData );
     try{
-        myEng->step1_fData_partition();
-        // myEng->step2_LM_construct();
-        // myEng->step3_LM_re_trans();
-        myEng->step3skip2_LM_re_construct();
-        myEng->step4_LM_pencil_SVD();
+        myEng.step1_fData_partition();
+        myEng.step3skip2_LM_re_construct();
+        myEng.step4_LM_pencil_SVD();
     }catch( const std::runtime_error& e ){
         std::cerr << "print_singVals aborted: " << e.what() << '\n';
-        shared_ptr<LM_eng> tmp;
+        LM_eng tmp;
         return tmp; 
     }
 
@@ -97,7 +95,7 @@ shared_ptr<LM_eng> LM_eng::print_singVals( const string& fullFileName,
 
     // utils::VectorXd_to_file( destDir, dataFileStem, myEng->get_singVals(), 0 );
 
-    LM_eng::print_singVals( *myEng, dataFileStem, destDir );
+    LM_eng::print_singVals( myEng, dataFileStem, destDir );
 
     return myEng;
 

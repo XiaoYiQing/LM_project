@@ -53,7 +53,7 @@ public:
     Then the generated singular values file will have the full file name:
         - "C:/project/singVal/lowPassFilterV2_vs.txt"
     */
-    static shared_ptr<LM_eng> print_singVals( const string& fullFileName, 
+    static LM_eng print_singVals( const string& fullFileName, 
         const string& destDir );
     
     /*
