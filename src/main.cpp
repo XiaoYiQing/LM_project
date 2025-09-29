@@ -71,7 +71,7 @@ int main() {
     // tests::MatrixXcd_to_file_test();
     // tests::file_to_MatrixXcd_test();
 
-    tests::numUtils_test_1(3);
+    tests::numUtils_test_1(4);
     // tests::gen_match_vector_test();
     // tests::sort_num_vec_inplace_test();
 

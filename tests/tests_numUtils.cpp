@@ -146,16 +146,16 @@ void tests::numUtils_test_1( unsigned int case_idx ){
         unsigned int cnt = 20;
 
         // Generate a random integer array.
-        shared_ptr<vector<double>> myRandIntVec = utils::rDoubleGen( L_bnd, U_bnd, cnt );
+        vector<double> myRandIntVec = utils::rDoubleGen( L_bnd, U_bnd, cnt );
 
         // Find the maximum element using std::max_element
-        auto maxElemIter = std::max_element(myRandIntVec->begin(), myRandIntVec->end());
-        auto minElemIter = std::min_element(myRandIntVec->begin(), myRandIntVec->end());
+        auto maxElemIter = std::max_element(myRandIntVec.begin(), myRandIntVec.end());
+        auto minElemIter = std::min_element(myRandIntVec.begin(), myRandIntVec.end());
 
-        match_flag = match_flag && ( myRandIntVec->size() == cnt );
+        match_flag = match_flag && ( myRandIntVec.size() == cnt );
         for( unsigned int z = 0; z < cnt; z++ ){
-            match_flag = match_flag && ( myRandIntVec->at(z) <= *maxElemIter );
-            match_flag = match_flag && ( myRandIntVec->at(z) >= *minElemIter );
+            match_flag = match_flag && ( myRandIntVec.at(z) <= *maxElemIter );
+            match_flag = match_flag && ( myRandIntVec.at(z) >= *minElemIter );
             if( !match_flag ){
                 break;
             }

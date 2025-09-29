@@ -553,7 +553,7 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
 
         Eigen::VectorXd f_blk = Eigen::VectorXd( block_size );
         for( unsigned int z = 0; z < block_size; z++ ){
-            f_blk(z) = z * utils::rDoubleGen( 0.0, 10.0, 1 )->at(0);
+            f_blk(z) = z * utils::rDoubleGen( 0.0, 10.0, 1 ).at(0);
         }
 
         myF.set_fval_block( lead, f_blk );
@@ -599,7 +599,7 @@ void tests::fData_setFunc_tests( unsigned int test_idx ){
         for( unsigned int z = 0; z < block_size; z++ ){
             Eigen::MatrixXd mat_z = Eigen::MatrixXd( row_cnt, col_cnt );
             mat_z.setOnes();
-            mat_z *= z * utils::rDoubleGen( 0.0, 10.0, 1 )->at(0);
+            mat_z *= z * utils::rDoubleGen( 0.0, 10.0, 1 ).at(0);
             newBlk_re.set( z, mat_z );
             newBlk_im.set( z, mat_z );
         }

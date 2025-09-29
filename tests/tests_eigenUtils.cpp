@@ -12,10 +12,10 @@ void tests::eigenUtils_test_1( unsigned int test_idx ){
 
         unsigned int num_cnt = 10;
 
-        shared_ptr< vector<double> > tmp_vec = utils::rDoubleGen( -10.0, 10.0, num_cnt );
+        vector<double> tmp_vec = utils::rDoubleGen( -10.0, 10.0, num_cnt );
 
         // Map the std::vector data to Eigen::VectorXd
-        Eigen::Map<Eigen::VectorXd> eigenVec(tmp_vec->data(), tmp_vec->size());
+        Eigen::Map<Eigen::VectorXd> eigenVec( tmp_vec.data(), tmp_vec.size() );
 
         // If you need an independent copy
         Eigen::VectorXd tarVec = eigenVec;
@@ -37,7 +37,7 @@ void tests::Vd_to_file_test(){
 
     unsigned int num_cnt = 10;
 
-    vector<double> tmp_vec = *utils::rDoubleGen( -10.0, 10.0, num_cnt );
+    vector<double> tmp_vec = utils::rDoubleGen( -10.0, 10.0, num_cnt );
 
     string targetDir = SRC_PATH_XYQ_str + "/data_output";
     string targetStemName = "Vd_to_file_res";

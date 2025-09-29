@@ -181,7 +181,7 @@ vector<int> utils::rIntGen( int L_bnd, int U_bnd, unsigned int cnt ){
 
 }
 
-shared_ptr<vector<double>> utils::rDoubleGen( double L_bnd, double U_bnd, unsigned int cnt ){
+vector<double> utils::rDoubleGen( double L_bnd, double U_bnd, unsigned int cnt ){
 
     if( L_bnd > U_bnd ){
         throw std::invalid_argument( "rDoubleGen lower bound must not be larger than the upper bound." );
@@ -203,10 +203,10 @@ shared_ptr<vector<double>> utils::rDoubleGen( double L_bnd, double U_bnd, unsign
     std::uniform_real_distribution<double> distrib( L_bnd, U_bnd );
 
     // // Create an integer array to store all random integers.
-    shared_ptr<vector<double>> tmpVec = make_shared< vector<double> >();
-    tmpVec->reserve( cnt );
+    vector<double> tmpVec = vector<double>();
+    tmpVec.reserve( cnt );
     for (unsigned int i = 0; i < cnt; i++) {
-        tmpVec->emplace_back( distrib(gen) );
+        tmpVec.emplace_back( distrib(gen) );
     }
     
     return tmpVec;

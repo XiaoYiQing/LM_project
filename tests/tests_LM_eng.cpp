@@ -282,17 +282,17 @@ void tests::LM_eng_reT_test(){
     for( unsigned int z = 0; z < sub_blk_cnt; z++ ){
 
         // Generate random values for the real and imaginary parts.
-        shared_ptr<vector<double>> reVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-        shared_ptr<vector<double>> imVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-        shared_ptr<vector<double>> reVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
-        shared_ptr<vector<double>> imVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        vector<double> reVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        vector<double> imVec_A = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        vector<double> reVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
+        vector<double> imVec_B = utils::rDoubleGen( -1, 1, sub_mat_size*sub_mat_size );
 
         // Create the current sub-matrix.
         Eigen::MatrixXcd mat_A_z( sub_mat_size, sub_mat_size );
         Eigen::MatrixXcd mat_B_z( sub_mat_size, sub_mat_size );
-        for( unsigned int y = 0; y < reVec_A->size(); y++ ){
-            mat_A_z(y) = complex<double>( reVec_A->at(y), imVec_A->at(y) );
-            mat_B_z(y) = complex<double>( reVec_B->at(y), imVec_B->at(y) );
+        for( unsigned int y = 0; y < reVec_A.size(); y++ ){
+            mat_A_z(y) = complex<double>( reVec_A.at(y), imVec_A.at(y) );
+            mat_B_z(y) = complex<double>( reVec_B.at(y), imVec_B.at(y) );
         }
 
         unsigned int lead_orig = z*2*sub_mat_size;

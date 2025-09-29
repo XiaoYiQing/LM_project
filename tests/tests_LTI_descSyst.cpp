@@ -462,8 +462,8 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         // Generate the sparse system.
         mySyst.gen_sparse_syst();
 
-        shared_ptr<vector<double>> test_num_arr = utils::rDoubleGen( 0, 10, 2 );
-        complex<double> test_pt( test_num_arr->at(0), test_num_arr->at(1) );
+        vector<double> test_num_arr = utils::rDoubleGen( 0, 10, 2 );
+        complex<double> test_pt( test_num_arr.at(0), test_num_arr.at(1) );
         
         Eigen::MatrixXcd H_diff = mySyst.tf_eval( test_pt ) - mySyst.tf_sparse_eval( test_pt );
 
@@ -477,11 +477,11 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
 
         // Generate a number of complex test points.
         unsigned int test_cnt = 50;
-        shared_ptr<vector<double>> rePart = utils::rDoubleGen( 0, 10, test_cnt );
-        shared_ptr<vector<double>> imPart = utils::rDoubleGen( 0, 10, test_cnt );
+        vector<double> rePart = utils::rDoubleGen( 0, 10, test_cnt );
+        vector<double> imPart = utils::rDoubleGen( 0, 10, test_cnt );
         vector< complex<double> > test_pt_arr( test_cnt );
         for( unsigned int z = 0; z < test_cnt; z++ ){
-            test_pt_arr.at(z) = complex<double>( rePart->at(z), imPart->at(z) );
+            test_pt_arr.at(z) = complex<double>( rePart.at(z), imPart.at(z) );
         }
 
         // Evaluate the system's transfer function at the test points.

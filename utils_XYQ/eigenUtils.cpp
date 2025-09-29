@@ -771,7 +771,7 @@ Eigen::MatrixXd utils::gen_rand_MatrixXd( unsigned int row_cnt, unsigned int col
 
     for( unsigned int i = 0; i < row_cnt; i++ ){
         // Generate the current row.
-        vector<double> curr_row = *utils::rDoubleGen( -1, 1, col_cnt );
+        vector<double> curr_row = utils::rDoubleGen( -1, 1, col_cnt );
         // Insert the current row.
         for( unsigned int j = 0; j < col_cnt; j++ ){
             randMat(i,j) = curr_row[j];
