@@ -327,8 +327,6 @@ protected:
     // Frequency partition 2 has DC point.
     bool f2_has_DC_pt = false;
 
-    // The reduced frequency set.
-    // shared_ptr<fData> myFr;
     // The reduced frequency set index array.
     vector< unsigned int > fr_idx_arr;
     /*
@@ -356,7 +354,7 @@ namespace LM_UTIL{
     /*
     Construct a Loewner Matrix.
     */
-    shared_ptr<Eigen::MatrixXcd> build_LM( const fData& f1Data, const fData& f2Data );
+    Eigen::MatrixXcd build_LM( const fData& f1Data, const fData& f2Data );
 
     
 

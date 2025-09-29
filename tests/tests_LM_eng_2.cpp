@@ -55,7 +55,7 @@ void tests::LM_eng_full_SFML_testrun_gen(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Construct the Loewner Matrix using the two cconj injected partitions.
-    Eigen::MatrixXcd myLM = *LM_UTIL::build_LM( myFrc1, myFrc2 );
+    Eigen::MatrixXcd myLM = LM_UTIL::build_LM( myFrc1, myFrc2 );
     // Construct the Loewner Matrix using the two cconj injected partitions.
     Eigen::MatrixXcd mySLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
     // Construct the W matrix vector using partition 1.

@@ -589,7 +589,7 @@ void LM_eng::step2_LM_construct(){
         fData myFrc2 = myFr2.gen_cplx_conj_comb();
 
         // Construct the Loewner Matrix using the two cconj injected partitions.
-        this->LM = *LM_UTIL::build_LM( myFrc1, myFrc2 );
+        this->LM = LM_UTIL::build_LM( myFrc1, myFrc2 );
         // Construct the Loewner Matrix using the two cconj injected partitions.
         this->SLM = *LM_UTIL::build_SLM( myFrc1, myFrc2 );
         // Construct the W matrix vector using partition 1.
@@ -1312,7 +1312,7 @@ vector< vector< unsigned int > > LM_UTIL::gen_2_partit_idx_arr( unsigned int ori
 
 
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){
+Eigen::MatrixXcd LM_UTIL::build_LM( const fData& f1Data, const fData& f2Data ){
 
     // Obtain the size of the two partitions.
     unsigned int f1Size = f1Data.get_f_cnt();
@@ -1330,7 +1330,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData
     unsigned int col_cnt = f1Size*in_cnt;
 
     // Initialize the Loewner Matrix.
-    shared_ptr<Eigen::MatrixXcd> LM = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
+    Eigen::MatrixXcd LM = Eigen::MatrixXcd( row_cnt, col_cnt );
 
     // Initialize temporary matrix representing the current sub-block being computed.
     Eigen::MatrixXcd LM_ij = Eigen::MatrixXcd( out_cnt, in_cnt );
@@ -1368,7 +1368,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_LM( const fData& f1Data, const fData
             LM_ij = ( f2_D_i - f1_D_j )/( f2_i - f1_j );
 
             // Insert the current calculated block into its part in the full matrix.
-            LM->block( lead_x, lead_y, out_cnt, in_cnt) = LM_ij;
+            LM.block( lead_x, lead_y, out_cnt, in_cnt) = LM_ij;
 
         }
 
