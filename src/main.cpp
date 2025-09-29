@@ -97,7 +97,7 @@ int main() {
     // tests::LM_eng_serialize_test();
     
     // tests::LTI_descSyst_test_1( 3 );
-    // tests::LTI_descSyst_test_2( 2 );
+    tests::LTI_descSyst_test_2( 2 );
 
     // tests::LM_eng_full_SFML_testrun();
     // tests::LM_eng_full_SFML_testrun_v2();
@@ -109,7 +109,7 @@ int main() {
     // tests::LM_eng_print_singVals();
     // tests::LM_eng_re_LM_comp_test( 1 );
 
-    tests::orch_SFLM_full_run_test();
+    // tests::orch_SFLM_full_run_test();
     // tests::orch_SFLM_direc_re_run_test();
     // FCT_SCR::singVal_extract_run();
 

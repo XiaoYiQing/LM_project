@@ -137,8 +137,8 @@ Eigen::MatrixXd get_B() const;
 Eigen::MatrixXd get_C() const;
 Eigen::MatrixXd get_D() const;
 
-void set_E( const shared_ptr< const Eigen::MatrixXd > E_in );
-void set_A( const shared_ptr< const Eigen::MatrixXd > A_in );
+void set_E( const Eigen::MatrixXd& E_in );
+void set_A( const Eigen::MatrixXd& A_in );
 void set_B( const shared_ptr< const Eigen::MatrixXd > B_in );
 void set_C( const shared_ptr< const Eigen::MatrixXd > C_in );
 void set_D( const shared_ptr< const Eigen::MatrixXd > D_in );

@@ -338,13 +338,13 @@ Eigen::MatrixXd LTI_descSyst::get_D() const{
     return this->D;
 }
 
-void LTI_descSyst::set_E( const shared_ptr< const Eigen::MatrixXd > E_in ){ 
-    this->E = *E_in;
+void LTI_descSyst::set_E( const Eigen::MatrixXd& E_in ){
+    this->E = E_in;
     this->utd_poles = false;
     this->utd_sparse_syst = false;
 }
-void LTI_descSyst::set_A( const shared_ptr< const Eigen::MatrixXd > A_in ){ 
-    this->A = *A_in; 
+void LTI_descSyst::set_A( const Eigen::MatrixXd& A_in ){
+    this->A = A_in; 
     this->utd_poles = false;
     this->utd_sparse_syst = false;
 }

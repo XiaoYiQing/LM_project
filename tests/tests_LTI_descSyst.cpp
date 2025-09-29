@@ -29,12 +29,12 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
 
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
+        mySyst.set_E( *E_ptr );
         if( mySyst.is_consistent() ){
             cout << "Consistency should be false!" << endl;
             return;
         }
-        mySyst.set_A( A_ptr );
+        mySyst.set_A( *A_ptr );
         if( mySyst.is_consistent() ){
             cout << "Consistency should be false!" << endl;
             return;
@@ -113,8 +113,8 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         shared_ptr< Eigen::MatrixXd >D_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, p ) );
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
-        mySyst.set_A( A_ptr );
+        mySyst.set_E( *E_ptr );
+        mySyst.set_A( *A_ptr );
         mySyst.set_B( B_ptr );
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
@@ -128,7 +128,7 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         }
 
         *A_ptr = -1*Eigen::MatrixXd::Identity( n, n );
-        mySyst.set_A( A_ptr );
+        mySyst.set_A( *A_ptr );
         is_stab = mySyst.is_stable();
         if( !is_stab ){
             cout << "Failed test: found not stable but case was stable." << endl;
@@ -138,7 +138,7 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         }
 
         *A_ptr = -1*Eigen::MatrixXd::Identity( n-1, n-1 );
-        mySyst.set_A( A_ptr );
+        mySyst.set_A( *A_ptr );
         is_stab = mySyst.is_stable();
         if( is_stab ){
             cout << "Failed test: inconsistent system found stable." << endl;
@@ -174,8 +174,8 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
-        mySyst.set_A( A_ptr );
+        mySyst.set_E( *E_ptr );
+        mySyst.set_A( *A_ptr );
         mySyst.set_B( B_ptr );
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
@@ -247,8 +247,8 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
-        mySyst.set_A( A_ptr );
+        mySyst.set_E( *E_ptr );
+        mySyst.set_A( *A_ptr );
         mySyst.set_B( B_ptr );
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
@@ -267,7 +267,7 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "False" << endl;
         }
 
-        mySyst.set_E( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Identity( n-1, n-1 ) ) );
+        mySyst.set_E( -1*Eigen::MatrixXd::Identity( n-1, n-1 ) );
         cout << "Poles up to date after inserting inconsistent E: " << endl;
         if( mySyst.is_stable() ){
             cout << "True" << endl;
@@ -275,7 +275,7 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "False" << endl;
         }
 
-        mySyst.set_E( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Identity( n, n ) ) );
+        mySyst.set_E( -1*Eigen::MatrixXd::Identity( n, n ) );
         cout << "Poles up to date after modifying E: " << endl;
         if( mySyst.get_utd_poles() ){
             cout << "True" << endl;
@@ -347,8 +347,8 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
-        mySyst.set_A( A_ptr );
+        mySyst.set_E( *E_ptr );
+        mySyst.set_A( *A_ptr );
         mySyst.set_B( B_ptr );
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
@@ -396,8 +396,8 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
-        mySyst.set_A( A_ptr );
+        mySyst.set_E( *E_ptr );
+        mySyst.set_A( *A_ptr );
         mySyst.set_B( B_ptr );
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
@@ -453,8 +453,8 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
             make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
 
         LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( E_ptr );
-        mySyst.set_A( A_ptr );
+        mySyst.set_E( *E_ptr );
+        mySyst.set_A( *A_ptr );
         mySyst.set_B( B_ptr );
         mySyst.set_C( C_ptr );
         mySyst.set_D( D_ptr );
