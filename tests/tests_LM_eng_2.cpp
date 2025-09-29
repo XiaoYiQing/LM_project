@@ -71,8 +71,8 @@ void tests::LM_eng_full_SFML_testrun_gen(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Build the left and right transformation matrices.
-    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
-    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    Eigen::MatrixXcd myTMat_L = LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
     // Obtain the hermitian of the right transform matrix.
     Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 

@@ -631,8 +631,8 @@ void LM_eng::step3_LM_re_trans(){
     Eigen::MatrixXcd myTMat_R;
     try{
         // Build the left and right transformation matrices.
-        myTMat_L = *LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
-        myTMat_R = *LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
+        myTMat_L = LM_UTIL::build_reT_mat( this->f2_has_DC_pt, out_cnt, fr1_len );
+        myTMat_R = LM_UTIL::build_reT_mat( this->f1_has_DC_pt, out_cnt, fr2_len );
     }catch(...){
         cerr << "step3_LM_re_trans exception rethrow log." << endl;
         throw;
@@ -1990,7 +1990,7 @@ Eigen::MatrixXd LM_UTIL::build_LM_pencil( double ref_f, const Eigen::MatrixXd& L
 }
 
 
-shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_blk_cnt ){
+Eigen::MatrixXcd LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_blk_cnt ){
 
 
     // Obtain the total number of rows and columns of the final transformation matrix.
@@ -2015,8 +2015,8 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
     T_unit *= 1/( std::sqrt(2.0) );
 
     // Initialize the transformation matrix.
-    shared_ptr<Eigen::MatrixXcd> T_mat = std::make_shared<Eigen::MatrixXcd>( row_cnt, col_cnt );
-    T_mat->setZero();
+    Eigen::MatrixXcd T_mat = Eigen::MatrixXcd( row_cnt, col_cnt );
+    T_mat.setZero();
     
     // Initialize current sub-block's lead coordinate.
     unsigned int lead_x = 0;
@@ -2024,7 +2024,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
     unsigned int z = 0;
     // In case of DC point, fill the first block, then increment the iteration index.
     if( has_DC_pt ){
-        T_mat->block( lead_x, lead_x, sub_mat_size, sub_mat_size ) = I_mat;
+        T_mat.block( lead_x, lead_x, sub_mat_size, sub_mat_size ) = I_mat;
         lead_x += sub_mat_size;
         z++;
     }
@@ -2032,7 +2032,7 @@ shared_ptr<Eigen::MatrixXcd> LM_UTIL::build_reT_mat( bool has_DC_pt, unsigned in
     for( ; z < sub_blk_cnt; z++ ){
 
         // Insert the current sub-block.
-        T_mat->block( lead_x, lead_x, 2*sub_mat_size, 2*sub_mat_size ) = T_unit;
+        T_mat.block( lead_x, lead_x, 2*sub_mat_size, 2*sub_mat_size ) = T_unit;
 
         // Increment leading point on the matrix diagonal.
         lead_x += 2*sub_mat_size;

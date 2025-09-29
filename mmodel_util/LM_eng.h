@@ -458,7 +458,7 @@ namespace LM_UTIL{
     > sub_mat_size: The size of each sub-matrix.
     > sub_cplx_blk_cnt: The number of distinct sub-matrices, excluding the purely real DC point one, if present.
     */
-    shared_ptr<Eigen::MatrixXcd> build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_cplx_blk_cnt );
+    Eigen::MatrixXcd build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_cplx_blk_cnt );
     
 
 };

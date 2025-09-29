@@ -272,7 +272,7 @@ void tests::LM_eng_reT_test(){
     unsigned int sub_mat_size = 3;
     unsigned int sub_blk_cnt = 2;
 
-    shared_ptr<Eigen::MatrixXcd> myTMat = LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt );
+    Eigen::MatrixXcd myTMat = LM_UTIL::build_reT_mat( has_DC_pt, sub_mat_size, sub_blk_cnt );
 
     // Initialize our test vector matrix.
     Eigen::MatrixXcd myMatVet_A( sub_mat_size, 2*sub_blk_cnt*sub_mat_size );
@@ -306,8 +306,8 @@ void tests::LM_eng_reT_test(){
     }
 
     // Multiply the target matrix with the real transform matrix from the RHS.
-    Eigen::MatrixXcd myReMatVet_A = myMatVet_A*( *myTMat );
-    Eigen::MatrixXcd myReMatVet_B = ( myTMat->conjugate().transpose() )*myMatVet_B;
+    Eigen::MatrixXcd myReMatVet_A = myMatVet_A*( myTMat );
+    Eigen::MatrixXcd myReMatVet_B = ( myTMat.conjugate().transpose() )*myMatVet_B;
 
     bool match_bool = true;
     match_bool = match_bool && ( myReMatVet_A.imag().cwiseAbs().maxCoeff() < num_thresh );
@@ -365,8 +365,8 @@ void tests::LM_eng_reT_test(){
     unsigned int sub_blk_cnt_2 = myFrs.at(1)->get_f_cnt();
 
     // Build the left and right transformation matrices.
-    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
-    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
+    Eigen::MatrixXcd myTMat_L = LM_UTIL::build_reT_mat( f2_has_DC_pt, sub_mat_size, sub_blk_cnt_1 );
+    Eigen::MatrixXcd myTMat_R = LM_UTIL::build_reT_mat( f1_has_DC_pt, sub_mat_size, sub_blk_cnt_2 );
     // Obtain the hermitian of the right transform matrix.
     Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
@@ -454,8 +454,8 @@ void tests::LM_eng_full_SFML_testrun(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Build the left and right transformation matrices.
-    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
-    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    Eigen::MatrixXcd myTMat_L = LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
     // Obtain the hermitian of the right transform matrix.
     Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
@@ -699,8 +699,8 @@ void tests::LM_eng_full_SFML_testrun_v2(){
 // ---------------------------------------------------------------------- >>>>>
 
     // Build the left and right transformation matrices.
-    Eigen::MatrixXcd myTMat_L = *LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
-    Eigen::MatrixXcd myTMat_R = *LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
+    Eigen::MatrixXcd myTMat_L = LM_UTIL::build_reT_mat( f2_has_DC_pt, out_cnt, fr1_len );
+    Eigen::MatrixXcd myTMat_R = LM_UTIL::build_reT_mat( f1_has_DC_pt, out_cnt, fr2_len );
     // Obtain the hermitian of the right transform matrix.
     Eigen::MatrixXcd myTMat_R_herm = myTMat_R.conjugate().transpose();
 
