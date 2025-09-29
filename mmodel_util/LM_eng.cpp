@@ -1166,17 +1166,17 @@ fData LM_eng::get_Fr2() const{
     return this->myFData.red_partit( this->partit2IdxArr );
 }
 
-shared_ptr<fData> LM_eng::get_Frc1() const{
+fData LM_eng::get_Frc1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return make_shared<fData>( this->myFData.red_partit( this->partit1IdxArr ).gen_cplx_conj_comb() );
+    return this->myFData.red_partit( this->partit1IdxArr ).gen_cplx_conj_comb();
 }
-shared_ptr<fData> LM_eng::get_Frc2() const{
+fData LM_eng::get_Frc2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced complex conjugate frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return make_shared<fData>( this->myFData.red_partit( this->partit2IdxArr ).gen_cplx_conj_comb() );
+    return this->myFData.red_partit( this->partit2IdxArr ).gen_cplx_conj_comb();
 }
 
 

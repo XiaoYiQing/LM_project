@@ -246,9 +246,9 @@ fData get_Fr1() const;
 // Obtain the frequency partition 2 data.
 fData get_Fr2() const;
 // Obtain the complex conjugate frequency partition 1 data.
-shared_ptr<fData> get_Frc1() const;
+fData get_Frc1() const;
 // Obtain the complex conjugate frequency partition 2 data.
-shared_ptr<fData> get_Frc2() const;
+fData get_Frc2() const;
 
 // Obtain the Loewner Matrix.
 Eigen::MatrixXcd get_LM() const;

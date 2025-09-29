@@ -331,12 +331,12 @@ void tests::LM_eng_full_SFML_dc_case_run(){
     LM_eng myEng( myFData );
     myEng.step1_fData_partition();
 
-    shared_ptr<fData> Frc1 = myEng.get_Frc1();
-    shared_ptr<fData> Frc2 = myEng.get_Frc2();
+    fData Frc1 = myEng.get_Frc1();
+    fData Frc2 = myEng.get_Frc2();
 
     bool t1bool = true;
-    t1bool = t1bool && ( Frc1->get_f_cnt() == Frc2->get_f_cnt() - 1 );
-    t1bool = t1bool && ( Frc1->get_fval_at(0) == 0 );
+    t1bool = t1bool && ( Frc1.get_f_cnt() == Frc2.get_f_cnt() - 1 );
+    t1bool = t1bool && ( Frc1.get_fval_at(0) == 0 );
     if( t1bool ){
         cout << "DC case step 1 test: passed!" << endl;
     }else{
@@ -357,8 +357,8 @@ void tests::LM_eng_full_SFML_dc_case_run(){
 
     unsigned int out_cnt = myEng.get_out_cnt();
     unsigned int in_cnt = myEng.get_in_cnt();
-    unsigned int Frc1_len = Frc1->get_f_cnt();
-    unsigned int Frc2_len = Frc2->get_f_cnt();
+    unsigned int Frc1_len = Frc1.get_f_cnt();
+    unsigned int Frc2_len = Frc2.get_f_cnt();
 
 
     bool t2bool = true;
