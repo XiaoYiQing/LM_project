@@ -35,12 +35,12 @@ void tests::orch_SFLM_full_run_test(){
     vector< unsigned int > f2_idx_vec = index_arrs.at(1);
 
     // Perform the full LM engine process.
-    shared_ptr<LM_eng> my_LM_eng = 
+    LM_eng my_LM_eng = 
         FCT_SCR::SFLM_full_run( myFData, f_r_idx_vec, f1_idx_vec, f2_idx_vec );
 
 
     // Generate a LIT system.
-    LTI_descSyst myTF = my_LM_eng->step5_LM_to_tf( 49 );
+    LTI_descSyst myTF = my_LM_eng.step5_LM_to_tf( 49 );
 
 
 // ---------------------------------------------------------------------- >>>>>
