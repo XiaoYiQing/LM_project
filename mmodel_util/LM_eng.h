@@ -242,9 +242,9 @@ unsigned int get_out_cnt() const;
 unsigned int get_in_cnt() const;
 
 // Obtain the frequency partition 1 data.
-shared_ptr<fData> get_Fr1() const;
+fData get_Fr1() const;
 // Obtain the frequency partition 2 data.
-shared_ptr<fData> get_Fr2() const;
+fData get_Fr2() const;
 // Obtain the complex conjugate frequency partition 1 data.
 shared_ptr<fData> get_Frc1() const;
 // Obtain the complex conjugate frequency partition 2 data.

@@ -1153,17 +1153,17 @@ unsigned int LM_eng::get_in_cnt() const{
 
 
 
-shared_ptr<fData> LM_eng::get_Fr1() const{
+fData LM_eng::get_Fr1() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced frequency partition 1: step1 (data preparation) has not been set." );
     }
-    return make_shared<fData>( this->myFData.red_partit( this->partit1IdxArr ) );
+    return this->myFData.red_partit( this->partit1IdxArr );
 }
-shared_ptr<fData> LM_eng::get_Fr2() const{
+fData LM_eng::get_Fr2() const{
     if( !this->flag1_data_prep ){
         throw std::runtime_error( "Cannot return reduced frequency partition 2: step1 (data preparation) has not been set." );
     }
-    return make_shared<fData>( this->myFData.red_partit( this->partit2IdxArr ) );
+    return this->myFData.red_partit( this->partit2IdxArr );
 }
 
 shared_ptr<fData> LM_eng::get_Frc1() const{

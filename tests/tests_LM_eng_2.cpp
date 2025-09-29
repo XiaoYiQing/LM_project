@@ -848,13 +848,13 @@ void tests::LM_eng_re_LM_comp_test( unsigned int test_idx ){
         Eigen::MatrixXd my_W_a = my_LM_eng_a.get_W_re();
 
         shared_ptr<Eigen::MatrixXd> my_LM_b = 
-            LM_UTIL::build_LM_re( *my_LM_eng_a.get_Fr1(), *my_LM_eng_a.get_Fr2() );
+            LM_UTIL::build_LM_re( my_LM_eng_a.get_Fr1(), my_LM_eng_a.get_Fr2() );
         shared_ptr<Eigen::MatrixXd> my_SLM_b = 
-            LM_UTIL::build_SLM_re( *my_LM_eng_a.get_Fr1(), *my_LM_eng_a.get_Fr2() );
+            LM_UTIL::build_SLM_re( my_LM_eng_a.get_Fr1(), my_LM_eng_a.get_Fr2() );
         shared_ptr<Eigen::MatrixXd> my_W_b = 
-            LM_UTIL::build_W_re( *my_LM_eng_a.get_Fr1() );
+            LM_UTIL::build_W_re( my_LM_eng_a.get_Fr1() );
         shared_ptr<Eigen::MatrixXd> my_F_b = 
-            LM_UTIL::build_F_re( *my_LM_eng_a.get_Fr2() );
+            LM_UTIL::build_F_re( my_LM_eng_a.get_Fr2() );
 
         // Calculate the highest discrepancy in magnitude.
         bool test_bool = true;
