@@ -39,17 +39,17 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "Consistency should be false!" << endl;
             return;
         }
-        mySyst.set_B( B_ptr );
+        mySyst.set_B( *B_ptr );
         if( mySyst.is_consistent() ){
             cout << "Consistency should be false!" << endl;
             return;
         }
-        mySyst.set_C( C_ptr );
+        mySyst.set_C( *C_ptr );
         if( mySyst.is_consistent() ){
             cout << "Consistency should be false!" << endl;
             return;
         }
-        mySyst.set_D( D_ptr );
+        mySyst.set_D( *D_ptr );
         if( !mySyst.is_consistent() ){
             cout << "Consistency should be true!" << endl;
             return;
@@ -115,9 +115,9 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         LTI_descSyst mySyst = LTI_descSyst();
         mySyst.set_E( *E_ptr );
         mySyst.set_A( *A_ptr );
-        mySyst.set_B( B_ptr );
-        mySyst.set_C( C_ptr );
-        mySyst.set_D( D_ptr );
+        mySyst.set_B( *B_ptr );
+        mySyst.set_C( *C_ptr );
+        mySyst.set_D( *D_ptr );
         bool is_stab = mySyst.is_stable();
 
         if( is_stab ){
@@ -176,9 +176,9 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         LTI_descSyst mySyst = LTI_descSyst();
         mySyst.set_E( *E_ptr );
         mySyst.set_A( *A_ptr );
-        mySyst.set_B( B_ptr );
-        mySyst.set_C( C_ptr );
-        mySyst.set_D( D_ptr );
+        mySyst.set_B( *B_ptr );
+        mySyst.set_C( *C_ptr );
+        mySyst.set_D( *D_ptr );
 
         double test_val = 0;
         Eigen::MatrixXcd eval_mat = mySyst.tf_eval( test_val );
@@ -249,9 +249,9 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
         LTI_descSyst mySyst = LTI_descSyst();
         mySyst.set_E( *E_ptr );
         mySyst.set_A( *A_ptr );
-        mySyst.set_B( B_ptr );
-        mySyst.set_C( C_ptr );
-        mySyst.set_D( D_ptr );
+        mySyst.set_B( *B_ptr );
+        mySyst.set_C( *C_ptr );
+        mySyst.set_D( *D_ptr );
 
         cout << "Poles up to date before computation: " << endl;
         if( mySyst.get_utd_poles() ){
@@ -290,9 +290,9 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
             cout << "False" << endl;
         }
 
-        mySyst.set_B( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Ones( n, p ) ) );
-        mySyst.set_C( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Ones( m, n ) ) );
-        mySyst.set_D( make_shared< Eigen::MatrixXd >( -1*Eigen::MatrixXd::Zero( m, p ) ) );
+        mySyst.set_B( -1*Eigen::MatrixXd::Ones( n, p ) );
+        mySyst.set_C( -1*Eigen::MatrixXd::Ones( m, n ) );
+        mySyst.set_D( -1*Eigen::MatrixXd::Zero( m, p ) );
         cout << "Poles up to date after modifying B, C, and D: " << endl;
         if( mySyst.get_utd_poles() ){
             cout << "True" << endl;
@@ -349,9 +349,9 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         LTI_descSyst mySyst = LTI_descSyst();
         mySyst.set_E( *E_ptr );
         mySyst.set_A( *A_ptr );
-        mySyst.set_B( B_ptr );
-        mySyst.set_C( C_ptr );
-        mySyst.set_D( D_ptr );
+        mySyst.set_B( *B_ptr );
+        mySyst.set_C( *C_ptr );
+        mySyst.set_D( *D_ptr );
 
         mySyst.gen_sparse_syst();
 
@@ -398,9 +398,9 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         LTI_descSyst mySyst = LTI_descSyst();
         mySyst.set_E( *E_ptr );
         mySyst.set_A( *A_ptr );
-        mySyst.set_B( B_ptr );
-        mySyst.set_C( C_ptr );
-        mySyst.set_D( D_ptr );
+        mySyst.set_B( *B_ptr );
+        mySyst.set_C( *C_ptr );
+        mySyst.set_D( *D_ptr );
 
         vector< complex<double> > test_f_arr = {
             complex<double>( 0, 0.1 ),
@@ -455,9 +455,9 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         LTI_descSyst mySyst = LTI_descSyst();
         mySyst.set_E( *E_ptr );
         mySyst.set_A( *A_ptr );
-        mySyst.set_B( B_ptr );
-        mySyst.set_C( C_ptr );
-        mySyst.set_D( D_ptr );
+        mySyst.set_B( *B_ptr );
+        mySyst.set_C( *C_ptr );
+        mySyst.set_D( *D_ptr );
 
         // Generate the sparse system.
         mySyst.gen_sparse_syst();

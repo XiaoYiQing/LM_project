@@ -348,12 +348,12 @@ void LTI_descSyst::set_A( const Eigen::MatrixXd& A_in ){
     this->utd_poles = false;
     this->utd_sparse_syst = false;
 }
-void LTI_descSyst::set_B( const shared_ptr< const Eigen::MatrixXd > B_in )
-    { this->B = *B_in; }
-void LTI_descSyst::set_C( const shared_ptr< const Eigen::MatrixXd > C_in )
-    { this->C = *C_in; }
-void LTI_descSyst::set_D( const shared_ptr< const Eigen::MatrixXd > D_in )
-    { this->D = *D_in; }
+void LTI_descSyst::set_B( const Eigen::MatrixXd& B_in )
+    { this->B = B_in; }
+void LTI_descSyst::set_C( const Eigen::MatrixXd& C_in )
+    { this->C = C_in; }
+void LTI_descSyst::set_D( const Eigen::MatrixXd& D_in )
+    { this->D = D_in; }
 
 bool LTI_descSyst::get_utd_poles() const{
     return this->utd_poles;
