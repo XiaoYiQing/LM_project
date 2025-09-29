@@ -426,7 +426,7 @@ namespace LM_UTIL{
     Loewner Matrix (SLM), and a select reference frequency value that can be
     picked as any complex frequency that participated in contructing the LM.
     */
-    shared_ptr<Eigen::MatrixXcd> build_LM_pencil( complex<double>, const Eigen::MatrixXcd& LM, 
+    Eigen::MatrixXcd build_LM_pencil( complex<double>, const Eigen::MatrixXcd& LM, 
         const Eigen::MatrixXcd& SLM );
 
     /*
@@ -435,7 +435,7 @@ namespace LM_UTIL{
     Loewner Matrix (SLM), and a select reference frequency value that can be
     picked as any frequency magnitude that participated in contructing the LM.
     */
-    shared_ptr<Eigen::MatrixXd> build_LM_pencil( double, const Eigen::MatrixXd& LM, 
+    Eigen::MatrixXd build_LM_pencil( double, const Eigen::MatrixXd& LM, 
         const Eigen::MatrixXd& SLM );
 
     /*

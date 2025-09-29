@@ -232,10 +232,10 @@ void tests::LM_pencil_test(){
 
 
     complex<double> cplx_f_ref = partit1->get_cplx_f_at( partit1->get_f_cnt()/2 );
-    shared_ptr<Eigen::MatrixXcd> myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, myLM, mySLM );
+    Eigen::MatrixXcd myLM_pen = LM_UTIL::build_LM_pencil( cplx_f_ref, myLM, mySLM );
 
     // Perform SVD.
-    Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( *myLM_pen );
+    Eigen::JacobiSVD<Eigen::MatrixXcd> mySVD( myLM_pen );
     // Get the singular values
     Eigen::VectorXd singularValues = mySVD.singularValues();
 
@@ -501,11 +501,10 @@ void tests::LM_eng_full_SFML_testrun(){
     double ref_f = myFr.get_fval_at( myFr.get_f_cnt() - 1 );
     
     // Construct the LM pencil.
-    shared_ptr<Eigen::MatrixXd> LM_pen = 
-        LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
+    Eigen::MatrixXd LM_pen = LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
 
     // Perform SVD.
-    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
     // Get the singular values
     Eigen::VectorXd singVals = svdResObj.singularValues();
     // Get the left singular vectors (U)
@@ -747,11 +746,10 @@ void tests::LM_eng_full_SFML_testrun_v2(){
     double ref_f = myFr.get_fval_at( myFr.get_f_cnt() - 1 );
     
     // Construct the LM pencil.
-    shared_ptr<Eigen::MatrixXd> LM_pen = 
-        LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
+    Eigen::MatrixXd LM_pen = LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
 
     // Perform SVD.
-    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
     // Get the singular values
     Eigen::VectorXd singVals = svdResObj.singularValues();
     // Get the left singular vectors (U)

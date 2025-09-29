@@ -118,11 +118,10 @@ void tests::LM_eng_full_SFML_testrun_gen(){
     double ref_f = myFr.get_fval_at( myFr.get_f_cnt() - 1 );
     
     // Construct the LM pencil.
-    shared_ptr<Eigen::MatrixXd> LM_pen = 
-        LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
+    Eigen::MatrixXd LM_pen = LM_UTIL::build_LM_pencil( ref_f, myLM_re, mySLM_re );
 
     // Perform SVD.
-    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( *LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
+    Eigen::JacobiSVD<Eigen::MatrixXd> svdResObj( LM_pen, Eigen::ComputeFullU | Eigen::ComputeFullV );
     // Get the singular values
     Eigen::VectorXd singVals = svdResObj.singularValues();
     // Get the left singular vectors (U)
