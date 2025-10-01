@@ -396,61 +396,135 @@ public:
 //      Access Functions
 // ====================================================================== >>>>>
 
-    /*
-    Set the number of inputs and outputs.
-    NOTE: This function expunges existing frequency data.
-    */
+    /**
+     * Set the number of inputs and outputs.
+     * 
+     * @param new_in_cnt The new number of inputs.
+     * @param new_out_cnt The new number of outputs.
+     * 
+     * @warning This function expunges existing frequency data.
+     */
     void set_IO_cnt( unsigned int new_in_cnt, unsigned int new_out_cnt );
 
-    /*
-    Set the number of outputs.
-    NOTE: This function expunges existing frequency data.
-    */
+    /**
+     * Set the number of outputs.
+     * 
+     * @param new_out_cnt The new number of outputs.
+     * 
+     * @warning This function expunges existing frequency data.
+     */
     void set_out_cnt( unsigned int new_out_cnt );
-    // Obtain the number of outputs (Number of rows in a data matrix).
+    /**
+     * Obtain the number of outputs (Number of rows in a data matrix).
+     * 
+     * @return The number of outputs.
+     */
     unsigned int get_out_cnt() const;
-    /*
-    Set the number of inputs.
-    NOTE: This function expunges existing frequency data.
-    */
+    /**
+     * Set the number of inputs.
+     * 
+     * @param new_in_cnt The new number of inputs.
+     * 
+     * @warning This function expunges existing frequency data.
+     */
     void set_in_cnt( unsigned int new_in_cnt );
-    // Obtain the number of inputs (Number of columns in a data matrix).
+    /**
+     * Obtain the number of inputs (Number of columns in a data matrix).
+     * 
+     * @return The number of inputs.
+     */
     unsigned int get_in_cnt() const;
-    // Obtain the number of frequency points.
+    /**
+     * Obtain the number of frequency points.
+     * 
+     * @return The number of frequency points (number of data matrices).
+     */
     unsigned int get_f_cnt() const;
-    // Obtain the string representation of the frequency scale or metric prefix.
+    /**
+     * Obtain the string representation of the frequency scale or metric prefix.
+     * 
+     * @return The string representation of the current adopted frequency metric prefix.
+     */
     string get_f_scale_str() const;
-    // Obtain the numerical value of the frequency scale or metric prefix.
+    /**
+     * Obtain the numerical value of the frequency scale or metric prefix.
+     * 
+     * @return The numerical value of the current adopted frequency metric prefix.
+     */
     double get_f_scale_num() const;
-    // Obtain the data type as a string.
+    /**
+     * Obtain the string representation of the frequency data type.
+     * 
+     * @return The string representation of the current adopted frequency data type.
+     */
     string get_f_data_type_str() const;
-    // Obtain the data format as a string.
+    /**
+     * Obtain the string representation of the frequency data format.
+     * 
+     * @return The string representation of the current adopted frequency data format.
+     */
     string get_f_data_format_str() const;
 
-    // Obtain the system impedance.
+    /**
+     * Obtain the system impedance.
+     * 
+     * @return The system impedance associated to this frequency data set.
+     */
     double get_systImp() const;
-    // Set the system impedance.
+    /**
+     * Set the system impedance.
+     * 
+     * @param The new system impedance to be associated to this frequency data set.
+     */
     void set_systImp( const double in_imp );
 
-    // Set the frequency value at the target frequency index.
+    /**
+     * Set the frequency value at the target frequency index.
+     * 
+     * @param f_idx The index at which the frequency value is to be changed.
+     * @param f_val The new value to be assigned at the target frequency index.
+     */
     void set_fval_at( unsigned int f_idx, double f_val );
-    // Obtain the frequency value at target frequency index.
+    /**
+     * Get the frequency value at the target frequency index.
+     * 
+     * @param f_idx The index at which the frequency value is to be fetched.
+     * 
+     * @return The frequency value at the target index.
+     */
     double get_fval_at( unsigned int f_idx ) const;
 
-    /*
-    Replace the block of continuous frequency within the frequency vector with the given block.
-    - lead: the starting index of the block.
-    - f_blk: the block of frequency to insert.
-    */
+    /**
+     * Replace the block of continuous frequency within the frequency vector with the given block.
+     * 
+     * @param lead The starting index of the block.
+     * @param f_blk the block of frequency to insert.
+     */
     void set_fval_block( unsigned int lead, const Eigen::VectorXd& f_blk );
 
-    // Obtain the complex frequency value at target frequency index.
     // TODO: Consider putting the 2*pi scaling in the future.
+    /**
+     * Obtain the complex frequency value at target frequency index.
+     * 
+     * @param f_idx The index at which the frequency value is to be fetched.
+     * 
+     * @return The frequency value at the target index.
+     */
     std::complex<double> get_cplx_f_at( unsigned int f_idx ) const;
 
-    // Set the real part data matrix at target frequency index.
+    /**
+     * Set the real part data matrix at target frequency index.
+     * 
+     * @param f_idx The index at which the frequency data real part is to be changed.
+     * @param new_rePart The new real part to be applied at the target index.
+     */
     void set_reData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_rePart );
-    // Obtain the real part data matrix at target frequency index.
+    /**
+     * Obtain the real part data matrix at target frequency index.
+     * 
+     * @param f_idx The index at which the frequency data real part is to be fetched.
+     * @return The real part of the data matrix at the target index.
+     */
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
 
     // Set the real part data matrix at target frequency index.
