@@ -20,6 +20,10 @@ using namespace std;
 
 /**
  * Template object for storing frequency data.
+ * 
+ * @note 
+ * 1- DC point is ALWAYS at index 0.
+ * 2- No repeated frequency entries.
  */
 class fData{    
 
@@ -58,7 +62,7 @@ public:
      * @param fullFileName The complete file name (directory, file stem, file extension) of 
      * the .s2p file to be read.
      * 
-     * NOTES:
+     * @NOTE:
      * 
      * - LTspice only provides two-port network S-parameters by default (That is S11, S12, 
      *   S21, S22), so the parser will only extract 2x2 S-parameter matrices.
@@ -118,18 +122,23 @@ public:
     static double get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX );
     
     /**
-     * Obtain the next prefix. 
-     * 
-     * - If "higher": next higher prefix
-     * 
-     * - If not "higher": next lower prefix
+     * Obtain the next prefix:
+     * - If "higher": next higher prefix.
+     * - If not "higher": next lower prefix.
      * 
      * @param tar_METRIC_PREFIX The target metrix prefix.
      * @param higher The boolean indicating whether to go higher than the target prefix.
      * @return The next metrix prefix following the target one.
      */
     static METRIC_PREFIX get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PREFIX, bool higher );
-    // Obtain the appropriate prefix for the given value.
+    /**
+     * Obtain the appropriate prefix for the given value.
+     * For example, inputting 123456 would return "k" for kilo whereas 
+     * inputting 1234567 would return "M" for mega.
+     * 
+     * @param tarVal The numerical value for which a metric prefix is sought for.
+     * @return The metric prefix most suited for the given numerical value.
+     */
     static METRIC_PREFIX get_METRIC_PREFIX_for_val( double tarVal );
 
 // ====================================================================== <<<<<
@@ -139,20 +148,37 @@ public:
 //      Class Enum "FDATA_TYPE" Help Functions
 // ====================================================================== >>>>>
 
-    /*
-    Enum representing the frequency data types.
-    S stands for scattering paramreter, Y for admittance parameter, etc.
-    */
+    /**
+     * Enum representing the frequency data types.
+     * S stands for scattering paramreter, Y for admittance parameter, etc.
+     */
     enum class FDATA_TYPE{ NONE, S, Y, Z, H, G };
 
-    // The number of enum entries in the enum "FDATA_TYPE" (Uses magic enum).
+    /**
+     * The number of enum entries in the enum "FDATA_TYPE" (Uses magic enum).
+     */
     const static int FDATA_TYPE_Count = (int) magic_enum::enum_count<FDATA_TYPE>();
 
-    // Obtain the string of the target enum case (Uses magic enum).
+    /**
+     * Obtain the string of the target enum case (Uses magic enum).
+     * 
+     * @param tar_FDATA_TYPE The target data type.
+     * @return The string representation of the target data type.
+     */
     static string get_FDATA_TYPE_Str( FDATA_TYPE tar_FDATA_TYPE );
-    // Obtain the enum matching the enum integer index.
+    /**
+     * Obtain the enum matching the enum integer index.
+     * 
+     * @param idx The target data type index.
+     * @return The data type associated to the target index.
+     */
     static FDATA_TYPE get_FDATA_TYPE_AtIdx( int idx );
-    // Obtain the prefix using the equivalent string symbol.
+    /**
+     * Obtain the data type equivalent to the target string representation.
+     * 
+     * @param strSymbol The target data type string representation.
+     * @return The data type associated to the string representation.
+     */
     static FDATA_TYPE get_FDATA_TYPE( string strSymbol );
 
 // ====================================================================== <<<<<
@@ -162,13 +188,14 @@ public:
 //      Class Enum "FDATA_FORMAT" Help Functions
 // ====================================================================== >>>>>
     
-    /*
-    Enum representing the frequency data types.
-    In the order defined:
-        DB: Decibel Magnitude/Degree Angle
-        MA: Linear Magnitude/Degree Angle (polar form)
-        RI: Real Part/Imaginary Part (rectangular form)
-    */
+
+    /**
+     * Enum representing the frequency data types.
+     * In the order defined:
+     *  - DB: Decibel Magnitude/Degree Angle
+     *  - MA: Linear Magnitude/Degree Angle (polar form)
+     *  - RI: Real Part/Imaginary Part (rectangular form)
+     */
     enum class FDATA_FORMAT{ NONE, DB, MA, RI };
 
     // The number of enum entries in the enum "FDATA_FORMAT" (Uses magic enum).
@@ -188,13 +215,11 @@ public:
 //      General Static Support Functions
 // ====================================================================== >>>>>
 
-/*
-Create two index arrays having mutually exclusive indices which
-can serve to create two partitions from the existing original set.
-*/
-static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origSize );
-
-
+    /**
+     * Create two index arrays having mutually exclusive indices which 
+     * can serve to create two partitions from the existing original set.
+     */
+    // static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origSize );
 
 // ====================================================================== <<<<<
 
@@ -212,9 +237,8 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
      * @param Xr_vec Frequency data real part.
      * @param Xi_vec Frequency data imaginary part.
      * 
-     * NOTE: scale, data-type, and data format are all set to NONE by default. You 
+     * @NOTE: scale, data-type, and data format are all set to NONE by default. You 
      * have to change them by yourself afterward initialization.
-     * 
      */
     fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec );
 
@@ -225,41 +249,60 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
 //      Data Editing
 // ====================================================================== >>>>>
 
-    /*
-    Re-initialize the fData by setting the f vector and the f data vector to
-    only zeros values with the given number of ports and frequency points.
-    This function does not affect format settings.
-    */
+    /**
+     * Re-initialize the fData by setting the f vector and the f data vector 
+     * to only zeros values with the given number of ports and frequency points. 
+     * This function does not affect format settings.
+     * 
+     * @param out_cnt The number of outputs (Number of rows of data matrices).
+     * @param in_cnt The number of inputs (Number of columns of data matrices).
+     * @param f_cnt Number of frequency points (Number of data matrices).
+     */
     void reInit( unsigned int out_cnt, unsigned int in_cnt, unsigned int f_cnt );
 
-    /*
-    Set the data of the target objects to match those of the reference object.
-    NOTE: Data copying does NOT perform settings copying such as frequency data type and format.
-    */
+    /**
+     * Set the data of the target objects to match those of the reference object.
+     * This includes frequency array copying.
+     * 
+     * @param tarObj The fData instance where the data is to be copied into.
+     * @param refObj The fData instance whose data is the source of the copying.
+     * 
+     * @note Data copying does NOT perform settings copying such as frequency data type and format.
+     */
     static void copy_data( fData& tarObj, const fData& refObj );
 
-    /*
-    Set the settings of the target objects to match those of the reference object.
-    NOTE: Settings copying does NOT perform any kind of data format conversion.
-    The target will adopt all settings of the reference directly without any check
-    and modifition on the data, so the frequency data and the frequency array are 
-    not touched.
-    */
+    /**
+     * Set the settings of the target objects to match those of the reference object.
+     * 
+     * @param tarObj The fData instance where the settings is to be copied into.
+     * @param refObj The fData instance whose settings are the source of the copying.
+     * 
+     * @note Settings copying does NOT perform any kind of data format conversion. 
+     * The target will adopt all settings of the reference directly without any check 
+     * and modifition on the data, so the frequency data and the frequency array are 
+     * not touched.
+     */
     static void copy_settings( fData& tarObj, const fData& refObj );
 
-    /*
-    Switch the format of the data from the current format to the specified new format.
-    */
+    /**
+     * Switch the format of the data from the current format to the specified new format.
+     * 
+     * @param newFormat The new data format to which the current data is to switch to.
+     */
     void data_format_Switch( FDATA_FORMAT newFormat );
-    /*
-    Switch the data prefix, which applies the corresponding rescaling to the f vector.
-    */
+
+    /**
+     * Switch the data prefix, which applies the corresponding rescaling to the f vector.
+     * 
+     * @param newPref The new metric prefix to which the current data is to rescale to.
+     */
     void data_prefix_switch( METRIC_PREFIX newPref );
 
-    /*
-    Normalize the frequency array. NOTE: this function simply selects an appropriate
-    metric prefix to switch to.
-    */
+    /**
+     * Normalize the frequency array with respect to known metric prefixes.
+     * 
+     * @note This function simply selects an appropriate metric prefix to switch to.
+     */
     void f_rescale();
 
 // ====================================================================== <<<<<
@@ -269,35 +312,52 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
 //      Specialized Support Functions
 // ====================================================================== >>>>>
 
-    /*
-    Return true if the zero frequency point is within the f vector.
-    NOTE: will only check the first entry of the f vector, which is the only
-    slot where the DC point is allowed to be.
-    */
+    /**
+     * Determine if the data has any 0 frequency (DC point) data point.
+     * 
+     * @return Boolean indicating whether the DC point is present in this instance of fData.
+     * 
+     * @note Will only check the first entry of the f vector, which is the only 
+     * slot where the DC point is allowed to be.
+     */
     bool hasDC() const;
 
-    /*
-    Create a reduced set of frequency data using a smaller linearly distributed
-    index set.
-    */
+    /**
+     * Create a reduced set of frequency data using a smaller linearly distributed
+     * index set.
+     * 
+     * @param rSize The size of the reduced linearly distributed frequency set.
+     * @return The fData formed from the reduced set of frequency points.
+     */
     fData red_partit_lin( unsigned int rSize );
     
-    /*
-    Create a reduced set of frequency data using a subset index array.
-    */
+    /**
+     * Create a reduced set of frequency data using a subset index array.
+     * 
+     * @param fr_idx_vec The index array for containing the indices of frequency 
+     *  data to extract to create the reduced fData.
+     * @return The reduced fData containing the frequency data from the original 
+     *  fData at the specified frequency points.
+     */
     fData red_partit( const vector< unsigned int >& fr_idx_vec ) const;
 
-    /*
-    Create two partitions from the original frequency data set.
-    The partitions are decided by interleaving indexing.
-    Partition 1 always has the first frequency entry.
-    */
+    /**
+     * Create two partitions from the original frequency data set. The 
+     * partitions are decided by interleaving indexing. 
+     * 
+     * @return Vector of 2 shared_ptr leading to the 2 fData partitions.
+     * 
+     * @note Partition 1 always has the first (index  = 0) frequency entry.
+     */
     vector< shared_ptr<fData> > gen_2_partit() const;
 
-    /*
-    Create two index arrays having mutually exclusive indices which
-    can serve to create two partitions from the existing f data set.
-    */
+    /**
+     * Create two index arrays following the interleaving indexing pattern and 
+     * having mutually exclusive indices which can serve to create two partitions 
+     * from the existing f data set.
+     * 
+     * @return Vector of 2 index vector arrays.
+     */
     vector< vector< unsigned int > > gen_2_partit_idx_arr() const;
 
     /*
@@ -307,21 +367,26 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
     */
     // vector< shared_ptr<fData> > gen_2_partit( const vector< unsigned int >& p1_idx );
 
-    /*
-    Generate a complex conjugate set of data.
-    This function assumes the frequency data are ordered in the ascending order
-    of frequency magnitudes (If DC point is present, it MUST be first entry).
-    The generated freq. data set is a complement set, so it will not include
-    the DC data point if it is present in the original.
-    */
+    /**
+     * Generate a complex conjugate set of data.
+     * This function assumes the frequency data are ordered in the ascending order
+     * of frequency magnitudes (If DC point is present, it MUST be first entry).
+     * The generated freq. data set is a complement set, so it will not include
+     * the DC data point if it is present in the original.
+     * 
+     * @return Create a complete complement set of complex conjugate frequency data.
+     */
     fData gen_cplx_conj_set() const;
 
-    /*
-    Generate a copy of the present fData object but with complex conjugate frequency
-    and data inserted in interleaving fashion.
-    This means each frequency and the corresponding frequency data is immediately 
-    followed by their complex conjugate in the arrays.
-    */
+    /**
+     * Generate a copy of the present fData object but with complex conjugate frequency 
+     * and data inserted in interleaving fashion.
+     * This means each frequency and the corresponding frequency data is immediately 
+     * followed by their complex conjugate in the arrays.
+     * 
+     * @return Create a fData which is the original fData instance injected with its complete
+     *  complex conjugate set of data.
+     */
     fData gen_cplx_conj_comb() const;
 
 // ====================================================================== <<<<<
