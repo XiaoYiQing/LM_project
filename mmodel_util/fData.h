@@ -18,7 +18,9 @@
 
 using namespace std;
 
-
+/**
+ * Template object for storing frequency data.
+ */
 class fData{    
 
 public:
@@ -27,28 +29,44 @@ public:
 //      Data From File Utility
 // ====================================================================== >>>>>
 
-    /*
-    Function to retrieve frequency data from files ending with the extension of format
-    ".sXp" where X is any positive integer representing number of I/O ports.
-    */
+    /**
+     * Function to retrieve frequency data from files ending with the extension of format
+     * ".sXp" where X is any positive integer representing number of I/O ports.
+     * 
+     * @param tarFData The fData object into which the read data is inserted.
+     * @param fullFileName The complete file name (directory, file stem, file extension) of 
+     * the .sXp file to be read.
+     */
     static void read_sXp_file( fData& tarFData, const string& fullFileName );
 
-    /*
-    Read the specific 2-port S-parameter data file, which follows a different parsing
-    rule than 3 or higher number of ports S data files.
-    */
+    /**
+     * Read the specific 2-port S-parameter data file, which follows a different parsing
+     * rule than 3 or higher number of ports S data files.
+     * 
+     * @param tarFData The fData object into which the read data is inserted.
+     * @param fullFileName The complete file name (directory, file stem, file extension) of 
+     * the .s2p file to be read.
+     */
     static void read_s2p_file( fData& tarFData, const string& fullFileName );
 
 
-    /*
-    Function to retrieve freq. data from S-parameter file data generated from the 
-    LTspice software.
-    NOTE:
-    - LTspice only provides two-port network S-parameters by default (That is S11, S12, 
-        S21, S22), so the parser will only extract 2x2 S-parameter matrices.
-    - This parser only reads data given in the (dB,degree (non-radian)) format.
-    - LTspice does not print additional information such as input impedance. As such,
-        such values are set to default (Rin = 50, for example).
+    /**
+     * Function to retrieve freq. data from S-parameter file data generated from the 
+     * LTspice software.
+     * 
+     * @param tarFData The fData object into which the read data is inserted.
+     * @param fullFileName The complete file name (directory, file stem, file extension) of 
+     * the .s2p file to be read.
+     * 
+     * NOTES:
+     * 
+     * - LTspice only provides two-port network S-parameters by default (That is S11, S12, 
+     *   S21, S22), so the parser will only extract 2x2 S-parameter matrices.
+     * 
+     * - This parser only reads data given in the (dB,degree (non-radian)) format.
+     * 
+     * - LTspice does not print additional information such as input impedance. As such,
+     * such values are set to default (Rin = 50, for example).
     */
     static void read_LTspice_Sp_file( fData& tarFData, const string& fullFileName );
 
@@ -59,30 +77,57 @@ public:
 //      Class Enum "METRIC_PREFIX" Help Functions
 // ====================================================================== >>>>>
 
-    /*
-    Enum representing the metric system prefix symbols.
-    In the order defined:
-        pico, nano, micro, micro (alt), milli, centi, deci, deca, hecto, kilo, mega, giga, tera
-    */
+    /**
+     * Enum representing the metric system prefix symbols.
+     * In the order defined:
+     * 
+     * - pico, nano, micro, micro (alt), milli, centi, deci, deca, hecto, kilo, mega, giga, tera
+     */
     enum class METRIC_PREFIX{ p, n, μ, mu, m, c, d, NONE, da, h, k, M, G, T };
 
     // The number of enum entries in the enum "METRIC_PREFIX" (Uses magic enum).
     const static int METRIC_PREFIX_Count = (int) magic_enum::enum_count<METRIC_PREFIX>();
 
-    // Obtain the string of the target enum case (Uses magic enum).
+    /**
+     * Obtain the string of the target enum case (Uses magic enum).
+     * 
+     * @param tar_METRIC_PREFIX The target metric prefix.
+     * @return The string representation of the target metric prefix.
+     */
     static string get_METRIC_PREFIX_Str( METRIC_PREFIX tar_METRIC_PREFIX );
-    // Obtain the enum matching the enum integer index (return -1 if failed).
+    /**
+     * Obtain the enum matching the enum integer index (return -1 if failed).
+     * 
+     * @param idx Index of the target metric prefix.
+     * @return The metric prefix associated to the target index.
+     */
     static METRIC_PREFIX get_METRIC_PREFIX_AtIdx( int idx );
-    // Obtain the prefix using the equivalent string symbol.
+    /**
+     * Obtain the prefix using the equivalent string symbol.
+     * 
+     * @param strSymbol The target string representation of a metric prefix.
+     * @return The actual metric prefix represented by the target string.
+     */
     static METRIC_PREFIX get_METRIC_PREFIX( string strSymbol );
-    // Obtain the numerical value of the metric prefix.
+    /**
+     * Obtain the numerical value of the metric prefix.
+     * 
+     * @param tar_METRIC_PREFIX The target metric prefix.
+     * @return The numerical value equivalent of one unit of the target metric prefix.
+     */
     static double get_METRIC_PREFIX_val( METRIC_PREFIX tar_METRIC_PREFIX );
     
-    /* 
-    Obtain the next prefix. 
-    If "higher": next higher prefix.
-    else: next lower prefix.
-    */
+    /**
+     * Obtain the next prefix. 
+     * 
+     * - If "higher": next higher prefix
+     * 
+     * - If not "higher": next lower prefix
+     * 
+     * @param tar_METRIC_PREFIX The target metrix prefix.
+     * @param higher The boolean indicating whether to go higher than the target prefix.
+     * @return The next metrix prefix following the target one.
+     */
     static METRIC_PREFIX get_METRIC_PREFIX_next( METRIC_PREFIX tar_METRIC_PREFIX, bool higher );
     // Obtain the appropriate prefix for the given value.
     static METRIC_PREFIX get_METRIC_PREFIX_for_val( double tarVal );
@@ -160,12 +205,18 @@ static vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origS
 
     fData();
 
-    /*
-    Initialization with known frequency vector and frequency data.
-    NOTE: scale, data-type, and data format are all set to NONE by default. You 
-    have to change them by yourself afterward initialization.
-    */
-    fData( Eigen::VectorXd&, Matrix3DXd&, Matrix3DXd& );
+    /**
+     * Initialization with known frequency vector and frequency data.
+     * 
+     * @param f_vec Vector of frequency magnitudes (Hz).
+     * @param Xr_vec Frequency data real part.
+     * @param Xi_vec Frequency data imaginary part.
+     * 
+     * NOTE: scale, data-type, and data format are all set to NONE by default. You 
+     * have to change them by yourself afterward initialization.
+     * 
+     */
+    fData( Eigen::VectorXd& f_vec, Matrix3DXd& Xr_vec, Matrix3DXd& Xi_vec );
 
 // ====================================================================== <<<<<
 
