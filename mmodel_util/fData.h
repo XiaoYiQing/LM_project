@@ -661,9 +661,7 @@ protected:
     // The system impedence at which the measurements were taken.
     double systImp;
 
-    /*
-    The vector of frequencies in hertz (unit saved separately).
-    */
+    // The vector of frequencies in hertz (unit saved separately).
     Eigen::VectorXd f_vec;
 
     // The vector of frequency data matrices real part.
