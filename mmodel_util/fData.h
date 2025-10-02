@@ -513,46 +513,77 @@ public:
     std::complex<double> get_cplx_f_at( unsigned int f_idx ) const;
 
     /**
-     * Set the real part data matrix at target frequency index.
+     * Set the data matrix real part at the target frequency index.
      * 
      * @param f_idx The index at which the frequency data real part is to be changed.
      * @param new_rePart The new real part to be applied at the target index.
      */
     void set_reData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_rePart );
     /**
-     * Obtain the real part data matrix at target frequency index.
+     * Obtain the real part data matrix at the target frequency index.
      * 
      * @param f_idx The index at which the frequency data real part is to be fetched.
      * @return The real part of the data matrix at the target index.
      */
     Eigen::MatrixXd get_reData_at_f( int f_idx ) const;
 
-    // Set the real part data matrix at target frequency index.
+    /**
+     * Set the data matrix imaginary part at the target frequency index.
+     * 
+     * @param f_idx The index at which the frequency data imaginary part is to be changed.
+     * @param new_imPart The new imaginary part to be applied at the target index.
+     */
     void set_imData_at_f( unsigned int f_idx, const Eigen::MatrixXd& new_imPart );
-    // Obtain the imaginary part data matrix at target frequency index.
+    /**
+     * Obtain the imaginary part data matrix at the target frequency index.
+     * 
+     * @param f_idx The index at which the frequency data imaginary part is to be fetched.
+     * @return The imaginary part of the data matrix at the target index.
+     */
     Eigen::MatrixXd get_imData_at_f( unsigned int f_idx ) const;
 
-    // Set the complex data at the target frequency index.
+    /**
+     * Set the data matrix at the target frequency index.
+     * 
+     * @param f_idx The index at which the frequency data is to be changed.
+     * @param new_mat The new data matrix to be applied at the target index.
+     */
     void set_cplxData_at_f( unsigned int f_idx, Eigen::MatrixXcd& new_mat );
-    // Obtain the complex data matrix at the target frequency index.
+    /**
+     * Obtain the data matrix at the target frequency index.
+     * 
+     * @param f_idx The index at which the frequency data is to be fetched.
+     * @return The data matrix at the target index.
+     */
     Eigen::MatrixXcd get_cplxData_at_f( unsigned int f_idx ) const;
 
-    /*
-    Replace the block of continuous data within the frequency data array with the given block.
-    - lead: the starting index of the block.
-    - newBlk_re: insert block real part.
-    - newBlk_im: insert block imag part.
-    */
+    /**
+     * Replace the block of continuous data within the frequency data array with the given block.
+     * 
+     * @param lead the starting index of the block.
+     * @param newBlk_re insert block real part.
+     * @param newBlk_im insert block imag part.
+     */
     void set_cplxData_block( unsigned int lead, const Matrix3DXd& newBlk_re, const Matrix3DXd& newBlk_im );
 
-    // Obtain the f vector.
+    /**
+     * Obtain the frequency vector.
+     * 
+     * @return The frequency vector (copy) of the current fData instance.
+     */
     Eigen::VectorXd getF_vec() const;
-    // Obtain the frequency data part A (Real part or magnitude).
+    /**
+     * Obtain the frequency data part A (Real part or magnitude).
+     * 
+     * @return The portion A (Real part or magnitude) of the frequency data (copy).
+     */
     Matrix3DXd getXr_vec() const;
-    // Obtain the frequency data part B (Imaginary part or phase).
+    /**
+     * Obtain the frequency data part B (Imaginary part or phase).
+     * 
+     * @return The portion B (Imaginary part or phase) of the frequency data (copy).
+     */
     Matrix3DXd getXi_vec() const;
-
-
 
 // ====================================================================== <<<<<
 
@@ -561,31 +592,58 @@ public:
 //      Printing
 // ====================================================================== >>>>>
 
+    /**
+     * Write the data content of the current fData instance to the target file (.txt).
+     * 
+     * The format of the final data file follows a minimal version of a touchstone file.
+     * For example, for a 3-by-3 data matrix case, the first column is the frequency column
+     * and the subsequent columns follow the data order: 
+     * 
+     * X11a X11b X12a X12b X13a X13b X21a X21b etc.
+     * 
+     * @param fileDir The directory where the data file is created.
+     * @param fileStem The file stem (file name without extension and directory) of the file to be created.
+     * @param options Does nothing for now ...
+     * 
+     * @note 2-ports system follow the same data column ordering, and not the X11 X21 X22 X12 ordering.
+     */
     void print_to( const string& fileDir, const string& fileStem, int options );
 
 // ====================================================================== <<<<<
 
+    // TODO: error check for valid full file name input.
+    /**
+     * Serialize method to save current object state to a file.
+     * 
+     * @param fullFilename The full filename of the target file to create where 
+     * the serialized data is to be stored.
+     */
+    void serialize(const std::string& fullFilename) const;
 
-    /*
-    Serialize method to save current object state to a file.
-    */ 
-    void serialize(const std::string& filename) const;
-
-    /*
-    Serialize method using existing binary file stream.
-    */
+    /**
+     * Serialize method using existing binary file stream.
+     * 
+     * @param ofs The binary file stream through which the serialized data of 
+     * this fData instance is to be send.
+     */
     void serialize( std::ofstream& ofs ) const;
 
-    /*
-    Deserialize method to imprint current object state with existing state written
-    in a binary file.
-    */
-    void deserialize(const std::string& filename );
+    /**
+     * Deserialize method to imprint the current fData instance state with existing 
+     * state extracted from a binary file.
+     * 
+     * @param fullFilename The full filename of the target file from which the serialized
+     * data is to be extracted from.
+     */
+    void deserialize( const std::string& fullFilename );
 
-    /*
-    Deserialize method to imprint current object state with state from existing 
-    binary file stream.
-    */
+    /**
+     * Deserialize method to imprint the current fData instance state with existing 
+     * state extracted from an existing data file stream.
+     * 
+     * @param ifs The binary file stream through which a fData instance serialized data is to 
+     * be extracted.
+     */
     void deserialize( std::ifstream& ifs );
 
 protected:

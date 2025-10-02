@@ -71,7 +71,7 @@ int main() {
     // tests::MatrixXcd_to_file_test();
     // tests::file_to_MatrixXcd_test();
 
-    tests::numUtils_test_1(4);
+    // tests::numUtils_test_1(4);
     // tests::gen_match_vector_test();
     // tests::sort_num_vec_inplace_test();
 
@@ -87,7 +87,7 @@ int main() {
     // tests::fData_test_sXp_read(1);
     // tests::fData_setFunc_tests( 1 );
     // tests::fData_LTspice_data_read_test();
-    // tests::fData_print_test(0);
+    tests::fData_print_test(0);
     // tests::fData_prefix_manip_test(1);
     // tests::fData_serialize_test();
 

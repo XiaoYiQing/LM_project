@@ -661,7 +661,7 @@ void tests::fData_LTspice_data_read_test(){
 void tests::fData_print_test( unsigned int test_idx ){
 
     int case_cnt = 0;
-    // 0- Standard touchstone test case.
+    // 0- Standard data write.
     if( test_idx == case_cnt ){
 
         // Define our frequency data object.

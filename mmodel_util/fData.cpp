@@ -964,9 +964,9 @@ void fData::print_to( const string& fileDir, const string& fileStem, int options
 // ====================================================================== <<<<<
 
 
-void fData::serialize(const std::string& filename) const{
+void fData::serialize( const std::string& fullFilename ) const{
 
-    std::ofstream ofs(filename, std::ios::binary);
+    std::ofstream ofs( fullFilename, std::ios::binary );
 
     if(!ofs){
         throw invalid_argument( "serialize: Target binary file not found or cannot be opened." );
@@ -1007,9 +1007,9 @@ void fData::serialize( std::ofstream& ofs ) const{
 }
 
 
-void fData::deserialize( const std::string& filename ){
+void fData::deserialize( const std::string& fullFilename ){
 
-    std::ifstream ifs( filename, std::ios::binary );
+    std::ifstream ifs( fullFilename, std::ios::binary );
     if (!ifs) {
         throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
     }
