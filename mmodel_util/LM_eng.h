@@ -15,59 +15,69 @@
 
 using namespace std;
 
-// TODO: try to implement the random SVD functionality.
 
+/**
+ * Specialized class for performing steps of the Loewner Matrix (LM) process.
+ * Given a fData object with acceptable characteristics and parameters, the object 
+ * can proceed to build the corresponding LMs with which a linear-time-invariant 
+ * state-space system can be produced which simulates the frequency data with which
+ * it is constructed with.
+ */
 class LM_eng{
 
 public: 
 
-    /*
-    Numerical threshold utilized by instances of this class for determining nullity.
-    If a number's magnitude is smaller than this threshold, it is considered a zero.
-    */
+    /**
+     * Numerical threshold utilized by instances of this class for determining nullity.
+     * If a number's magnitude is smaller than this threshold, it is considered a zero.
+     */
     static const double NUM_THRESH;
 
-    /*
-    Standard reduced frequency set size. This is the number of frequency entries to be
-    extracted from the original fData set to create a subset fData. This subset fData
-    is the one used to construct the SFLM system, because the full set fData is usually
-    too large and overkill.
-    */
+    /**
+     * Standard reduced frequency set size. This is the number of frequency entries to be 
+     * extracted from the original fData set to create a subset fData. This subset fData 
+     * is the one used to construct the SFLM system, because the full set fData is usually 
+     * too large and overkill.
+     */
     static const unsigned int STD_RED_FSET_SIZE = 100;
 
 // ====================================================================== >>>>>
 //      Data Printing Functions
 // ====================================================================== >>>>>
-
-    /*
-    Highly specific support function which creates a LM_eng based on the 
-    data file specified by "fullFileName" and goes through the SFML process
-    to generate singular values of real Loewner Matrix system.
-    The singular values are then saved at the target directory "destDir" as
-    a simple text file using the same file name stem as "fullFileName" with added
-    suffix "_sv".
-    For example, if 
-        - destDir = "C:/project/singVal"
-        - fullFileName = "lowPassFilterV2.s2p" or "lowPassFilterV2.txt"
-
-    Then the generated singular values file will have the full file name:
-        - "C:/project/singVal/lowPassFilterV2_vs.txt"
-    */
+    
+    /**
+     * Highly specific support function which creates a LM_eng based on the 
+     * data file specified by "fullFileName" and goes through the SFML process
+     * to generate singular values of real Loewner Matrix system.
+     * The singular values are then saved at the target directory "destDir" as
+     * a simple text file using the same file name stem as "fullFileName" with added
+     * suffix "_sv".
+     * 
+     * For example, if 
+     *   - destDir = "C:/project/singVal"
+     *   - fullFileName = "lowPassFilterV2.s2p" or "lowPassFilterV2.txt"
+     * 
+     * Then the generated singular values file will have the full file name:
+     *   - "C:/project/singVal/lowPassFilterV2_vs.txt"
+     */
     static LM_eng print_singVals( const string& fullFileName, 
         const string& destDir );
     
-    /*
-    Print the singular values of the target LM system at the specific directory under
-    the filename stem.
-    For example, if 
-        - destDir = "C:/project/singVal"
-        - fileStem = "lowPassFilterV2"
 
-    Then the generated singular values file will have the full file name:
-        - "C:/project/singVal/lowPassFilterV2.txt"
-    NOTE: The given "tar_LM_eng" must have generated the singular values already, or
-    the process is aborted.
-    */
+    /**
+     * Print the singular values of the target LM system at the specific directory under 
+     * the filename stem.
+     * 
+     * For example, if 
+     *   - destDir = "C:/project/singVal"
+     *   - fileStem = "lowPassFilterV2"
+     * 
+     * Then the generated singular values file will have the full file name:
+     *   - "C:/project/singVal/lowPassFilterV2_vs.txt"
+     * 
+     * @note: The given "tar_LM_eng" must have generated the singular values already, or
+     * the process is aborted.
+     */
     static void print_singVals( const LM_eng& tar_LM_eng, const string& fileStem, 
         const string& destDir );
 
@@ -78,7 +88,12 @@ public:
 // ====================================================================== >>>>>
 
     LM_eng();
-
+    
+    /**
+     * Initialize the Loewner Matrix engine using the given frequency data.
+     * 
+     * @param inData The frequency data that is the base of this LM engine instance.
+     */
     LM_eng( const fData& inData );
 
 // ====================================================================== <<<<<
@@ -88,9 +103,13 @@ public:
 //      Serialization
 // ====================================================================== >>>>>
 
-    /*
-    Serialize method to save current object state to a file.
-    */ 
+    /**
+     * Serialize method to save current object state to a file.
+     * 
+     * @param filename The full filename of the target file into which the serialize data 
+     * of the LM_eng instance is to be written to. File is created if not present, file is
+     * overwritten if it is present.
+     */
     void serialize(const std::string& filename) const;
 
     /*
