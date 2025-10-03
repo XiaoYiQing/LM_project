@@ -55,15 +55,21 @@ public:
      * 
      * For example, if 
      *   - destDir = "C:/project/singVal"
-     *   - fullFileName = "lowPassFilterV2.s2p" or "lowPassFilterV2.txt"
+     *   - filename = "lowPassFilterV2.s2p" or "lowPassFilterV2.txt"
      * 
      * Then the generated singular values file will have the full file name:
-     *   - "C:/project/singVal/lowPassFilterV2_vs.txt"
+     *   - "C:/project/singVal/lowPassFilterV2_sv.txt"
+     * 
+     * @param fullFileName The full file name (dir + stem + ext) of the file from which
+     *  the LM_eng is to extract its initial frequency data.
+     * @param destDir The directory in which the file containing the singular values is
+     *  to be located.
+     * @return The LM_eng created during the process.
      */
     static LM_eng print_singVals( const string& fullFileName, 
         const string& destDir );
     
-
+    // TODO: This function needs to have data precision specified.
     /**
      * Print the singular values of the target LM system at the specific directory under 
      * the filename stem.
@@ -73,9 +79,15 @@ public:
      *   - fileStem = "lowPassFilterV2"
      * 
      * Then the generated singular values file will have the full file name:
-     *   - "C:/project/singVal/lowPassFilterV2_vs.txt"
+     *   - "C:/project/singVal/lowPassFilterV2_sv.txt"
      * 
-     * @note: The given "tar_LM_eng" must have generated the singular values already, or
+     * @param tar_LM_eng The target LM_eng from which the singular values to be 
+     *  written to file are extracted from.
+     * @param fileStem The stem of the singular value file.
+     * @param destDir The directory in which the file containing the singular values is
+     *  to be located.
+     * 
+     * @note The given "tar_LM_eng" must have generated the singular values already, or
      * the process is aborted.
      */
     static void print_singVals( const LM_eng& tar_LM_eng, const string& fileStem, 
@@ -452,22 +464,29 @@ vector< unsigned int > get_partit2IdxArr() const;
 
 
 protected:
-
+    
     bool flag0_data_set = false;
     bool flag1_data_prep = false;
     bool flag2_LM_const = false;
     bool flag3_re_trans = false;
     bool flag4_pen_SVD = false;
 
-    // The Loewner Matrices.
+    // The Loewner Matrice.
     Eigen::MatrixXcd LM;
+    // The frequency shifted-Loewner Matrix
     Eigen::MatrixXcd SLM;
+    // Partition 1 data row matrix vector.
     Eigen::MatrixXcd W;
+    // Partition 2 data column matrix vector.
     Eigen::MatrixXcd F;
-    // The Real Loewner Matrices.
+
+    // The Real Loewner Matrice.
     Eigen::MatrixXd LM_re;
+    // The real frequency shifted-Loewner Matrix
     Eigen::MatrixXd SLM_re;
+    // Partition 1 data row matrix vector post-real transform.
     Eigen::MatrixXd W_re;
+    // Partition 2 data column matrix vector post-real transform.
     Eigen::MatrixXd F_re;
 
     // Define the maximum available singular value index.
@@ -646,28 +665,6 @@ namespace LM_UTIL{
     Eigen::MatrixXd build_LM_pencil( double f_ref, const Eigen::MatrixXd& LM, 
         const Eigen::MatrixXd& SLM );
 
-    /*
-    Construct a real transformation matrix in the context of Loewner Matrix real transform.
-    The transformation is based on a target vector of matrices, where sub_mat_size is defined
-    as the length each matrix takes from the vector total length.
-
-    Note that the transformation matrix is scaled by 2^(-0.5).
-
-    The vector of matrices is expected to have the specific pair pattern where each 
-    distinct matrix entry is immediately followed by its complex conjugate.
-    In this case, the vector total length is found to be:
-        total_len = 2*sub_cplx_blk_cnt*sub_mat_size.
-
-    The only exception to the above pattern occurs when has_DC_pt = true, in which
-    case the very first matrix entry of the vector is purely real. Naturally, it won't
-    be followed by a complex conjugate version, so the vector total length would be:
-        total_len = ( 2*sub_cplx_blk_cnt + 1 )*sub_mat_size.
-
-    > has_DC_pt: If the DC point is present, it means the first sub block vector is real and need
-        no complex to real transform.
-    > sub_mat_size: The size of each sub-matrix.
-    > sub_cplx_blk_cnt: The number of distinct sub-matrices, excluding the purely real DC point one, if present.
-    */
 
     /**
      * \brief Construct a real transformation matrix in the context of Loewner Matrix real transform. 
