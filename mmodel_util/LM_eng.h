@@ -112,10 +112,14 @@ public:
      */
     void serialize(const std::string& filename) const;
 
-    /*
-    Deserialize method to imprint current object with the state of a class instance 
-    saved in a binary file.
-    */
+
+    /**
+     * Deserialize method to imprint current object with the state of a class instance 
+     * saved in a binary file.
+     * 
+     * @param filename The full filename of the target file from which the serialize data 
+     * of a LM_eng instance is to be imprinted onto this instance. 
+     */
     void deserialize(const std::string& filename);
 
 // ====================================================================== <<<<<
@@ -124,76 +128,89 @@ public:
 //      Major LM System Steps
 // ====================================================================== >>>>>
 
-    /*
-    The pre-SFML process step, which is simply setting the frequency data as well
-    as selecting the portion of the data being used to construct the LMs and the rest
-    for validation.
-    */ 
+    /**
+     * The pre-SFML process step, which is simply setting the frequency data as well 
+     * as selecting the portion of the data being used to construct the LMs and the rest 
+     * for validation.
+     * 
+     * @param inData The frequency data that is the base of this LM engine instance.
+     */
     void step0_fData_set( const fData& inData );
-    /*
-    The pre-SFML process step, which is simply setting the frequency data as well
-    as selecting the portion of the data being used to construct the LMs and the rest
-    for validation.
-    This function version allows user to specify which portion of the data is used
-    to construct the LMs via specifying "fr_idx_arr_in".
-    */ 
+    /**
+     * The pre-SFML process step, which is simply setting the frequency data as well 
+     * as selecting the portion of the data being used to construct the LMs and the rest 
+     * for validation.
+     * 
+     * This function version allows user to specify which portion of the data is used 
+     * to construct the LMs via specifying "fr_idx_arr_in".
+     * 
+     * @param inData The frequency data that is the base of this LM engine instance.
+     * @param fr_idx_arr_in The sub indexing array for extracting a fData subset from 
+     * the original data. This subset is then used to construct the LMs.
+     */
     void step0_fData_set( const fData& inData, const vector<unsigned int>& fr_idx_arr_in );
 
-    /*
-    SFML step where the data selected to construct the LMs are partitioning into 2 
-    partitions.
-    */
+    /**
+     * SFML step where the data selected to construct the LMs are partitioning into 2 
+     * partitions.
+     */
     void step1_fData_partition();
-    /*
-    SFML step where the data selected to construct the LMs are partitioning into 2 
-    partitions.
-    This function version lets the user directly dictate how the two partitions
-    are created. Note that the two index arrays argument must:
-        - have mutually exclusive indices.
-        - have no repeated indices.
-        - have a total of indices equal to the amount of data selected to construct the LMs.
-    */
+    /**
+     * SFML step where the data selected to construct the LMs are partitioning into 2 
+     * partitions.
+     * 
+     * This function version lets the user directly dictate how the two partitions
+     * are created. Note that the two index arrays argument must:
+     *     1- have mutually exclusive indices.
+     *     2- have no repeated indices.
+     *     3- have a total of indices equal to the amount of data selected to construct the LMs.
+     */
     void step1_fData_partition( const vector<unsigned int>& f1IdxVec, 
         const vector<unsigned int>& f2IdxVec );
     
-    /*
-    SFML step where the LM are constructed using the complex frequency data.
-    As such, the LMs generated at this step are complex and not purely real.
-    */
+    /**
+     * SFML step where the LM are constructed using the complex frequency data.
+     * As such, the LMs generated at this step are complex and not purely real.
+     */
     void step2_LM_construct();
     
-    /*
-    SFLM step where the complex LMs are transformed into real LMs.
-    */
+    /**
+     * SFLM step where the complex LMs are transformed into real LMs.
+     */
     void step3_LM_re_trans();
     
-    /*
-    Special SFLM step where the real Loewner Matrices are constructed directly.
-    However, the complex Loewner Matrices are skipped entirely, and are thus 
-    inaccessible.
-    */
+    /**
+     * Special SFLM step where the real Loewner Matrices are constructed directly. 
+     * However, the complex Loewner Matrices are skipped entirely, and are thus 
+     * inaccessible.
+     */
     void step3skip2_LM_re_construct();
-    /*
-    Special SFLM step where the real Loewner Matrices are constructed directly.
-    However, the complex Loewner Matrices are skipped entirely, and are thus 
-    inaccessible.
-    Alt note: this function contains all codes in a single function rather than calling
-    sub-task functions.
-    */
+    /**
+     * Special SFLM step where the real Loewner Matrices are constructed directly.
+     * However, the complex Loewner Matrices are skipped entirely, and are thus 
+     * inaccessible.
+     * 
+     * Alt note: this function contains all codes in a single function rather than calling 
+     * sub-task functions.
+     */
     void step3skip2_LM_re_construct_alt();
     
-    /*
-    SFLM step where the LM pencil is created and then undergoes singular value 
-    decomposition.
-    */
+    /**
+     * SFLM step where the LM pencil is created and then undergoes singular value 
+     * decomposition.
+     */
     void step4_LM_pencil_SVD();
-    /*
-    SFLM step where the LM pencil is created and then undergoes singular value 
-    decomposition.
-    This function version let's the user select the reference frequency.
-    NOTE: "f_ref" value would normally be chosen from the frequency array with which
-    the LMs were constructed with.
-    */
+    /**
+     * SFLM step where the LM pencil is created and then undergoes singular value 
+     * decomposition.
+     * 
+     * This function version let's the user select the reference frequency.
+     * 
+     * @param f_ref The reference frequency magnitude for constructing the LM pencil.
+     * 
+     * @note "f_ref" value would normally be chosen from the frequency array with which
+     * the LMs were constructed with.
+     */
     void step4_LM_pencil_SVD( double f_ref );
     /*
     SFLM step where the LM pencil is created and then undergoes singular value 
@@ -205,27 +222,53 @@ public:
     less effective the computation becomes to a point the full SVD decomposition 
     becomes less expensive than the partial one.
     */
+    /**
+     * SFLM step where the LM pencil is created and then undergoes singular value 
+     * decomposition.
+     * 
+     * This function version let's the user select the number of singular values to 
+     * compute. This is achieved through the random singular value method, where 
+     * only the specified number of largest singular values are approximated.
+     * 
+     * @param svd_cnt The number of singular values to compute. 
+     * 
+     * @note Opting to limit the number of singular value computed using "svd_cnt" is 
+     * meant for a svd_cnt << svd_cnt_max. The closer "svd_cnt" is to svd_cnt_max, the 
+     * less effective the computation becomes to a point the full SVD becomes less
+     * expensive than the partial one.
+     */
     void step4_LM_pencil_SVD( unsigned int svd_cnt );
-    /*
-    SFLM step where the LM pencil is created and then undergoes singular value 
-    decomposition.
-    This function version let's the user select the reference frequency as well as
-    the number of singular values to compute.
-    NOTE: "f_ref" value would normally be chosen from the frequency array with which
-    the LMs were constructed with.
-    NOTE: Opting to limit the number of singular value computed using "svd_cnt" is 
-    meant for a svd_cnt << svd_cnt_max. The closer "svd_cnt" is to svd_cnt_max, the 
-    less effective the computation becomes to a point the full SVD decomposition 
-    becomes less expensive than the partial one.
-    */
+
+    /**
+     * SFLM step where the LM pencil is created and then undergoes singular value 
+     * decomposition.
+     * 
+     * This function version let's the user select the reference frequency as well as
+     * the number of singular values to compute.
+     * 
+     * @note 
+     *   1- "f_ref" value would normally be chosen from the frequency array with which
+     *      the LMs were constructed with. 
+     *   2- Opting to limit the number of singular value computed using "svd_cnt" is 
+     *      meant for a svd_cnt << svd_cnt_max. The closer "svd_cnt" is to svd_cnt_max, the 
+     *      less effective the computation becomes to a point the full SVD becomes less
+     *      expensive than the partial one.
+     */
     void step4_LM_pencil_SVD( double f_ref, unsigned int svd_cnt );
 
-    /*
-    Given the number of singular values to be kept, create the transfer function
-    of equal order from the LM system.
-    NOTE: the input must be the number of singular values, NOT the singular value index
-    where the cut-off occurs.
-    */
+    /**
+     * Given the number of largest singular values to be kept, create the transfer function 
+     * of equal order from the LM system using the singular vectors associated to the
+     * retained singular values.
+     * 
+     * @param svd_ret_cnt The number of largest singular values to retain from the pencil 
+     * decomposition.
+     * 
+     * @return The resulting instance of Linear-Time-Invariant descriptor system.
+     * 
+     * @note The input must be the number of singular values, NOT the singular value index
+     * where the cut-off occurs.
+     */
     LTI_descSyst step5_LM_to_tf( unsigned int svd_ret_cnt );
 
 // ====================================================================== <<<<<
@@ -235,69 +278,155 @@ public:
 //      Access Function
 // ====================================================================== >>>>>
 
-/*
-Get the flag of the specified LM step index.
-*/
+/**
+ * Get the flag of the specified LM step index.
+ * 
+ * @param flagIdx The index of the LM process flag to be returned.
+ * 
+ * @return The target flag state.
+ */
 bool get_flag( unsigned int flagIdx ) const;
 
-// Insert new frequency data to the current LM engine.
-// void set_fData( const fData& inData );
-
-// Obtain the current fData.
+/**
+ * Obtain the current fData.
+ * 
+ * @param fData The frequency data object serving as the base of the LM engine.
+ */
 fData get_fData() const;
 
-/*
-Obtain the reference frequency magnitude used to construct the LM pencil.
-*/
+/**
+ * Obtain the reference frequency magnitude used to construct the LM pencil.
+ * 
+ * @return The reference frequency magnitude used to construct the LM pencil.
+ */
 double get_ref_f_mag() const;
-/*
-Obtain the maximum number of singular values available from the LM pencil.
-*/
+/**
+ * Obtain the maximum number of singular values available from the LM pencil.
+ * 
+ * @return The maximum number of LM pencil singular values available.
+ */
 unsigned int get_svd_cnt_max() const;
 
-// Obtain the number of outputs.
+/**
+ * Obtain the number of outputs.
+ * 
+ * @return The number of outputs (also the number of rows to the f data matrices).
+ */
 unsigned int get_out_cnt() const;
-// Obtain the number of inputs.
+/**
+ * Obtain the number of inputs.
+ * 
+ * @return The number of inputs (also the number of columns to the f data matrices).
+ */
 unsigned int get_in_cnt() const;
 
-// Obtain the frequency partition 1 data.
+/**
+ * Obtain the frequency partition 1 data.
+ * 
+ * @return The fData representing the current LM_eng's frequency partition 1 data.
+ */
 fData get_Fr1() const;
-// Obtain the frequency partition 2 data.
+/**
+ * Obtain the frequency partition 2 data.
+ * 
+ * @return The fData representing the current LM_eng's frequency partition 2 data.
+ */
 fData get_Fr2() const;
-// Obtain the complex conjugate frequency partition 1 data.
+/**
+ * Obtain the frequency partition 1 data injected with complex conjugates.
+ * 
+ * @return The fData representing the current LM_eng's frequency partition 1 data 
+ *  injected with complex conjugates.
+ */
 fData get_Frc1() const;
-// Obtain the complex conjugate frequency partition 2 data.
+/**
+ * Obtain the frequency partition 2 data injected with complex conjugates.
+ * 
+ * @return The fData representing the current LM_eng's frequency partition 2 data 
+ *  injected with complex conjugates.
+ */
 fData get_Frc2() const;
 
-// Obtain the Loewner Matrix.
+/**
+ * Obtain the Loewner Matrix.
+ * 
+ * @return The current stored Loewner Matrix.
+ */
 Eigen::MatrixXcd get_LM() const;
-// Obtain the shifted-Loewner Matrix.
+/**
+ * Obtain the shifted-Loewner Matrix.
+ * 
+ * @return The current stored shifted-Loewner Matrix.
+ */
 Eigen::MatrixXcd get_SLM() const;
-// Obtain the partition 1 data row vector.
+/**
+ * Obtain the partition 1 data row vector.
+ * 
+ * @return The partition 1 data row matrix vector.
+ */
 Eigen::MatrixXcd get_W() const;
-// Obtain the partition 2 data column vector.
+/**
+ * Obtain the partition 2 data column vector.
+ * 
+ * @return The partition 2 data column matrix vector.
+ */
 Eigen::MatrixXcd get_F() const;
 
-// Obtain the Loewner Matrix after real transform.
+/**
+ * Obtain the post-real transform Loewner Matrix.
+ * 
+ * @return The current stored post-real transform Loewner Matrix.
+ */
 Eigen::MatrixXd get_LM_re() const;
-// Obtain the shifted-Loewner Matrix after real transform.
+/**
+ * Obtain the post-real transform shifted-Loewner Matrix.
+ * 
+ * @return The current stored post-real transform shifted-Loewner Matrix.
+ */
 Eigen::MatrixXd get_SLM_re() const;
-// Obtain the partition 1 data row vector after real transform.
+/**
+ * Obtain the partition 1 post-real transform data row vector.
+ * 
+ * @return The partition 1 post-real transform data row matrix vector.
+ */
 Eigen::MatrixXd get_W_re() const;
-// Obtain the partition 2 data column vector after real transform.
+/**
+ * Obtain the partition 2 post-real transform data column vector.
+ * 
+ * @return The partition 2 post-real transform data column matrix vector.
+ */
 Eigen::MatrixXd get_F_re() const;
 
-
-// Obtain the current Loewner Matrix pencil's computed singular values.
+/**
+ * Obtain the current Loewner Matrix pencil's computed singular values.
+ * 
+ * @return Vector of singular values.
+ */
 Eigen::VectorXd get_singVals() const;
-// Obtain the left singular vectors generated from the current LM pencil.
+/**
+ * Obtain the left singular vectors generated from the current LM pencil.
+ * 
+ * @return The matrix where each column is a left singular vector.
+ */
 Eigen::MatrixXd get_U() const;
-// Obtain the left singular vectors generated from the current LM pencil.
+/**
+ * Obtain the right singular vectors generated from the current LM pencil.
+ * 
+ * @return The matrix where each column is a right singular vector.
+ */
 Eigen::MatrixXd get_V() const;
 
-// Obtain the bool indicating whether partition 1 contains the DC point.
+/**
+ * Obtain the bool indicating whether partition 1 contains the DC point.
+ * 
+ * @return Boolean indicating whether partition 1 contains the DC point.
+ */
 bool get_f1_has_DC_pt() const;
-// Obtain the bool indicating whether partition 2 contains the DC point.
+/**
+ * Obtain the bool indicating whether partition 2 contains the DC point.
+ * 
+ * @return Boolean indicating whether partition 2 contains the DC point.
+ */
 bool get_f2_has_DC_pt() const;
 
 // Obtain the reduced frequency data set index array.
