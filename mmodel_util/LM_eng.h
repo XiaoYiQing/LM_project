@@ -429,11 +429,23 @@ bool get_f1_has_DC_pt() const;
  */
 bool get_f2_has_DC_pt() const;
 
-// Obtain the reduced frequency data set index array.
+/**
+ * Obtain the reduced frequency data set index array.
+ * 
+ * @return The index array of the fData subset actually used to construct the LM.
+ */
 vector< unsigned int > get_fr_idx_arr() const;
-// Obtain the partition #1 index array.
+/**
+ * Obtain the partition #1 index array.
+ * 
+ * @return The index array of the subset fData's partition 1.
+ */
 vector< unsigned int > get_partit1IdxArr() const;
-// Obtain the partition #2 index array.
+/**
+ * Obtain the partition #2 index array.
+ * 
+ * @return The index array of the subset fData's partition 2.
+ */
 vector< unsigned int > get_partit2IdxArr() const;
 
 // ====================================================================== <<<<<
@@ -477,15 +489,18 @@ protected:
 
     // The reduced frequency set index array.
     vector< unsigned int > fr_idx_arr;
-    /*
-    The index array of partition 1 of the reduced frequency set.
-    NOTE: Indexing with respect to the full fData myFData.
-    */
+
+    /**
+     * The index array of partition 1 of the reduced frequency set.
+     * 
+     * @note Indexing with respect to the full fData myFData.
+     */
     vector< unsigned int > partit1IdxArr;
-    /*
-    The index array of partition 2 of the reduced frequency set.
-    NOTE: Indexing with respect to the full fData myFData.
-    */
+    /**
+     * The index array of partition 2 of the reduced frequency set.
+     * 
+     * @note Indexing with respect to the full fData myFData.
+     */
     vector< unsigned int > partit2IdxArr;
 
 };
@@ -493,104 +508,151 @@ protected:
 
 namespace LM_UTIL{
 
-    /*
-    Create two index arrays having mutually exclusive indices which
-    can serve to create two partitions from the existing original set.
-    */
+    /**
+     * Create two index arrays using interleaving pattern and having mutually 
+     * exclusive indices which can serve to create two partitions from the 
+     * existing original set of size "origSize".
+     * 
+     * @param origSize The size of the original set for which we intend to subdivide 
+     *  into 2 partitions.
+     * @return A size 2 vector containing 2 index vectors having mutually exlusive indices from
+     *  0 to ( origSize - 1 ).
+     */
     vector< vector< unsigned int > > gen_2_partit_idx_arr( unsigned int origSize );
 
-    /*
-    Construct a Loewner Matrix.
-    */
+    /**
+     * Construct a Loewner Matrix using the two given partition data.
+     * 
+     * @param f1Data Partition 1 frequency data.
+     * @param f2Data Partition 2 frequency data.
+     * @return The resulting constructed Loewner Matrix.
+     * 
+     * @note Frequency points in f1Data and f2Data must not have duplicates and must 
+     *  be mutually exclusive.
+     */
     Eigen::MatrixXcd build_LM( const fData& f1Data, const fData& f2Data );
 
-    
 
-    /*
-    Construct a shifted-Loewner Matrix.
-    */
+    /**
+     * Construct a frequency shifted-Loewner Matrix using the two given partition data.
+     * 
+     * @param f1Data Partition 1 frequency data.
+     * @param f2Data Partition 2 frequency data.
+     * @return The resulting constructed frequency shifted-Loewner Matrix.
+     * 
+     * @note Frequency points in f1Data and f2Data must not have duplicates and must 
+     *  be mutually exclusive.
+     */
     Eigen::MatrixXcd build_SLM( const fData& f1Data, const fData& f2Data );
 
-
-    /*
-    Construct the row matrix vector containing the partition 1 data matrices in 
-    the same order they are used to construct the LM and SLM.
-    */
+    /**
+     * Construct the row matrix vector containing the partition 1 data matrices in 
+     * the same order they are used to construct the LM and SLM.
+     * 
+     * @param f1Data Partition 1 frequency data.
+     * @return The resulting constructed frequency partition 1 row matrix vector.
+     */
     Eigen::MatrixXcd build_W( const fData& f1Data );
 
-    /*
-    Construct the col matrix vector containing the partition 2 data matrices in 
-    the same order they are used to construct the LM and SLM.
-    */
+    /**
+     * Construct the col matrix vector containing the partition 2 data matrices in 
+     * the same order they are used to construct the LM and SLM.
+     * 
+     * @param f2Data Partition 2 frequency data.
+     * @return The resulting constructed frequency partition 2 column matrix vector.
+     */
     Eigen::MatrixXcd build_F( const fData& f2Data );
 
-    /*
-    Construct a real Loewner Matrix. A number of points need to be considered when
-    utilizing this function:
-    - The given frequency data is going to be inflated with the complete complex 
-        conjugate set (except for the DC point, if present).
-    - If the DC point is present, it must be the first entry of either f1Data or f2Data.
-    - The real Loenwer Matrix is constructed directly rather than through transform 
-        matrix multiplication.
-    */
+
+    /**
+     * Construct a real Loewner Matrix using the two given partition data.
+     *   
+     * @param f1Data Partition 1 frequency data.
+     * @param f2Data Partition 2 frequency data.
+     * @return The resulting constructed Loewner Matrix.
+     * 
+     * @note Some conditions must be met:
+     *   - Frequency points in f1Data and f2Data must not have duplicates and must be mutually exclusive.
+     *   - If the DC point is present, it must be the first entry of either f1Data or f2Data.
+     */
     Eigen::MatrixXd build_LM_re( const fData& myFr1, const fData& myFr2 );
 
-    /*
-    Construct a real shifted-Loewner Matrix. A number of points need to be considered 
-    when utilizing this function:
-    - The given frequency data is going to be inflated with the complete complex 
-        conjugate set (except for the DC point, if present).
-    - If the DC point is present, it must be the first entry of either f1Data or f2Data.
-    - The real Loenwer Matrix is constructed directly rather than through transform 
-        matrix multiplication.
-    */
+    /**
+     * Construct a real shifted-Loewner Matrix using the two given partition data.
+     *   
+     * @param f1Data Partition 1 frequency data.
+     * @param f2Data Partition 2 frequency data.
+     * @return The resulting constructed real frequency shifted-Loewner Matrix.
+     * 
+     * @note Some conditions must be met:
+     *   - Frequency points in f1Data and f2Data must not have duplicates and must be mutually exclusive.
+     *   - If the DC point is present, it must be the first entry of either f1Data or f2Data.
+     */
     Eigen::MatrixXd build_SLM_re( const fData& myFr1, const fData& myFr2 );
 
-    /*
-    Construct a real W matrix (partition 1 data vector). A number of points need to be considered 
-    when utilizing this function:
-    - The given frequency data is going to be inflated with the complete complex 
-        conjugate set (except for the DC point, if present).
-    - If the DC point is present, it must be the first entry of either f1Data.
-    - The real matrix is constructed directly rather than through transform 
-        matrix multiplication.
-    */
+    /**
+     * Construct the real row matrix vector utilizing the partition 1 data matrices in 
+     * the same order they are used to construct the LM and SLM.
+     * 
+     * @param f1Data Partition 1 frequency data.
+     * @return The resulting constructed frequency partition 1 real row matrix vector.
+     * 
+     * @note Some conditions must be met:
+     *   - Frequency points in f1Data must not have duplicates.
+     *   - If the DC point is present, it must be the first entry of either f1Data.
+     */
     Eigen::MatrixXd build_W_re( const fData& myFr1 );
 
-    /*
-    Construct a real F matrix (partition 2 data vector). A number of points need to be considered 
-    when utilizing this function:
-    - The given frequency data is going to be inflated with the complete complex 
-        conjugate set (except for the DC point, if present).
-    - If the DC point is present, it must be the first entry of either f2Data.
-    - The real matrix is constructed directly rather than through transform 
-        matrix multiplication.
-    */
+    /**
+     * Construct the real column matrix vector utilizing the partition 2 data matrices in 
+     * the same order they are used to construct the LM and SLM.
+     * 
+     * @param f1Data Partition 2 frequency data.
+     * @return The resulting constructed frequency partition 2 real column matrix vector.
+     * 
+     * @note Some conditions must be met:
+     *   - Frequency points in f2Data must not have duplicates.
+     *   - If the DC point is present, it must be the first entry of either f2Data.
+     */
     Eigen::MatrixXd build_F_re( const fData& myFr2 );
 
-    /*
-    Generate the Loenwer Matrix pencil.
-    The pencil is constructed using the Loewner Matrix (LM), the shifted 
-    Loewner Matrix (SLM), and a select reference frequency value that can be
-    picked as any complex frequency that participated in contructing the LM.
-    */
-    Eigen::MatrixXcd build_LM_pencil( complex<double>, const Eigen::MatrixXcd& LM, 
+
+    /**
+     * Generate the Loenwer Matrix pencil.
+     * The pencil is constructed using the Loewner Matrix (LM), the shifted-Loewner 
+     * Matrix (SLM), and a select reference frequency value that can be picked 
+     * as any complex frequency that participated in contructing the LM.
+     * 
+     * @param f_ref The reference frequency value defining the LM pencil.
+     * @param LM The Loewner Matrix.
+     * @param SLM The frequency shifted-Loewner Matrix.
+     * @return The LM pencil.
+     */
+    Eigen::MatrixXcd build_LM_pencil( complex<double> f_ref, const Eigen::MatrixXcd& LM, 
         const Eigen::MatrixXcd& SLM );
 
-    /*
-    Generate the Loenwer Matrix pencil, but after the real transform.
-    The pencil is constructed using the Loewner Matrix (LM), the shifted 
-    Loewner Matrix (SLM), and a select reference frequency value that can be
-    picked as any frequency magnitude that participated in contructing the LM.
-    */
-    Eigen::MatrixXd build_LM_pencil( double, const Eigen::MatrixXd& LM, 
+
+    /**
+     * Generate the Loenwer Matrix pencil, but after the real transform.
+     * The pencil is constructed using the real Loewner Matrix (LM), the real shifted 
+     * Loewner Matrix (SLM), and a select reference frequency magnitude value that can be
+     * picked as any frequency magnitude that participated in contructing the LM.
+     * 
+     * @param f_ref The reference frequency mangitude value defining the LM pencil.
+     * @param LM The real Loewner Matrix.
+     * @param SLM The real frequency shifted-Loewner Matrix.
+     * @return The LM pencil.
+     */
+    Eigen::MatrixXd build_LM_pencil( double f_ref, const Eigen::MatrixXd& LM, 
         const Eigen::MatrixXd& SLM );
 
     /*
     Construct a real transformation matrix in the context of Loewner Matrix real transform.
     The transformation is based on a target vector of matrices, where sub_mat_size is defined
     as the length each matrix takes from the vector total length.
+
     Note that the transformation matrix is scaled by 2^(-0.5).
+
     The vector of matrices is expected to have the specific pair pattern where each 
     distinct matrix entry is immediately followed by its complex conjugate.
     In this case, the vector total length is found to be:
@@ -606,6 +668,38 @@ namespace LM_UTIL{
     > sub_mat_size: The size of each sub-matrix.
     > sub_cplx_blk_cnt: The number of distinct sub-matrices, excluding the purely real DC point one, if present.
     */
+
+    /**
+     * \brief Construct a real transformation matrix in the context of Loewner Matrix real transform. 
+     * 
+     * The transformation T is aimed at a target vector of matrices V, where 
+     * "sub_mat_size" is defined as the length each matrix takes from V's 
+     * total length. The number of distinct complex matrices in V is "sub_cplx_blk_cnt".
+     * 
+     * - If V is a row matrix vector, then V * T => purely real.
+     * 
+     * - If V is a column matrix vector, then T * V => purely real.
+     * 
+     * Matrices in V are expected to have the specific pair pattern where each 
+     * distinct matrix entry is immediately followed by its complex conjugate.
+     * In this case, the V's total length is found to be:
+     * 
+     * - V_len = 2*sub_cplx_blk_cnt*sub_mat_size.
+     * 
+     * The only exception to the above pattern occurs when "has_DC_pt" is true, in which 
+     * case the very first matrix entry of V is purely real and is not counted towards
+     * "sub_cplx_blk_cnt". Naturally, this real matrix won't be followed by a complex conjugate 
+     * version, so V's total length would be:
+     * 
+     * - V_len = ( 2*sub_cplx_blk_cnt + 1 )*sub_mat_size.
+     * 
+     * @param has_DC_pt Flag indicating whether the DC point data matrix is present.
+     * @param sub_mat_size The size of each sub-matrix.
+     * @param sub_cplx_blk_cnt The number of complex data matrices.
+     * @return The real transform matrix.
+     * 
+     * @note The transformation matrix is scaled by 2^(-0.5) so that it is unitary.
+     */
     Eigen::MatrixXcd build_reT_mat( bool has_DC_pt, unsigned int sub_mat_size, unsigned int sub_cplx_blk_cnt );
     
 
