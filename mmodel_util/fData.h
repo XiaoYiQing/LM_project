@@ -611,7 +611,6 @@ public:
 
 // ====================================================================== <<<<<
 
-    // TODO: error check for valid full file name input.
     /**
      * Serialize method to save current object state to a file.
      * 

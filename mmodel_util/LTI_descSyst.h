@@ -17,7 +17,11 @@ using namespace std;
 
 
 
-
+/**
+ * Class representing instances of Linear-Time-Invariant (LTI) descriptor systems.
+ * It's primary task is holding the E, A, B, C, D matrices and facilitating evaluation
+ * of the transfer function on demand.
+ */
 class LTI_descSyst{
 
 
@@ -29,6 +33,9 @@ public:
 
 LTI_descSyst();
 
+/**
+ * Initialize an LTI_descSyst instance with the given E, A, B, C, D matrices.
+ */
 LTI_descSyst( Eigen::MatrixXd& E_in, Eigen::MatrixXd& A_in, Eigen::MatrixXd& B_in, 
     Eigen::MatrixXd& C_in, Eigen::MatrixXd& D_in );
 
@@ -39,10 +46,12 @@ LTI_descSyst( Eigen::MatrixXd& E_in, Eigen::MatrixXd& A_in, Eigen::MatrixXd& B_i
 //      Specialized Operations
 // ====================================================================== >>>>>
 
-/*
-Check if the system matrices are consistent with transfer function matrices requirements.
-Returns string describing what exactly caused the inconsistency, if any.
-*/
+/**
+ * Check if the system matrices are consistent with transfer function matrices requirements.
+ * Returns string describing what exactly caused the inconsistency, if any.
+ * 
+ * @return String describing the inconsistency. Empty if no inconsistencies.
+ */
 string consistency_check() const;
 /*
 Check if the system matrices are consistent with transfer function matrices requirements.
