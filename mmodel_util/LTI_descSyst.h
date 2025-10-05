@@ -233,10 +233,27 @@ void set_D( const Eigen::MatrixXd& D_in );
 
 // Obtain the up-to-date flag of computed poles (true if current poles are up-to-date).
 bool get_utd_poles() const;
+// Obtain the up-to-date flag of sparse system (true if current sparse system is up-to-date).
 bool get_utd_sparse_syst() const;
 
+// TODO: You need to prevent the following functions to work if sparse system is not utd.
+/**
+ * Obtain the diagonalized A matrix.
+ * 
+ * @return The diagonalized A matrix.
+ */
 Eigen::SparseMatrix< complex<double> > get_As() const;
+/**
+ * Obtain the left sparse system transformation matrix.
+ * 
+ * @return The left sparse system transformation matrix.
+ */
 Eigen::MatrixXcd get_Ts_L() const;
+/**
+ * Obtain the right sparse system transformation matrix.
+ * 
+ * @return The right sparse system transformation matrix.
+ */
 Eigen::MatrixXcd get_Ts_R() const;
 
 // ====================================================================== <<<<<
