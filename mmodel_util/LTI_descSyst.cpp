@@ -36,7 +36,7 @@ LTI_descSyst::LTI_descSyst( Eigen::MatrixXd& E_in, Eigen::MatrixXd& A_in, Eigen:
     this->D = D_in;
 
     if( !this->is_consistent() ){
-        cout << "WARNING: initialize LTI system has inconsistent matrix sizes." << endl;
+        throw std::runtime_error( "LTI_descSyst failed to initialize: system is inconsistent." );
     }
 
     // Initialize the up-to-date booleans.
@@ -115,8 +115,7 @@ Eigen::VectorXcd LTI_descSyst::get_poles(){
 
     // Verify if the current system is legitimate.
     if( !this->is_consistent() ){
-        cout << "System is inconsistent: cannot generate poles." << endl;
-        return Eigen::VectorXcd::Zero(0);
+        throw runtime_error( "Cannot return poles: LTI system is inconsistent." );
     }
 
     // Directly return currently stored poles if they were up-to-date already.
@@ -132,8 +131,7 @@ Eigen::VectorXcd LTI_descSyst::get_poles(){
     Eigen::ComplexEigenSolver< Eigen::MatrixXcd > mySolver( pole_mat );
     // Check if the computation was successful
     if ( mySolver.info() != Eigen::Success ) {
-        std::cerr << "Failed to compute eigenvalues." << std::endl;
-        return Eigen::VectorXcd::Zero(0);
+        throw std::runtime_error( "Cannot compute poles: Eigen solver failed." );
     }
 
     // Determine if the system is stable (Maximum poles real part is negative).
@@ -150,15 +148,13 @@ bool LTI_descSyst::to_reg_syst(){
 
     // Verify if the current system is legitimate.
     if( !this->is_consistent() ){
-        cout << "Cannot perform regular system translation: System is inconsistent." << endl;
-        return false;
+        throw runtime_error( "Cannot perform regular system translation: LTI system is inconsistent." );
     }
 
     // Compute E^(-1).
     Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(this->E);
     if(!lu_decomp.isInvertible()) {
-        std::cerr << "Cannot perform regular system translation: E is singular or too close to being singular." << std::endl;
-        return false;
+        throw runtime_error( "Cannot perform regular system translation: E is singular or too close to being singular." );
     }
     Eigen::MatrixXd E_inv = lu_decomp.inverse();
 
@@ -172,16 +168,17 @@ bool LTI_descSyst::to_reg_syst(){
 
 bool LTI_descSyst::gen_sparse_syst(){
 
-    if( !this->to_reg_syst() ){
-        cerr << "System sparsification failed: cannot translate into regular system." << endl;
-        return false;
+    // Try to turn the system into a regular system.
+    try{
+        this->to_reg_syst();
+    }catch( ... ){
+        throw;
     }
 
     // Eigen-decomposition
     Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(this->A);
     if (eigensolver.info() != Eigen::Success) {
-        cerr << "System sparsification failed: Eigen decomposition on A failed." << std::endl;
-        return false;
+        throw runtime_error( "System sparsification failed: Eigen decomposition of A failed." );
     }
     Eigen::VectorXcd eigvals = eigensolver.eigenvalues();
     this->As = eigvals.asDiagonal();
@@ -190,8 +187,7 @@ bool LTI_descSyst::gen_sparse_syst(){
     // Compute Q^(-1).
     Eigen::FullPivLU<Eigen::MatrixXcd> lu_decomp(Ts_L);
     if(!lu_decomp.isInvertible()) {
-        std::cerr << "Cannot continue sparsification process: Eigenvector matrix is unexpectedly singular." << std::endl;
-        return false;
+        throw runtime_error( "System sparsification failed: Eigenvector matrix is unexpectedly singular." );
     }
     this->Ts_R = lu_decomp.inverse();
 
@@ -210,9 +206,8 @@ Eigen::MatrixXcd LTI_descSyst::tf_eval( complex<double> f_tar ) const{
 
     // Solve system using LU decomposition
     Eigen::FullPivLU<Eigen::MatrixXcd> lu( tmp_1 );
-    if(!lu.isInvertible()) {
-        std::cerr << "Matrix is singular or nearly singular." << std::endl;
-        return -1*Eigen::MatrixXcd::Ones(1,1);
+    if( !lu.isInvertible() ) {
+        throw runtime_error( "Transfer function evaluation failed: target evaluation point is a pole." );
     }
 
     Eigen::MatrixXcd tmp_2 = lu.solve( B_tmp );
@@ -238,9 +233,8 @@ Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> >& f_vec ) const{
 
         // Solve system using LU decomposition
         Eigen::FullPivLU<Eigen::MatrixXcd> lu( tmp_1 );
-        if(!lu.isInvertible()) {
-            std::cerr << "Matrix is singular or nearly singular." << std::endl;
-            return Matrix3DXcd(1,1,1);
+        if( !lu.isInvertible() ){
+            throw runtime_error( "Transfer function evaluation failed: A target evaluation point is a pole." );
         }
         Eigen::MatrixXcd tmp_2 = lu.solve( B_tmp );
         Eigen::MatrixXcd H_z = this->C * tmp_2;
@@ -256,8 +250,7 @@ Matrix3DXcd LTI_descSyst::tf_eval( vector< complex<double> >& f_vec ) const{
 Eigen::MatrixXcd LTI_descSyst::tf_sparse_eval( complex<double> f_tar ) const{
 
     if( !this->utd_sparse_syst ){
-        cerr << "Cannot evaluate transfer function via sparse system: sparse system currently not updated" << endl;
-        return Eigen::MatrixXcd::Zero(0,0);
+        throw runtime_error( "Sparse transfer function evaluation failed: sparse system currently not updated." );
     }
 
     // Evaluate ( s*I - As )^(-1)
@@ -278,11 +271,10 @@ Eigen::MatrixXcd LTI_descSyst::tf_sparse_eval( complex<double> f_tar ) const{
 Matrix3DXcd LTI_descSyst::tf_sparse_eval( vector< complex<double> >& f_vec ) const{
 
     if( !this->utd_sparse_syst ){
-        cerr << "Cannot evaluate transfer function via sparse system: sparse system currently not updated" << endl;
-        return Matrix3DXcd(0,0,0);
+        throw runtime_error( "Sparse transfer function evaluation failed: sparse system currently not updated." );
     }
 
-    // Obtain the number of evluation points.
+    // Obtain the number of evaluation points.
     unsigned int eval_cnt = f_vec.size();
 
     // Initialize return variable.

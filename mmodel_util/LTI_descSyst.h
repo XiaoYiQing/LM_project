@@ -101,6 +101,7 @@ bool is_stable();
  */
 Eigen::VectorXcd get_poles();
 
+//TODO: make this function not return bool, but throw exceptions if something goes wrong.
 /**
  * Transform the current descriptor system into a regular system (E becomes identity).
  * 
@@ -111,6 +112,7 @@ Eigen::VectorXcd get_poles();
  */
 bool to_reg_syst();
 
+//TODO: make this function not return bool, but throw exceptions if something goes wrong.
 /**
  * Generate the sparse version of this system, where E becomes the identity matrix and 
  * A becomes a diagonal matrix (Transfer function is still identical).
