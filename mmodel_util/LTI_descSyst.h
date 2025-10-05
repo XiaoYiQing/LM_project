@@ -15,8 +15,6 @@
 
 using namespace std;
 
-// TODO: Put exception throwing instead of simple messages for error handling in this class.
-
 /**
  * Class representing instances of Linear-Time-Invariant (LTI) descriptor systems.
  * It's primary task is holding the E, A, B, C, D matrices and facilitating evaluation
@@ -101,7 +99,6 @@ bool is_stable();
  */
 Eigen::VectorXcd get_poles();
 
-//TODO: make this function not return bool, but throw exceptions if something goes wrong.
 /**
  * Transform the current descriptor system into a regular system (E becomes identity).
  * 
@@ -110,9 +107,8 @@ Eigen::VectorXcd get_poles();
  * 
  * @note This operation is irreversible, and is only possible if E is invertible.
  */
-bool to_reg_syst();
+void to_reg_syst();
 
-//TODO: make this function not return bool, but throw exceptions if something goes wrong.
 /**
  * Generate the sparse version of this system, where E becomes the identity matrix and 
  * A becomes a diagonal matrix (Transfer function is still identical).
@@ -122,7 +118,7 @@ bool to_reg_syst();
  * @note This operation starts with regular system translation, which is irreversible
  *  if successful.
  */
-bool gen_sparse_syst();
+void gen_sparse_syst();
 
 /**
  * Evaluate the transfer function represented by the current system at the 
@@ -238,7 +234,6 @@ bool get_utd_poles() const;
 // Obtain the up-to-date flag of sparse system (true if current sparse system is up-to-date).
 bool get_utd_sparse_syst() const;
 
-// TODO: You need to prevent the following functions to work if sparse system is not utd.
 /**
  * Obtain the diagonalized A matrix.
  * 
@@ -276,8 +271,6 @@ protected:
     Eigen::MatrixXd C;
     // Matrix D.
     Eigen::MatrixXd D;
-
-    
 
     // Boolean indicating if the current computed poles are up-to-date.
     bool utd_poles;

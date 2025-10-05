@@ -144,7 +144,7 @@ Eigen::VectorXcd LTI_descSyst::get_poles(){
     
 }
 
-bool LTI_descSyst::to_reg_syst(){
+void LTI_descSyst::to_reg_syst(){
 
     // Verify if the current system is legitimate.
     if( !this->is_consistent() ){
@@ -162,11 +162,9 @@ bool LTI_descSyst::to_reg_syst(){
     this->B = E_inv * B;
     this->E = Eigen::MatrixXd::Identity( this->E.rows(), this->E.cols() );
 
-    return true;
-
 }
 
-bool LTI_descSyst::gen_sparse_syst(){
+void LTI_descSyst::gen_sparse_syst(){
 
     // Try to turn the system into a regular system.
     try{
@@ -193,8 +191,6 @@ bool LTI_descSyst::gen_sparse_syst(){
 
     // Update the up-to-date boolean.
     utd_sparse_syst = true;
-
-    return true;
 
 }
 
