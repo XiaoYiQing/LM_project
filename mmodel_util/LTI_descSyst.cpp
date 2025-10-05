@@ -61,10 +61,6 @@ bool LTI_descSyst::is_consistent() const{
 
 }
 
-/*
-Check if the system matrices are consistent with transfer function matrices requirements.
-A consistent system return an empty string.
-*/
 string LTI_descSyst::consistency_check() const{
 
     string err_msg = "";
@@ -92,15 +88,12 @@ string LTI_descSyst::consistency_check() const{
 
 }
 
-// Obtain the number of outputs.
 unsigned int LTI_descSyst::get_output_cnt() const{
     return static_cast<unsigned int>( this->B.cols() );
 }
-// Obtain the number of inputs.
 unsigned int LTI_descSyst::get_input_cnt() const{
     return static_cast<unsigned int>( this->C.rows() );
 }
-// Obtain the order of the system.
 unsigned int LTI_descSyst::get_order() const{
     return static_cast<unsigned int>( this->A.rows() );
 }
