@@ -349,13 +349,25 @@ bool LTI_descSyst::get_utd_sparse_syst() const{
 }
 
 Eigen::SparseMatrix< complex<double> > LTI_descSyst::get_As() const{
-    return this->As;
+    if( utd_sparse_syst ){
+        return this->As;
+    }else{
+        throw runtime_error( "Cannot return As (sparse A): sparse system currently not updated." );
+    }
 }
 Eigen::MatrixXcd LTI_descSyst::get_Ts_L() const{
-    return this->Ts_L;
+    if( utd_sparse_syst ){
+        return this->Ts_L;
+    }else{
+        throw runtime_error( "Cannot return Ts_L (Left sparse system transform matrix): sparse system currently not updated." );
+    }
 }
 Eigen::MatrixXcd LTI_descSyst::get_Ts_R() const{
-    return this->Ts_R;
+    if( utd_sparse_syst ){
+        return this->Ts_R;
+    }else{
+        throw runtime_error( "Cannot return Ts_R (Right sparse system transform matrix): sparse system currently not updated." );
+    }
 }
 
 // ====================================================================== <<<<<
