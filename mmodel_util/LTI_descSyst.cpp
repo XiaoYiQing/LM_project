@@ -351,9 +351,6 @@ void LTI_descSyst::set_D( const Eigen::MatrixXd& D_in )
 bool LTI_descSyst::get_utd_poles() const{
     return this->utd_poles;
 }
-Eigen::VectorXcd LTI_descSyst::get_poles() const{
-    return this->poles;
-}
 
 bool LTI_descSyst::get_utd_sparse_syst() const{
     return this->utd_sparse_syst;

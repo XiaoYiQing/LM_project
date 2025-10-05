@@ -122,45 +122,65 @@ bool to_reg_syst();
  */
 bool gen_sparse_syst();
 
-/*
-Evaluate the transfer function represented by the current system at the 
-target frequency.
+/**
+ * Evaluate the transfer function represented by the current system at the 
+ * target frequency.
+ * 
+ * @param f_tar The frequency evaluation point to applied to the transfer function.
+ * @return The evaluated frequency parameter matrix at the evaluation point.
+ * 
+ * @note No assumption is made on the nature of the frequency value "f_tar", and it will be
+ *  used directly in the transfer function equation.
+ * 
+ * @warning Transfer function evaluation can be expensive depending on the order of the system.
+ *  Consider using the sparse transfer function evaluation, if permissible.
+ */
+Eigen::MatrixXcd tf_eval( complex<double> f_tar ) const;
 
-WARNING: transfer function evaluation can be expensive depending on the order of the system.
-    Consider using the sparse transfer function evaluation, if permissible.
-*/
-Eigen::MatrixXcd tf_eval( complex<double> ) const;
+/**
+ * Evaluate the transfer function represented by the current system at the 
+ * target frequencies.
+ * 
+ * @param f_vec Vector of frequency evaluation points to be used in the transfer function.
+ * @return Vector of evaluated frequency parameter matrices.
+ * 
+ * @note No assumption is made on the nature of the frequency values in "f_vec", and 
+ *  they will be used directly in the transfer function equation.
+ * 
+ * @warning Transfer function evaluation can be expensive depending on the order of the system.
+ *  Consider using the sparse transfer function evaluation, if permissible.
+ */
+Matrix3DXcd tf_eval( vector< complex<double> >& f_vec ) const;
 
-/*
-Evaluate the transfer function represented by the current system at the 
-target frequency.
-Input is vector of complex<double>.
-Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
+/**
+ * Evaluate the transfer function using the sparse representation at the 
+ * target frequency.
+ * 
+ * @param f_tar The frequency evaluation point to applied to the transfer function.
+ * @return The evaluated frequency parameter matrix at the evaluation point.
+ * 
+ * @note No assumption is made on the nature of the frequency value "f_tar", and it will be
+ *  used directly in the transfer function equation.
+ * 
+ * @warning If the sparse representation is not up-to-date, this 
+ *  function returns an empty result.
+ */
+Eigen::MatrixXcd tf_sparse_eval( complex<double> f_tar ) const;
 
-WARNING: transfer function evaluation can be expensive depending on the order of the system.
-    Consider using the sparse transfer function evaluation, if permissible.
-*/
-Matrix3DXcd tf_eval( vector< complex<double> >& ) const;
-
-/*
-Evaluate the transfer function using the sparse representation at the target
-frequency.
-
-WARNING: if the sparse representation is not up-to-date, this 
-function returns an empty result.
-*/
-Eigen::MatrixXcd tf_sparse_eval( complex<double> ) const;
-
-/*
-Evaluate the transfer function represented by the current system at the 
-target frequency.
-Input is vector of complex<double>.
-Output is array of MatrixXcd matrices, under the class Matrix3DXcd.
-
-WARNING: if the sparse representation is not up-to-date, this 
-function returns an empty result.
-*/
-Matrix3DXcd tf_sparse_eval( vector< complex<double> >& ) const;
+/**
+ * Evaluate the transfer function the sparse representation at the 
+ * target frequencies.
+ * 
+ * @param f_vec Vector of frequency evaluation points to be used in the transfer function.
+ * @return Vector of evaluated frequency parameter matrices.
+ * 
+ * @note No assumption is made on the nature of the frequency values in "f_vec", and 
+ *  they will be used directly in the transfer function equation.
+ * 
+ * @warning If the sparse representation is not up-to-date, this 
+ *  function returns an empty result.
+ */
+Matrix3DXcd tf_sparse_eval( vector< complex<double> >& f_vec ) const;
 
 // ====================================================================== <<<<<
 
@@ -169,21 +189,50 @@ Matrix3DXcd tf_sparse_eval( vector< complex<double> >& ) const;
 //      Access Function
 // ====================================================================== >>>>>
 
+// Return the current E matrix.
 Eigen::MatrixXd get_E() const;
+// Return the current A matrix.
 Eigen::MatrixXd get_A() const;
+// Return the current B matrix.
 Eigen::MatrixXd get_B() const;
+// Return the current C matrix.
 Eigen::MatrixXd get_C() const;
+// Return the current D matrix.
 Eigen::MatrixXd get_D() const;
 
+/**
+ * @brief Set the E matrix.
+ * @param E_in The new E matrix to be applied.
+ * @note This function invalidates up-to-date flags for computed poles and sparse system.
+ */
 void set_E( const Eigen::MatrixXd& E_in );
+/**
+ * @brief Set the A matrix.
+ * @param E_in The new A matrix to be applied.
+ * @note This function invalidates up-to-date flags for computed poles and sparse system.
+ */
 void set_A( const Eigen::MatrixXd& A_in );
+/**
+ * @brief Set the B matrix.
+ * @param E_in The new B matrix to be applied.
+ * @note This function invalidates up-to-date flags for computed poles and sparse system.
+ */
 void set_B( const Eigen::MatrixXd& B_in );
+/**
+ * @brief Set the C matrix.
+ * @param E_in The new C matrix to be applied.
+ * @note This function invalidates up-to-date flags for computed poles and sparse system.
+ */
 void set_C( const Eigen::MatrixXd& C_in );
+/**
+ * @brief Set the D matrix.
+ * @param E_in The new D matrix to be applied.
+ * @note This function invalidates up-to-date flags for computed poles and sparse system.
+ */
 void set_D( const Eigen::MatrixXd& D_in );
 
+// Obtain the up-to-date flag of computed poles (true if current poles are up-to-date).
 bool get_utd_poles() const;
-Eigen::VectorXcd get_poles() const;
-
 bool get_utd_sparse_syst() const;
 
 Eigen::SparseMatrix< complex<double> > get_As() const;
