@@ -97,7 +97,7 @@ int main() {
     // tests::LM_eng_serialize_test();
     
     tests::LTI_descSyst_test_1( 1 );
-    // tests::LTI_descSyst_acc_consist_test();
+    // tests::LTI_descSyst_access_consist_test();
     // tests::LTI_descSyst_test_2( 2 );
 
     // tests::LM_eng_full_SFML_testrun();

@@ -25,7 +25,7 @@ namespace tests{
     */
     void LTI_descSyst_test_1( unsigned int case_idx );
 
-    void LTI_descSyst_acc_consist_test();
+    void LTI_descSyst_access_consist_test();
 
     /*
     Test regular system translation and sparsification.
