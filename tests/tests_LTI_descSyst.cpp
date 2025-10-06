@@ -9,90 +9,6 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
     // Initialize test case index.
     int case_cnt = 0;
 
-    // 0- Test base functionalities such as initialization, insert, get.
-    if( case_cnt == case_idx ){
-
-        // Number of inputs.
-        unsigned int m = 7;
-        
-        // Number of outputs.
-        unsigned int p = 5;
-
-        // System order
-        unsigned int n = 40;
-        
-        shared_ptr< Eigen::MatrixXd >E_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, p ) );
-
-
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        if( mySyst.is_consistent() ){
-            cout << "Consistency should be false!" << endl;
-            return;
-        }
-        mySyst.set_A( *A_ptr );
-        if( mySyst.is_consistent() ){
-            cout << "Consistency should be false!" << endl;
-            return;
-        }
-        mySyst.set_B( *B_ptr );
-        if( mySyst.is_consistent() ){
-            cout << "Consistency should be false!" << endl;
-            return;
-        }
-        mySyst.set_C( *C_ptr );
-        if( mySyst.is_consistent() ){
-            cout << "Consistency should be false!" << endl;
-            return;
-        }
-        mySyst.set_D( *D_ptr );
-        if( !mySyst.is_consistent() ){
-            cout << "Consistency should be true!" << endl;
-            return;
-        }
-
-        if( mySyst.get_input_cnt() != m ){
-            cout << "Input count mismatch." << endl;
-            return;
-        }
-        if( mySyst.get_output_cnt() != p ){
-            cout << "Output count mismatch." << endl;
-            return;
-        }
-        if( mySyst.get_order() != n ){
-            cout << "Order mismatch." << endl;
-            return;
-        }
-
-        if( mySyst.get_E() != *E_ptr ){
-            cout << "Matrix E compare failed." << endl;
-            return;
-        }
-        if( mySyst.get_A() != *A_ptr ){
-            cout << "Matrix A compare failed." << endl;
-            return;
-        }
-        if( mySyst.get_B() != *B_ptr ){
-            cout << "Matrix B compare failed." << endl;
-            return;
-        }
-        if( mySyst.get_C() != *C_ptr ){
-            cout << "Matrix C compare failed." << endl;
-            return;
-        }
-        if( mySyst.get_D() != *D_ptr ){
-            cout << "Matrix D compare failed." << endl;
-            return;
-        }
-
-        cout << "All tests passed!" << endl;
-
-    }
-
     case_cnt++;
     // 1- Test stability checking.
     if( case_cnt == case_idx ){
@@ -307,6 +223,59 @@ void tests::LTI_descSyst_test_1( unsigned int case_idx ){
 }
 
 
+void tests::LTI_descSyst_acc_consist_test(){
+
+    // Number of inputs.
+    unsigned int m = 7;
+    
+    // Number of outputs.
+    unsigned int p = 5;
+
+    // System order
+    unsigned int n = 40;
+    
+    shared_ptr< Eigen::MatrixXd >E_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
+    shared_ptr< Eigen::MatrixXd >A_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
+    shared_ptr< Eigen::MatrixXd >B_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, p ) );
+    shared_ptr< Eigen::MatrixXd >C_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, n ) );
+    shared_ptr< Eigen::MatrixXd >D_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, p ) );
+
+
+    bool test_bool = true;
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( *E_ptr );
+    test_bool = test_bool && !mySyst.is_consistent();
+
+    mySyst.set_A( *A_ptr );
+    test_bool = test_bool && !mySyst.is_consistent();
+
+    mySyst.set_B( *B_ptr );
+    test_bool = test_bool && !mySyst.is_consistent();
+
+    mySyst.set_C( *C_ptr );
+    test_bool = test_bool && !mySyst.is_consistent();
+
+    mySyst.set_D( *D_ptr );
+    test_bool = test_bool && mySyst.is_consistent();
+
+    test_bool = test_bool && ( mySyst.get_input_cnt() == m );
+    test_bool = test_bool && ( mySyst.get_output_cnt() == p );
+    test_bool = test_bool && ( mySyst.get_order() == n );
+    test_bool = test_bool && ( mySyst.get_E() == *E_ptr );
+    test_bool = test_bool && ( mySyst.get_A() == *A_ptr );
+    test_bool = test_bool && ( mySyst.get_B() == *B_ptr );
+    test_bool = test_bool && ( mySyst.get_C() == *C_ptr );
+    test_bool = test_bool && ( mySyst.get_D() == *D_ptr );
+
+    if( test_bool ){
+        cout << "LTI_descSyst matrix access functions and consistency test: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst matrix access functions and consistency test: failed!" << endl;
+    }
+    
+}
+
+
 void tests::LTI_descSyst_test_2( unsigned int case_idx ){
     
     // Initialize test case index.
@@ -410,7 +379,11 @@ void tests::LTI_descSyst_test_2( unsigned int case_idx ){
         };
 
         Matrix3DXcd desc_app_data = mySyst.tf_eval( test_f_arr );
-        bool transRes = mySyst.to_reg_syst();
+        try{
+            mySyst.to_reg_syst();
+        }catch( std::runtime_error e ){
+            cout << e.what() << endl;
+        }
         Matrix3DXcd reg_app_data = mySyst.tf_eval( test_f_arr );
 
         Matrix3DXcd app_data_diff = desc_app_data - reg_app_data;
