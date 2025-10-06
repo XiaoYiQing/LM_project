@@ -3,236 +3,6 @@
 
 
 
-void tests::LTI_descSyst_test_1( unsigned int case_idx ){
-
-
-    // Initialize test case index.
-    int case_cnt = 0;
-
-    case_cnt++;
-    // 1- Test stability checking.
-    if( case_cnt == case_idx ){
-
-        // Number of inputs.
-        unsigned int m = 7;
-        
-        // Number of outputs.
-        unsigned int p = 5;
-
-        // System order
-        unsigned int n = 100;
-        
-        shared_ptr< Eigen::MatrixXd >E_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, p ) );
-
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        mySyst.set_A( *A_ptr );
-        mySyst.set_B( *B_ptr );
-        mySyst.set_C( *C_ptr );
-        mySyst.set_D( *D_ptr );
-        bool is_stab = mySyst.is_stable();
-
-        bool test_bool = true;
-        test_bool = test_bool && !is_stab;
-        if( test_bool ){
-            cout << "LTI_descSyst stability test 1: passed!" << endl;
-        }else{
-            cout << "LTI_descSyst stability test 1: failed!" << endl;
-        }
-
-
-        test_bool = true;
-        *A_ptr = -1*Eigen::MatrixXd::Identity( n, n );
-        mySyst.set_A( *A_ptr );
-        is_stab = mySyst.is_stable();
-        test_bool = test_bool && is_stab;
-        if( test_bool ){
-            cout << "LTI_descSyst stability test 2: passed!" << endl;
-        }else{
-            cout << "LTI_descSyst stability test 2: failed!" << endl;
-        }
-
-        test_bool = true;
-        *A_ptr = -1*Eigen::MatrixXd::Identity( n-1, n-1 );
-        mySyst.set_A( *A_ptr );
-        try{
-            is_stab = mySyst.is_stable();
-            test_bool = false;
-        }catch( std::runtime_error e ){
-            test_bool = true;
-        }catch( ... ){
-            test_bool = false;
-        }
-        if( test_bool ){
-            cout << "LTI_descSyst stability test 3: passed!" << endl;
-        }else{
-            cout << "LTI_descSyst stability test 3: failed!" << endl;
-        }
-
-    }
-
-    case_cnt++;
-    // 2- Transfer function eval test.
-    if( case_cnt == case_idx ){
-
-        // Number of inputs.
-        unsigned int m = 2;
-        
-        // Number of outputs.
-        unsigned int p = 2;
-
-        // System order
-        unsigned int n = 4;
-        
-        shared_ptr< Eigen::MatrixXd >E_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
-
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        mySyst.set_A( *A_ptr );
-        mySyst.set_B( *B_ptr );
-        mySyst.set_C( *C_ptr );
-        mySyst.set_D( *D_ptr );
-
-        double test_val = 0;
-        Eigen::MatrixXcd eval_mat = mySyst.tf_eval( test_val );
-        Eigen::MatrixXcd expect_mat = -4*Eigen::MatrixXcd::Ones( m, p );
-
-        if( eval_mat == expect_mat ){
-            cout << "Test 1 passed: single f evaluation." << endl;
-        }else{
-            cout << "Test 1 failed: single f evaluation." << endl;
-        }
-
-
-        vector< complex<double> > test_arr = { complex<double>(0,0), complex<double>(0.5,0),
-            complex<double>(0,0.5) };
-        Matrix3DXcd eval_arr = mySyst.tf_eval( test_arr );
-
-        Matrix3DXcd expect_arr = Matrix3DXcd( m, p, test_arr.size() );
-
-        Eigen::MatrixXcd tmp = (Eigen::MatrixXcd(2, 2) << 
-        std::complex<double>(-4,0), std::complex<double>(-4,0),
-        std::complex<double>(-4,0), std::complex<double>(-4,0)).finished();
-        expect_arr.set( 0, tmp );
-        tmp = (Eigen::MatrixXcd(2, 2) << 
-        std::complex<double>(-8,0), std::complex<double>(-8,0),
-        std::complex<double>(-8,0), std::complex<double>(-8,0)).finished();
-        expect_arr.set( 1, tmp );
-        tmp = (Eigen::MatrixXcd(2, 2) << 
-        std::complex<double>(-3.2,-1.6), std::complex<double>(-3.2,-1.6),
-        std::complex<double>(-3.2,-1.6), std::complex<double>(-3.2,-1.6)).finished();
-        expect_arr.set( 2, tmp );
-
-        bool test_pass = true;
-        for( unsigned int z = 0; z < test_arr.size(); z++ ){
-            test_pass = test_pass && ( eval_arr.at(z) == expect_arr.at(z) );
-        }
-        if( test_pass ){
-            cout << "Test 2 passed: multi f evaluation." << endl;
-        }else{
-            cout << "Test 2 failed: multi f evaluation." << endl;
-        }
-
-    }
-
-
-
-    case_cnt++;
-    // 3- Saved compute poles test.
-    if( case_cnt == case_idx ){
-
-        // Number of inputs.
-        unsigned int m = 2;
-        // Number of outputs.
-        unsigned int p = 2;
-        // System order
-        unsigned int n = 4;
-        
-        shared_ptr< Eigen::MatrixXd >E_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
-
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        mySyst.set_A( *A_ptr );
-        mySyst.set_B( *B_ptr );
-        mySyst.set_C( *C_ptr );
-        mySyst.set_D( *D_ptr );
-
-        cout << "Poles up to date before computation: " << endl;
-        if( mySyst.get_utd_poles() ){
-            cout << "True" << endl;
-        }else{
-            cout << "False" << endl;
-        }
-        Eigen::VectorXcd currPoles = mySyst.get_poles();
-        cout << "Poles up to date after computation: " << endl;
-        if( mySyst.get_utd_poles() ){
-            cout << "True" << endl;
-        }else{
-            cout << "False" << endl;
-        }
-
-        mySyst.set_E( -1*Eigen::MatrixXd::Identity( n-1, n-1 ) );
-        cout << "Poles up to date after inserting inconsistent E: " << endl;
-        if( mySyst.is_stable() ){
-            cout << "True" << endl;
-        }else{
-            cout << "False" << endl;
-        }
-
-        mySyst.set_E( -1*Eigen::MatrixXd::Identity( n, n ) );
-        cout << "Poles up to date after modifying E: " << endl;
-        if( mySyst.get_utd_poles() ){
-            cout << "True" << endl;
-        }else{
-            cout << "False" << endl;
-        }
-        currPoles = mySyst.get_poles();
-        cout << "Poles up to date after modifying E AND computing the poles: " << endl;
-        if( mySyst.get_utd_poles() ){
-            cout << "True" << endl;
-        }else{
-            cout << "False" << endl;
-        }
-
-        mySyst.set_B( -1*Eigen::MatrixXd::Ones( n, p ) );
-        mySyst.set_C( -1*Eigen::MatrixXd::Ones( m, n ) );
-        mySyst.set_D( -1*Eigen::MatrixXd::Zero( m, p ) );
-        cout << "Poles up to date after modifying B, C, and D: " << endl;
-        if( mySyst.get_utd_poles() ){
-            cout << "True" << endl;
-        }else{
-            cout << "False" << endl;
-        }
-
-    }
-
-
-
-}
-
-
 void tests::LTI_descSyst_access_consist_test(){
 
     // Number of inputs.
@@ -285,6 +55,216 @@ void tests::LTI_descSyst_access_consist_test(){
     
 }
 
+
+void tests::LTI_descSyst_stab_check_test(){
+
+    // Number of inputs.
+    unsigned int m = 7;
+    
+    // Number of outputs.
+    unsigned int p = 5;
+
+    // System order
+    unsigned int n = 100;
+    
+    shared_ptr< Eigen::MatrixXd >E_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >A_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >B_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, p ) );
+    shared_ptr< Eigen::MatrixXd >C_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, n ) );
+    shared_ptr< Eigen::MatrixXd >D_ptr = make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( m, p ) );
+
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( *E_ptr );
+    mySyst.set_A( *A_ptr );
+    mySyst.set_B( *B_ptr );
+    mySyst.set_C( *C_ptr );
+    mySyst.set_D( *D_ptr );
+    bool is_stab = mySyst.is_stable();
+
+    bool test_bool = true;
+    test_bool = test_bool && !is_stab;
+    if( test_bool ){
+        cout << "LTI_descSyst stability test 1: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst stability test 1: failed!" << endl;
+    }
+
+
+    test_bool = true;
+    *A_ptr = -1*Eigen::MatrixXd::Identity( n, n );
+    mySyst.set_A( *A_ptr );
+    is_stab = mySyst.is_stable();
+    test_bool = test_bool && is_stab;
+    if( test_bool ){
+        cout << "LTI_descSyst stability test 2: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst stability test 2: failed!" << endl;
+    }
+
+    test_bool = true;
+    *A_ptr = -1*Eigen::MatrixXd::Identity( n-1, n-1 );
+    mySyst.set_A( *A_ptr );
+    try{
+        is_stab = mySyst.is_stable();
+        test_bool = test_bool && false;
+    }catch( std::runtime_error e ){
+        test_bool = test_bool && true;
+    }catch( ... ){
+        test_bool = test_bool && false;
+    }
+    if( test_bool ){
+        cout << "LTI_descSyst stability test 3: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst stability test 3: failed!" << endl;
+    }
+
+}
+
+
+void tests::LTI_descSyst_tf_eval_test(){
+
+    // Number of inputs.
+    unsigned int m = 2;
+    
+    // Number of outputs.
+    unsigned int p = 2;
+
+    // System order
+    unsigned int n = 4;
+    
+    shared_ptr< Eigen::MatrixXd >E_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >A_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >B_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
+    shared_ptr< Eigen::MatrixXd >C_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
+    shared_ptr< Eigen::MatrixXd >D_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
+
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( *E_ptr );
+    mySyst.set_A( *A_ptr );
+    mySyst.set_B( *B_ptr );
+    mySyst.set_C( *C_ptr );
+    mySyst.set_D( *D_ptr );
+
+    double test_val = 0;
+    Eigen::MatrixXcd eval_mat = mySyst.tf_eval( test_val );
+    Eigen::MatrixXcd expect_mat = -4*Eigen::MatrixXcd::Ones( m, p );
+
+    bool test_bool = true;
+    test_bool = test_bool && ( eval_mat == expect_mat );
+    if( test_bool ){
+        cout << "LTI_descSyst tf_eval test 1: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst tf_eval test 1: failed!" << endl;
+    }
+
+
+    vector< complex<double> > test_arr = { complex<double>(0,0), complex<double>(0.5,0),
+        complex<double>(0,0.5) };
+    Matrix3DXcd eval_arr = mySyst.tf_eval( test_arr );
+
+    Matrix3DXcd expect_arr = Matrix3DXcd( m, p, test_arr.size() );
+
+    Eigen::MatrixXcd tmp = (Eigen::MatrixXcd(2, 2) << 
+    std::complex<double>(-4,0), std::complex<double>(-4,0),
+    std::complex<double>(-4,0), std::complex<double>(-4,0)).finished();
+    expect_arr.set( 0, tmp );
+    tmp = (Eigen::MatrixXcd(2, 2) << 
+    std::complex<double>(-8,0), std::complex<double>(-8,0),
+    std::complex<double>(-8,0), std::complex<double>(-8,0)).finished();
+    expect_arr.set( 1, tmp );
+    tmp = (Eigen::MatrixXcd(2, 2) << 
+    std::complex<double>(-3.2,-1.6), std::complex<double>(-3.2,-1.6),
+    std::complex<double>(-3.2,-1.6), std::complex<double>(-3.2,-1.6)).finished();
+    expect_arr.set( 2, tmp );
+
+    test_bool = true;
+    for( unsigned int z = 0; z < test_arr.size(); z++ ){
+        test_bool = test_bool && ( eval_arr.at(z) == expect_arr.at(z) );
+    }
+    if( test_bool ){
+        cout << "LTI_descSyst tf_eval test 2: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst tf_eval test 2: failed!" << endl;
+    }
+
+}
+
+void tests::LTI_descSyst_poles_test(){
+
+    // Number of inputs.
+    unsigned int m = 2;
+    // Number of outputs.
+    unsigned int p = 2;
+    // System order
+    unsigned int n = 4;
+    
+    shared_ptr< Eigen::MatrixXd >E_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >A_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >B_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
+    shared_ptr< Eigen::MatrixXd >C_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
+    shared_ptr< Eigen::MatrixXd >D_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
+
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( *E_ptr );
+    mySyst.set_A( *A_ptr );
+    mySyst.set_B( *B_ptr );
+    mySyst.set_C( *C_ptr );
+    mySyst.set_D( *D_ptr );
+
+    bool test_bool = true;
+    test_bool = test_bool && !( mySyst.get_utd_poles() );
+    Eigen::VectorXcd currPoles = mySyst.get_poles();
+    test_bool = test_bool && ( mySyst.get_utd_poles() );
+
+    if( test_bool ){
+        cout << "LTI_descSyst utd_poles flag test: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst utd_poles flag test: failed!" << endl;
+    }
+
+    test_bool = true;
+    mySyst.set_E( -1*Eigen::MatrixXd::Identity( n-1, n-1 ) );
+    try{
+        mySyst.is_stable();
+        test_bool = test_bool && false;
+    }catch( std::runtime_error e ){
+        test_bool = test_bool && true;
+    }catch(...){
+        test_bool = test_bool && false;
+    }
+    if( test_bool ){
+        cout << "LTI_descSyst stability check inconsistent case test: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst stability check inconsistent case test: failed!" << endl;
+    }
+
+    test_bool = true;
+    mySyst.set_E( -1*Eigen::MatrixXd::Identity( n, n ) );
+    test_bool = test_bool && !( mySyst.get_utd_poles() );
+    currPoles = mySyst.get_poles();
+    test_bool = test_bool && ( mySyst.get_utd_poles() );
+    mySyst.set_B( -1*Eigen::MatrixXd::Ones( n, p ) );
+    mySyst.set_C( -1*Eigen::MatrixXd::Ones( m, n ) );
+    mySyst.set_D( -1*Eigen::MatrixXd::Zero( m, p ) );
+    test_bool = test_bool && ( mySyst.get_utd_poles() );
+
+    if( test_bool ){
+        cout << "LTI_descSyst utd_poles flag test 2 (due to matrix change): passed!" << endl;
+    }else{
+        cout << "LTI_descSyst utd_poles flag test 2 (due to matrix change): failed!" << endl;
+    }
+
+}
 
 void tests::LTI_descSyst_test_2( unsigned int case_idx ){
     

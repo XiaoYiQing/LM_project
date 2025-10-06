@@ -27,6 +27,12 @@ namespace tests{
 
     void LTI_descSyst_access_consist_test();
 
+    void LTI_descSyst_stab_check_test();
+
+    void LTI_descSyst_tf_eval_test();
+
+    void LTI_descSyst_poles_test();
+
     /*
     Test regular system translation and sparsification.
     */
