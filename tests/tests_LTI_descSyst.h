@@ -15,16 +15,6 @@ extern string RES_PATH_XYQ_str;
 
 namespace tests{
 
-
-    /*
-    Test base functionalities.
-    case_idx:
-        0: base functionalities.
-        1: stability.
-        2:
-    */
-    void LTI_descSyst_test_1( unsigned int case_idx );
-
     void LTI_descSyst_access_consist_test();
 
     void LTI_descSyst_stab_check_test();
@@ -33,10 +23,11 @@ namespace tests{
 
     void LTI_descSyst_poles_test();
 
-    /*
-    Test regular system translation and sparsification.
-    */
-    void LTI_descSyst_test_2( unsigned int case_idx );
+    void LTI_descSyst_sparse_test();
+
+    void LTI_descSyst_regSyst_test();
+
+    void LTI_descSyst_sparSyst_test();
 
 
 

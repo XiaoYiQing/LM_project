@@ -1,8 +1,6 @@
 #include "tests_LTI_descSyst.h"
 
 
-
-
 void tests::LTI_descSyst_access_consist_test(){
 
     // Number of inputs.
@@ -266,212 +264,270 @@ void tests::LTI_descSyst_poles_test(){
 
 }
 
-void tests::LTI_descSyst_test_2( unsigned int case_idx ){
+void tests::LTI_descSyst_sparse_test(){
+
+    Eigen::MatrixXd A(2,2);
+    A << 0, -1, 1, 0;
+
+    bool test_bool = true;
+
+    // Eigen-decomposition
+    Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(A);
+    test_bool = test_bool && ( eigensolver.info() == Eigen::Success );
+    if ( !test_bool ) {
+        cerr << "Unexpected error, could not perform eigendecomposition." << std::endl;
+        return;
+    }
+
+    Eigen::VectorXcd eigvals = eigensolver.eigenvalues();
+    test_bool = test_bool && ( complex<double>( eigvals(0) ) == complex<double>(0,1) );
+    test_bool = test_bool && ( complex<double>( eigvals(1) ) == complex<double>(0,-1) );
+    if( test_bool ){
+        cout << "LTI_descSyst base eigensolver behavior check: success!" << endl;
+    }else{
+        cout << "LTI_descSyst base eigensolver behavior check: failed! Further tests aborted." << endl;
+        return;
+    }
+
+    // Number of inputs.
+    unsigned int m = 2;
+    // Number of outputs.
+    unsigned int p = 2;
+    // System order
+    unsigned int n = 4;
     
-    // Initialize test case index.
-    int case_cnt = 0;
+    shared_ptr< Eigen::MatrixXd >E_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
+    shared_ptr< Eigen::MatrixXd >A_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
+    shared_ptr< Eigen::MatrixXd >B_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
+    shared_ptr< Eigen::MatrixXd >C_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
+    shared_ptr< Eigen::MatrixXd >D_ptr = 
+        make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
 
-    // 0- Real matrix to complex eigenvalues test.
-    if( case_cnt == case_idx ){
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( *E_ptr );
+    mySyst.set_A( *A_ptr );
+    mySyst.set_B( *B_ptr );
+    mySyst.set_C( *C_ptr );
+    mySyst.set_D( *D_ptr );
 
-        Eigen::MatrixXd A(2,2);
-        A << 0, -1, 1, 0;
+    mySyst.gen_sparse_syst();
 
-        // Eigen-decomposition
-        Eigen::EigenSolver<Eigen::MatrixXd> eigensolver(A);
-        if (eigensolver.info() != Eigen::Success) {
-            cerr << "Unexpected error, could not perform eigendecomposition." << std::endl;
+    Eigen::MatrixXd A_reg = mySyst.get_A();
+    Eigen::MatrixXcd As_tmp = mySyst.get_As();
+    Eigen::MatrixXcd Ts_L_tmp = mySyst.get_Ts_L();
+    Eigen::MatrixXcd Ts_R_tmp = mySyst.get_Ts_R();
+
+    Eigen::MatrixXcd A_reg_approx = Ts_L_tmp*As_tmp*Ts_R_tmp;
+    Eigen::MatrixXcd A_reg_diff = A_reg_approx - A_reg;
+
+    test_bool = true;
+    // Compute sum of squares
+    double max_err_term = A_reg_diff.array().abs().maxCoeff();
+    test_bool = test_bool && ( max_err_term < 1.0e-9 );
+    if( test_bool ){
+        cout << "LTI_descSyst sparsification computation test: passed!" << endl;
+    }else{
+        cout << "LTI_descSyst sparsification computation test: failed!" << endl;
+    }
+
+}
+
+void tests::LTI_descSyst_regSyst_test(){
+
+    // Number of inputs.
+    unsigned int m = 2;
+    // Number of outputs.
+    unsigned int p = 2;
+    // System order
+    unsigned int n = 4;
+    
+    Eigen::MatrixXd E_mat = Eigen::MatrixXd::Random( n, n );
+    Eigen::MatrixXd A_mat = Eigen::MatrixXd::Identity( n, n );
+    Eigen::MatrixXd B_mat = Eigen::MatrixXd::Ones( n, p );
+    Eigen::MatrixXd C_mat = Eigen::MatrixXd::Ones( m, n );
+    Eigen::MatrixXd D_mat = Eigen::MatrixXd::Zero( m, p );
+
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( E_mat );
+    mySyst.set_A( A_mat );
+    mySyst.set_B( B_mat );
+    mySyst.set_C( C_mat );
+    mySyst.set_D( D_mat );
+
+    vector< complex<double> > test_f_arr = {
+        complex<double>( 0, 0.1 ),
+        complex<double>( 0, 0.2 ),
+        complex<double>( 0, 0.3 ),
+        complex<double>( 0, 0.4 )
+    };
+
+    // Generate the descriptor system data.
+    Matrix3DXcd desc_app_data;
+
+    bool test_bool = false;
+    // Number of tries in generating random E matrix.
+    unsigned int retry_max_cnt = 20;
+    unsigned int retry_left = retry_max_cnt;
+    // Regenerate E if it isn't invertible.
+    while( retry_left > 0 ){
+
+        try{
+            // Generate the descriptor system data before changing to regular.
+            desc_app_data = mySyst.tf_eval( test_f_arr );
+            // Attempt to change into regular system.
+            mySyst.to_reg_syst();
+            // If successful, break out the retry loop.
+            test_bool = true;
+            break;
+        }catch( std::runtime_error e ){
+            // Retry with new random E matrix.
+            E_mat = Eigen::MatrixXd::Random( n, n );
+            mySyst.set_E( E_mat );            
+        }catch(...){
+            cout << "LTI_descSyst regular system test cannot proceed as regular system translation failed in an unexpected way." << endl;
             return;
         }
-        Eigen::VectorXcd eigvals = eigensolver.eigenvalues();
-        cout << eigvals << endl;
-        cout << endl;
 
-        // Number of inputs.
-        unsigned int m = 2;
-        // Number of outputs.
-        unsigned int p = 2;
-        // System order
-        unsigned int n = 4;
+        retry_left--;
         
-        shared_ptr< Eigen::MatrixXd >E_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
-
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        mySyst.set_A( *A_ptr );
-        mySyst.set_B( *B_ptr );
-        mySyst.set_C( *C_ptr );
-        mySyst.set_D( *D_ptr );
-
-        mySyst.gen_sparse_syst();
-
-        Eigen::MatrixXd A_reg = mySyst.get_A();
-        Eigen::MatrixXcd As_tmp = mySyst.get_As();
-        Eigen::MatrixXcd Ts_L_tmp = mySyst.get_Ts_L();
-        Eigen::MatrixXcd Ts_R_tmp = mySyst.get_Ts_R();
-
-        Eigen::MatrixXcd A_reg_approx = Ts_L_tmp*As_tmp*Ts_R_tmp;
-        Eigen::MatrixXcd A_reg_diff = A_reg_approx - A_reg;
-
-        // Compute sum of squares
-        double max_err_term = A_reg_diff.array().abs().maxCoeff();
-        if( max_err_term < 1.0e-9 ){
-            cout << "Sparse system computation test: passed." << endl;
-        }else{
-            cout << "Sparse system computation test: failed." << endl;
-        }
-
+    }
+    if( !test_bool ){
+        cout << "LTI_descSyst regular system test failed to generate random invertible E after ";  
+        cout << retry_max_cnt << " tries. Test aborted." << endl;
+        return;
     }
 
-    // 1- Regular system translation test.
-    case_cnt++;
-    if( case_cnt == case_idx ){
+    // Compute the regular system data.
+    Matrix3DXcd reg_app_data = mySyst.tf_eval( test_f_arr );
 
-        // Number of inputs.
-        unsigned int m = 2;
-        // Number of outputs.
-        unsigned int p = 2;
-        // System order
-        unsigned int n = 4;
-        
-        shared_ptr< Eigen::MatrixXd >E_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
+    // Compute the difference between the descriptor and regular system's data.
+    Matrix3DXcd app_data_diff = desc_app_data - reg_app_data;
+    double RMS_err = Matrix3DXcd::RMS_total_comp( app_data_diff );
+    // double RMS_1 = Matrix3DXcd::RMS_total_comp( desc_app_data );
+    // double RMS_2 = Matrix3DXcd::RMS_total_comp( reg_app_data );
 
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        mySyst.set_A( *A_ptr );
-        mySyst.set_B( *B_ptr );
-        mySyst.set_C( *C_ptr );
-        mySyst.set_D( *D_ptr );
+    double num_thresh = 1e-9;
+    test_bool = test_bool && ( RMS_err < num_thresh );
+    if( test_bool ){
+        cout << "LTI_descSyst regular system test: passed." << endl;
+    }else{
+        cout << "LTI_descSyst regular system test: failed." << endl;
+    }
+    
+}
 
-        vector< complex<double> > test_f_arr = {
-            complex<double>( 0, 0.1 ),
-            complex<double>( 0, 0.2 ),
-            complex<double>( 0, 0.3 ),
-            complex<double>( 0, 0.4 )
-        };
+void tests::LTI_descSyst_sparSyst_test(){
 
-        Matrix3DXcd desc_app_data = mySyst.tf_eval( test_f_arr );
+    // Number of inputs.
+    unsigned int m = 2;
+    // Number of outputs.
+    unsigned int p = 2;
+    // System order
+    unsigned int n = 80;
+    // Numerical threshold for the test.
+    double num_thresh = 1e-9;
+
+    Eigen::MatrixXd E_mat = Eigen::MatrixXd::Random( n, n );
+    Eigen::MatrixXd A_mat = Eigen::MatrixXd::Identity( n, n );
+    Eigen::MatrixXd B_mat = Eigen::MatrixXd::Ones( n, p );
+    Eigen::MatrixXd C_mat = Eigen::MatrixXd::Ones( m, n );
+    Eigen::MatrixXd D_mat = Eigen::MatrixXd::Zero( m, p );
+
+    LTI_descSyst mySyst = LTI_descSyst();
+    mySyst.set_E( E_mat );
+    mySyst.set_A( A_mat );
+    mySyst.set_B( B_mat );
+    mySyst.set_C( C_mat );
+    mySyst.set_D( D_mat );
+
+
+    bool test_bool = false;
+    // Number of tries in generating random E matrix.
+    unsigned int retry_max_cnt = 20;
+    unsigned int retry_left = retry_max_cnt;
+    // Regenerate E if it isn't invertible.
+    while( retry_left > 0 ){
+
         try{
-            mySyst.to_reg_syst();
+            // Generate the sparse system.
+            mySyst.gen_sparse_syst();
+            // If successful, break out the retry loop.
+            test_bool = true;
+            break;
         }catch( std::runtime_error e ){
-            cout << e.what() << endl;
-        }
-        Matrix3DXcd reg_app_data = mySyst.tf_eval( test_f_arr );
-
-        Matrix3DXcd app_data_diff = desc_app_data - reg_app_data;
-        double RMS_err = Matrix3DXcd::RMS_total_comp( app_data_diff );
-        double RMS_1 = Matrix3DXcd::RMS_total_comp( desc_app_data );
-        double RMS_2 = Matrix3DXcd::RMS_total_comp( reg_app_data );
-
-        cout << "RMS desc: " << RMS_1 << endl;
-        cout << "RMS reg: " << RMS_2 << endl;
-        cout << "RMS error between desc and reg systems: " << RMS_err << endl;
-        if( RMS_err < 1e-9 ){
-            cout << "RMS error is acceptable: test passed." << endl;
-        }else{
-            cout << "RMS error is too large: test failed." << endl;
+            // Retry with new random E matrix.
+            E_mat = Eigen::MatrixXd::Random( n, n );
+            mySyst.set_E( E_mat );            
+        }catch(...){
+            cout << "LTI_descSyst sparse system test cannot proceed as sparse system computation failed in an unexpected way." << endl;
+            return;
         }
 
+        retry_left--;
+        
+    }
+    if( !test_bool ){
+        cout << "LTI_descSyst sparse system test failed to generate random invertible E after ";  
+        cout << retry_max_cnt << " tries. Test aborted." << endl;
+        return;
     }
 
 
-    // 2- Sparse system transfer function evaluation.
-    case_cnt++;
-    if( case_cnt == case_idx ){
+    // Generate random testing points.
+    vector<double> test_num_arr = utils::rDoubleGen( 0, 10, 2 );
+    complex<double> test_pt( test_num_arr.at(0), test_num_arr.at(1) );
+    // Compute the difference between the evaluated data between the original and sparse transfer functions.
+    Eigen::MatrixXcd H_diff = mySyst.tf_eval( test_pt ) - mySyst.tf_sparse_eval( test_pt );
 
-        // Number of inputs.
-        unsigned int m = 2;
-        // Number of outputs.
-        unsigned int p = 2;
-        // System order
-        unsigned int n = 80;
-        
-        shared_ptr< Eigen::MatrixXd >E_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Random( n, n ) );
-        shared_ptr< Eigen::MatrixXd >A_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Identity( n, n ) );
-        shared_ptr< Eigen::MatrixXd >B_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( n, p ) );
-        shared_ptr< Eigen::MatrixXd >C_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Ones( m, n ) );
-        shared_ptr< Eigen::MatrixXd >D_ptr = 
-            make_shared< Eigen::MatrixXd >( Eigen::MatrixXd::Zero( m, p ) );
-
-        LTI_descSyst mySyst = LTI_descSyst();
-        mySyst.set_E( *E_ptr );
-        mySyst.set_A( *A_ptr );
-        mySyst.set_B( *B_ptr );
-        mySyst.set_C( *C_ptr );
-        mySyst.set_D( *D_ptr );
-
-        // Generate the sparse system.
-        mySyst.gen_sparse_syst();
-
-        vector<double> test_num_arr = utils::rDoubleGen( 0, 10, 2 );
-        complex<double> test_pt( test_num_arr.at(0), test_num_arr.at(1) );
-        
-        Eigen::MatrixXcd H_diff = mySyst.tf_eval( test_pt ) - mySyst.tf_sparse_eval( test_pt );
-
-        // Compute sum of squares
-        double max_err_term = H_diff.array().abs().maxCoeff();
-        if( max_err_term < 1.0e-9 ){
-            cout << "Sparse system transfer function eval test 1: passed." << endl;
-        }else{
-            cout << "Sparse system transfer function eval test 1: failed." << endl;
-        }
-
-        // Generate a number of complex test points.
-        unsigned int test_cnt = 50;
-        vector<double> rePart = utils::rDoubleGen( 0, 10, test_cnt );
-        vector<double> imPart = utils::rDoubleGen( 0, 10, test_cnt );
-        vector< complex<double> > test_pt_arr( test_cnt );
-        for( unsigned int z = 0; z < test_cnt; z++ ){
-            test_pt_arr.at(z) = complex<double>( rePart.at(z), imPart.at(z) );
-        }
-
-        // Evaluate the system's transfer function at the test points.
-        auto start = std::chrono::high_resolution_clock::now();
-        Matrix3DXcd std_appr_data = mySyst.tf_eval( test_pt_arr );
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::milli> duration = end - start;
-        cout << "Non-sparse TF eval time (ms): " << duration.count() << endl;
-
-        start = std::chrono::high_resolution_clock::now();
-        Matrix3DXcd sp_appr_data = mySyst.tf_sparse_eval( test_pt_arr );
-        end = std::chrono::high_resolution_clock::now();
-        duration = end - start;
-        cout << "Sparse TF eval time (ms): " << duration.count() << endl;
-        
-
-        // Compute difference in evaluation between using sparse and standard matrices.
-        Matrix3DXcd appr_data_diff = std_appr_data - sp_appr_data;
-
-        double tot_RMS_err = Matrix3DXcd::RMS_total_comp( appr_data_diff );
-        if( tot_RMS_err < 1.0e-9 ){
-            cout << "Sparse system transfer function eval test 2: passed." << endl;
-        }else{
-            cout << "Sparse system transfer function eval test 2: failed." << endl;
-        }
-
+    // Max difference error check.
+    double max_err_term = H_diff.array().abs().maxCoeff();
+    test_bool = test_bool && ( max_err_term < num_thresh );
+    if( test_bool ){
+        cout << "LTI_descSyst sparse system transfer function eval test 1: passed." << endl;
+    }else{
+        cout << "LTI_descSyst sparse system transfer function eval test 1: failed." << endl;
     }
 
+
+    // Generate a number of complex test points.
+    unsigned int test_cnt = 20;
+    vector<double> rePart = utils::rDoubleGen( 0, 10, test_cnt );
+    vector<double> imPart = utils::rDoubleGen( 0, 10, test_cnt );
+    vector< complex<double> > test_pt_arr( test_cnt );
+    for( unsigned int z = 0; z < test_cnt; z++ ){
+        test_pt_arr.at(z) = complex<double>( rePart.at(z), imPart.at(z) );
+    }
+
+    cout << "TF eval test 2 settings: [ (order, output, input) = " << "(" << n << "," << m << "," << p << ") ]";
+    cout << "[Number of evaluation points: " << test_cnt << "]" << endl;
+
+    // Evaluate the system's transfer function at the test points.
+    auto start = std::chrono::high_resolution_clock::now();
+    Matrix3DXcd std_appr_data = mySyst.tf_eval( test_pt_arr );
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> duration = end - start;
+    cout << "Non-sparse TF eval time (ms): " << duration.count() << endl;
+
+    start = std::chrono::high_resolution_clock::now();
+    Matrix3DXcd sp_appr_data = mySyst.tf_sparse_eval( test_pt_arr );
+    end = std::chrono::high_resolution_clock::now();
+    duration = end - start;
+    cout << "Sparse TF eval time (ms): " << duration.count() << endl;
+    
+
+    test_bool = true;
+    // Compute difference in evaluation between using sparse and standard matrices.
+    Matrix3DXcd appr_data_diff = std_appr_data - sp_appr_data;
+    double tot_RMS_err = Matrix3DXcd::RMS_total_comp( appr_data_diff );
+    test_bool = test_bool && ( tot_RMS_err < num_thresh );
+    if( test_bool ){
+        cout << "LTI_descSyst sparse system transfer function eval test 2: passed." << endl;
+    }else{
+        cout << "LTI_descSyst sparse system transfer function eval test 2: failed." << endl;
+    }
 
 }
