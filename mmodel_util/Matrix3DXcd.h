@@ -95,10 +95,27 @@ public:
 
     Matrix3DXcd();
 
+    /**
+     * Construct a Matrix3DXcd instance as a vector zeros matrices with specified 
+     * dimensions.
+     * 
+     * @param row_idx Number of rows.
+     * @param col_idx Number of columns.
+     * @param lvl_idx Number of 2D matrices or height or depth of the 3D matrix.
+     */
     Matrix3DXcd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
 
+    /**
+     * Construct a Matrix3DXcd by directly assigning the vector of MatrixXcd.
+     * 
+     * @param Mat3D The vector of MatrixXcd to be directly integrated into the Matrix3DXcd instance.
+     */
     Matrix3DXcd( const vector< Eigen::MatrixXcd >& Mat3D );
 
+    /**
+     * Construct a Matrix3DXcd by directly using one Matrix3DXd instance as the real part and
+     * one Matrix3DXd instance as the imaginary part.
+     */
     Matrix3DXcd( const Matrix3DXd& rePart, const Matrix3DXd& imPart );
 
 // ====================================================================== <<<<<
@@ -108,22 +125,69 @@ public:
 //      Operators
 // ====================================================================== >>>>>
 
-    // Overloading the addition operator with another matrix of the same class.
+    /**
+     * Addition operator overload: current Matrix3DXcd instance addition with another 
+     * Matrix3DXcd instance.
+     * 
+     * @param tarMat Target Matrix3DXcd being added to current instance.
+     * @return Matrix3DXcd sum.
+     */
     Matrix3DXcd operator+(const Matrix3DXcd& tarMat) const;
 
     // Overloading the substraction operator with another matrix of the same class.
+    /**
+     * Substraction operator overload: another Matrix3DXcd instance substracted from current 
+     * Matrix3DXcd instance.
+     * 
+     * @param tarMat Target Matrix3DXcd being substracted from the current instance.
+     * @return Matrix3DXcd difference.
+     */
     Matrix3DXcd operator-(const Matrix3DXcd& tarMat) const;
 
-    // Overloading the multiplication operator for scalar multiplication.
+    /**
+     * Scalar multiplication operator overload: A scalar multiplied to the current 
+     * Matrix3DXcd instance.
+     * 
+     * @param scalar Target scalar being multiplied to the current instance.
+     * @return Matrix3DXcd product.
+     */
     Matrix3DXcd operator*(const double scalar) const;
 
-    // Overloading the compound multiplication operator for scalar multiplication.
+    /**
+     * Scalar compound multiplication operator overload: A scalar multiplied to the 
+     * current Matrix3DXcd instance and directly updated in said instance.
+     * 
+     * @param scalar Target scalar being multiplied to the current instance.
+     * @return The same Matrix3DXcd instance, but updated as the product.
+     */
     Matrix3DXcd& operator*=(const double scalar);
 
-    // Overloading the multiplication operator with another matrix of the same class.
+    /**
+     * @brief Same class multiplication operator overload: another Matrix3DXcd instance 
+     * multiplied with the current instance element-wise.
+     * 
+     * In actuality, element-wise multiplication is conducted, where each scalar 
+     * element in either matrices sharing the same coordinates are multiplied 
+     * together and the product is placed at the same coordinate in the product
+     * matrix.
+     * 
+     * @param tarMat Target Matrix3DXcd instance being multiplied to the current instance.
+     * @return Matrix3DXcd element-wise product.
+     */
     Matrix3DXcd operator*(const Matrix3DXcd& tarMat) const;
 
-    // Overloading the division oeprator with anothe matrix of the same class.
+    /**
+     * @brief Same class division operator overload: current Matrix3DXcd instance divided
+     * by another instance element-wise. 
+     * 
+     * In actuality, element-wise division is conducted, where each scalar element 
+     * in the current matrix instance is divided by the corresponding scalar element 
+     * in the divisor matrix of the same coordinates. The quotient scalar is placed 
+     * in the quotient matrix at the same coordinate.
+     * 
+     * @param tarMat Target Matrix3DXcd acting as the divisor to the current isntance.
+     * @return Matrix3DXcd element-wise quotient.
+     */
     Matrix3DXcd operator/(const Matrix3DXcd& tarMat) const;
 
 // ====================================================================== <<<<<
