@@ -96,12 +96,10 @@ int main() {
     // tests::LM_eng_reT_test();
     // tests::LM_eng_serialize_test();
     
-    // tests::LTI_descSyst_test_1( 3 );
     // tests::LTI_descSyst_access_consist_test();
     // tests::LTI_descSyst_stab_check_test();
     // tests::LTI_descSyst_tf_eval_test();
     // tests::LTI_descSyst_poles_test();
-    // tests::LTI_descSyst_test_2( 2 );
     // tests::LTI_descSyst_sparse_test();
     // tests::LTI_descSyst_regSyst_test();
     tests::LTI_descSyst_sparSyst_test();

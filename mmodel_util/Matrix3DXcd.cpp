@@ -6,9 +6,9 @@
 //      Static Functions
 // ====================================================================== >>>>>
 
-/*
-Default numerical threshold for determining if a number is trivial.
-*/
+/**
+ * Default numerical threshold for determining if a number is trivial.
+ */
 const double Matrix3DXcd::DEF_NUM_THRESH = 1e-12;
 
 bool Matrix3DXcd::consist_check( const Matrix3DXcd& tarMat ){

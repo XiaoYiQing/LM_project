@@ -15,15 +15,15 @@ using namespace std;
 
 
 
-/*
-This is my take for the 3D matrix based on the MatrixXcd matrix from the 
-Eigen library.
-The 3D matrix is nothing more than a vector of 2D MatrixXcd matrices.
-The class' purpose is to ease manipulation of the 3D matrix as well as simple
-matrix operations.
-This implementation doesn't operate as a typical 3D matrix in that its 3rd dimension
-is variable.
-*/
+/**
+ * A pseudo extension the the Eigen::Matrix2DXcd that is not official.
+ * This class mimics a 3D matrix, but is in actuality a vector of 2D matrices 
+ * (vector of Eigen::Matrix2DXcd).
+ * More than just a vector of 2D matrices, this class allows basic matrix operations
+ * seemlessly, which is the primary goal of this class in the first place.
+ * The 3rd dimension being represented as the vector dimension also allows fairly easy
+ * modification on the 3rd dimension.
+ */
 class Matrix3DXcd{    
 
 
@@ -35,33 +35,54 @@ public:
 
     static const double DEF_NUM_THRESH;
 
-    /*
-    Function for checking the consistency of the 3D matrix vector.
-    For instance, all 2D matrices in the vector must have the same size.
-    */
-    static bool consist_check( const Matrix3DXcd& );
-    /*
-    Function for checking the consistency of the 3D matrix vector.
-    For instance, all 2D matrices in the vector must have the same size.
-    */
+
+    /**
+     * Check the consistency of a Matrix3DXcd instance.
+     * For example, all 2D matrices in the vector must have the same size.
+     * 
+     * @param tarMat The target Matrix3DXcd instance to check for consistency.
+     * @return Consistency boolean of the target Matrix3DXcd instance.
+     */
+    static bool consist_check( const Matrix3DXcd& tarMat );
+    /**
+     * Check the consistency of a vector of 2D matrices (Eigen::MatrixXcd).
+     * For example, all 2D matrices in the vector must have the same size.
+     * 
+     * @param tarMat The target vector of MatrixXcd to check for consistency.
+     * @return Consistency boolean of the target vector of MatrixXcd.
+     */
     static bool consist_check( const vector< Eigen::MatrixXcd >& );
 
-    /*
-    Function for checking if 2 2D matrices are of the same size.
-    */
+    /**
+     * Support function for checking whether two Eigen::MatrixXcd instances
+     * have the same dimensions.
+     * 
+     * @param matA 2D matrix number 1.
+     * @param matB 2D matrix number 2.
+     * @return Boolean indicating whether two two matrices have the same dimensions.
+     */
     static bool same_size( const Eigen::MatrixXcd& matA, const Eigen::MatrixXcd& matB );
 
+
+    /**
+     * Function checks whether the 3D matrix contains 0 row and 0 column matrices, in
+     * which case the Matrix3DXcd is considered null.
+     * 
+     * @param tarMat The target matrix to check for null status.
+     * @return Boolean indicating whether the Matrix3DXcd instance should be considered null.
+     */
+    static bool null_ref_check( const Matrix3DXcd& tarMat );
     /*
     Function for checking if the reference matrix of the matrix vector has
     0 rows or 0 columns.
     If true, the reference matrix has 0 rows or columns.
     */
-    static bool null_ref_check( const Matrix3DXcd& );
-    /*
-    Function for checking if the reference matrix of the matrix vector has
-    0 rows or 0 columns.
-    If true, the reference matrix has 0 rows or columns.
-    */
+    /**
+     * Function checks whether the vector of MatrixXcd contains 0 row and 0 column MatrixXcd.
+     * 
+     * @param tarMat The target MatrixXcd vector to check for null status.
+     * @return Boolean indicating whether the MatrixXcd vector should be considered null.
+     */
     static bool null_ref_check( const vector< Eigen::MatrixXcd >& );
 
 
