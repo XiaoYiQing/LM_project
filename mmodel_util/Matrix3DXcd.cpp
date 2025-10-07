@@ -286,7 +286,7 @@ void Matrix3DXcd::elem_raise_pow( double base_val ){
     
     double log_base_val = log( base_val );
 
-    *this*=log_base_val;
+    *this *= log_base_val;
 
     unsigned int z = 0;
     for( unsigned int z = 0; z < Mat3D.size(); z++ ){

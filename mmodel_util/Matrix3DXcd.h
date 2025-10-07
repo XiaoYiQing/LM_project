@@ -185,7 +185,7 @@ public:
      * in the divisor matrix of the same coordinates. The quotient scalar is placed 
      * in the quotient matrix at the same coordinate.
      * 
-     * @param tarMat Target Matrix3DXcd acting as the divisor to the current isntance.
+     * @param tarMat Target Matrix3DXcd acting as the divisor to the current instance.
      * @return Matrix3DXcd element-wise quotient.
      */
     Matrix3DXcd operator/(const Matrix3DXcd& tarMat) const;
@@ -197,44 +197,61 @@ public:
 //      Operations
 // ====================================================================== >>>>>
 
-    /*
-    Perform element-wise power to the target value on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise power to the target scalar on all entries of the matrix.
+     * 
+     * @param exp_val Target exponent to raise all entries of the matrix to the power of.
+     */
     void elem_pow( double exp_val );
 
-    /*
-    Perform element-wise power with the input base value raised to the power value given
-    by the entries of the matrix.
-    */
+    /**
+     * Perform element-wise power with the input base value raised to the power value given
+     * by the entries of the matrix.
+     * 
+     * @param base_val Target base value to be raied to the power of each entries of the matrix.
+     */
     void elem_raise_pow( double base_val );
 
-    /*
-    Perform element-wise base 10 logarithmic operation.
-    */
+    /**
+     * Perform element-wise base 10 logarithmic operation.
+     */
     void elem_log10();
 
-    /*
-    Perform element-wise cosine function on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise cosine function on the entries of the matrix. 
+     * 
+     * @note Entries considered in radians.
+     */
     void elem_cos();
 
-    /*
-    Perform element-wise cosine function on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise sine function on the entries of the matrix. 
+     * 
+     * @note Entries considered in radians.
+     */
     void elem_sin();
 
-    /*
-    Perform element-wise arctan function on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise arctan function on the entries of the matrix. 
+     * 
+     * @note Entries considered in radians.
+     */
     void elem_atan();
-
-    /*
-    Perform element-wise division with entries of "tarMat" serving as divisors.
-    This function has a special rule where if both the entry of the present matrix
-    and the one in tarMat at the matching coordinate are zero (according to num_thresh), 
-    the result is 0 and not considered a runtime error.
-    Context: this is to deal with DC point frequency data having zero real part.
-    */
+    
+    /**
+     * @brief Perform element-wise division with entries of "tarMat" serving as 
+     * divisors with special rules regarding division by 0.
+     * 
+     * This function has a special rule where if both the entry of the present 
+     * matrix and the one in tarMat at the matching coordinate are zero 
+     * (according to num_thresh), the result is 0 and not considered a runtime
+     * error.
+     * 
+     * @param tarMat Target Matrix3DXcd acting as the divisor to the current instance.
+     * @return Matrix3DXcd element-wise quotient.
+     * 
+     * @note This function is designed to deal with DC point frequency data having zero real part.
+     */
     Matrix3DXcd elem_div_spec( const Matrix3DXcd& tarMat ) const;
 
 // ====================================================================== <<<<<
@@ -244,20 +261,21 @@ public:
 //      Specialized Operations
 // ====================================================================== >>>>>
 
-    /*
-    Specialize function which computes the phase (in radians) with the individual
-    vector real parts in "rePart" and corresponding imaginary parts in "imPart".
-    Each entry in the 3D matrix is considered one independent vector.
-    The resulting phases are stored in a 3D matrix of the same size.
-    */
-    // static Matrix3DXcd elem_phase_comp( const Matrix3DXcd& rePart, const Matrix3DXcd& imPart );
+    /**
+     * @brief Specialized function which computes the phase (in radians) of each 
+     * element of the target matrix.
+     * 
+     * @param tarMat Target matrix for which the element-wise phases are to be computed.
+     * @return The 3D matrix containing the element-wise phases.
+     */
     static Matrix3DXcd elem_phase_comp( const Matrix3DXcd& tarMat );
 
-    /*
-    Compute the root-mean-square (RMS) value from the 3D matrix of complex value
-    with real and imaginary parts stored separately.
-    */
-    // static double RMS_total_comp( const Matrix3DXcd& rePart, const Matrix3DXcd& imPart );
+    /**
+     * Compute the root-mean-square (RMS) value from the target Matrix3DXcd instance.
+     * 
+     * @param tarMat Target matrix from which the RMS is to be computed.
+     * @return The RMS value of the target matrix.
+     */
     static double RMS_total_comp( const Matrix3DXcd& tarMat );
 
 // ====================================================================== <<<<<
@@ -267,22 +285,38 @@ public:
 //      Support Functions
 // ====================================================================== >>>>>
 
-    /* 
-    Check if the target 2D matrix can be added to the 3D matrix.
-    */
+    /**
+     * Check if the target 2D matrix can be added to the 3D matrix.
+     * 
+     * @param val Target 2D matrix for which entry into the current 3D matrix instance is checked.
+     * @return Boolean indicating whether the target 2D matrix can be added or inserted in the
+     *  current instance.
+     */
     bool mat3DValidInCheck( const Eigen::MatrixXcd& val );
 
-    /*
-    Re-initialize the 3D matrix with an initiate set of zero matrices of specified sizes.
-    This function effectively serves as the "reserve" function specifically when the 3D matrix
-    is empty (or emptied) and requires a new start with specificed number of rows and columns.
-    WARNING: This function erases all current 3D matrix entries.
-    */
+    // TODO: change the name of the argument. "Index" is misleading.
+    /**
+     * @brief Re-initialize the 3D matrix with a set of zero matrices of specified sizes.
+     * 
+     * This function effectively serves as the "reserve" function specifically 
+     * when the 3D matrix is empty (or emptied) and requires a new start with 
+     * specificed number of rows and columns, though this function differs in 
+     * that actual memory are dedicated when calling it.
+     * 
+     * @param row_idx Number of rows.
+     * @param col_idx Number of columns.
+     * @param lvl_idx Number of 2D matrices or height or depth of the 3D matrix.
+     * 
+     * @warning This function erases all current 3D matrix entries.
+     * 
+     */
     void reInit( unsigned int row_cnt, unsigned int col_cnt, unsigned int lvl_cnt );
 
-    /*
-    Clear all existing 2D matrices.
-    */
+    /**
+     * @brief Clear all existing 2D matrices.
+     * 
+     * This is achieved by emptying the vector holding the 2D matrices.
+     */
     void clear();
 
     /*
