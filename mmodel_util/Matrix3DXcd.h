@@ -16,11 +16,14 @@ using namespace std;
 
 
 /**
- * A pseudo extension the the Eigen::Matrix2DXcd that is not official.
+ * \brief A pseudo unofficial extension the the Eigen::Matrix2DXcd.
+ * 
  * This class mimics a 3D matrix, but is in actuality a vector of 2D matrices 
  * (vector of Eigen::Matrix2DXcd).
+ * 
  * More than just a vector of 2D matrices, this class allows basic matrix operations
  * seemlessly, which is the primary goal of this class in the first place.
+ * 
  * The 3rd dimension being represented as the vector dimension also allows fairly easy
  * modification on the 3rd dimension.
  */
@@ -422,30 +425,53 @@ public:
      */
     Matrix3DXcd at( vector< unsigned int > idxVec );
 
-    /*
-    Set the 2D matrix values at the target index to the given 2D matrix values.
-    */
-    void set( unsigned int, const Eigen::MatrixXcd& );
+    /**
+     * Set the 2D matrix values at the target index to the given 2D matrix values.
+     * 
+     * \param tarIdx Index of the target 2D matrix to replace.
+     * \param tarMat The new 2D matrix to be placed at the target index.
+     * 
+     * \note Input matrix must match expected 2D matrix dimensions.
+     */
+    void set( unsigned int tarIdx, const Eigen::MatrixXcd& tarMat );
 
-    /*
-    Set the value at the specific coordinate of the specific 2D matrix. 
-    */
-    void set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, double val );
+    /**
+     * Set the value at the specific coordinate of the specific 2D matrix. 
+     * 
+     * \param row_idx Target cell row index.
+     * \param col_idx Target cell column index.
+     * \param lvl_idx Target cell height/depth/level index.
+     */
+    void set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, complex<double> val );
 
-    /*
-    Put a new 2D matrix entry at the end of the vector.
-    */
+    /**
+     * Put a new 2D matrix entry at the end of the vector.
+     * 
+     * \param in2DMat New matrix entry to be added at the end of the vector of 2D matrices.
+     * 
+     * \note Dimensions of new matrix entry must match dimensions of current vector entries.
+     */
     void push_back( const Eigen::MatrixXcd& in2DMat );
-    /*
-    Put a vector of 2D matrix entries at the end of the vector.
-    */
+
+    /**
+     * Put a vector of 2D matrix entries at the end of the vector.
+     * 
+     * \param in2DMatVec Vector of new matrix entries to be added at the end of 
+     *  of the present vector 2D matrices.
+     * 
+     * \note Dimensions of new matrix entries must match dimensions of current vector entries.
+     */
     void push_back( const vector< Eigen::MatrixXcd >& in2DMatVec );
 
-    /*
-    Insert a new 2D matrix entry at the target index position.
-    */
+    /**
+     * Insert a new 2D matrix entry at the target index position.
+     * 
+     * \param idx Index where the new matrix entry is to be placed.
+     * \param in2DMat New matrix entry to be inserted into the vector.
+     * 
+     * \note Dimensions of new matrix entry must match dimensions of current vector entries.
+     */
     void insert( unsigned int idx, const Eigen::MatrixXcd& in2DMat );
-
 
 // ====================================================================== <<<<<
 
@@ -457,16 +483,17 @@ protected:
 //      Member Variables
 // ====================================================================== >>>>>
 
-    /* 
-    The numerical threshold used by this object to determine if a numerical value
-    is to be considered trivial.
-    As such, this value is also used to evaluate if two numerical values are equal.
-    */
+    /**
+     * \brief The numerical threshold used by this object to determine if a numerical 
+     * value is to be considered trivial.
+     * 
+     * As such, this value is also used to evaluate if two numerical values are equal.
+     */
     double num_thresh;
 
-    /*
-    The 3D matrix, which is just a vector of 2D matrices.
-    */
+    /**
+     * The vector of 2D matrices that act as a pseudo 3D matrix within this class.
+     */
     vector< Eigen::MatrixXcd > Mat3D;
 
 // ====================================================================== <<<<<

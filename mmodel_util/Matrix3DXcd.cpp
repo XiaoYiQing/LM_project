@@ -599,7 +599,7 @@ void Matrix3DXcd::set( unsigned int tarIdx, const Eigen::MatrixXcd& tarMat ){
 }
 
 
-void Matrix3DXcd::set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, double val ){
+void Matrix3DXcd::set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, complex<double> val ){
 
     if( lvl_idx >= this->levels() ){
         throw std::out_of_range( 
