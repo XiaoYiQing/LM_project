@@ -396,7 +396,6 @@ public:
      */
     bool isEmpty() const;
 
-
     /**
      * \brief Return the 2D matrix (copy) at the target index of the vector of 2D matrix.
      * 
@@ -435,6 +434,7 @@ public:
      * \param row_idx Target cell row index.
      * \param col_idx Target cell column index.
      * \param lvl_idx Target cell height/depth/level index.
+     * \param val Target cell's new value to be assigned.
      */
     void set( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx, complex<double> val );
 
@@ -469,6 +469,7 @@ public:
 
 // ====================================================================== <<<<<
 
+    // TODO: write the serialize + deserialize functions for this class
 
 protected:
 
