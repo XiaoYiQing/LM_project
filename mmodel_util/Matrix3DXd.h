@@ -15,15 +15,18 @@ using namespace std;
 
 
 
-/*
-This is my take for the 3D matrix based on the MatrixXd matrix from the 
-Eigen library.
-The 3D matrix is nothing more than a vector of 2D MatrixXd matrices.
-The class' purpose is to ease manipulation of the 3D matrix as well as simple
-matrix operations.
-This implementation doesn't operate as a typical 3D matrix in that its 3rd dimension
-is variable.
-*/
+/**
+ * \brief A pseudo unofficial extension the the Eigen::Matrix2DXd.
+ * 
+ * This class mimics a 3D matrix, but is in actuality a vector of 2D matrices 
+ * (vector of Eigen::Matrix2DXd).
+ * 
+ * More than just a vector of 2D matrices, this class allows basic matrix operations
+ * seemlessly, which is the primary goal of this class in the first place.
+ * 
+ * The 3rd dimension being represented as the vector dimension also allows fairly easy
+ * modification on the 3rd dimension.
+ */
 class Matrix3DXd{    
 
 
@@ -35,37 +38,48 @@ public:
 
     static const double DEF_NUM_THRESH;
 
-    /*
-    Function for checking the consistency of the 3D matrix vector.
-    For instance, all 2D matrices in the vector must have the same size.
-    */
+    /**
+     * Check the consistency of a Matrix3DXd instance.
+     * For example, all 2D matrices in the vector must have the same size.
+     * 
+     * @param tarMat The target Matrix3DXd instance to check for consistency.
+     * @return Consistency boolean of the target Matrix3DXd instance.
+     */
     static bool consist_check( const Matrix3DXd& );
-    /*
-    Function for checking the consistency of the 3D matrix vector.
-    For instance, all 2D matrices in the vector must have the same size.
-    */
+    /**
+     * Check the consistency of a vector of 2D matrices (Eigen::MatrixXd).
+     * For example, all 2D matrices in the vector must have the same size.
+     * 
+     * @param tarMat The target vector of MatrixXd to check for consistency.
+     * @return Consistency boolean of the target vector of MatrixXd.
+     */
     static bool consist_check( const vector< Eigen::MatrixXd >& );
 
-    /*
-    Function for checking if 2 2D matrices are of the same size.
-    */
+    /**
+     * Support function for checking whether two Eigen::MatrixXd instances
+     * have the same dimensions.
+     * 
+     * @param matA 2D matrix number 1.
+     * @param matB 2D matrix number 2.
+     * @return Boolean indicating whether two two matrices have the same dimensions.
+     */
     static bool same_size( const Eigen::MatrixXd& matA, const Eigen::MatrixXd& matB );
 
-    /*
-    Function for checking if the reference matrix of the matrix vector has
-    0 rows or 0 columns.
-    If true, the reference matrix has 0 rows or columns.
-    */
+    /**
+     * Function checks whether the 3D matrix contains 0 row and 0 column matrices, in
+     * which case the Matrix3DXd is considered null.
+     * 
+     * @param tarMat The target matrix to check for null status.
+     * @return Boolean indicating whether the Matrix3DXd instance should be considered null.
+     */
     static bool null_ref_check( const Matrix3DXd& );
-    /*
-    Function for checking if the reference matrix of the matrix vector has
-    0 rows or 0 columns.
-    If true, the reference matrix has 0 rows or columns.
-    */
+    /**
+     * Function checks whether the vector of MatrixXd contains 0 row and 0 column MatrixXd.
+     * 
+     * @param tarMat The target MatrixXd vector to check for null status.
+     * @return Boolean indicating whether the MatrixXd vector should be considered null.
+     */
     static bool null_ref_check( const vector< Eigen::MatrixXd >& );
-
-
-    
 
 // ====================================================================== <<<<<
 
@@ -76,8 +90,21 @@ public:
 
     Matrix3DXd();
 
+    /**
+     * Construct a Matrix3DXd instance as a vector zeros matrices with specified 
+     * dimensions.
+     * 
+     * @param row_idx Number of rows.
+     * @param col_idx Number of columns.
+     * @param lvl_idx Number of 2D matrices or height or depth of the 3D matrix.
+     */
     Matrix3DXd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
 
+    /**
+     * Construct a Matrix3DXd by directly assigning the vector of MatrixXd.
+     * 
+     * @param Mat3D The vector of MatrixXcd to be directly integrated into the Matrix3DXd instance.
+     */
     Matrix3DXd( const vector< Eigen::MatrixXd >& Mat3D );
 
 // ====================================================================== <<<<<
@@ -87,22 +114,68 @@ public:
 //      Operators
 // ====================================================================== >>>>>
 
-    // Overloading the addition operator with another matrix of the same class.
+    /**
+     * Addition operator overload: current Matrix3DXd instance addition with another 
+     * Matrix3DXd instance.
+     * 
+     * @param tarMat Target Matrix3DXd being added to current instance.
+     * @return Matrix3DXd sum.
+     */
     Matrix3DXd operator+(const Matrix3DXd& tarMat) const;
 
-    // Overloading the addition operator with another matrix of the same class.
+    /**
+     * Substraction operator overload: another Matrix3DXd instance substracted from current 
+     * Matrix3DXd instance.
+     * 
+     * @param tarMat Target Matrix3DXd being substracted from the current instance.
+     * @return Matrix3DXd difference.
+     */
     Matrix3DXd operator-(const Matrix3DXd& tarMat) const;
 
-    // Overloading the multiplication operator for scalar multiplication.
+    /**
+     * Scalar multiplication operator overload: A scalar multiplied to the current 
+     * Matrix3DXd instance.
+     * 
+     * @param scalar Target scalar being multiplied to the current instance.
+     * @return Matrix3DXd product.
+     */
     Matrix3DXd operator*(const double scalar) const;
 
-    // Overloading the compound multiplication operator for scalar multiplication.
+    /**
+     * Scalar compound multiplication operator overload: A scalar multiplied to the 
+     * current Matrix3DXd instance and directly updated in said instance.
+     * 
+     * @param scalar Target scalar being multiplied to the current instance.
+     * @return The same Matrix3DXd instance, but updated as the product.
+     */
     Matrix3DXd& operator*=(const double scalar);
 
-    // Overloading the multiplication operator with another matrix of the same class.
+    /**
+     * @brief Same class multiplication operator overload: another Matrix3DXd instance 
+     * multiplied with the current instance element-wise.
+     * 
+     * In actuality, element-wise multiplication is conducted, where each scalar 
+     * element in either matrices sharing the same coordinates are multiplied 
+     * together and the product is placed at the same coordinate in the product
+     * matrix.
+     * 
+     * @param tarMat Target Matrix3DXd instance being multiplied to the current instance.
+     * @return Matrix3DXd element-wise product.
+     */
     Matrix3DXd operator*(const Matrix3DXd& tarMat) const;
 
-    // Overloading the division oeprator with anothe matrix of the same class.
+    /**
+     * @brief Same class division operator overload: current Matrix3DXd instance divided
+     * by another instance element-wise. 
+     * 
+     * In actuality, element-wise division is conducted, where each scalar element 
+     * in the current matrix instance is divided by the corresponding scalar element 
+     * in the divisor matrix of the same coordinates. The quotient scalar is placed 
+     * in the quotient matrix at the same coordinate.
+     * 
+     * @param tarMat Target Matrix3DXd acting as the divisor to the current instance.
+     * @return Matrix3DXd element-wise quotient.
+     */
     Matrix3DXd operator/(const Matrix3DXd& tarMat) const;
 
 // ====================================================================== <<<<<
@@ -112,44 +185,61 @@ public:
 //      Operations
 // ====================================================================== >>>>>
 
-    /*
-    Perform element-wise power to the target value on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise power to the target scalar on all entries of the matrix.
+     * 
+     * @param exp_val Target exponent to raise all entries of the matrix to the power of.
+     */
     void elem_pow( double exp_val );
 
-    /*
-    Perform element-wise power with the input base value raised to the power value given
-    by the entries of the matrix.
-    */
+    /**
+     * Perform element-wise power with the input base value raised to the power value given
+     * by the entries of the matrix.
+     * 
+     * @param base_val Target base value to be raied to the power of each entries of the matrix.
+     */
     void elem_raise_pow( double base_val );
 
-    /*
-    Perform element-wise base 10 logarithmic operation.
-    */
+    /**
+     * Perform element-wise base 10 logarithmic operation.
+     */
     void elem_log10();
 
-    /*
-    Perform element-wise cosine function on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise cosine function on the entries of the matrix. 
+     * 
+     * @note Entries considered in radians.
+     */
     void elem_cos();
 
-    /*
-    Perform element-wise cosine function on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise sine function on the entries of the matrix. 
+     * 
+     * @note Entries considered in radians.
+     */
     void elem_sin();
 
-    /*
-    Perform element-wise arctan function on the entries of the matrix.
-    */
+    /**
+     * Perform element-wise arctan function on the entries of the matrix. 
+     * 
+     * @note Entries considered in radians.
+     */
     void elem_atan();
 
-    /*
-    Perform element-wise division with entries of "tarMat" serving as divisors.
-    This function has a special rule where if both the entry of the present matrix
-    and the one in tarMat at the matching coordinate are zero (according to num_thresh), 
-    the result is 0 and not considered a runtime error.
-    Context: this is to deal with DC point frequency data having zero real part.
-    */
+    /**
+     * @brief Perform element-wise division with entries of "tarMat" serving as 
+     * divisors with special rules regarding division by 0.
+     * 
+     * This function has a special rule where if both the entry of the present 
+     * matrix and the one in tarMat at the matching coordinate are zero 
+     * (according to num_thresh), the result is 0 and not considered a runtime
+     * error.
+     * 
+     * @param tarMat Target Matrix3DXd acting as the divisor to the current instance.
+     * @return Matrix3DXd element-wise quotient.
+     * 
+     * @note This function is designed to deal with DC point frequency data having zero real part.
+     */
     Matrix3DXd elem_div_spec( const Matrix3DXd& tarMat ) const;
 
 // ====================================================================== <<<<<
@@ -159,12 +249,13 @@ public:
 //      Specialized Operations
 // ====================================================================== >>>>>
 
-    /*
-    Specialize function which computes the phase (in radians) with the individual
-    vector real parts in "rePart" and corresponding imaginary parts in "imPart".
-    Each entry in the 3D matrix is considered one independent vector.
-    The resulting phases are stored in a 3D matrix of the same size.
-    */
+    /**
+     * @brief Specialized function which computes the phase (in radians) of each 
+     * element of the target matrix.
+     * 
+     * @param tarMat Target matrix for which the element-wise phases are to be computed.
+     * @return The 3D matrix containing the element-wise phases.
+     */
     static Matrix3DXd elem_phase_comp( const Matrix3DXd& rePart, const Matrix3DXd& imPart );
 
     /*

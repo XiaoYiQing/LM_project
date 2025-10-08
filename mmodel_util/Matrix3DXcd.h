@@ -75,11 +75,6 @@ public:
      * @return Boolean indicating whether the Matrix3DXcd instance should be considered null.
      */
     static bool null_ref_check( const Matrix3DXcd& tarMat );
-    /*
-    Function for checking if the reference matrix of the matrix vector has
-    0 rows or 0 columns.
-    If true, the reference matrix has 0 rows or columns.
-    */
     /**
      * Function checks whether the vector of MatrixXcd contains 0 row and 0 column MatrixXcd.
      * 
@@ -137,7 +132,6 @@ public:
      */
     Matrix3DXcd operator+(const Matrix3DXcd& tarMat) const;
 
-    // Overloading the substraction operator with another matrix of the same class.
     /**
      * Substraction operator overload: another Matrix3DXcd instance substracted from current 
      * Matrix3DXcd instance.
