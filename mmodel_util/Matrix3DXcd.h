@@ -319,26 +319,52 @@ public:
      */
     void clear();
 
-    /*
-    Reserve a set number of entries worth of memory for additional 2D matrices.
-    This reserve additionally places zero matrices at the reserved spaces within
-    the 3D matrix as placeholders for direct index access.
-    */
-    void reserve( unsigned int );
 
-    /*
-    Perform the same operations as resize() of a vector variable.
-    */
-    void resize( unsigned int );
+    /**
+     * \brief Reserve a set number of entries worth of memory for additional 2D matrices.
+     * 
+     * Unlike the real "reserve" function which allocates memory without creating matrix entries,
+     * this function creates a number of zeros matrices in the vector to fulfill the requested
+     * total number of 2D matrices to reserve.
+     * 
+     * \param res_size The total amount of 2D matrices the vector of 2D matrices is specified 
+     *  to hold.
+     * 
+     * \note res_size is not the number of additional entries to add to the current 2D matrix vector;
+     *  res_size is the final size of the 2D matrix vector. If the current vector has 6 entries and 
+     *  res_size = 10, then the vector is going to be given 4 more (zero) matrix entries.
+     *  If res_size <= current 2D matrix vector size, nothing happens.
+     */
+    void reserve( unsigned int res_size );
 
-    /*
-    Perform the same operations as shrink_to_fit() of a vector variable.
-    */
+    /**
+     * \brief Set the number of entries of the matrix to the specified size.
+     * 
+     * Effectively, we simply use the "resize()" function of a vector in general.
+     * This function is more definitive than the "reserve" function as it will 
+     * delete 2D matrix entries beyond the new vector limit to fulfill the new 
+     * size requested.
+     * 
+     * @param tarSize The amount of entries the 2D matrix vector is forced to contain.
+     */
+    void resize( unsigned int tarSize );
+
+    /**
+     * Perform the same operations as shrink_to_fit() of a vector variable.
+     * 
+     * @note With how my version of "reserve" functions, this function will basically 
+     *  do nothing because I am not actually using the true "reserve" function of a vector.
+     */
     void shrink_to_fit();
 
-    /*
-    Obtain a continuous subset segment of the vector of 2D matrices.
-    */
+    /**
+     * Obtain a continuous subset segment of the vector of 2D matrices.
+     * 
+     * @param startIndex The starting index of the subset of the 2D matrix vector to extract.
+     * @param len The number of entries to extract for subset.
+     * @return The subset version of the original Matrix3DXcd.
+     * 
+     */
     Matrix3DXcd segment( size_t startIndex, size_t len ) const;
 
 // ====================================================================== <<<<<
@@ -348,28 +374,52 @@ public:
 //      Access Functions
 // ====================================================================== >>>>>
 
-    // Obtain a vector representing the dimensions of the 3D matrix (row #, col #, level # ).
+    /**
+     * Obtain the size of the current 3D matrix in a vector of size 3.
+     * 
+     * @return Vector of unsigned int containing the number of rows, columns, and 
+     *  depth/level/height.
+     */
     vector<unsigned int> size() const;
 
+    // Fetch the number of rows directly.
     unsigned int rows() const;
+    // Fetch the number of columns directly.
     unsigned int cols() const;
+    // Fetch the number of depth/level/height directly.
     unsigned int levels() const;
 
-    // Determine if the matrix is empty. True if matrix vector is empty.
+    /**
+     * \brief Determine if the current Matrix3DXcd instance is empty.
+     * 
+     * \return Boolean indicating whether the 3D matrix is empty.
+     * 
+     * \note Only checks if there are entries in the vector. Will return false even if 
+     *  the vector contains nothing but 0 x 0 matrices.
+     */
     bool isEmpty() const;
 
-    /*
-    Return the 2D matrix at the target index of the vector of 2D matrix.
-    NOTE: this "at( unsigned int )" function does not perform the assignment 
-    function because it doesn't return a reference, but a copy. This is to 
-    prevent insertion of a 2D matrix having different dimensions than the rest.
-    */
-    Eigen::MatrixXcd at( unsigned int ) const;
 
-    /*
-    Return a subset 3D matrix comprised of the group of 2D matrices given by the
-    input index vector.
-    */
+    /**
+     * \brief Return the 2D matrix (copy) at the target index of the vector of 2D matrix.
+     * 
+     * \param tarIdx The index of the target 2D matrix to extract from the vector.
+     * \return The 2D matrix (copy) at the specified index.
+     * 
+     * \note This "at( unsigned int tarIdx )" function does not perform the assignment 
+     * function because it doesn't return a reference, but a copy. This is to 
+     * prevent insertion of a 2D matrix having different dimensions than the rest.
+     */
+    Eigen::MatrixXcd at( unsigned int tarIdx ) const;
+
+    /**
+     * Return a subset Matrix3DXcd comprised of the group of 2D matrices given by the
+     * input index vector.
+     * 
+     * \param idxVec The vector of indices of the 2D matrices to extract to create the 
+     * subset Matrix3DXcd.
+     * \return The subset Matrix3DXcd containing only the 2D matrices of the specified indices.
+     */
     Matrix3DXcd at( vector< unsigned int > idxVec );
 
     /*

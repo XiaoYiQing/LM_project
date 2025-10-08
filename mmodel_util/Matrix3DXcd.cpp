@@ -477,7 +477,7 @@ void Matrix3DXcd::reserve( unsigned int res_size ){
 
     this->Mat3D.reserve( res_size );
     for( size_t i = currSize; i < res_size; i++ ) {
-        Mat3D.emplace_back( Eigen::MatrixXcd( row_cnt, col_cnt ) );
+        Mat3D.emplace_back( Eigen::MatrixXcd::Zero( row_cnt, col_cnt ) );
     }
 
 }
@@ -548,8 +548,8 @@ bool Matrix3DXcd::isEmpty() const{
     return this->Mat3D.size() == 0;
 }
 
-Eigen::MatrixXcd Matrix3DXcd::at( unsigned int z ) const{
-    return this->Mat3D.vector::at(z);
+Eigen::MatrixXcd Matrix3DXcd::at( unsigned int tarIdx ) const{
+    return this->Mat3D.vector::at( tarIdx );
 }
 
 Matrix3DXcd Matrix3DXcd::at( vector< unsigned int > idxVec ){
