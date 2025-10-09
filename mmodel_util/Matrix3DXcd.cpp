@@ -111,7 +111,7 @@ Matrix3DXcd::Matrix3DXcd( const Matrix3DXd& rePart, const Matrix3DXd& imPart ){
     // Fill the class matrix vector with complex matrices obtained through combination
     // of real and imaginary part matrices.
     this->reInit( row_cnt, col_cnt, level_cnt );
-    Eigen::MatrixXcd mat_z = Eigen::MatrixXd::Zero( row_cnt, col_cnt );
+    Eigen::MatrixXcd mat_z = Eigen::MatrixXcd::Zero( row_cnt, col_cnt );
     Eigen::MatrixXd re_z = Eigen::MatrixXd::Zero( row_cnt, col_cnt );
     Eigen::MatrixXd im_z = Eigen::MatrixXd::Zero( row_cnt, col_cnt );
     for( unsigned int z = 0; z < level_cnt; z++ ){
@@ -677,3 +677,83 @@ void Matrix3DXcd::insert( unsigned int idx, const Eigen::MatrixXcd& in2DMat ){
 }
 
 // ====================================================================== <<<<<
+
+
+
+void Matrix3DXcd::serialize( const std::string& filename ) const{
+
+    // Open binary stream to target file.
+    std::ofstream ofs( filename, std::ios::binary);
+
+    if(!ofs){
+        throw invalid_argument( "serialize: Target binary file not found or cannot be opened." );
+    }
+
+    this->serialize( ofs );
+
+}
+
+
+void Matrix3DXcd::serialize( std::ofstream& ofs ) const{
+
+    // Write the numerical threshold.
+    ofs.write(reinterpret_cast<const char*>(&num_thresh), sizeof(num_thresh));
+
+    // Obtain the sizes (depth, row count, column count).
+    size_t depth = Mat3D.size();
+    int rows = Mat3D.at(0).rows();
+    int cols = Mat3D.at(0).cols();
+
+    // Write the number of matrices.
+    ofs.write(reinterpret_cast<const char*>( &depth ), sizeof( depth ));
+    // Write the number of rows and columns of the matrices.
+    ofs.write(reinterpret_cast<const char*>( &rows ), sizeof( rows ));
+    ofs.write(reinterpret_cast<const char*>( &cols ), sizeof( cols ));
+    // Write each matrix in the vector into the binary file one after another.
+    for( Eigen::MatrixXcd mat: Mat3D ){
+        ofs.write( reinterpret_cast<const char*>( mat.data() ), 
+            rows * cols * sizeof( double ) );
+    }
+
+}
+
+
+
+void Matrix3DXcd::deserialize( const std::string& filename ){
+
+    std::ifstream ifs( filename, std::ios::binary );
+    if (!ifs) {
+        throw invalid_argument( "deserialize: Target binary file not found or cannot be opened." );
+    }
+
+    this->deserialize( ifs );
+
+}
+
+
+void Matrix3DXcd::deserialize( std::ifstream& ifs ){
+
+    // Write the numerical threshold.
+    ifs.read(reinterpret_cast<char*>(&num_thresh), sizeof(num_thresh));
+
+    // Obtain the sizes (depth, row count, column count).
+    size_t depth = 0;
+    int rows = -1;
+    int cols = -1;
+    // Write the number of matrices.
+    ifs.read(reinterpret_cast<char*>( &depth ), sizeof( depth ));
+    // Write the number of rows and columns of the matrices.
+    ifs.read(reinterpret_cast<char*>( &rows ), sizeof( rows ));
+    ifs.read(reinterpret_cast<char*>( &cols ), sizeof( cols ));
+
+    // Reinitialize the vector of matrices.
+    this->reInit( rows, cols, depth );
+
+    // Write each matrix in the vector into the binary file one after another.
+    for( unsigned int z = 0; z < depth; z++ ){
+        Eigen::MatrixXcd mat;
+        ifs.read(reinterpret_cast<char*>( Mat3D.at(z).data() ), 
+            rows * cols * sizeof( double ) );
+    }
+
+}

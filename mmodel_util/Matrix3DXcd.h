@@ -469,6 +469,37 @@ public:
 // ====================================================================== <<<<<
 
     // TODO: write the serialize + deserialize functions for this class
+    /**
+     * Serialize method to save current object state to a binary file.
+     * 
+     * \param filename The filename of the binary file where the binary data is to be written to.
+     *  Make sure the extension is ".bin".
+     * 
+     * \note Make sure you use a full filename to know exactly where the file ends up.
+     */
+    void serialize( const std::string& filename ) const;
+    /**
+     * Serialize method to save current object state to a binary file.
+     * 
+     * \param ofs An existing binary file output stream through which the binary data is sent.
+     */
+    void serialize( std::ofstream& ofs ) const;
+
+    /**
+     * Deserialize method to imprint current object state with existing state written
+     * in a binary file.
+     * 
+     * \param filename The filename of the binary file where the binary data is 
+     *  to be extracted from. Make sure the extension is ".bin".
+     */
+    void deserialize( const std::string& filename );
+    /**
+     * Deserialize method to imprint current object state with existing state from 
+     * currently opened binary file input stream.
+     * 
+     * \param ifs An existing binary file input stream through which the binary data is extracted.
+     */
+    void deserialize( std::ifstream& ifs );
 
 protected:
 
