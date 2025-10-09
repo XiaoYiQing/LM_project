@@ -34,6 +34,7 @@
 #include "tests_LM_eng.h"
 #include "tests_LTI_descSyst.h"
 #include "tests_Matrix3DXd.h"
+#include "tests_Matrix3DXcd.h"
 #include "tests_numUtils.h"
 #include "tests_orches.h"
 
@@ -81,6 +82,8 @@ int main() {
     // tests::Matrix3DXd_test_4_supp(0);
     // tests::Matrix3DXd_test_serialize();
 
+    tests::Matrix3DXcd_serialize_test();
+
     // tests::fData_test_1( 0 );
     // tests::fData_test_2( 3 );
     // tests::fData_enum_test(0);
@@ -102,7 +105,7 @@ int main() {
     // tests::LTI_descSyst_poles_test();
     // tests::LTI_descSyst_sparse_test();
     // tests::LTI_descSyst_regSyst_test();
-    tests::LTI_descSyst_sparSyst_test();
+    // tests::LTI_descSyst_sparSyst_test();
 
     // tests::LM_eng_full_SFML_testrun();
     // tests::LM_eng_full_SFML_testrun_v2();

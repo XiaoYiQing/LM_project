@@ -712,7 +712,7 @@ void Matrix3DXcd::serialize( std::ofstream& ofs ) const{
     // Write each matrix in the vector into the binary file one after another.
     for( Eigen::MatrixXcd mat: Mat3D ){
         ofs.write( reinterpret_cast<const char*>( mat.data() ), 
-            rows * cols * sizeof( double ) );
+            rows * cols * sizeof( std::complex<double> ) );
     }
 
 }
@@ -753,7 +753,7 @@ void Matrix3DXcd::deserialize( std::ifstream& ifs ){
     for( unsigned int z = 0; z < depth; z++ ){
         Eigen::MatrixXcd mat;
         ifs.read(reinterpret_cast<char*>( Mat3D.at(z).data() ), 
-            rows * cols * sizeof( double ) );
+            rows * cols * sizeof( std::complex<double> ) );
     }
 
 }
