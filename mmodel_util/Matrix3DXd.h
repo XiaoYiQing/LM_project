@@ -286,7 +286,6 @@ public:
      */
     bool mat3DValidInCheck( const Eigen::MatrixXd& val );
 
-    // TODO: change the name of the argument. "Index" is misleading.
     /**
      * @brief Re-initialize the 3D matrix with a set of zero matrices of specified sizes.
      * 
@@ -295,9 +294,9 @@ public:
      * specificed number of rows and columns, though this function differs in 
      * that actual memory are dedicated when calling it.
      * 
-     * @param row_idx Number of rows.
-     * @param col_idx Number of columns.
-     * @param lvl_idx Number of 2D matrices or height or depth of the 3D matrix.
+     * @param row_cnt Number of rows.
+     * @param col_cnt Number of columns.
+     * @param lvl_cnt Number of 2D matrices or height or depth of the 3D matrix.
      * 
      * @warning This function erases all current 3D matrix entries.
      * 

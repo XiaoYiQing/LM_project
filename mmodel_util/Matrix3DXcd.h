@@ -97,11 +97,11 @@ public:
      * Construct a Matrix3DXcd instance as a vector zeros matrices with specified 
      * dimensions.
      * 
-     * @param row_idx Number of rows.
-     * @param col_idx Number of columns.
-     * @param lvl_idx Number of 2D matrices or height or depth of the 3D matrix.
+     * @param row_cnt Number of rows.
+     * @param col_cnt Number of columns.
+     * @param lvl_cnt Number of 2D matrices or height or depth of the 3D matrix.
      */
-    Matrix3DXcd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx );
+    Matrix3DXcd( unsigned int row_cnt, unsigned int col_cnt, unsigned int lvl_cnt );
 
     /**
      * Construct a Matrix3DXcd by directly assigning the vector of MatrixXcd.
@@ -291,7 +291,6 @@ public:
      */
     bool mat3DValidInCheck( const Eigen::MatrixXcd& val );
 
-    // TODO: change the name of the argument. "Index" is misleading.
     /**
      * @brief Re-initialize the 3D matrix with a set of zero matrices of specified sizes.
      * 
@@ -300,9 +299,9 @@ public:
      * specificed number of rows and columns, though this function differs in 
      * that actual memory are dedicated when calling it.
      * 
-     * @param row_idx Number of rows.
-     * @param col_idx Number of columns.
-     * @param lvl_idx Number of 2D matrices or height or depth of the 3D matrix.
+     * @param row_cnt Number of rows.
+     * @param col_cnt Number of columns.
+     * @param lvl_cnt Number of 2D matrices or height or depth of the 3D matrix.
      * 
      * @warning This function erases all current 3D matrix entries.
      * 

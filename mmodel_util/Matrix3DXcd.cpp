@@ -68,10 +68,10 @@ Matrix3DXcd::Matrix3DXcd(){
     this->num_thresh = Matrix3DXcd::DEF_NUM_THRESH;
 }
 
-Matrix3DXcd::Matrix3DXcd( unsigned int row_idx, unsigned int col_idx, unsigned int lvl_idx ){
+Matrix3DXcd::Matrix3DXcd( unsigned int row_cnt, unsigned int col_cnt, unsigned int lvl_cnt ){
     this->num_thresh = Matrix3DXcd::DEF_NUM_THRESH;
 
-    this->reInit( row_idx, col_idx, lvl_idx );
+    this->reInit( row_cnt, col_cnt, lvl_cnt );
 }
 
 Matrix3DXcd::Matrix3DXcd( const vector< Eigen::MatrixXcd >& Mat3D ){
